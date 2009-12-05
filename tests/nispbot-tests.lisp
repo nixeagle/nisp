@@ -49,9 +49,9 @@ about redefining a symbol."
 
 (test parse-bot-command
   (is-every string=
-    ((nix-bot::parse-bot-command ",arglist +")
+    ((nispbot::parse-bot-command ",arglist +")
      "arglist")
-    ((multiple-value-bind (ignore arg) (nix-bot::parse-bot-command ",arglist xyz")
+    ((multiple-value-bind (ignore arg) (nispbot::parse-bot-command ",arglist xyz")
        arg)
      "xyz")))
 
