@@ -64,3 +64,10 @@ about redefining a symbol."
   (5am:finishes
     (nispbot::function-lambda-list-to-string "1")
     "Do better then throwing an error on non-function objects"))
+
+
+(def-suite config-tests :in all-tests)
+(in-suite config-tests)
+
+(test *channel*
+  (is (stringp )))

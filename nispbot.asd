@@ -19,5 +19,6 @@
   :serial t
   :components
   ((:file "package")
+   (:file "config-dist")
    (:file "config")
    (:file "nispbot")))
