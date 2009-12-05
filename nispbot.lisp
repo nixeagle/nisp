@@ -1,11 +1,8 @@
-(defpackage #:nispbot (:use :common-lisp :irc :cl-ppcre))
+
 (in-package :nispbot)
 (setq *allow-named-registers* t)
 
 (defvar *connection*)
-(defvar *nickname* "clnixbot")
-(defconstant *eighthbit* "platinum.eighthbit.net")
-(defvar *channel* "#lisp")
 
 (defun start-connection ()
   "Simple connection function for basic testing."

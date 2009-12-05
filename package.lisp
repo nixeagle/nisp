@@ -1,2 +1,2 @@
 (defpackage #:nispbot
-  (:use :common-lisp :irc :cl-ppcre))q
+  (:use :common-lisp :irc :cl-ppcre))
