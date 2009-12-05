@@ -18,4 +18,5 @@
                :cl-irc)
   :serial t
   :components
-  ((:file "nispbot")))
+  ((:file "package")
+   (:file "nispbot")))
