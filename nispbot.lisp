@@ -1,5 +1,5 @@
-(defpackage :nix-bot (:use :common-lisp :irc :cl-ppcre))
-(in-package :nix-bot)
+(defpackage #:nispbot (:use :common-lisp :irc :cl-ppcre))
+(in-package :nispbot)
 (setq *allow-named-registers* t)
 
 (defvar *connection*)

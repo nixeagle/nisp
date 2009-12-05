@@ -3,18 +3,19 @@
 
 (in-package :cl-user)
 
-(defpackage #:nix-bot-system
+(defpackage #:nispbot-system
   (:use :cl :asdf))
 
-(in-package #:nix-bot-system)
+(in-package #:nispbot-system)
 
-(defsystem :nix-bot
+(defsystem :nispbot
   :version "0.0.0"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv3 or later"
   :description "irc bot"
-  :depends-on (:cl-irc)
+  :depends-on (:cl-ppcre
+               :cl-irc)
   :serial t
   :components
-  ((:file "nix-bot")))
+  ((:file "nispbot")))

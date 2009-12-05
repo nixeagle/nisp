@@ -1,7 +1,7 @@
-(defpackage #:nix-bot-tests
+(defpackage #:nispbot-tests
   (:use :common-lisp
         :fiveam
-        :nix-bot)
+        :nispbot)
   (:shadowing-import-from :irc pass))
 (in-package :FiveAM)
 
@@ -22,7 +22,7 @@ about redefining a symbol."
      (setf (get-fixture ',name) (cons ',args ',body))
      ',name))
 
-(in-package :nix-bot-tests)
+(in-package :nispbot-tests)
 
 (def-suite all-tests
     :description "Top level test suite")
