@@ -69,5 +69,6 @@ about redefining a symbol."
 (def-suite config-tests :in all-tests)
 (in-suite config-tests)
 
-(test *channel*
-  (is (stringp )))
+(test *channel*-is-a-string
+  "Make sure that we don't change the type without letting users know."
+  (is (stringp *channel*)))
