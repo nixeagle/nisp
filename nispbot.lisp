@@ -35,8 +35,14 @@
         (",(\\w*) (.+)" msg-text)
     (values command args)))
 
-(defun function-lambda-list-to-string (string)
-  "Return a string with the function's arg list in it."
+(defgeneric function-lambda-list-to-string (symbol)
+  (:method (symbol)
+    "An unexpected error has occured on your request, please notify the developers.")
+  (:documentation
+   "Return a string with the function's arg list in it."))
+
+
+(defmethod function-lambda-list-to-string ((symbol string))
   (princ-to-string
-   (sb-introspect:function-lambda-list
-    (read-from-string string))))
+       (sb-introspect:function-lambda-list
+        (read-from-string symbol))))

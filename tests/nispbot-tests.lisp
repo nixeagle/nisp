@@ -5,7 +5,6 @@
   (:shadowing-import-from :irc pass))
 (in-package :FiveAM)
 
-
 (defmacro def-fixture (name args &body body)
   "Defines a fixture named NAME. A fixture is very much like a
 macro but is used only for simple templating. A fixture created
@@ -23,6 +22,8 @@ about redefining a symbol."
      ',name))
 
 (in-package :nispbot-tests)
+(setf 5am:*debug-on-error* nil)
+(setf 5am:*debug-on-failure* nil)
 
 (def-suite all-tests
     :description "Top level test suite")
@@ -71,4 +72,8 @@ about redefining a symbol."
 
 (test *channel*-is-a-string
   "Make sure that we don't change the type without letting users know."
-  (is (stringp *channel*)))
+  (is (stringp nispbot-config::*channel*)))
+
+
+(def-suite error-handling-tests :in all-tests)
+(in-suite error-handling-tests)
