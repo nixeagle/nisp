@@ -1,6 +1,6 @@
 (defpackage #:nisp-introspect
-  (:use
-   #+sbcl :sb-introspect))
+  (:use :cl)
+  (:export #:function-lambda-list))
 
 
 (defpackage #:nispbot-config
@@ -9,4 +9,5 @@
 
 (defpackage #:nispbot
   (:use :common-lisp :irc :cl-ppcre
-        :nispbot-config))
+        :nispbot-config
+        :nisp-introspect))

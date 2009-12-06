@@ -60,8 +60,9 @@ about redefining a symbol."
   "Get a valid arglist with no errors."
   (is
    (string=
-    (nispbot::function-lambda-list-to-string "+")
-    "(&REST ARGS)"))
+    
+    "(&REST ARGS)"
+    (nispbot::function-lambda-list-to-string "+")))
   (5am:finishes
     (nispbot::function-lambda-list-to-string "1")
     "Do better then throwing an error on non-function objects"))

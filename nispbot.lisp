@@ -43,8 +43,6 @@
 
 
 (defmethod function-lambda-list-to-string ((symbol string))
-  (princ-to-string
-       (sb-introspect:function-lambda-list
-        (read-from-string symbol))))
+  (princ-to-string (function-lambda-list symbol)))
 
 

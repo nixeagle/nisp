@@ -19,7 +19,7 @@
   :serial t
   :components
   ((:file "package")
+   (:file "nisp-introspect")
    (:file "config-dist")
    (:file "config")
-   (:file "nisp-introspect")
    (:file "nispbot")))
