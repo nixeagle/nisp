@@ -1,6 +1,6 @@
 (defpackage #:nisp
   (:use :cl
-        #+fiveam :5am))
+        #+5am :5am))
 
 (defpackage #:nisp-introspect
   (:use :cl)
@@ -15,3 +15,8 @@
   (:use :common-lisp :irc :cl-ppcre
         :nispbot-config
         :nisp-introspect))
+
+(in-package :nisp)
+
+(def-suite all-tests
+    :description "Top level test suite")

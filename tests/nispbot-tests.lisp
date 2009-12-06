@@ -2,14 +2,11 @@
 
 (in-package :nispbot-tests)
 
-(def-suite all-tests
-    :description "Top level test suite")
-
 (def-suite basic-irc
-    :in all-tests
+    :in nisp::all-tests
     :description "Tests all the irc related stuff")
 
-(in-suite basic-irc)
+(in-suite nisp::basic-irc)
 
 (test (make-irc-message)
    "Testing usage of `cl-irc:make-irc-message'"
@@ -45,7 +42,7 @@
     "Do better then throwing an error on non-function objects"))
 
 
-(def-suite config-tests :in all-tests)
+(def-suite config-tests :in nisp::all-tests)
 (in-suite config-tests)
 
 (test *channel*-is-a-string
@@ -68,5 +65,5 @@
 (test invalid-string
   (is (stringp ())))
 
-(def-suite error-handling-tests :in all-tests)
+(def-suite error-handling-tests :in nisp::all-tests)
 (in-suite error-handling-tests)
