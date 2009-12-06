@@ -26,7 +26,7 @@
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
   :description "irc bot"
-                                        ;  :weakly-depends-on (:fiveam)
+  :weakly-depends-on (:fiveam)
   :depends-on (:cl-ppcre
                :cl-irc
                :nisp)

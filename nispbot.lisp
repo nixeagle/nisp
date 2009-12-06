@@ -81,9 +81,3 @@
   (5am:finishes
     (nispbot::function-lambda-list-to-string "1")
     "Do better then throwing an error on non-function objects"))
-
-(in-suite config-suite)
-
-(test *channel*-is-a-string
-  "Make sure that we don't change the type without letting users know."
-  (is (stringp nispbot-config::*channel*)))
