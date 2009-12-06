@@ -6,10 +6,11 @@
 (in-suite nisp-introspect-suite)
 
 (defgeneric function-lambda-list (symbol)
-  (:method (symbol)
-    (sb-introspect:function-lambda-list symbol))
   (:documentation
    "Return lambda list description given a string or a valid function designator."))
+
+(defmethod function-lambda-list (symbol)
+    #+sbcl (sb-introspect:function-lambda-list symbol))
 
 (defmethod function-lambda-list :around (symbol)
   "Handle errors originating from a function-lambda list call."
