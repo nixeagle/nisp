@@ -19,7 +19,6 @@
 
 
 (defsystem :nispbot
-  :version "0.0.0"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
