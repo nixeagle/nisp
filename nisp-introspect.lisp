@@ -35,9 +35,4 @@
   "Should return a lambda list of the function's arguments"
   (is (equal '(&REST SB-KERNEL::ARGS)
              (function-lambda-list "+"))
-      "+ has always worked, but this is the base case.")
-  (is (equal '(&REST SB-IMPL::ARGS)
-             (function-lambda-list "list"))
-      "list is a function, we need to read it as such.")
-  (is (stringp (function-lambda-list "1"))
-      "Not a function, invalid input"))
+      "+ has always worked, but this is the base case."))
