@@ -1,8 +1,6 @@
 
 
 (in-package :nispbot-tests)
-(setf 5am:*debug-on-error* nil)
-(setf 5am:*debug-on-failure* nil)
 
 (def-suite all-tests
     :description "Top level test suite")
