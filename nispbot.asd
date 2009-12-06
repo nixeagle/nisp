@@ -21,4 +21,5 @@
   ((:file "package")
    (:file "config-dist")
    (:file "config")
+   (:file "nisp-introspect")
    (:file "nispbot")))
