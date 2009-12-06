@@ -1,3 +1,7 @@
+(defpackage #:nisp
+  (:use :cl
+        #+fiveam :5am))
+
 (defpackage #:nisp-introspect
   (:use :cl)
   (:export #:function-lambda-list))
