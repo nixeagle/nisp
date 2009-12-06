@@ -9,15 +9,23 @@
   (:documentation
    "Return lambda list description given a string or a valid function designator."))
 
-(defmethod function-lambda-list (symbol)
-    #+sbcl (sb-introspect:function-lambda-list symbol))
-
 (defmethod function-lambda-list :around (symbol)
   "Handle errors originating from a function-lambda list call."
   (handler-case (call-next-method)
         (error ()
           (format nil "Passed input type ~A not valid extended function designator."
                   (type-of symbol)))))
+
+(defmethod function-lambda-list (symbol)
+    #+sbcl (sb-introspect:function-lambda-list symbol))
+
+(test function-lambda-list/symbol
+  "Anything other then a functionp input should return error string."
+  (is (equal '(&REST SB-KERNEL::ARGS)
+             (function-lambda-list '+)))
+  (is (stringp (function-lambda-list 1))))
+
+
 
 (defmethod function-lambda-list ((symbol string))
   "If we get a string, read it and re-call."
@@ -33,9 +41,3 @@
       "list is a function, we need to read it as such.")
   (is (stringp (function-lambda-list "1"))
       "Not a function, invalid input"))
-
-(test function-lambda-list/symbol
-  "Anything other then a functionp input should return error string."
-  (is (equal '(&REST SB-KERNEL::ARGS)
-             (function-lambda-list '+)))
-  (is (stringp (function-lambda-list 1))))
