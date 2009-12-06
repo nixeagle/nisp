@@ -1,6 +1,4 @@
 ;; system definition file
-
-
 (in-package :cl-user)
 
 (defpackage #:nispbot-system
@@ -8,18 +6,30 @@
 
 (in-package #:nispbot-system)
 
+(defsystem :nisp
+  :version "0.0.1"
+  :author "James S <dev@nixeagle.org>"
+  :maintainer "James S <dev@nixeagle.org>"
+  :license "GPLv2 or later"
+  :description "Nixeagle's random lisp experiments"
+  :weakly-depends-on (:Fiveam)
+  :serial t
+  :components ((:file "5amfix")
+               (:file "package")))
+
+
 (defsystem :nispbot
   :version "0.0.0"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
-  :license "GPLv3 or later"
+  :license "GPLv2 or later"
   :description "irc bot"
   :depends-on (:cl-ppcre
-               :cl-irc)
+               :cl-irc
+               :nisp)
   :serial t
   :components
-  ((:file "package")
-   (:file "nisp-introspect")
+  ((:file "nisp-introspect")
    (:file "config-dist")
    (:file "config")
    (:file "nispbot")))

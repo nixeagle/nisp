@@ -3,8 +3,8 @@
 (progn
   (in-package :FiveAM)
 
-  (setf 5am:*debug-on-error* nil)
-  (setf 5am:*debug-on-failure* nil)
+  (defparameter *debug-on-error* nil)
+  (defparameter *debug-on-failure* nil)
 
   (defmacro def-fixture (name args &body body)
     "Defines a fixture named NAME. A fixture is very much like a
