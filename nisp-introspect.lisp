@@ -8,8 +8,6 @@
       (handler-case
           (call-next-method)
         (error () (format nil "Passed input type ~A not valid extended function designator." (type-of symbol)))))
-
-  
   (:documentation
    "Return lambda list description given a string or a valid function
    designator."))
@@ -24,7 +22,7 @@
   (function-lambda-list (intern symbol)))
 
 (defmethod function-lambda-list ((symbol symbol))
-  (if (fboundp symbol)
-      (function-lambda-list (symbol-function symbol))
-      (error 'error symbol)))
+  (unless (fboundp symbol)
+    (error 'error symbol))
+  (function-lambda-list (symbol-function symbol)))
 
