@@ -11,7 +11,7 @@
   (join *connection* *channel*)
   (join *connection* "#bots")
   (irc:add-hook *connection* 'irc:irc-privmsg-message #'command-hook)
-  (irc:read-message-loop *connection*))
+  (irc:start-background-message-handler *connection*))
 
 (defun command-hook (message)
   "For now lets try to parse just one command"

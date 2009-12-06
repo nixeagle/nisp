@@ -24,4 +24,5 @@
 (defmethod function-lambda-list ((symbol symbol))
   (if (fboundp symbol)
       (function-lambda-list (symbol-function symbol))
-      (function-lambda-list t)))
+      (function-lambda-list (list symbol))))
+
