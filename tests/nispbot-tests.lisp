@@ -1,25 +1,4 @@
-(defpackage #:nispbot-tests
-  (:use :common-lisp
-        :fiveam
-        :nispbot)
-  (:shadowing-import-from :irc pass))
-(in-package :FiveAM)
 
-(defmacro def-fixture (name args &body body)
-  "Defines a fixture named NAME. A fixture is very much like a
-macro but is used only for simple templating. A fixture created
-with DEF-FIXTURE is a macro which can use the special macrolet
-&BODY to specify where the body should go.
-
-See Also: WITH-FIXTURE
-
-*note* that this overrides the default 5am DEF-FIXTURE. 5am's
-DEF-FIXTURE evals itself too much causing a SBCL compiler warning
-about redefining a symbol."
-  `(eval-when (:compile-toplevel :load-toplevel :execute)
-     (rem-fixture ',name)
-     (setf (get-fixture ',name) (cons ',args ',body))
-     ',name))
 
 (in-package :nispbot-tests)
 (setf 5am:*debug-on-error* nil)
@@ -75,6 +54,21 @@ about redefining a symbol."
   "Make sure that we don't change the type without letting users know."
   (is (stringp nispbot-config::*channel*)))
 
+(defpackage #:introspection-tests
+  (:use ))
+
+(def-suite introspection-tests
+    :in all-tests
+    :description "Test that introspection functions behave as they should")
+
+(def-suite function-lambda-list/suite
+    :in introspection-tests
+    :description "Verify that lambda list generation is correct.")
+
+(in-suite function-lambda-list/suite)
+
+(test invalid-string
+  (is (stringp ())))
 
 (def-suite error-handling-tests :in all-tests)
 (in-suite error-handling-tests)
