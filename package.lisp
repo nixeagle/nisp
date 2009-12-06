@@ -34,4 +34,3 @@
 
 (5am:def-suite config-suite
     :in nisp::all-tests)
-

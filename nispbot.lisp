@@ -1,5 +1,7 @@
 
 (in-package :nispbot)
+
+
 (setq *allow-named-registers* t)
 
 (defvar *connection*)
@@ -45,7 +47,7 @@
 (defmethod function-lambda-list-to-string ((symbol string))
   (princ-to-string (function-lambda-list symbol)))
 
-(in-suite basic-irc)
+(in-suite basic-irc-suite)
 
 (test (make-irc-message)
    "Testing usage of `cl-irc:make-irc-message'"
@@ -80,7 +82,7 @@
     (nispbot::function-lambda-list-to-string "1")
     "Do better then throwing an error on non-function objects"))
 
-(in-suite config-tests)
+(in-suite config-suite)
 
 (test *channel*-is-a-string
   "Make sure that we don't change the type without letting users know."
