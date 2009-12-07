@@ -8,8 +8,12 @@
 
 
 (defpackage #:nispbot-config
-  (:use :common-lisp #+5am :5am)
+  (:use :common-lisp #+5am :5am
+        )
   (:export *channel* *nickname* *eighthbit*))
+
+(defpackage #:nisp-safe
+  (:use :common-lisp #+5am :5am))
 
 (defpackage #:nispbot
   (:use :common-lisp  
@@ -35,4 +39,8 @@
 (in-package :nispbot-config)
 
 (5am:def-suite config-suite
+    :in nisp::all-tests)
+
+(in-package :nisp-safe)
+(5am:def-suite safe-suite
     :in nisp::all-tests)

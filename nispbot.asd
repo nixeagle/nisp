@@ -19,7 +19,8 @@
     :weakly-depends-on (:Fiveam)
     :serial t
     :components ((:file "5amfix")
-                 (:file "package")))
+                 (:file "package")
+                 (:file "safe")))
 
 (defsystem :nispbot
   :author "James S <dev@nixeagle.org>"
@@ -35,4 +36,5 @@
   ((:file "nisp-introspect")
    (:file "config-dist")
    (:file "config")
+   (:file "safe-scope")
    (:file "nispbot")))
