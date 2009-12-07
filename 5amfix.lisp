@@ -4,7 +4,6 @@
   (in-package :FiveAM)
 
   (setq *debug-on-error* nil)
-  (defparameter *debug-on-failure* nil)
 
   (defmacro def-fixture (name args &body body)
     "Defines a fixture named NAME. A fixture is very much like a

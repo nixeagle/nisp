@@ -2,6 +2,9 @@
   (:use :cl
         #+5am :5am))
 
+(defpackage #:nisp-asdf
+  (:use :cl #+5am :5am))
+
 (defpackage #:nisp-introspect
   (:use :cl #+5am :5am)
   (:export #:function-lambda-list))
@@ -44,3 +47,17 @@
 (in-package :nisp-safe)
 (5am:def-suite safe-suite
     :in nisp::all-tests)
+
+(in-package :nisp-asdf)
+(5am:def-suite asdf-suite
+    :in nisp::all-tests)
+
+(in-suite asdf-suite)
+
+(defun list-system-components (system-name)
+  "Given an asdf system, list all components"
+  (asdf:module-components (asdf:find-system system-name)))
+
+(test list-system-components
+  (is (listp (list-system-components :nisp))
+      "Expect a list"))
