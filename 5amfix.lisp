@@ -3,7 +3,7 @@
 (progn
   (in-package :FiveAM)
 
-  (defparameter *debug-on-error* nil)
+  (setq *debug-on-error* nil)
   (defparameter *debug-on-failure* nil)
 
   (defmacro def-fixture (name args &body body)
