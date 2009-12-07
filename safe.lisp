@@ -15,6 +15,10 @@ with this package prefix.")
 This is a cheap way to namespace packages. Better ideas welcome."
   (concatenate 'string *safe-package-prefix* name))
 
+(test format-package-name
+  "Result should be with *safe-package-prefix* prepended"
+  (is (string= "safe-test" (format-package-name "test"))))
+
 (defun make-empty-safe-package (name)
   (make-package (format-package-name name)))
 
