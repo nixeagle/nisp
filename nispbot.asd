@@ -19,6 +19,7 @@
     :weakly-depends-on (:Fiveam)
     :serial t
     :components ((:file "5amfix")
+                 (:file "main-test-suite")
                  (:file "package")
                  (:file "safe")))
 
