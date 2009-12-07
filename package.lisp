@@ -24,18 +24,19 @@
 
 (defgeneric list-system-components (systems)
   (:method (systems)
-    (check-type systems (or string keyword cons))))
+    (check-type systems (or string keyword cons)))
+  (:documentation "Return components of SYSTEM-NAME"))
 
 
 (defmethod list-system-components ((system-names cons))
-  "Given a list of asdf systems return a list of components"
   (mapcar #'list-system-components system-names))
 
 (defmethod list-system-components ((system-name symbol))
-  "Return components of SYSTEM-NAME"
   (asdf:module-components
    (asdf:find-system system-name)))
 
+(defmethod list-system-components ((system-name string))
+  (asdf:module-components (asdf:find-system system-name)))
 
 
 (test list-system-components
