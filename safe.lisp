@@ -20,7 +20,7 @@ with this package prefix.")
            (car (last (coerce *safe-package-prefix* 'list))))))
 
 (defun format-package-name (name)
-  "Take name and append a prefix.
+  "Take name and append *safe-package-prefix*
 
 This is a cheap way to namespace packages. Better ideas welcome."
   (concatenate 'string *safe-package-prefix* name))
