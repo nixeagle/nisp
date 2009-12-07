@@ -15,12 +15,6 @@
   (:use :common-lisp #+5am :5am))
 
 
-
-
-(in-package :nisp-safe)
-(5am:def-suite safe-suite
-    :in nisp::all-tests)
-
 (in-package :nisp-asdf)
 (5am:def-suite asdf-suite
     :in nisp::all-tests)

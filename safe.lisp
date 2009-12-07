@@ -5,6 +5,8 @@
 ;;; moon, its not my fault ;)
 
 (in-package :nisp-safe)
+(5am:def-suite safe-suite
+    :in nisp::all-tests)
 (in-suite safe-suite)
 
 (defvar *safe-package-prefix* "safe-"
