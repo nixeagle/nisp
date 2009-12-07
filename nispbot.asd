@@ -4,24 +4,19 @@
   (:use :cl :asdf))
 (in-package #:nispbot-system)
 
-
-
-
-
-  
-
-  (defsystem :nisp
-    :version "0.0.1"
-    :author "James S <dev@nixeagle.org>"
-    :maintainer "James S <dev@nixeagle.org>"
-    :license "GPLv2 or later"
-    :description "Nixeagle's random lisp experiments"
-    :weakly-depends-on (:Fiveam)
-    :serial t
-    :components ((:file "5amfix")
-                 (:file "main-test-suite")
-                 (:file "package")
-                 (:file "safe")))
+(defsystem :nisp
+  :version "0.0.1"
+  :author "James S <dev@nixeagle.org>"
+  :maintainer "James S <dev@nixeagle.org>"
+  :license "GPLv2 or later"
+  :description "Nixeagle's random lisp experiments"
+  :weakly-depends-on (:Fiveam)
+  :serial t
+  :components ((:file "5amfix")
+               (:file "main-test-suite")
+               (:file "package")
+               (:file "nisp-asdf")
+               (:file "safe")))
 
 (defsystem :nispbot
   :author "James S <dev@nixeagle.org>"
