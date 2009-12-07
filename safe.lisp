@@ -1,6 +1,9 @@
 ;;; The idea here is to do safe evaluation by reading using alternate
 ;;; packages
 
+;;; Please note this code is highly experimental, if it blows up the
+;;; moon, its not my fault ;)
+
 (in-package :nisp-safe)
 (in-suite safe-suite)
 
