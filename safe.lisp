@@ -13,6 +13,11 @@
   "All packages created for holding known safe code are stored
 with this package prefix.")
 
+(test *safe-package-prefix*
+  "Should be a string with a trailing -"
+  (is (stringp *safe-package-prefix*))
+  (is (eql #\-
+           (car (last (coerce *safe-package-prefix* 'list))))))
 
 (defun format-package-name (name)
   "Take name and append a prefix.
