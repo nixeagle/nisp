@@ -40,10 +40,23 @@
 
 (in-suite asdf-suite)
 
-(defun list-system-components (system-name)
-  "Given an asdf system, list all components"
-  (asdf:module-components (asdf:find-system system-name)))
+(defgeneric list-system-components (systems)
+  (:method (systems)
+    (error 'type-error :datum systems)))
+
+(defmethod list-system-components ((system-names cons))
+  "Given a list of asdf systems return a list of components"
+  (mapcan #'list-system-components system-names))
+
+(defmethod list-system-components ((system-name symbol))
+  "Return components of SYSTEM-NAME"
+  (asdf:module-components
+   (asdf:find-system system-name)))
+
+
 
 (test list-system-components
   (is (listp (list-system-components :nisp))
-      "Expect a list"))
+      "Expect a list")
+  (is (listp (list-system-components '(:nisp :nispbot)))
+      "Should be able to take more then one arg."))
