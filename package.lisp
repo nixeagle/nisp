@@ -1,5 +1,3 @@
-
-
 (defpackage #:nisp-asdf
   (:use :cl #+5am :5am))
 
@@ -18,12 +16,6 @@
 
 
 
-(in-package :nisp)
-
-(in-package :nispbot-config)
-
-(5am:def-suite config-suite
-    :in nisp::all-tests)
 
 (in-package :nisp-safe)
 (5am:def-suite safe-suite
