@@ -94,3 +94,12 @@
   (5am:finishes
     (nispbot::function-lambda-list-to-string "1")
     "Do better then throwing an error on non-function objects"))
+
+(defpackage #:nispbot-basic-commands
+  (:use :cl #+ :5am :nispbot))
+(in-package :nispbot-basic-commands)
+
+(5am:def-suite basic-command-suite
+    :in nispbot::basic-irc-suite)
+
+(5am:in-suite basic-command-suite)
