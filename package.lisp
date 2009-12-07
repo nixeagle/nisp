@@ -18,26 +18,12 @@
 (defpackage #:nisp-safe
   (:use :common-lisp #+5am :5am))
 
-(defpackage #:nispbot
-  (:use :common-lisp  
-        :nisp
-        #+5am :5am
-        :cl-irc :cl-ppcre
-       
-        :nispbot-config
-        :nisp-introspect)
-  (:shadowing-import-from :cl-irc :pass))
+
 
 (in-package :nisp)
 
 (5am:def-suite all-tests
     :description "Top level test suite")
-
-(in-package :nispbot)
-
-(5am:def-suite basic-irc-suite
-    :in nisp::all-tests
-    :description "Tests all the irc related stuff")
 
 (in-package :nispbot-config)
 
