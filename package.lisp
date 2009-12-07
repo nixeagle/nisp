@@ -27,7 +27,6 @@
     (check-type systems (or string keyword cons)))
   (:documentation "Return components of SYSTEM-NAME"))
 
-
 (defmethod list-system-components ((system-names cons))
   (mapcar #'list-system-components system-names))
 
@@ -45,7 +44,11 @@
   (is (listp (list-system-components '(:nisp :nispbot)))
       "Should be able to take more then one arg.")
   (signals (simple-type-error) (list-system-components 1))
-  (signals (simple-type-error) (list-system-components nil))
+  (signals (asdf::missing-component) (list-system-components nil)
+           "Nil has nothing we are interested in.")
+  (signals
+      (asdf::missing-component)
+    (list-system-components :this-does-not-exist-as-a-package))
   (is (listp (list-system-components "nisp"))))
  
 
