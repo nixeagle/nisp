@@ -122,8 +122,13 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!"))
 (defmacro with-safe-readtable (&body body)
   "Use readtable for all read calls in body.If readtable is not passed,
 we default to instantiating a new one using make-readtable"
-  `(let ((*readtable* ,(make-readtable)))
+  `(let ((*readtable* *safe-readtable*))
      ,@body))
+
+(test (with-safe-readtable :depends-on *safe-readtable*)
+  (with-safe-readtable
+    (is (eq *readtable* *safe-readtable*)
+        "Make sure that inside this form *readtable* is set to *safe-readtable*")))
 
 ;;; Moving this down here for now after make-readtable is defined
 ;;; because this depends on that function being defined.
