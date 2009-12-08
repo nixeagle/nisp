@@ -20,7 +20,8 @@
    (:file "nisp-asdf")
    (:module "random"
             :components
-            ((:file "random")))
+            ((:file "defconstant")
+             (:file "random")))
    (:file "safe")))
 
 (defsystem :nispbot

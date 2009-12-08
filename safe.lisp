@@ -19,6 +19,10 @@ with this package prefix.")
   (is (eql #\-
            (car (last (coerce *safe-package-prefix* 'list))))))
 
+(nisp-util::define-constant  +base-empty-packages+
+    '(:nisp-safe-alpha :nisp-safe-beta :nisp-safe-general)
+  "Base safe packages as far as development goes.")
+
 (defun format-package-name (name)
   "Take name and append *safe-package-prefix*
 
@@ -40,3 +44,12 @@ This is a cheap way to namespace packages. Better ideas welcome."
 
 (test (delete-safe-package :depends-on create-empty-safe-package)
   (is-true (delete-safe-package "safe-test1")))
+
+(defun make-empty-base-packages ()
+  "Using the packages named in +base-empty-packages+ create a set of
+packages that are empty for development experimentation."
+  (mapc #'make-empty-safe-package +base-empty-packages+))
+
+(defun delete-base-packages ()
+  "Undo the actions of make-empty-base-packages."
+  (mapc #'delete-safe-package +base-empty-packages+))
