@@ -69,4 +69,16 @@ packages that are empty for development experimentation."
   (delete-base-packages))
 
 (test (safe-read-with-colons :fixture base-package-fixture)
-  (is (not (fboundp (read-using-package "safe-nisp-safe-alpha" "cl::+")))))
+  (is (not (fboundp (read-using-package "safe-nisp-safe-alpha" "cl::+")))
+      "IF YOU SEE THIS:: DO NOT EVEN THINK ABOUT IGNORING IT!
+
+This message means that a function outside of a socalled 'safe' package
+was accessed. This test does the following:
+
+1) create an empty package, eg one with no internal symbols
+2) runs read-from-string using the package as the *PACKAGE* variable.
+3) reads the following string \"cl::+\".
+4) If cl::+ is an fbound symbol a critical assumption failed
+   or a regression has occured.
+
+AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!"))
