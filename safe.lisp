@@ -20,7 +20,7 @@ with this package prefix.")
            (car (last (coerce *safe-package-prefix* 'list))))))
 
 (nisp-util::define-constant  +base-empty-packages+
-    '(:nisp-safe-alpha :nisp-safe-beta :nisp-safe-general)
+    '("nisp-safe-alpha" "nisp-safe-beta" "nisp-safe-general")
   "Base safe packages as far as development goes.")
 
 (defun format-package-name (name)
@@ -56,3 +56,17 @@ packages that are empty for development experimentation."
 (defun delete-base-packages ()
   "Undo the actions of make-empty-base-packages."
   (mapc #'delete-safe-package +base-empty-packages+))
+
+(defun read-using-package (name string)
+  "read STRING using package NAME."
+  (let ((*package* (find-package name)))
+    (read-from-string string)))
+
+(5am:def-fixture base-package-fixture ()
+  (delete-base-packages)
+  (make-empty-base-packages)
+  (&body)
+  (delete-base-packages))
+
+(test (safe-read-with-colons :fixture base-package-fixture)
+  (is (not (fboundp (read-using-package "safe-nisp-safe-alpha" "cl::+")))))
