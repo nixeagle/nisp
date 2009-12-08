@@ -15,10 +15,18 @@ CLOS style.")
   "The network to connect to. Currently we can connect only
 to one network at a time. This is a bug and will be fixed.")
 
-(defparameter *channel* "#lisp, #bots"
-  "The channel to join after connecting. The format of this
+(defparameter *channel* nil
+  "DEPRECIATED: The channel to join after connecting. The format of this
 is subject to change pretty soon.")
 
-(test *channel*-is-a-string
-  "Make sure that we don't change the type without letting users know."
-  (is (stringp nispbot-config::*channel*)))
+(defparameter *channels* '("#chan1"  "#chan2" "chan3")
+  "Default list of channels to join on connection. When the bot goes
+  object orianted this will follow, but no matter what it will remain a
+  list in the simplest case.")
+
+(test *channel*-is-nil
+  "Please use *channels* which is currently a list of strings. *channel is depreciated."
+  (is (eq nil *channel*)))
+
+(test *channels*-is-a-list
+  (is (listp *channels*)))

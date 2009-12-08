@@ -23,10 +23,20 @@
   "Simple connection function for basic testing."
   (set '*connection* (connect :nickname *nickname*
                              :server *eighthbit*))
-  (join *connection* *channel*)
-  (join *connection* "#bots")
+  (when (stringp *channel*)
+      (warn "*channel* will be removed in a future release. Please use *channels*")
+      (join *connection* *channel*))
+  (join-all-channels)
   (irc:add-hook *connection* 'irc:irc-privmsg-message #'command-hook)
   (irc:start-background-message-handler *connection*))
+
+(defun join-all-channels ()
+  "Join all channels in *channels*. Later we will expand this to work
+for any arbitrary connection or list of channels."
+  (mapc
+   (lambda (channel)
+     (join *connection* channel))
+   nispbot-config::*channels*))
 
 (defun command-hook (message)
   "For now lets try to parse just one command"

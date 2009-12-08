@@ -19,7 +19,6 @@
    (:file "package")
    (:file "nisp-asdf")
    (:module "random"
-            
             :components
             ((:file "random")))
    (:file "safe")))
