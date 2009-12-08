@@ -37,7 +37,10 @@ This is a cheap way to namespace packages. Better ideas welcome."
   (make-package (format-package-name name)))
 
 (defun delete-safe-package (name)
-  (delete-package (format-package-name name)))
+  "Delete package NAME unless its already deleted."
+  (let ((safe-package-name (format-package-name name)))
+    (when (packagep (find-package safe-package-name))
+      (delete-package safe-package-name))))
 
 (test create-empty-safe-package
   (is (packagep (make-empty-safe-package "safe-test1"))))
