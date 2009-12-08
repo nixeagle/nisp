@@ -11,12 +11,18 @@
   :license "GPLv2 or later"
   :description "Nixeagle's random lisp experiments"
   :weakly-depends-on (:Fiveam)
+  :depends-on (:cl-ppcre)
   :serial t
-  :components ((:file "5amfix")
-               (:file "main-test-suite")
-               (:file "package")
-               (:file "nisp-asdf")
-               (:file "safe")))
+  :components
+  ((:file "5amfix")
+   (:file "main-test-suite")
+   (:file "package")
+   (:file "nisp-asdf")
+   (:module "random"
+            
+            :components
+            ((:file "random")))
+   (:file "safe")))
 
 (defsystem :nispbot
   :author "James S <dev@nixeagle.org>"

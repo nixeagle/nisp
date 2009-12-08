@@ -96,7 +96,8 @@
     "Do better then throwing an error on non-function objects"))
 
 (defpackage #:nispbot-basic-commands
-  (:use :cl #+ :5am :nispbot))
+  (:use :cl #+5am :5am :nispbot))
+
 (in-package :nispbot-basic-commands)
 
 (5am:def-suite basic-command-suite
