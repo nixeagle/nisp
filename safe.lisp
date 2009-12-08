@@ -1,6 +1,9 @@
 ;;; The idea here is to do safe evaluation by reading using alternate
 ;;; packages
-
+;;;
+;;; This is not _intended_ for use by anyone anywhere other then the author.
+;;; the package is still very incomplete and untested.
+;;;
 ;;; Please note this code is highly experimental, if it blows up the
 ;;; moon, its not my fault ;)
 
@@ -91,8 +94,10 @@ packages that are empty for development experimentation."
 (5am:def-fixture base-package-fixture ()
   (delete-base-packages)
   (make-empty-base-packages)
-  (&body)
-  (delete-base-packages))
+  (prog1
+      (let ((*readtable* (make-readtable)))
+        (&body))
+    (delete-base-packages)))
 
 (test (safe-read-with-colons :fixture base-package-fixture)
   (is (not (fboundp (read-using-package "safe-alpha" "cl::+")))
