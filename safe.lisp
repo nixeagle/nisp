@@ -113,3 +113,28 @@ was accessed. This test does the following:
    or a regression has occured.
 
 AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!"))
+
+(defmacro with-package (package &body body)
+  "Evaluate body in the context of package-name."
+  `(let ((*package* (find-package ,package)))
+     ,@body))
+
+(defmacro with-safe-readtable (&body body)
+  "Use readtable for all read calls in body.If readtable is not passed,
+we default to instantiating a new one using make-readtable"
+  `(let ((*readtable* ,(make-readtable)))
+     ,@body))
+
+;;; Moving this down here for now after make-readtable is defined
+;;; because this depends on that function being defined.
+(defparameter *safe-readtable* (make-readtable)
+  "The safe readtable that is used by the with-safe-readtable macro.
+
+This is currently a parameter but should be made into a constant at some
+point so a warning or error can block it being changed in a running
+program.")
+
+(test (*safe-readtable* :depends-on (and make-readtable))
+  "Make sure we get a readtable."
+  (is (readtablep *safe-readtable*)
+      "Should be a readtable, nothing else"))
