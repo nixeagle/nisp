@@ -20,7 +20,7 @@ with this package prefix.")
            (car (last (coerce *safe-package-prefix* 'list))))))
 
 (nisp-util::define-constant  +base-empty-packages+
-    '("nisp-safe-alpha" "nisp-safe-beta" "nisp-safe-general")
+    '("alpha" "beta" "general")
   "Base safe packages as far as development goes.")
 
 (defun format-package-name (name)
@@ -69,7 +69,7 @@ packages that are empty for development experimentation."
   (delete-base-packages))
 
 (test (safe-read-with-colons :fixture base-package-fixture)
-  (is (not (fboundp (read-using-package "safe-nisp-safe-alpha" "cl::+")))
+  (is (not (fboundp (read-using-package "safe-alpha" "cl::+")))
       "IF YOU SEE THIS:: DO NOT EVEN THINK ABOUT IGNORING IT!
 
 This message means that a function outside of a socalled 'safe' package
