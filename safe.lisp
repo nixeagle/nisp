@@ -62,6 +62,20 @@ packages that are empty for development experimentation."
   (let ((*package* (find-package name)))
     (read-from-string string)))
 
+(defun colon-reader (stream char)
+  "Signal an error if a colon is used to access another package."
+  (declare (ignore stream char))
+  ;; For now we just error out. This is a safe thing to do as far as
+  ;; disabling package access goes, but in the process use of : is
+  ;; broken for :keywords and possibly other things too.
+  (error "Accessing packages outside of the current one is disabled."))
+
+(test colon-reader
+  (signals (simple-error)
+    ;; This is not even remotely correct arguments passed, the point is
+    ;; to verify that we send an error
+    (colon-reader nil nil)))
+
 (5am:def-fixture base-package-fixture ()
   (delete-base-packages)
   (make-empty-base-packages)
