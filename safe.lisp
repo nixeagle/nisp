@@ -76,6 +76,18 @@ packages that are empty for development experimentation."
     ;; to verify that we send an error
     (colon-reader nil nil)))
 
+(defun make-readtable ()
+  "Create readtable that prevents any syntax that can cause a package
+  change."
+  (let ((*readtable* (copy-readtable nil)))
+    (set-macro-character #\: #'colon-reader nil *readtable*)
+    *readtable*))
+
+(test make-readtable
+  (let ((*readtable* (make-readtable)))
+    (is (functionp (get-macro-character #\:))
+        "Created read table should have a function bound to #\\\:")))
+
 (5am:def-fixture base-package-fixture ()
   (delete-base-packages)
   (make-empty-base-packages)
