@@ -243,3 +243,16 @@ This is mostly motivated for use in test cases."
          (setq name (package-name *package*))
          (prog1 (multiple-value-list ,@body)
            (delete-package name))))))
+
+(test (with-empty-package :depends-on (and gen-empty-package))
+  "No two invokations of this macro should ever provide the same package."
+  (is (not (packagep (with-empty-package
+                        *package*)))
+      "Returned (deleted) package will be nil according to packagep. If
+this returns an undeleted function then we did not do the cleanup work
+properly")
+  (with-empty-package
+    (nisp-safe::is
+     (= 0 (nisp-util::count-symbols))
+     "A package should have 0 symbols on creation.")))
+
