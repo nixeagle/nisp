@@ -198,18 +198,23 @@ MAKE-PACKAGE with no arguments implentation defined."
           "A package is not empty if it has more then 0 elements."))))
 
 
-;;; Close over gen-empty-package so we know that the generated package
-;;; will always be unique and never clash with any other package.
-(let ((id 0))
-  (defun gen-empty-package (&optional prefix)
+;;;; Generate an empty package.
+;;; Please note this used to be a closure, but it is now defined as a
+;;; global internal variable as the closure gets reset when the lisp
+;;; file gets recompiled. Ideas or advice on how to have a closure set
+;;; itself only once and never reset are welcome.
+(defvar *empty-package-counter* 0
+  "Internal global variable to increment the ids instead of using a
+  closure as a closure gets reset whenever a file gets re-compiled.")
+
+(defun gen-empty-package (&optional prefix)
     "Generate and return a package with a unique name prefixed by an integer
 
 If prefix is not supplied, default to G-SAFE-"
     (let ((prefix (or prefix "G-SAFE-")))
       (make-empty-package
        (concatenate 'string
-                    prefix (write-to-string (incf id)))))))
-
+                    prefix (write-to-string (incf *empty-package-counter*))))))
 
 (test (gen-empty-package :depends-on (and make-empty-package))
   "Generating an empty package should always give us a new package. If
