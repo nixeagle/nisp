@@ -237,7 +237,7 @@ This is mostly motivated for use in test cases."
 (def-suite empty-packages
     :in safe-suite
     :description "Tests related to empty packages")
-(in-suite empty-package)
+(in-suite empty-packages)
 
 (test make-empty-package
   "Package returned should have nothing in it"
