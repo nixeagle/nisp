@@ -184,19 +184,6 @@ have to do this because the ansi standard leaves what to do with
 MAKE-PACKAGE with no arguments implentation defined."
   (make-package name :use 'nil))
 
-(test make-empty-package
-  "Package returned should have nothing in it"
-  ;; package name is intentionally long and mixed case. Doing so means
-  ;; no chance of colliding with some other package.
-  (let ((empty-name "safe-SoMe-Long-paKAGeName"))
-    (when (packagep (find-package empty-name))
-      (delete-package empty-name))
-    (let ((empty-package (make-empty-package empty-name)))
-      (is (packagep empty-package)
-          "A package is expected, even if its not empty. (base assumption)")
-      (is (= 0 (nisp-util::count-symbols empty-name))
-          "A package is not empty if it has more then 0 elements."))))
-
 
 ;;;; Generate an empty package.
 ;;; Please note this used to be a closure, but it is now defined as a
@@ -251,6 +238,19 @@ This is mostly motivated for use in test cases."
     :in safe-suite
     :description "Tests related to empty packages")
 (in-suite empty-package)
+
+(test make-empty-package
+  "Package returned should have nothing in it"
+  ;; package name is intentionally long and mixed case. Doing so means
+  ;; no chance of colliding with some other package.
+  (let ((empty-name "safe-SoMe-Long-paKAGeName"))
+    (when (packagep (find-package empty-name))
+      (delete-package empty-name))
+    (let ((empty-package (make-empty-package empty-name)))
+      (is (packagep empty-package)
+          "A package is expected, even if its not empty. (base assumption)")
+      (is (= 0 (nisp-util::count-symbols empty-name))
+          "A package is not empty if it has more then 0 elements."))))
 
 (test (with-empty-package :depends-on (and gen-empty-package))
   "No two invokations of this macro should ever provide the same
