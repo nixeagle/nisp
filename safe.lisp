@@ -119,6 +119,16 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!"))
   `(let ((*package* (find-package ,package)))
      ,@body))
 
+(test with-package
+  (is (eq #'asdf:oos
+          (with-package "ASDF"
+            (symbol-function (read-from-string "oos"))))
+      "Needs to return the symbol internal to asdf")
+  (is (eq #'asdf:oos
+          (with-package :asdf
+            (symbol-function (read-from-string "oos"))))
+      "Needs to return the symbol internal to safe-alpha"))
+
 (defmacro with-safe-readtable (&body body)
   "Use readtable for all read calls in body.If readtable is not passed,
 we default to instantiating a new one using make-readtable"
