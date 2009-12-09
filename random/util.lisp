@@ -17,4 +17,8 @@ If NAME is not given assume *package* instead"
             collect s))))
 
 (test count-symbols
-  (is (<= 0 (count-symbols :nisp-util))))
+  (let ((i (count-symbols :nisp-util)))
+    (is (integerp i)
+        "A count means an integer")
+    (is (<= 0 i)
+        "A negative symbol count makes no sense")))
