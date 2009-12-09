@@ -204,15 +204,20 @@ MAKE-PACKAGE with no arguments implentation defined."
   (defun gen-empty-package (&optional prefix)
     "Generate and return a package with a unique name prefixed by an integer
 
-If prefix is not supplied, default to G-SAFE-" 
+If prefix is not supplied, default to G-SAFE-"
     (let ((prefix (or prefix "G-SAFE-")))
-      prefix)))
+      (make-empty-package
+       (concatenate 'string
+                    prefix (write-to-string (incf id)))))))
+
 
 (test (gen-empty-package :depends-on (and make-empty-package))
   "Generating an empty package should always give us a new package. If
 at any time we are able to generate a package collision a bug has been
 found."
   ;; test fails, not implemented
-  (is (not (eq (gen-empty-package) (gen-empty-package)))
-      "Should not get the same object from two different calls to
-gen-empty-package"))
+  (let ((package1 (gen-empty-package))
+        (package2 (gen-empty-package)))
+    (is (not (eq package1 package2))
+        "Should not get the same object from two different calls to
+gen-empty-package")))
