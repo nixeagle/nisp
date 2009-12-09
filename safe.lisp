@@ -167,6 +167,14 @@ program.")
                                       with-package))
   )
 
+
+;;;; General purpose interface to making new packages
+;;;The basic idea with this is to make a package that has nothing in it,
+;;;and to be able to make these packages without specifying a name every
+;;;time we make one. This property is useful for tests as well as for
+;;;making a new empty package on user request. Some examples of use
+;;;include giving each 'user' their own namespace so experiments by one
+;;;user will not cause clashes by experiments of the other.
 (defun make-empty-package (name)
   "Create an empty package called NAME.
 
