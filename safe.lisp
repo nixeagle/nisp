@@ -239,9 +239,8 @@ This is mostly motivated for use in test cases."
      (block block-name
        (progn
          (setq name (package-name *package*))
-         (prog1 (multiple-value-list ,@body)
+         (prog1 ,@body
            (delete-package name))))))
-
 (test (with-empty-package :depends-on (and gen-empty-package))
   "No two invokations of this macro should ever provide the same
 package."
