@@ -156,3 +156,13 @@ program.")
   "Make sure we get a readtable."
   (is (readtablep *safe-readtable*)
       "Should be a readtable, nothing else"))
+
+(defmacro with-safe-package (name &body body)
+  `(with-package ,(format-package-name name)
+     (with-safe-readtable
+       ,@body)))
+
+(test (with-safe-package :depends-on (and
+                                      with-safe-readtable
+                                      with-package))
+  )
