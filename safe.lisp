@@ -166,3 +166,25 @@ program.")
                                       with-safe-readtable
                                       with-package))
   )
+
+(defun make-empty-package (name)
+  "Create an empty package called NAME.
+
+This is just a wrapper around (make-package) with extra arguments to
+ensure the generated package really is empty on all implentations. We
+have to do this because the ansi standard leaves what to do with
+MAKE-PACKAGE with no arguments implentation defined."
+  (make-package name :use 'nil))
+
+(test make-empty-package
+  "Package returned should have nothing in it"
+  ;; package name is intentionally long and mixed case. Doing so means
+  ;; no chance of colliding with some other package.
+  (let ((empty-name "safe-SoMe-Long-paKAGeName"))
+    (when (packagep (find-package empty-name))
+      (delete-package empty-name))
+    (let ((empty-package (make-empty-package empty-name)))
+      (is (packagep empty-package)
+          "A package is expected, even if its not empty. (base assumption)")
+      (is (= 0 (nisp-util::count-symbols empty-name))
+          "A package is not empty if it has more then 0 elements."))))
