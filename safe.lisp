@@ -241,14 +241,11 @@ This is mostly motivated for use in test cases."
          (setq name (package-name *package*))
          (prog1 ,@body
            (delete-package name))))))
+
 (test (with-empty-package :depends-on (and gen-empty-package))
   "No two invokations of this macro should ever provide the same
 package."
-  (is (not (packagep (with-empty-package
-                        *package*)))
-      "Returned (deleted) package will be nil according to packagep. If
-this returns an undeleted function then we did not do the cleanup work
-properly")
+  
   (with-empty-package
     (nisp-safe::is
      (= 0 (nisp-util::count-symbols))
@@ -261,3 +258,13 @@ properly")
               (with-empty-package
                 (values '1 'a))))
       "Multiple value returns are valid."))
+
+;;; Right now this test fails to detect the condition it is looking
+;;; for. Right now I do not see any portable way to verify that a
+;;; package has actually been deleted
+(test (with-empty-package/is-deleted :depends-on (and gen-empty-package))
+  (is (not (packagep (with-empty-package
+                        *package*)))
+      "Returned (deleted) package will be nil according to packagep. If
+this returns an undeleted function then we did not do the cleanup work
+properly"))
