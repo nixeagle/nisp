@@ -16,13 +16,14 @@
   :components
   ((:file "5amfix")
    (:file "main-test-suite")
-   (:file "package")
-   (:file "nisp-asdf")
    (:module "random"
             :components
-            ((:file "util")
+            ((:file "package")
+             (:file "util")
              (:file "defconstant")
              (:file "random")))
+   (:file "package")
+   (:file "nisp-asdf")
    (:file "safe")))
 
 (defsystem :nispbot
