@@ -252,23 +252,6 @@ This is mostly motivated for use in test cases."
       (is (= 0 (nisp-util::count-symbols empty-name))
           "A package is not empty if it has more then 0 elements."))))
 
-(test (with-empty-package :depends-on (and gen-empty-package))
-  "No two invokations of this macro should ever provide the same
-package."
-  
-  (with-empty-package
-    (nisp-safe::is
-     (= 0 (nisp-util::count-symbols))
-     "A package should have 0 symbols on creation."))
-  (is (= 3 (with-empty-package
-             (+ 1 2)))
-      "Should return 3, not (3) or an error.")
-  (is (equal '(1 a)
-             (multiple-value-list
-              (with-empty-package
-                (values '1 'a))))
-      "Multiple value returns are valid."))
-
 ;;; Right now this test fails to detect the condition it is looking
 ;;; for. Right now I do not see any portable way to verify that a
 ;;; package has actually been deleted
@@ -276,5 +259,24 @@ package."
   "Returned (deleted) package will be nil according to packagep. If
 this returns an undeleted function then we did not do the cleanup work
 properly"
-  (is (not (packagep (with-empty-package
-                       *package*)))))
+  (is (not (packagep
+            (with-empty-package *package*)))))
+
+(test (with-empty-package :depends-on (and gen-empty-package))
+  "Expect 0 symbols in an empty package."
+  (with-empty-package
+    (is (= 0 (nisp-util::count-symbols)))))
+
+(test (multiple-return-values :depends-on (and gen-empty-package))
+  "Calling with empty package should not change what is returned from
+the function. All return values need to be preserved."
+  (is (equal '(1 a)
+             (multiple-value-list
+              (with-empty-package
+                (values '1 'a))))))
+
+(test (single-return-value :depends-on (and gen-empty-package))
+  "We don't want to break the simple cases. If a function returns 3, we
+expect 3 no more and no less. (3) or an error is not acceptable."
+  (is (= 3 (with-empty-package
+             3))))
