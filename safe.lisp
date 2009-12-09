@@ -235,9 +235,7 @@ package after the body is done executing.
 
 This is mostly motivated for use in test cases."
   `(let* ((name (gensym))
-          (block-name (gensym))
-          (*package* (gen-empty-package))
-          (ret (gensym)))
+          (*package* (gen-empty-package)))
      (block block-name
        (progn
          (setq name (package-name *package*))
