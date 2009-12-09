@@ -247,6 +247,11 @@ This is mostly motivated for use in test cases."
          (prog1 ,@body
            (delete-package name))))))
 
+(def-suite empty-packages
+    :in safe-suite
+    :description "Tests related to empty packages")
+(in-suite empty-package)
+
 (test (with-empty-package :depends-on (and gen-empty-package))
   "No two invokations of this macro should ever provide the same
 package."
