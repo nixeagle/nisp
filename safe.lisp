@@ -221,3 +221,25 @@ found."
     (is (not (eq package1 package2))
         "Should not get the same object from two different calls to
 gen-empty-package")))
+
+;;; I've chosen to name this 'with-empty-package' and not
+;;; 'with-temp-empty-package' as it is implied that the package is
+;;; temporary given there are no other arguments to the macro other then
+;;; the body forms. There is no real good way for passed body forms to
+;;; get the name of the package other then to wrap the macro around in a
+;;; let form or some other method of passing the package name from
+;;; inside the macro outside of it.
+(defmacro with-empty-package (&body body)
+  "Run body with *package* set to an empty package and remove the
+package after the body is done executing.
+
+This is mostly motivated for use in test cases."
+  `(let* ((name (gensym))
+          (block-name (gensym))
+          (*package* (gen-empty-package))
+          (ret (gensym)))
+     (block block-name
+       (progn
+         (setq name (package-name *package*))
+         (prog1 (multiple-value-list ,@body)
+           (delete-package name))))))
