@@ -20,7 +20,8 @@
    (:file "nisp-asdf")
    (:module "random"
             :components
-            ((:file "defconstant")
+            ((:file "util")
+             (:file "defconstant")
              (:file "random")))
    (:file "safe")))
 
