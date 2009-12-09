@@ -272,9 +272,9 @@ package."
 ;;; Right now this test fails to detect the condition it is looking
 ;;; for. Right now I do not see any portable way to verify that a
 ;;; package has actually been deleted
-(test (with-empty-package/is-deleted :depends-on (and gen-empty-package))
-  (is (not (packagep (with-empty-package
-                        *package*)))
-      "Returned (deleted) package will be nil according to packagep. If
+(test (is-deleted :depends-on (and gen-empty-package))
+  "Returned (deleted) package will be nil according to packagep. If
 this returns an undeleted function then we did not do the cleanup work
-properly"))
+properly"
+  (is (not (packagep (with-empty-package
+                       *package*)))))
