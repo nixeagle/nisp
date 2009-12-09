@@ -230,8 +230,9 @@ This is mostly motivated for use in test cases."
           (*package* (gen-empty-package)))
      (progn
        (setq name (package-name *package*))
-       (prog1 ,@body
-         (delete-package name)))))
+       (apply #'values
+              (prog1 (multiple-value-list ,@body)
+                (delete-package name))))))
 
 (def-suite empty-packages
     :in safe-suite
