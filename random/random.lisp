@@ -4,18 +4,21 @@
 
 ;;; source taken from swank and modified to do what I wanted to do.
 
-(defun nisp-pprint-eval (string)
+(defun nisp-pprint-eval (string &optional extra)
   (swank::with-buffer-syntax ()
-    (let* ((5am:*run-test-when-defined* t)
+    (let* ((5am:*run-test-when-defined* extra)
            (stand (make-string-output-stream))
            (trace (make-string-output-stream))
+           (err (make-string-output-stream))
            (*standard-output* stand)
            (*trace-output* trace)
+           (*error-output* err)
            (form (read-from-string string))
            (values (multiple-value-list
                     (eval form))))
       (list string
             (get-output-stream-string stand)
+            (get-output-stream-string err)
             (get-output-stream-string trace)
             (nisp-pprint values)))))
 
