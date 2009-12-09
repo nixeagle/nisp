@@ -228,11 +228,10 @@ package after the body is done executing.
 This is mostly motivated for use in test cases."
   `(let* ((name (gensym))
           (*package* (gen-empty-package)))
-     (block block-name
-       (progn
-         (setq name (package-name *package*))
-         (prog1 ,@body
-           (delete-package name))))))
+     (progn
+       (setq name (package-name *package*))
+       (prog1 ,@body
+         (delete-package name)))))
 
 (def-suite empty-packages
     :in safe-suite
