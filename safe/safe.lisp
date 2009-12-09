@@ -234,6 +234,8 @@ This is mostly motivated for use in test cases."
               (prog1 (multiple-value-list ,@body)
                 (delete-package name))))))
 
+
+;;;; Handle creating empty packages.
 (def-suite empty-packages
     :in safe-suite
     :description "Tests related to empty packages")
