@@ -6,7 +6,8 @@
 
 (defun nisp-pprint-eval (string)
   (swank::with-buffer-syntax ()
-    (let* ((stand (make-string-output-stream))
+    (let* ((5am:*run-test-when-defined* t)
+           (stand (make-string-output-stream))
            (trace (make-string-output-stream))
            (*standard-output* stand)
            (*trace-output* trace)
