@@ -37,7 +37,10 @@ This is a cheap way to namespace packages. Better ideas welcome."
   (is (string= "safe-test" (format-package-name "test"))))
 
 (defun make-empty-safe-package (name)
-  (make-package (format-package-name name)))
+  (make-package (format-package-name name) :use 'nil))
+
+(test make-empty-safe-package
+  (is (packagep (make-empty-safe-package "test1"))))
 
 (defun delete-safe-package (name)
   "Delete package NAME unless its already deleted."
@@ -45,11 +48,8 @@ This is a cheap way to namespace packages. Better ideas welcome."
     (when (packagep (find-package safe-package-name))
       (delete-package safe-package-name))))
 
-(test create-empty-safe-package
-  (is (packagep (make-empty-safe-package "safe-test1"))))
-
-(test (delete-safe-package :depends-on create-empty-safe-package)
-  (is-true (delete-safe-package "safe-test1")))
+(test (delete-safe-package :depends-on make-empty-safe-package)
+  (is-true (delete-safe-package "test1")))
 
 (defun make-empty-base-packages ()
   "Using the packages named in +base-empty-packages+ create a set of
