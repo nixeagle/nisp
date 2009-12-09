@@ -243,7 +243,8 @@ This is mostly motivated for use in test cases."
            (delete-package name))))))
 
 (test (with-empty-package :depends-on (and gen-empty-package))
-  "No two invokations of this macro should ever provide the same package."
+  "No two invokations of this macro should ever provide the same
+package."
   (is (not (packagep (with-empty-package
                         *package*)))
       "Returned (deleted) package will be nil according to packagep. If
@@ -252,5 +253,12 @@ properly")
   (with-empty-package
     (nisp-safe::is
      (= 0 (nisp-util::count-symbols))
-     "A package should have 0 symbols on creation.")))
-
+     "A package should have 0 symbols on creation."))
+  (is (= 3 (with-empty-package
+             (+ 1 2)))
+      "Should return 3, not (3) or an error.")
+  (is (equal '(1 a)
+             (multiple-value-list
+              (with-empty-package
+                (values '1 'a))))
+      "Multiple value returns are valid."))
