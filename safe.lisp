@@ -120,6 +120,9 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!"))
      ,@body))
 
 (test with-package
+  ;; We have repeated with package stuff, this should be done better but
+  ;; the point is to verify that both ASDF and :asdf work. We know that
+  ;; "asdf" won't work because that implies |asdf| (case sensitivity).
   (is (eq #'asdf:oos
           (with-package "ASDF"
             (symbol-function (read-from-string "oos"))))
