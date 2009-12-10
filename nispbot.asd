@@ -11,7 +11,8 @@
   :license "GPLv2 or later"
   :description "Nixeagle's random lisp experiments"
   :weakly-depends-on (:Fiveam)
-  :depends-on (:cl-ppcre)
+  :depends-on (:cl-ppcre
+               :lift)
   :serial t
   :components
   ((:file "5amfix")
@@ -36,7 +37,8 @@
   :license "GPLv2 or later"
   :description "irc bot"
   :weakly-depends-on (:fiveam)
-  :depends-on (:cl-ppcre
+  :depends-on (
+               :cl-ppcre
                :cl-irc
                :nisp)
   :serial t

@@ -8,6 +8,8 @@
 ;;; moon, its not my fault ;)
 
 (in-package :nisp-safe)
+(def-suite safe-suite
+    :in nisp::all-tests)
 (in-suite safe-suite)
 
 (defvar *safe-package-prefix* "safe-"
@@ -19,10 +21,6 @@ with this package prefix.")
   (is (stringp *safe-package-prefix*))
   (is (eql #\-
            (car (last (coerce *safe-package-prefix* 'list))))))
-
-(nisp-util::define-constant  +base-empty-packages+
-    '("alpha" "beta" "general")
-  "Base safe packages as far as development goes.")
 
 (defun format-package-name (name)
   "Take name and append *safe-package-prefix*
@@ -50,6 +48,13 @@ This is a cheap way to namespace packages. Better ideas welcome."
 
 (test (delete-safe-package :depends-on make-empty-safe-package)
   (is-true (delete-safe-package "test1")))
+
+;;;; base package stuff
+;;;do we really need this? -- nixeagle 2009-12-10
+
+(nisp-util::define-constant  +base-empty-packages+
+    '("alpha" "beta" "general")
+  "Base safe packages as far as development goes.")
 
 (defun make-empty-base-packages ()
   "Using the packages named in +base-empty-packages+ create a set of
@@ -120,10 +125,10 @@ we default to instantiating a new one using make-readtable"
   `(let ((*readtable* *safe-readtable*))
      ,@body))
 
-(test (with-safe-readtable :depends-on *safe-readtable*)
+(test (set-readtable :depends-on *safe-readtable*)
+  "Make sure that inside this form *readtable* is set to *safe-readtable*"
   (with-safe-readtable
-    (is (eq *readtable* *safe-readtable*)
-        "Make sure that inside this form *readtable* is set to *safe-readtable*")))
+    (is (eq *readtable* *safe-readtable*))))
 
 ;;; Moving this down here for now after make-readtable is defined
 ;;; because this depends on that function being defined.
@@ -144,8 +149,5 @@ program.")
      (with-safe-readtable
        ,@body)))
 
-(test (with-safe-package :depends-on (and
-                                      with-safe-readtable
-                                      with-package))
+(test (with-safe-package)
   )
-

@@ -1,13 +1,14 @@
 (defpackage #:nisp-empty-package
-  (:use :cl #+5am :5am)
+  (:use :cl #+5am :5am :nisp-util)
   (:export #:with-empty-package
-           #:make-empty-package))
+           #:make-empty-package
+           #:with-package
+           ))
 
 (defpackage #:nisp-safe
-  (:use :common-lisp #+5am :5am
+  (:use :common-lisp :stefil #+5am :5am
         :nisp-empty-package
         :nisp-util))
 
 (in-package :nisp-safe)
-(5am:def-suite safe-suite
-    :in nisp::all-tests)
+

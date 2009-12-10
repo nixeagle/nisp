@@ -17,11 +17,11 @@
 ;;; making a new empty package on user request. Some examples of use
 ;;; include giving each 'user' their own namespace so experiments by one
 ;;; user will not cause clashes by experiments of the other.
-
+ 
 (in-package :nisp-empty-package)
 
 (def-suite empty-packages
-    :in nisp-safe::safe-suite
+    :in nisp::all-tests
     :description "Tests related to empty packages")
 (in-suite empty-packages)
 
