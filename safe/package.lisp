@@ -8,7 +8,8 @@
 (defpackage #:nisp-safe
   (:use :common-lisp :lift
         :nisp-empty-package
-        :nisp-util))
+        :nisp-util)
+  (:export #:with-safe-package))
 
 (in-package :nisp-safe)
 

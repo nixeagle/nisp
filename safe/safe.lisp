@@ -176,6 +176,7 @@ program.")
            (ensure (readtablep *safe-readtable*))))
 
 (defmacro with-safe-package (name &body body)
+  "Use the given package name to read some code."
   `(with-package ,(format-package-name name)
      (with-safe-readtable
        ,@body)))
