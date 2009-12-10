@@ -1,9 +1,7 @@
 ;;; Introspection of lisp systems. May be portable one day.
 (in-package :nisp-introspect)
 
-(def-suite nisp-introspect-suite
-    :in nisp::all-tests)
-(in-suite nisp-introspect-suite)
+(deftestsuite root-suite (nisp::root-suite) ())
 
 (defgeneric function-lambda-list (symbol)
   (:documentation
@@ -19,20 +17,20 @@
 (defmethod function-lambda-list (symbol)
     #+sbcl (sb-introspect:function-lambda-list symbol))
 
-(test function-lambda-list/symbol
-  "Anything other then a functionp input should return error string."
-  (is (equal '(&REST SB-KERNEL::ARGS)
-             (function-lambda-list '+)))
-  (is (stringp (function-lambda-list 1))))
-
 
 
 (defmethod function-lambda-list ((symbol string))
   "If we get a string, read it and re-call."
   (function-lambda-list (read-from-string symbol)))
 
-(test function-lambda-list/string
-  "Should return a lambda list of the function's arguments"
-  (is (equal '(&REST SB-KERNEL::ARGS)
-             (function-lambda-list "+"))
-      "+ has always worked, but this is the base case."))
+
+(deftestsuite test-function-lambda-list (root-suite)
+  ((plus-arg-list '(&REST SB-KERNEL::ARGS)))
+  :test (pass-valid-symbol
+         (ensure-same (function-lambda-list '+)
+                      plus-arg-list))
+  :test (pass-invalid-symbol
+         (ensure (stringp (function-lambda-list 1))))
+  :test (pass-valid-string
+         (ensure-same (function-lambda-list "+")
+                      plus-arg-list)))
