@@ -6,6 +6,8 @@
     :in nisp::all-tests)
 (in-suite config-suite)
 
+(deftestsuite root-suite (nisp::root-suite) ())
+
 (defparameter *nickname* "somenick"
   "The nick name of the bot. Be warned that this layout
 is likely to be very temporary as we plan on moving into a
@@ -24,9 +26,22 @@ is subject to change pretty soon.")
   object orianted this will follow, but no matter what it will remain a
   list in the simplest case.")
 
-(test *channel*-is-nil
-  "Please use *channels* which is currently a list of strings. *channel is depreciated."
-  (is (eq nil *channel*)))
+(deftestsuite test-*channel* (root-suite)
+  ()
+  :test (is-nil
+         (ensure-same *channel* nil :test #'eq)))
 
-(test *channels*-is-a-list
-  (is (listp *channels*)))
+(deftestsuite test-*channels* (root-suite)
+  ()
+  :test (is-list
+         (:documentation
+          "Please use *channels* which is currently a list of
+strings. *channel is depreciated.")
+         (ensure (listp *channels*))))
+
+;; (test *channel*-is-nil
+;;   "Please use *channels* which is currently a list of strings. *channel is depreciated."
+;;   (is (eq nil *channel*)))
+
+;; (test *channels*-is-a-list
+;;   (is (listp *channels*)))
