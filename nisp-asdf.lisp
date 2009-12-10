@@ -47,17 +47,3 @@
 The point of all the tests in this suite is to verify that the function
 handles message passing as expected. We verify that strings, lists and
 keywords all return valid results.")
-
-#+ (or)
-(test list-system-components
-  (is (listp (list-system-components :nisp))
-      "Expect a list")
-  (is (listp (list-system-components '(:nisp :nispbot)))
-      "Should be able to take more then one arg.")
-  (signals (simple-type-error) (list-system-components 1))
-  (signals (asdf::missing-component) (list-system-components nil)
-           "Nil has nothing we are interested in.")
-  (signals
-      (asdf::missing-component)
-    (list-system-components :this-does-not-exist-as-a-package))
-  (is (listp (list-system-components "nisp"))))
