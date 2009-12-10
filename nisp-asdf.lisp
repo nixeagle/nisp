@@ -1,8 +1,4 @@
 (in-package :nisp-asdf)
-(5am:def-suite asdf-suite
-    :in nisp::all-tests)
-
-(in-suite asdf-suite)
 
 (deftestsuite root-suite (nisp::root-suite) ())
 

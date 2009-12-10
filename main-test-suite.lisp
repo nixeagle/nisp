@@ -5,6 +5,3 @@
 
 (in-package :nisp)
 (deftestsuite root-suite () ())
-
-(5am:def-suite all-tests
-    :description "Top level test suite")
