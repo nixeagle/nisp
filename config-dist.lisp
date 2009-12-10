@@ -2,9 +2,6 @@
 ;;; breaking changes, though notice will be given in some form.
 
 (in-package :nispbot-config)
-(5am:def-suite config-suite
-    :in nisp::all-tests)
-(in-suite config-suite)
 
 (deftestsuite root-suite (nisp::root-suite) ())
 
