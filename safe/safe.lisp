@@ -51,11 +51,11 @@ This is a cheap way to namespace packages. Better ideas welcome."
   ;;        (:documentation "We should error if an empty string is passed")
   ;;        (ensure-error (make-empty-safe-package "")))
 
-;; (defun delete-safe-package (name)
-;;   "Delete package NAME unless its already deleted."
-;;   (let ((safe-package-name (format-package-name name)))
-;;     (when (packagep (find-package safe-package-name))
-;;       (delete-package safe-package-name))))
+(defun delete-safe-package (name)
+  "Delete package NAME unless its already deleted."
+  (let ((safe-package-name (format-package-name name)))
+    (when (packagep (find-package safe-package-name))
+      (delete-package safe-package-name))))
 
 ;; (test (delete-safe-package :depends-on make-empty-safe-package)
 ;;   (is-true (delete-safe-package "test1")))
@@ -64,17 +64,8 @@ This is a cheap way to namespace packages. Better ideas welcome."
 ;;;do we really need this? -- nixeagle 2009-12-10
 
 (nisp-util::define-constant  +base-empty-packages+
-    '("alpha" "beta" "general")
+    '("test1" "test2" "test3")
   "Base safe packages as far as development goes.")
-
-(defun make-empty-base-packages ()
-  "Using the packages named in +base-empty-packages+ create a set of
-packages that are empty for development experimentation."
-  (mapc #'make-empty-safe-package +base-empty-packages+))
-
-(defun delete-base-packages ()
-  "Undo the actions of make-empty-base-packages."
-  (mapc #'delete-safe-package +base-empty-packages+))
 
 (defun read-using-package (name string)
   "read STRING using package NAME."
@@ -91,8 +82,10 @@ packages that are empty for development experimentation."
 
 (deftestsuite base-packages (root-suite)
   ()
-  (:setup (make-empty-base-packages))
-  (:teardown (delete-base-packages)))
+  (:setup
+   (mapc #'make-empty-safe-package +base-empty-packages+))
+  (:teardown
+   (mapc #'delete-safe-package +base-empty-packages+)))
 
 (deftestsuite test-colon-reader (base-packages)
   ()
