@@ -132,19 +132,6 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
          (let ((*readtable* (make-readtable)))
            (ensure (functionp (get-macro-character #\:))))))
 
-;; (test make-readtable
-;;   (let ((*readtable* (make-readtable)))
-;;     (is (functionp (get-macro-character #\:))
-;;         )))
-
-;; (5am:def-fixture base-package-fixture ()
-;;   (delete-base-packages)
-;;   (make-empty-base-packages)
-;;   (prog1
-;;       (let ((*readtable* (make-readtable)))
-;;         (&body))
-;;     (delete-base-packages)))
-
 (defmacro with-safe-readtable (&body body)
   "Use readtable for all read calls in body.If readtable is not passed,
 we default to instantiating a new one using make-readtable"
