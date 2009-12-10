@@ -128,3 +128,23 @@ the function. All return values need to be preserved."
 expect 3 no more and no less. (3) or an error is not acceptable."
   (is (= 3 (with-empty-package
              3))))
+
+
+(defmacro with-package (package &body body)
+  "Evaluate body in the context of package-name."
+  `(let ((*package* (find-package ,package)))
+     ,@body))
+
+(test with-package
+  "Getting the package name of *package* should be changed to the
+package specified in the call to with-package"
+  ;; We have repeated with package stuff, this should be done better but
+  ;; the point is to verify that both ASDF and :asdf work. We know that
+  ;; "asdf" won't work because that implies |asdf| (case sensitivity).
+  (is-every string=
+    ("ASDF"
+     (with-package "ASDF"
+       (package-name *package*)))
+    ("ASDF"
+     (with-package :asdf
+       (package-name *package*)))))

@@ -114,24 +114,6 @@ was accessed. This test does the following:
 
 AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!"))
 
-(defmacro with-package (package &body body)
-  "Evaluate body in the context of package-name."
-  `(let ((*package* (find-package ,package)))
-     ,@body))
-
-(test with-package
-  ;; We have repeated with package stuff, this should be done better but
-  ;; the point is to verify that both ASDF and :asdf work. We know that
-  ;; "asdf" won't work because that implies |asdf| (case sensitivity).
-  (is (eq #'asdf:oos
-          (with-package "ASDF"
-            (symbol-function (read-from-string "oos"))))
-      "Needs to return the symbol internal to asdf")
-  (is (eq #'asdf:oos
-          (with-package :asdf
-            (symbol-function (read-from-string "oos"))))
-      "Needs to return the symbol internal to safe-alpha"))
-
 (defmacro with-safe-readtable (&body body)
   "Use readtable for all read calls in body.If readtable is not passed,
 we default to instantiating a new one using make-readtable"
