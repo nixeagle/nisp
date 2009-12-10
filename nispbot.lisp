@@ -2,9 +2,9 @@
   (:use :common-lisp :lift
         :nisp
         :cl-irc :cl-ppcre
-       
         :nispbot-config
-        :nisp-introspect)
+        :nisp-introspect
+        :nisp-safe)
   (:shadowing-import-from :cl-irc :pass))
 
 (in-package :nispbot)
@@ -104,6 +104,7 @@ verify that the result is correct.")
           (:documentation "Invalid input like the number 1 in a string
 needs to return a sensible result.")
           (ensure (stringp (function-lambda-list-to-string "1"))))))
+
 
 (defpackage #:nispbot-basic-commands
   (:use :cl :lift :nispbot))

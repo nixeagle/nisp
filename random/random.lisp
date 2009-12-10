@@ -1,5 +1,3 @@
-(defpackage #:nisp-random
-  (:use :cl :lift))
 (in-package :nisp-random)
 
 ;;; source taken from swank and modified to do what I wanted to do.
