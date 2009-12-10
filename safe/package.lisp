@@ -1,5 +1,5 @@
 (defpackage #:nisp-empty-package
-  (:use :cl #+5am :5am :lift :nisp-util)
+  (:use :cl :lift :nisp-util)
   (:export #:with-empty-package
            #:make-empty-package
            #:with-package

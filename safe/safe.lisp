@@ -12,15 +12,19 @@
     :in nisp::all-tests)
 (in-suite safe-suite)
 
+(deftestsuite root-suite (nisp::root-suite) ())
+
 (defvar *safe-package-prefix* "safe-"
   "All packages created for holding known safe code are stored
 with this package prefix.")
 
-(test *safe-package-prefix*
-  "Should be a string with a trailing -"
-  (is (stringp *safe-package-prefix*))
-  (is (eql #\-
-           (car (last (coerce *safe-package-prefix* 'list))))))
+(deftestsuite test-*safe-variable-prefix* (root-suite)
+  ()
+  :test (is-string (ensure (stringp *safe-package-prefix*)))
+  :test (last-element
+         (:documentation "Last element of the prefix needs to be a dash")
+         (ensure-same (car (last (coerce *safe-package-prefix* 'list)))
+                      #\-)))
 
 (defun format-package-name (name)
   "Take name and append *safe-package-prefix*
@@ -28,26 +32,36 @@ with this package prefix.")
 This is a cheap way to namespace packages. Better ideas welcome."
   (concatenate 'string *safe-package-prefix* name))
 
-(test format-package-name
-  "Result should be with *safe-package-prefix* prepended"
-  (is (string= "safe-test" (format-package-name "test"))))
+(deftestsuite test-format-package-name (root-suite)
+  ()
+  :test (result-has-prefix
+         (ensure-same (format-package-name "test")
+                      "safe-test")))
 
 (defun make-empty-safe-package (name)
   "Make a package prefixed with the safe prefix specified in
 *safe-package-prefix*"
   (make-empty-package (format-package-name name)))
 
-(test make-empty-safe-package
-  (is (packagep (make-empty-safe-package "test1"))))
+(deftestsuite test-make-empty-safe-package (root-suite)
+  ()
+  (:teardown (when (find-package "safe-test1")
+               (delete-package "safe-test1")))
+  :test (is-package
+         (ensure (packagep (make-empty-safe-package "test1")))))
 
-(defun delete-safe-package (name)
-  "Delete package NAME unless its already deleted."
-  (let ((safe-package-name (format-package-name name)))
-    (when (packagep (find-package safe-package-name))
-      (delete-package safe-package-name))))
+  ;; :test (pass-empty-string
+  ;;        (:documentation "We should error if an empty string is passed")
+  ;;        (ensure-error (make-empty-safe-package "")))
 
-(test (delete-safe-package :depends-on make-empty-safe-package)
-  (is-true (delete-safe-package "test1")))
+;; (defun delete-safe-package (name)
+;;   "Delete package NAME unless its already deleted."
+;;   (let ((safe-package-name (format-package-name name)))
+;;     (when (packagep (find-package safe-package-name))
+;;       (delete-package safe-package-name))))
+
+;; (test (delete-safe-package :depends-on make-empty-safe-package)
+;;   (is-true (delete-safe-package "test1")))
 
 ;;;; base package stuff
 ;;;do we really need this? -- nixeagle 2009-12-10
@@ -78,35 +92,21 @@ packages that are empty for development experimentation."
   ;; broken for :keywords and possibly other things too.
   (error "Accessing packages outside of the current one is disabled."))
 
-(test colon-reader
-  (signals (simple-error)
-    ;; This is not even remotely correct arguments passed, the point is
-    ;; to verify that we send an error
-    (colon-reader nil nil)))
+(deftestsuite base-packages (root-suite)
+  ()
+  (:setup (make-empty-base-packages))
+  (:teardown (delete-base-packages)))
 
-(defun make-readtable ()
-  "Create readtable that prevents any syntax that can cause a package
-  change."
-  (let ((*readtable* (copy-readtable nil)))
-    (set-macro-character #\: #'colon-reader nil *readtable*)
-    *readtable*))
-
-(test make-readtable
-  (let ((*readtable* (make-readtable)))
-    (is (functionp (get-macro-character #\:))
-        "Created read table should have a function bound to #\\\:")))
-
-(5am:def-fixture base-package-fixture ()
-  (delete-base-packages)
-  (make-empty-base-packages)
-  (prog1
-      (let ((*readtable* (make-readtable)))
-        (&body))
-    (delete-base-packages)))
-
-(test (safe-read-with-colons :fixture base-package-fixture)
-  (is (not (fboundp (read-using-package "safe-alpha" "cl::+")))
-      "IF YOU SEE THIS:: DO NOT EVEN THINK ABOUT IGNORING IT!
+(deftestsuite test-colon-reader (base-packages)
+  ()
+  ;; This is not even remotely correct arguments passed, the point is
+  ;; to verify that we send an error
+  :test (expect-error
+         (ensure-condition 'simple-error
+                        (colon-reader nil nil)))
+  :test (double-colon
+         (:documentation
+          "IF YOU SEE THIS:: DO NOT EVEN THINK ABOUT IGNORING IT!
 
 This message means that a function outside of a socalled 'safe' package
 was accessed. This test does the following:
@@ -117,7 +117,36 @@ was accessed. This test does the following:
 4) If cl::+ is an fbound symbol a critical assumption failed
    or a regression has occured.
 
-AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!"))
+AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
+         (ensure (not (fboundp (read-using-package "safe-alpha" "cl::+"))))))
+
+(defun make-readtable ()
+  "Create readtable that prevents any syntax that can cause a package
+  change."
+  (let ((*readtable* (copy-readtable nil)))
+    (set-macro-character #\: #'colon-reader nil *readtable*)
+    *readtable*))
+(deftestsuite test-make-readtable (root-suite)
+  ;((*readtable* (make-readtable)))
+  ()
+  :test (colon-macro-function-bound?
+         ;(:documentation
+         ; "Created read table should have a function bound to #\\\:")
+         (let ((*readtable* (make-readtable)))
+           (ensure (functionp (get-macro-character #\:))))))
+
+;; (test make-readtable
+;;   (let ((*readtable* (make-readtable)))
+;;     (is (functionp (get-macro-character #\:))
+;;         )))
+
+;; (5am:def-fixture base-package-fixture ()
+;;   (delete-base-packages)
+;;   (make-empty-base-packages)
+;;   (prog1
+;;       (let ((*readtable* (make-readtable)))
+;;         (&body))
+;;     (delete-base-packages)))
 
 (defmacro with-safe-readtable (&body body)
   "Use readtable for all read calls in body.If readtable is not passed,
