@@ -11,5 +11,3 @@
         :nisp-util)
   (:export #:with-safe-package))
 
-(in-package :nisp-safe)
-
