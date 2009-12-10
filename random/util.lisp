@@ -5,7 +5,7 @@
 ;;; For the lack of any better place to put these for now...
 ;(setq *test-describe-if-not-successful?* t)
 
-(deftestsuite nisp-util () ())
+(deftestsuite nisp-util (nisp::root-suite) ())
 
 ;;;This is a terrible implentation, but I cannot figure out how to tell
 ;;;the compiler that I want to simply iterate and count instead of

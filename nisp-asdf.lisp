@@ -4,6 +4,7 @@
 
 (in-suite asdf-suite)
 
+(deftestsuite nisp-asdf-suite () ())
 
 (defgeneric list-system-components (systems)
   (:method (systems)
