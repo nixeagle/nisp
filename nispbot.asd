@@ -26,7 +26,9 @@
    (:file "nisp-asdf")
    (:module "safe"
             :components
-            ((:file "safe")))))
+            ((:file "package")
+             (:file "empty-package")
+             (:file "safe")))))
 
 (defsystem :nispbot
   :author "James S <dev@nixeagle.org>"

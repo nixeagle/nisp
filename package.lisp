@@ -10,7 +10,3 @@
   (:use :common-lisp #+5am :5am
         )
   (:export *channel* *nickname* *eighthbit*))
-
-(defpackage #:nisp-safe
-  (:use :common-lisp #+5am :5am
-        :nisp-util))
