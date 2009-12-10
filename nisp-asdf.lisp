@@ -4,7 +4,7 @@
 
 (in-suite asdf-suite)
 
-(deftestsuite nisp-asdf-suite () ())
+(deftestsuite root-suite (nisp::root-suite) ())
 
 (defgeneric list-system-components (systems)
   (:method (systems)
@@ -21,7 +21,7 @@
 (defmethod list-system-components ((system-name string))
   (asdf:module-components (asdf:find-system system-name)))
 
-(deftestsuite list-system-components (nisp-asdf-suite)
+(deftestsuite list-system-components (root-suite)
   ()
   :test (pass-keyword-with-valid-package-name
          (ensure-same (integerp (list-system-components :nisp)) t))

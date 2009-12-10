@@ -25,6 +25,8 @@
     :description "Tests related to empty packages")
 (in-suite empty-packages)
 
+(deftestsuite root-suite (nisp::root-suite) ())
+
 (defun make-empty-package (name)
   "Create an empty package called NAME.
 
@@ -52,6 +54,20 @@ If prefix is not supplied, default to G-SAFE-"
        (concatenate 'string
                     prefix (write-to-string (incf *empty-package-counter*))))))
 
+(deftestsuite test-gen-empty-package (root-suite)
+  ()
+  (:test (generate-different-packages
+          (:documentation "
+Should not get the same object from two
+different calls to gen-empty-package
+")
+          (ensure-same (gen-empty-package)
+                       (gen-empty-package))))
+  (:documentation "Generating an empty package gives us a new
+package. If at any time we are able to generate a package collision a
+bug has been found."))
+
+#+ (or)
 (test (gen-empty-package :depends-on (and make-empty-package))
   "Generating an empty package should always give us a new package. If
 at any time we are able to generate a package collision a bug has been
@@ -86,7 +102,17 @@ This is mostly motivated for use in test cases."
 
 ;;;; Handle creating empty packages.
 
+(deftestsuite test-make-empty-package (root-suite)
+  ((empty-name "safe-SoMe-Long-paKAGeName")
+   (empty-package))
+  (:setup (setq empty-package (make-empty-package empty-name)))
+  (:teardown (delete-package empty-name))
+  :test (expect-package
+         (ensure (packagep empty-package)))
+  :test (expect-zero-elements
+         (ensure-same (nisp-util::count-symbols empty-name) 0)))
 
+#+ (or)
 (test make-empty-package
   "Package returned should have nothing in it"
   ;; package name is intentionally long and mixed case. Doing so means
