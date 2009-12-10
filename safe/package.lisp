@@ -6,7 +6,7 @@
            ))
 
 (defpackage #:nisp-safe
-  (:use :common-lisp :stefil #+5am :5am
+  (:use :common-lisp #+5am :5am
         :nisp-empty-package
         :nisp-util))
 
