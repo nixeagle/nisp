@@ -8,9 +8,6 @@
 ;;; moon, its not my fault ;)
 
 (in-package :nisp-safe)
-(def-suite safe-suite
-    :in nisp::all-tests)
-(in-suite safe-suite)
 
 (deftestsuite root-suite (nisp::root-suite) ())
 
@@ -154,10 +151,14 @@ we default to instantiating a new one using make-readtable"
   `(let ((*readtable* *safe-readtable*))
      ,@body))
 
-(test (set-readtable :depends-on *safe-readtable*)
-  "Make sure that inside this form *readtable* is set to *safe-readtable*"
-  (with-safe-readtable
-    (is (eq *readtable* *safe-readtable*))))
+(deftestsuite test-with-safe-readtable (root-suite)
+  ()
+  :test (modify-readtable
+         (:documentation
+          "Make sure that inside this form *readtable* is set to
+*safe-readtable*")
+         (with-safe-readtable
+           (ensure (eq *readtable* *safe-readtable*)))))
 
 ;;; Moving this down here for now after make-readtable is defined
 ;;; because this depends on that function being defined.
@@ -168,15 +169,13 @@ This is currently a parameter but should be made into a constant at some
 point so a warning or error can block it being changed in a running
 program.")
 
-(test (*safe-readtable* :depends-on (and make-readtable))
-  "Make sure we get a readtable."
-  (is (readtablep *safe-readtable*)
-      "Should be a readtable, nothing else"))
+(deftestsuite test-*safe-readtable* (root-suite)
+    ()
+    :documentation "Make sure we get a readtable."
+    :test (is-readtable
+           (ensure (readtablep *safe-readtable*))))
 
 (defmacro with-safe-package (name &body body)
   `(with-package ,(format-package-name name)
      (with-safe-readtable
        ,@body)))
-
-(test (with-safe-package)
-  )
