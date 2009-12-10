@@ -2,6 +2,8 @@
 
 (in-package :nisp-util)
 
+(deftestsuite nisp-util () ())
+
 ;;;This is a terrible implentation, but I cannot figure out how to tell
 ;;;the compiler that I want to simply iterate and count instead of
 ;;;consing and making a list of symbols then counting it. This will do
@@ -16,6 +18,16 @@ If NAME is not given assume *package* instead"
             for s being the symbols of (find-package package)
             collect s))))
 
+(deftestsuite count-symbols (nisp-util)
+  ((i (count-symbols :nisp-util)))
+  (:test (ensure (integerp i) ) )
+  (:run-setup :once-per-suite)
+;  (:run-setup :once-per-session)
+  (:documentation "
+Portably count the number of all symbols in a given package.
+"))
+
+#+ (or)
 (test count-symbols
   (let ((i (count-symbols :nisp-util)))
     (is (integerp i)
