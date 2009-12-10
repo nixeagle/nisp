@@ -30,11 +30,3 @@ If NAME is not given assume *package* instead"
   (:documentation "
 Portably count the number of all symbols in a given package.
 "))
-
-#+ (or)
-(test count-symbols
-  (let ((i (count-symbols :nisp-util)))
-    (is (integerp i)
-        "A count means an integer")
-    (is (<= 0 i)
-        "A negative symbol count makes no sense")))
