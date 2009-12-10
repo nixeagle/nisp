@@ -9,9 +9,8 @@
 
 (in-package :nispbot)
 
-(5am:def-suite basic-irc-suite
-    :in nisp::all-tests
-    :description "Tests all the irc related stuff")
+(deftestsuite root-suite (nisp::root-suite) ())
+(deftestsuite basic-irc-suite (root-suite) ())
 
 
 (setq *allow-named-registers* t)
@@ -69,47 +68,44 @@ for any arbitrary connection or list of channels."
 (defmethod function-lambda-list-to-string ((symbol string))
   (princ-to-string (function-lambda-list symbol)))
 
-(in-suite basic-irc-suite)
+(deftestsuite test-make-irc-message (basic-irc-suite)
+  ()
+  (:test (format-private-message
+           (:documentation "Demonstrate how to create a private message and
+verify that the result is correct.")
+           (ensure-same (irc::make-irc-message "privmsg" "#channel" "text")
+                        (format nil "privmsg #channel :text~%")
+                        :test #'string=))))
 
-(test (make-irc-message)
-   "Testing usage of `cl-irc:make-irc-message'"
-   (is (string=
-        (format nil "privmsg #channel :text~%")
-        (irc::make-irc-message "privmsg" "#channel" "text"))
-       "Simplest case of a private message to a channel"))
+(deftestsuite test-tokenize-string (basic-irc-suite)
+  ()
+  (:documentation "Demonstrate irc::tokenize-string")
+  (:test (split-by-space
+          (ensure-same (irc::tokenize-string
+                        "Some string to test on"
+                        :delimiters '(#\Space))
+                       '("Some" "string" "to" "test" "on")))))
 
-(test (tokenize-string)
-  "Demonstrate irc::tokenize-string"
-  (is (equal (irc::tokenize-string
-          "Some string to test on"
-          :delimiters '(#\Space))
-         '("Some" "string" "to" "test" "on"))))
+(deftestsuite test-parse-bot-command (basic-irc-suite)
+  ()
+  (:test (short-command
+          (ensure-same
+           (parse-bot-command ",arglist +")
+           (values "arglist" "+")
+           :test #'string=))))
 
-(test parse-bot-command
-  (is-every string=
-    ((nispbot::parse-bot-command ",arglist +")
-     "arglist")
-    ((multiple-value-bind (ignore arg) (nispbot::parse-bot-command ",arglist xyz")
-       arg)
-     "xyz")))
-
-(test (function-lambda-list-to-string :depends-on parse-bot-command)
-  "Get a valid arglist with no errors."
-  (is
-   (string=
-    
-    "(&REST ARGS)"
-    (nispbot::function-lambda-list-to-string "+")))
-  (5am:finishes
-    (nispbot::function-lambda-list-to-string "1")
-    "Do better then throwing an error on non-function objects"))
+(deftestsuite test-function-lambda-list-to-string
+    (basic-irc-suite)
+  ()
+  (:test (pass-+
+          (:documentation "We need to get a string")
+          (ensure (stringp (function-lambda-list-to-string "+")))))
+  (:test (pass-1
+          (:documentation "Invalid input like the number 1 in a string
+needs to return a sensible result.")
+          (ensure (stringp (function-lambda-list-to-string "1"))))))
 
 (defpackage #:nispbot-basic-commands
   (:use :cl :lift :nispbot))
 
 (in-package :nispbot-basic-commands)
-
-(5am:def-suite basic-command-suite
-    :in nispbot::basic-irc-suite)
-
-(5am:in-suite basic-command-suite)

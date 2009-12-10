@@ -43,5 +43,4 @@
   ((:file "nisp-introspect")
    (:file "config-dist")
    (:file "config")
-   (:file "safe-scope")
    (:file "nispbot")))
