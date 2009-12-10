@@ -35,7 +35,9 @@ This is a cheap way to namespace packages. Better ideas welcome."
   (is (string= "safe-test" (format-package-name "test"))))
 
 (defun make-empty-safe-package (name)
-  (make-package (format-package-name name) :use 'nil))
+  "Make a package prefixed with the safe prefix specified in
+*safe-package-prefix*"
+  (make-empty-package (format-package-name name)))
 
 (test make-empty-safe-package
   (is (packagep (make-empty-safe-package "test1"))))
