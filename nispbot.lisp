@@ -1,5 +1,5 @@
 (defpackage #:nispbot
-  (:use :common-lisp  
+  (:use :common-lisp :lift
         :nisp
         #+5am :5am
         :cl-irc :cl-ppcre
