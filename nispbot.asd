@@ -10,13 +10,11 @@
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
   :description "Nixeagle's random lisp experiments"
-  :weakly-depends-on (:Fiveam)
   :depends-on (:cl-ppcre
                :lift)
   :serial t
   :components
-  ((:file "5amfix")
-   (:file "main-test-suite")
+  ((:file "main-test-suite")
    (:module "random"
             :components
             ((:file "package")
@@ -36,7 +34,6 @@
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
   :description "irc bot"
-  :weakly-depends-on (:fiveam)
   :depends-on (:lift
                :cl-ppcre
                :cl-irc

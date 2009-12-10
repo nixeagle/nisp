@@ -1,7 +1,6 @@
 (defpackage #:nispbot
   (:use :common-lisp :lift
         :nisp
-        #+5am :5am
         :cl-irc :cl-ppcre
        
         :nispbot-config
@@ -106,7 +105,7 @@ for any arbitrary connection or list of channels."
     "Do better then throwing an error on non-function objects"))
 
 (defpackage #:nispbot-basic-commands
-  (:use :cl #+5am :5am :nispbot))
+  (:use :cl :lift :nispbot))
 
 (in-package :nispbot-basic-commands)
 
