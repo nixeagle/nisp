@@ -20,11 +20,6 @@
  
 (in-package :nisp-empty-package)
 
-(def-suite empty-packages
-    :in nisp::all-tests
-    :description "Tests related to empty packages")
-(in-suite empty-packages)
-
 (deftestsuite root-suite (nisp::root-suite) ())
 
 (defun make-empty-package (name)
@@ -112,65 +107,40 @@ This is mostly motivated for use in test cases."
   :test (expect-zero-elements
          (ensure-same (nisp-util::count-symbols empty-name) 0)))
 
-#+ (or)
-(test make-empty-package
-  "Package returned should have nothing in it"
-  ;; package name is intentionally long and mixed case. Doing so means
-  ;; no chance of colliding with some other package.
-  (let ((empty-name "safe-SoMe-Long-paKAGeName"))
-    (when (packagep (find-package empty-name))
-      (delete-package empty-name))
-    (let ((empty-package (make-empty-package empty-name)))
-      (is (packagep empty-package)
-          "A package is expected, even if its not empty. (base assumption)")
-      (is (= 0 (nisp-util::count-symbols empty-name))
-          "A package is not empty if it has more then 0 elements."))))
-
-;;; Right now this test fails to detect the condition it is looking
-;;; for. Right now I do not see any portable way to verify that a
-;;; package has actually been deleted
-(test (is-deleted :depends-on (and gen-empty-package))
-  "Returned (deleted) package will be nil according to packagep. If
-this returns an undeleted function then we did not do the cleanup work
-properly"
-  (is (not (packagep
-            (with-empty-package *package*)))))
-
-(test (with-empty-package :depends-on (and gen-empty-package))
-  "Expect 0 symbols in an empty package."
-  (with-empty-package
-    (is (= 0 (nisp-util::count-symbols)))))
-
-(test (multiple-return-values :depends-on (and gen-empty-package))
-  "Calling with empty package should not change what is returned from
-the function. All return values need to be preserved."
-  (is (equal '(1 a)
+(deftestsuite test-with-empty-package (root-suite)
+  ()
+  :test (deleted-package
+         (:documentation "Returned (deleted) package will be nil
+according to packagep. If this returns an undeleted function then we did
+not do the cleanup work properly")
+         (ensure (not (packagep (with-empty-package *package*)))))
+  :test (package-has-no-symbols
+         (ensure (with-empty-package
+                   (= 0 (nisp-util::count-symbols)))))
+  :test (multiple-return-values
+         (ensure-same 
              (multiple-value-list
               (with-empty-package
-                (values '1 'a))))))
-
-(test (single-return-value :depends-on (and gen-empty-package))
-  "We don't want to break the simple cases. If a function returns 3, we
-expect 3 no more and no less. (3) or an error is not acceptable."
-  (is (= 3 (with-empty-package
-             3))))
-
+                (values '1 'a))) '(1 a)))
+  :test (single-return-value
+         (ensure-same (with-empty-package 3) 3)))
 
 (defmacro with-package (package &body body)
   "Evaluate body in the context of package-name."
   `(let ((*package* (find-package ,package)))
      ,@body))
 
-(test with-package
-  "Getting the package name of *package* should be changed to the
-package specified in the call to with-package"
-  ;; We have repeated with package stuff, this should be done better but
-  ;; the point is to verify that both ASDF and :asdf work. We know that
-  ;; "asdf" won't work because that implies |asdf| (case sensitivity).
-  (is-every string=
-    ("ASDF"
-     (with-package "ASDF"
-       (package-name *package*)))
-    ("ASDF"
-     (with-package :asdf
-       (package-name *package*)))))
+(deftestsuite test-with-package (root-suite)
+  ()
+  :test (pass-string
+         (ensure-same
+          (with-package "ASDF"
+            (package-name *package*))
+          "ASDF"))
+  :test (pass-keyword
+          (ensure-same
+           (with-package :asdf
+             (package-name *package*))
+           "ASDF"))
+  :documentation "Getting the package name of *package* should be
+  changed to the package specified in the call to with-package")
