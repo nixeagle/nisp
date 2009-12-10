@@ -23,7 +23,8 @@ If NAME is not given assume *package* instead"
 
 (deftestsuite count-symbols (nisp-util)
   ((i (count-symbols :nisp-util)))
-  (:test (ensure (integerp i) ) )
+  (:test (is-integer (ensure (integerp i))))
+  (:test (is-positive (ensure (<= 0 i))))
   (:run-setup :once-per-suite)
 ;  (:run-setup :once-per-session)
   (:documentation "
