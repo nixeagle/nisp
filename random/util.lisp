@@ -2,6 +2,9 @@
 
 (in-package :nisp-util)
 
+;;; For the lack of any better place to put these for now...
+;(setq *test-describe-if-not-successful?* t)
+
 (deftestsuite nisp-util () ())
 
 ;;;This is a terrible implentation, but I cannot figure out how to tell

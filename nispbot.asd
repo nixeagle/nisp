@@ -37,7 +37,7 @@
   :license "GPLv2 or later"
   :description "irc bot"
   :weakly-depends-on (:fiveam)
-  :depends-on (
+  :depends-on (:lift
                :cl-ppcre
                :cl-irc
                :nisp)
