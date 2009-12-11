@@ -3,7 +3,8 @@
 (defpackage #:nispbot-system
   (:use :cl :asdf))
 (in-package #:nispbot-system)
-
+(defpackage #:nisp-safe-system
+  (:use :cl :asdf))
 (defsystem :nisp
   :version "0.0.1"
   :author "James S <dev@nixeagle.org>"
@@ -27,6 +28,7 @@
             :components
             ((:file "package")
              (:file "empty-package")
+             (:file "arithmetic")
              (:file "safe")))))
 
 (defsystem :nispbot

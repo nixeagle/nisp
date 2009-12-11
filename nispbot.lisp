@@ -4,6 +4,7 @@
         :cl-irc :cl-ppcre
         :nispbot-config
         :nisp-introspect
+        :nisp-empty-package
         :nisp-safe)
   (:shadowing-import-from :cl-irc :pass))
 
@@ -26,7 +27,9 @@
       (join *connection* *channel*))
   (join-all-channels)
   (irc:add-hook *connection* 'irc:irc-privmsg-message #'command-hook)
-  (irc:start-background-message-handler *connection*))
+  (irc:start-background-message-handler *connection*)
+;  (irc:read-message-loop *connection*)
+  )
 
 (defun join-all-channels ()
   "Join all channels in *channels*. Later we will expand this to work
@@ -37,26 +40,45 @@ for any arbitrary connection or list of channels."
    nispbot-config::*channels*))
 
 (defun command-hook (message)
+  (declare (notinline command-hook))
   "For now lets try to parse just one command"
   (let ((msg-text (second (arguments message)))
         (target (first (arguments message))))
     (handler-case
         (progn
-          (multiple-value-bind (bot-cmd ar)
+          (multiple-value-bind (bot-cmd)
               (parse-bot-command msg-text)
-            (when (string-equal bot-cmd "arglist")
+            (when bot-cmd
               (privmsg (connection message)
                        target
-                       (function-lambda-list-to-string ar)))))
-      (error () (privmsg (connection message)
+                       (format nil "~S"
+                               (multiple-value-bind (res)
+                                   (eval (read-bot-message bot-cmd))
+                                 res))))
+            ))
+      (error (condition) (privmsg (connection message)
                          target
-                         "An error has occurred")))))
+                         (format nil "~A" condition))))))
+
+;; (when (string-equal bot-cmd "arglist")
+;;               (privmsg (connection message)
+;;                        target
+;;                        (function-lambda-list-to-string ar)))
 
 (defun parse-bot-command (msg-text)
   "Parse an irc message and split command out from the rest."
-  (register-groups-bind (command args)
-        (",(\\w*) (.+)" msg-text)
-    (values command args)))
+  (register-groups-bind (command)
+        ("^,(.+)" msg-text)
+    (values command)))
+
+(defun read-bot-message (msg-text)
+  "Return a form ready to be funcall'd"
+  (multiple-value-bind (res)
+      (with-package (gen-empty-package)
+        (cl::use-package '(:safe-arithmetic))
+        (with-safe-readtable
+          (read-from-string msg-text)))
+    res))
 
 (defgeneric function-lambda-list-to-string (symbol)
   (:method (symbol)
