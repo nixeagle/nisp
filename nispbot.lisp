@@ -68,6 +68,7 @@ for any arbitrary connection or list of channels."
 ;;                        target
 ;;                        (function-lambda-list-to-string ar)))
 
+
 (defun parse-bot-command (msg-text)
   "Parse an irc message and split command out from the rest."
   (register-groups-bind (command)
@@ -108,15 +109,6 @@ Note that the newline is not replaced by a space!"
   (:test (pass-string
           (:documentation "Base case")
           (ensure (stringp (strip-newline "some string"))))))
-
-(defgeneric function-lambda-list-to-string (symbol)
-  (:method (symbol)
-    "An unexpected error has occured on your request, please notify the developers.")
-  (:documentation
-   "Return a string with the function's arg list in it."))
-
-(defmethod function-lambda-list-to-string ((symbol string))
-  (princ-to-string (function-lambda-list symbol)))
 
 (deftestsuite test-make-irc-message (basic-irc-suite)
   ()
