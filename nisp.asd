@@ -6,13 +6,16 @@
 (defpackage #:nisp-safe-system
   (:use :cl :asdf))
 (defsystem :nisp
-  :version "0.0.2"
+  :version "0.0.3"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
   :description "Nixeagle's random lisp experiments"
   :depends-on (:cl-ppcre
-               :lift)
+               :lift
+               :cl-irc
+               :trivial-timeout
+               :trivial-shell)
   :properties ((#:author-email . "dev@nixeagle.org")
                (#:date . "Future")
                ((#:albert #:output-dir) . "albert-docs/")
@@ -38,20 +41,28 @@
             ((:file "package")
              (:file "empty-package")
              (:file "arithmetic")
-             (:file "safe")))))
-
-(defsystem :nispbot
-  :author "James S <dev@nixeagle.org>"
-  :maintainer "James S <dev@nixeagle.org>"
-  :license "GPLv2 or later"
-  :description "irc bot"
-  :depends-on (:lift
-               :cl-ppcre
-               :cl-irc
-               :trivial-timeout
-               :nisp)
-
-  :serial t
-  :components  ((:file "config-dist")
+             (:file "safe")))
+   (:file "config-dist")
    (:file "config")
-   (:file "nispbot")))
+   (:file "nispbot")
+   (:file "nisp-dev-helper")))
+
+;; (defsystem :nispbot
+;;   :author "James S <dev@nixeagle.org>"
+;;   :maintainer "James S <dev@nixeagle.org>"
+;;   :license "GPLv2 or later"
+;;   :description "irc bot"
+;;   :depends-on (:lift
+;;                :cl-ppcre
+               
+;;                :trivial-timeout
+;;                :nisp)
+
+
+;;   :serial t
+;;   :components
+;;   )
+
+;; (defsystem #:nisp-dev-helper
+;;   :depends-on (:lift :nisp :nispbot :trivial-shell)
+;;   :components ((:file "nisp-dev-helper")))
