@@ -6,7 +6,7 @@
 (defpackage #:nisp-safe-system
   (:use :cl :asdf))
 (defsystem :nisp
-  :version "0.0.1"
+  :version "0.0.2"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"

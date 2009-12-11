@@ -14,19 +14,10 @@ CLOS style.")
   "The network to connect to. Currently we can connect only
 to one network at a time. This is a bug and will be fixed.")
 
-(defparameter *channel* nil
-  "DEPRECIATED: The channel to join after connecting. The format of this
-is subject to change pretty soon.")
-
 (defparameter *channels* '("#chan1"  "#chan2" "chan3")
   "Default list of channels to join on connection. When the bot goes
   object orianted this will follow, but no matter what it will remain a
   list in the simplest case.")
-
-(deftestsuite test-*channel* (root-suite)
-  ()
-  :test (is-nil
-         (ensure-same *channel* nil :test #'eq)))
 
 (deftestsuite test-*channels* (root-suite)
   ()

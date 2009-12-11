@@ -23,9 +23,6 @@
   "Simple connection function for basic testing."
   (set '*connection* (connect :nickname *nickname*
                              :server *eighthbit*))
-  (when (stringp *channel*)
-      (warn "*channel* will be removed in a future release. Please use *channels*")
-      (join *connection* *channel*))
   (join-all-channels)
   (irc:add-hook *connection* 'irc:irc-privmsg-message #'command-hook)
   (irc:start-background-message-handler *connection*)
