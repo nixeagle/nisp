@@ -152,3 +152,20 @@ needs to return a sensible result.")
   (:use :cl :lift :nispbot))
 
 (in-package :nispbot-basic-commands)
+
+
+(defpackage #:nispbot-dev-helpers
+  (:use :cl :nispbot :lift))
+
+(in-package :nispbot-dev-helpers)
+
+(defun reload-irc-privmsg-hook (&rest hooks)
+  "Easy way to reset the hooks for privmsgs
+
+Something like:
+
+ (nispbot-dev-helpers::reload-irc-privmsg-hook #'nispbot::command-hook)"
+  (irc:remove-hooks nispbot::*connection* 'irc:irc-privmsg-message)
+  (mapc (lambda (hook)
+          (irc:add-hook nispbot::*connection* 'irc:irc-privmsg-message hook))
+        hooks))
