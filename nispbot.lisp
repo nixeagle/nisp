@@ -75,7 +75,12 @@ for any arbitrary connection or list of channels."
   "Return a form ready to be funcall'd"
   (multiple-value-bind (res)
       (with-package (gen-empty-package)
-        (cl::use-package '(:safe-arithmetic))
+        (cl::use-package '(:safe-arithmetic
+                           :safe-arithmetic-trig
+                           :safe-arithmetic-comparision
+                           :safe-arithmetic-type-manipulation
+                           :safe-arithmetic-boole
+                           :safe-arithmetic-implentation-constants))
         (with-safe-readtable
           (read-from-string msg-text)))
     res))
