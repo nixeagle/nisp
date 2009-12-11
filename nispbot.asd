@@ -42,8 +42,16 @@
                :cl-irc
                :trivial-timeout
                :nisp)
+  :properties ((#:author-email . "dev@nixeagle.org")
+		 (#:date . "Future")
+		 ((#:albert #:output-dir) . "albert-docs/")
+		 ((#:albert #:formats) . ("docbook" "html"))
+		 ((#:albert #:docbook #:template) . "book")
+		 ((#:albert #:docbook #:bgcolor) . "white")
+		 ((#:albert #:docbook #:textcolor) . "black")
+		 )
+
   :serial t
-  :components
-  ((:file "config-dist")
+  :components  ((:file "config-dist")
    (:file "config")
    (:file "nispbot")))
