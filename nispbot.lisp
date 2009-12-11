@@ -80,7 +80,8 @@ for any arbitrary connection or list of channels."
                            :safe-arithmetic-comparision
                            :safe-arithmetic-type-manipulation
                            :safe-arithmetic-boole
-                           :safe-arithmetic-implentation-constants))
+                           :safe-arithmetic-implentation-constants
+                           :safe-arithmetic-random))
         (with-safe-readtable
           (read-from-string msg-text)))
     res))
@@ -90,7 +91,6 @@ for any arbitrary connection or list of channels."
     "An unexpected error has occured on your request, please notify the developers.")
   (:documentation
    "Return a string with the function's arg list in it."))
-
 
 (defmethod function-lambda-list-to-string ((symbol string))
   (princ-to-string (function-lambda-list symbol)))

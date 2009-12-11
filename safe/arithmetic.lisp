@@ -2,13 +2,6 @@
 
 (in-package :nisp-safe-system)
 
-(defmacro define-export-system (name from &rest symbol-list)
-  `(defpackage ,name
-     (:use)
-     (:import-from ,from ,@(values symbol-list))
-     (:export ,@(values symbol-list))))
-
-
 ;;; These should be fairly safe as there are no side effects,
 ;;; at least according to the standard.
 
@@ -151,6 +144,9 @@
     long-float-epsilon             short-float-negative-epsilon   
     long-float-negative-epsilon    single-float-epsilon           
     most-negative-double-float     single-float-negative-epsilon)
+
+(define-export-system #:safe-arithmetic-random :cl
+  #:random)
 
 ;;; These do modifications to variables, eg side effects.
 (sb-int:sane-package)

@@ -15,3 +15,9 @@
   (:export #:with-safe-package
            #:with-safe-readtable
            ))
+
+(defmacro define-export-system (name from &rest symbol-list)
+  `(defpackage ,name
+     (:use)
+     (:import-from ,from ,@(values symbol-list))
+     (:export ,@(values symbol-list))))
