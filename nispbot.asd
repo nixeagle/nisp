@@ -24,6 +24,7 @@
              (:file "random")))
    (:file "package")
    (:file "nisp-asdf")
+   (:file "nisp-introspect")
    (:module "safe"
             :components
             ((:file "package")
@@ -39,10 +40,10 @@
   :depends-on (:lift
                :cl-ppcre
                :cl-irc
+               :trivial-timeout
                :nisp)
   :serial t
   :components
-  ((:file "nisp-introspect")
-   (:file "config-dist")
+  ((:file "config-dist")
    (:file "config")
    (:file "nispbot")))

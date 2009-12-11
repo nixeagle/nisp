@@ -1,6 +1,7 @@
 (defpackage #:nispbot
   (:use :common-lisp :lift
         :nisp
+        :trivial-timeout
         :cl-irc :cl-ppcre
         :nispbot-config
         :nisp-introspect
@@ -49,16 +50,18 @@ for any arbitrary connection or list of channels."
           (multiple-value-bind (bot-cmd)
               (parse-bot-command msg-text)
             (when bot-cmd
-              (privmsg (connection message)
-                       target
-                       (format nil "~S"
-                               (multiple-value-bind (res)
-                                   (eval (read-bot-message bot-cmd))
-                                 res))))
+              (with-timeout (1)
+                (privmsg (connection message)
+                         target
+                         (strip-newline
+                          (format nil "~S"
+                                  (multiple-value-bind (res)
+                                      (eval (read-bot-message bot-cmd))
+                                    res))))))
             ))
       (error (condition) (privmsg (connection message)
-                         target
-                         (format nil "~A" condition))))))
+                                  target
+                                  (format nil "~A" condition))))))
 
 ;; (when (string-equal bot-cmd "arglist")
 ;;               (privmsg (connection message)
@@ -81,10 +84,30 @@ for any arbitrary connection or list of channels."
                            :safe-arithmetic-type-manipulation
                            :safe-arithmetic-boole
                            :safe-arithmetic-implentation-constants
-                           :safe-arithmetic-random))
+                           :safe-arithmetic-random
+                           :nisp-safe-introspect
+                           :nisp-unsafe-iteration))
         (with-safe-readtable
           (read-from-string msg-text)))
     res))
+
+(defun strip-newline (string)
+  "Given a string, remove all newlines.
+
+This is very irc specific where lines need to be all on one line.
+
+Note that the newline is not replaced by a space!"
+  (coerce
+   (loop for char in (coerce string 'list)
+      if (not (eq #\Newline  char))
+      collect char)
+   'string))
+
+(deftestsuite strip-newline (root-suite)
+  ()
+  (:test (pass-string
+          (:documentation "Base case")
+          (ensure (stringp (strip-newline "some string"))))))
 
 (defgeneric function-lambda-list-to-string (symbol)
   (:method (symbol)
