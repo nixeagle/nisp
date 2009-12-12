@@ -56,7 +56,7 @@ If prefix is not supplied, default to G-SAFE-"
 Should not get the same object from two
 different calls to gen-empty-package
 ")
-          (ensure-same (gen-empty-package)
+          (ensure-different (gen-empty-package)
                        (gen-empty-package))))
   (:documentation "Generating an empty package gives us a new
 package. If at any time we are able to generate a package collision a
