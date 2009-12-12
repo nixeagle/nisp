@@ -1,6 +1,7 @@
 (defpackage #:nispbot
   (:use :common-lisp :lift
         :nisp
+        :metatilities
         :trivial-timeout
         :cl-irc :cl-ppcre
         :nispbot-config

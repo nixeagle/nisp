@@ -30,3 +30,8 @@ If NAME is not given assume *package* instead"
   (:documentation "
 Portably count the number of all symbols in a given package.
 "))
+
+(defmacro ensure-predicate (predicate form &optional format &rest args)
+  "Using predicate, throw an error if the result is not true
+but make sure to explain what went wrong in the format string."
+  (list 'nyi predicate form format args))
