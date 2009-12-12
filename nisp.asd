@@ -12,18 +12,11 @@
   :license "GPLv2 or later"
   :description "Nixeagle's random lisp experiments"
   :depends-on (:cl-ppcre
+               :tinaa
                :lift
                :cl-irc
                :trivial-timeout
                :trivial-shell)
-  :properties ((#:author-email . "dev@nixeagle.org")
-               (#:date . "Future")
-               ((#:albert #:output-dir) . "albert-docs/")
-               ((#:albert #:formats) . ("docbook" "html"))
-               ((#:albert #:docbook #:template) . "book")
-               ((#:albert #:docbook #:bgcolor) . "white")
-               ((#:albert #:docbook #:textcolor) . "black")
-               )
   :serial t
   :components
   ((:file "main-test-suite")
@@ -66,3 +59,26 @@
 ;; (defsystem #:nisp-dev-helper
 ;;   :depends-on (:lift :nisp :nispbot :trivial-shell)
 ;;   :components ((:file "nisp-dev-helper")))
+
+
+;;   :properties (((#:albert #:use-temporary-files) . nil)
+;; 		 ((#:albert #:output-dir) . "Docs-Nisp/")
+;; 		 ((#:albert #:formats) . ("html"))
+;; 		 ((#:albert #:docbook #:template) . "book")
+;; 		 ((#:albert #:html #:output-dir) . "HTMLDocs")
+;; 		 ((#:albert #:presentation #:funcallable #:calledby) t)
+;; ;		 ((#:albert #:docbook #:cvs-viewurl) . "http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/langband/langband/")
+;; ;		 ((#:albert #:docbook #:cvs-tag) . "HEAD")
+;; ;		 ((#:albert #:html #:cvs-viewurl) . "http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/langband/langband/")
+;; ;		 ((#:albert #:html #:cvs-tag) . "HEAD")
+;; 		 )
+
+  ;; :properties ((#:author-email . "dev@nixeagle.org")
+  ;;              (#:date . "Future")
+  ;;              ((#:albert #:output-dir) . "albert-docs/")
+  ;;              ((#:albert #:formats) . '("html"))
+  ;;              (("albert" "presentation" "class" "related-methods") . t)
+  ;;              ((#:albert #:docbook #:template) . "book")
+  ;;              ((#:albert #:docbook #:bgcolor) . "white")
+  ;;              ((#:albert #:docbook #:textcolor) . "black")
+  ;;              )
