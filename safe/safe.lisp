@@ -37,28 +37,6 @@ match what capacities you want to allow untrusted code to do.
 On the todo list is to create a class that allows multiple instances and
 tracks currently interned packages and whatnot.")
 
-(deprecated
-  (defun format-package-name (name)
-    "Take name and append *safe-package-prefix*
-
-This is a cheap way to namespace packages. Better ideas welcome.
-
-Please replace this with (concatenate 'string \"safe-\" name)
-if you want the old behavior. The global variable has been removed."
-    name))
-
-(deftestsuite test-format-package-name (root-suite)
-  ()
-  :test (result-has-prefix
-         (ensure-same (format-package-name "test")
-                      "test"))
-  :test (pass-keyword
-         (:documentation
-          "Passing a keyword is something that should be allowed as it
-is normal to refer to packages by keywords in lisp.")
-         (ensure-same (format-package-name :test)
-                      "TEST")))
-
 (defun make-safe-package (name)
    "Should make a totally independent package. All normal safe stuff should be in this by default.
 
@@ -79,10 +57,8 @@ Some questions to consider:
 
 (defun delete-safe-package (name)
   "Delete package NAME unless its already deleted."
-  ;; Removed the let call, but still don't have this fully functional
-  ;; style
-  (when (packagep (find-package (format-package-name name)))
-    (delete-package (format-package-name name))))
+  (when (packagep (find-package name))
+    (delete-package name)))
 
 ;; (test (delete-safe-package :depends-on make-empty-safe-package)
 ;;   (is-true (delete-safe-package "test1")))
@@ -188,7 +164,7 @@ program.")
 
 (defmacro with-safe-package (name &body body)
   "Use the given package name to read some code."
-  `(with-package ,(format-package-name name)
+  `(with-package ,name
      (with-safe-readtable
        ,@body)))
 
