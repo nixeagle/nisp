@@ -94,14 +94,11 @@ Some questions to consider:
   (let ((*readtable* (copy-readtable nil)))
     (set-macro-character #\: #'colon-reader nil *readtable*)
     *readtable*))
+
 (deftestsuite test-make-readtable (root-suite)
-  ;((*readtable* (make-readtable)))
   ()
   :test (colon-macro-function-bound?
-         ;(:documentation
-         ; "Created read table should have a function bound to #\\\:")
-         (let ((*readtable* (make-readtable)))
-           (ensure (functionp (get-macro-character #\:))))))
+         (ensure (functionp (get-macro-character #\: (make-readtable))))))
 
 (defmacro with-safe-readtable (&body body)
   "Use readtable for all read calls in body.If readtable is not passed,
