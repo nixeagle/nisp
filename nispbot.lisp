@@ -129,7 +129,7 @@ verify that the result is correct.")
   (:test (short-command
           (ensure-same
            (parse-bot-command ",arglist +")
-           (values "arglist" "+")
+           (values "arglist +")
            :test #'string=))))
 
 
