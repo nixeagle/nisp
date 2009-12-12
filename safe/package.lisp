@@ -28,4 +28,9 @@
 ;;; This is NOT safe on its own currently, however testing timeouts in
 ;;; the irc portion. Eventually that needs to move here.
 (define-export-system :nisp-unsafe-iteration :cl
-  #:loop)
+  #:loop
+  #:list)
+
+;;; things required to get some minimal support going
+(define-export-system :nisp-safe-misc :cl
+  #:list)
