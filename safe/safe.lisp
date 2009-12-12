@@ -60,16 +60,6 @@ Some questions to consider:
   (when (packagep (find-package name))
     (delete-package name)))
 
-;; (test (delete-safe-package :depends-on make-empty-safe-package)
-;;   (is-true (delete-safe-package "test1")))
-
-;;;; base package stuff
-;;;do we really need this? -- nixeagle 2009-12-10
-
-(nisp-util::define-constant  +base-empty-packages+
-    '("test1" "test2" "test3")
-  "Base safe packages as far as development goes.")
-
 (defun read-using-package (name string)
   "read STRING using package NAME."
   (let ((*package* (find-package name)))
@@ -84,11 +74,11 @@ Some questions to consider:
   (error "Accessing packages outside of the current one is disabled."))
 
 (deftestsuite base-packages (root-suite)
-  ()
+  ((base-empty-packages (list '"test1" '"test2" '"test3")))
   (:setup
-   (mapc #'make-empty-package +base-empty-packages+))
+   (mapc #'make-empty-package base-empty-packages))
   (:teardown
-   (mapc #'delete-safe-package +base-empty-packages+)))
+   (mapc #'delete-safe-package base-empty-packages)))
 
 (deftestsuite test-colon-reader (base-packages)
   ()
