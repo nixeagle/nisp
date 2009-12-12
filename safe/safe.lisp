@@ -7,21 +7,19 @@
 ;;; Please note this code is highly experimental, if it blows up the
 ;;; moon, its not my fault ;)
 
+(defpackage #:nisp-safe
+  (:use :common-lisp
+        :lift
+        :metatilities
+        :nisp-empty-package
+        :nisp-util)
+  (:export #:with-safe-package
+           #:with-safe-readtable
+           ))
+
 (in-package :nisp-safe)
 
 (deftestsuite root-suite (nisp::root-suite) ())
-
-(defvar *safe-package-prefix* "safe-"
-  "All packages created for holding known safe code are stored
-with this package prefix.")
-
-(deftestsuite test-*safe-variable-prefix* (root-suite)
-  ()
-  :test (is-string (ensure (stringp *safe-package-prefix*)))
-  :test (last-element
-         (:documentation "Last element of the prefix needs to be a dash")
-         (ensure-same (car (last (coerce *safe-package-prefix* 'list)))
-                      #\-)))
 
 (defvar *prepared-safe-packages*
   '(:safe-arithmetic
@@ -39,23 +37,27 @@ match what capacities you want to allow untrusted code to do.
 On the todo list is to create a class that allows multiple instances and
 tracks currently interned packages and whatnot.")
 
-(defun format-package-name (name)
-  "Take name and append *safe-package-prefix*
+(deprecated
+  (defun format-package-name (name)
+    "Take name and append *safe-package-prefix*
 
-This is a cheap way to namespace packages. Better ideas welcome."
-  (concatenate 'string *safe-package-prefix* name))
+This is a cheap way to namespace packages. Better ideas welcome.
+
+Please replace this with (concatenate 'string \"safe-\" name)
+if you want the old behavior. The global variable has been removed."
+    name))
 
 (deftestsuite test-format-package-name (root-suite)
   ()
   :test (result-has-prefix
          (ensure-same (format-package-name "test")
-                      "safe-test"))
+                      "test"))
   :test (pass-keyword
          (:documentation
           "Passing a keyword is something that should be allowed as it
 is normal to refer to packages by keywords in lisp.")
          (ensure-same (format-package-name :test)
-                      "safe-TEST")))
+                      "TEST")))
 
 (defun make-empty-safe-package (name)
   "Make a package prefixed with the safe prefix specified in
@@ -179,7 +181,7 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
           (not
            (fboundp
             (with-safe-readtable
-              (read-using-package "safe-test1" "cl::+")))))))
+              (read-using-package "test1" "cl::+")))))))
 
 ;;; Moving this down here for now after make-readtable is defined
 ;;; because this depends on that function being defined.

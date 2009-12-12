@@ -8,15 +8,7 @@
            #:gen-empty-package
            ))
 
-(defpackage #:nisp-safe
-  (:use :common-lisp
-        :lift
-        :metatilities
-        :nisp-empty-package
-        :nisp-util)
-  (:export #:with-safe-package
-           #:with-safe-readtable
-           ))
+
 
 
 
