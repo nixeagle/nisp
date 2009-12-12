@@ -33,7 +33,13 @@ This is a cheap way to namespace packages. Better ideas welcome."
   ()
   :test (result-has-prefix
          (ensure-same (format-package-name "test")
-                      "safe-test")))
+                      "safe-test"))
+  :test (pass-keyword
+         (:documentation
+          "Passing a keyword is something that should be allowed as it
+is normal to refer to packages by keywords in lisp.")
+         (ensure-same (format-package-name :test)
+                      "safe-TEST")))
 
 (defun make-empty-safe-package (name)
   "Make a package prefixed with the safe prefix specified in
