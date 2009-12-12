@@ -31,7 +31,19 @@ If NAME is not given assume *package* instead"
 Portably count the number of all symbols in a given package.
 "))
 
+
 (defmacro ensure-predicate (predicate form &optional format &rest args)
   "Using predicate, throw an error if the result is not true
 but make sure to explain what went wrong in the format string."
-  (list 'nyi predicate form format args))
+;  (list 'nyi predicate form format args)
+  (let ((gpredicate (gensym))
+        (result (gensym)))
+    `(let ((,gpredicate #',predicate))
+       (let ((result (funcall ,gpredicate ,form)))
+         (if 
+          t
+          (list ',predicate ',form ,form)))))
+  )
+
+(ensure-predicate integerp (string "abc") )
+;(ensure (foobar a) )
