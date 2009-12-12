@@ -4,7 +4,6 @@
         :trivial-timeout
         :cl-irc :cl-ppcre
         :nispbot-config
-        :nisp-introspect
         :nisp-empty-package
         :nisp-safe)
   (:shadowing-import-from :cl-irc :pass))
