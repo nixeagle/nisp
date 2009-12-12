@@ -93,22 +93,7 @@ This is a cheap way to namespace packages. Better ideas welcome."
   ;; to verify that we send an error
   :test (expect-error
          (ensure-condition 'simple-error
-                        (colon-reader nil nil)))
-  :test (double-colon
-         (:documentation
-          "IF YOU SEE THIS:: DO NOT EVEN THINK ABOUT IGNORING IT!
-
-This message means that a function outside of a socalled 'safe' package
-was accessed. This test does the following:
-
-1) create an empty package, eg one with no internal symbols
-2) runs read-from-string using the package as the *PACKAGE* variable.
-3) reads the following string \"cl::+\".
-4) If cl::+ is an fbound symbol a critical assumption failed
-   or a regression has occured.
-
-AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
-         (ensure (not (fboundp (read-using-package "safe-alpha" "cl::+"))))))
+                        (colon-reader nil nil))))
 
 (defun make-readtable ()
   "Create readtable that prevents any syntax that can cause a package
@@ -131,14 +116,33 @@ we default to instantiating a new one using make-readtable"
   `(let ((*readtable* *safe-readtable*))
      ,@body))
 
-(deftestsuite test-with-safe-readtable (root-suite)
+(deftestsuite test-with-safe-readtable (base-packages)
   ()
   :test (modify-readtable
          (:documentation
           "Make sure that inside this form *readtable* is set to
 *safe-readtable*")
          (with-safe-readtable
-           (ensure (eq *readtable* *safe-readtable*)))))
+           (ensure (eq *readtable* *safe-readtable*))))
+  :test (double-colon
+         (:documentation
+          "IF YOU SEE THIS:: DO NOT EVEN THINK ABOUT IGNORING IT!
+
+This message means that a function outside of a socalled 'safe' package
+was accessed. This test does the following:
+
+1) create an empty package, eg one with no internal symbols
+2) runs read-from-string using the package as the *PACKAGE* variable.
+3) reads the following string \"cl::+\".
+4) If cl::+ is an fbound symbol a critical assumption failed
+   or a regression has occured.
+
+AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
+         (ensure
+          (not
+           (fboundp
+            (with-safe-readtable
+              (read-using-package "safe-test1" "cl::+")))))))
 
 ;;; Moving this down here for now after make-readtable is defined
 ;;; because this depends on that function being defined.
