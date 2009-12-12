@@ -89,9 +89,10 @@ Some questions to consider:
 
 (defun delete-safe-package (name)
   "Delete package NAME unless its already deleted."
-  (let ((safe-package-name (format-package-name name)))
-    (when (packagep (find-package safe-package-name))
-      (delete-package safe-package-name))))
+  ;; Removed the let call, but still don't have this fully functional
+  ;; style
+  (when (packagep (find-package (format-package-name name)))
+    (delete-package (format-package-name name))))
 
 ;; (test (delete-safe-package :depends-on make-empty-safe-package)
 ;;   (is-true (delete-safe-package "test1")))
