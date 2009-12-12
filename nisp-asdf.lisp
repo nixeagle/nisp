@@ -24,7 +24,7 @@
   :test (pass-string-with-valid-package-name
          (ensure (listp (list-system-components "nisp"))))
   :test (pass-multiple-args-in-a-list
-         (ensure (listp (list-system-components '(:nisp :nispbot)))))
+         (ensure (listp (list-system-components '(:nisp)))))
   :test (pass-integer
          (ensure-condition 'simple-type-error
            (list-system-components 1)))
