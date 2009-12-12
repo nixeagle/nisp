@@ -9,7 +9,9 @@
            ))
 
 (defpackage #:nisp-safe
-  (:use :common-lisp :lift
+  (:use :common-lisp
+        :lift
+        :metatilities
         :nisp-empty-package
         :nisp-util)
   (:export #:with-safe-package

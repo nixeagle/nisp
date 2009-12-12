@@ -12,6 +12,7 @@
   :license "GPLv2 or later"
   :description "Nixeagle's random lisp experiments"
   :depends-on (:cl-ppcre
+               :metatilities
                :tinaa
                :lift
                :cl-irc

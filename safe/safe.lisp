@@ -23,6 +23,22 @@ with this package prefix.")
          (ensure-same (car (last (coerce *safe-package-prefix* 'list)))
                       #\-)))
 
+(defvar *prepared-safe-packages*
+  '(:safe-arithmetic
+    :safe-arithmetic-trig
+    :safe-arithmetic-comparision
+    :safe-arithmetic-type-manipulation
+    :safe-arithmetic-boole
+    :safe-arithmetic-implentation-constants
+    :safe-arithmetic-random
+    :nisp-safe-introspect)
+  "Listing of packages that have been prepared or deemed to be safe.
+This is the default list, the idea is depending on the situation mix and
+match what capacities you want to allow untrusted code to do.
+
+On the todo list is to create a class that allows multiple instances and
+tracks currently interned packages and whatnot.")
+
 (defun format-package-name (name)
   "Take name and append *safe-package-prefix*
 
@@ -56,6 +72,9 @@ is normal to refer to packages by keywords in lisp.")
   ;; :test (pass-empty-string
   ;;        (:documentation "We should error if an empty string is passed")
   ;;        (ensure-error (make-empty-safe-package "")))
+
+(defun make-safe-package (name)
+  (nyi name))
 
 (defun delete-safe-package (name)
   "Delete package NAME unless its already deleted."
