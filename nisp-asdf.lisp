@@ -20,7 +20,7 @@
 (deftestsuite list-system-components (root-suite)
   ()
   :test (pass-keyword-with-valid-package-name
-         (ensure-same (integerp (list-system-components :nisp)) t))
+         (ensure-same (listp (list-system-components :nisp)) t))
   :test (pass-string-with-valid-package-name
          (ensure (listp (list-system-components "nisp"))))
   :test (pass-multiple-args-in-a-list
