@@ -1,2 +1,8 @@
 *.fasl
 /config.lisp
+/albert-docs
+/tinaa
+/atdoc
+/Docs-Nisp
+/safe/test-results
+/lift-tests
