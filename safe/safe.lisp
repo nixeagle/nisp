@@ -59,18 +59,6 @@ is normal to refer to packages by keywords in lisp.")
          (ensure-same (format-package-name :test)
                       "TEST")))
 
-(defun make-empty-safe-package (name)
-  "Make a package prefixed with the safe prefix specified in
-*safe-package-prefix*"
-  (make-empty-package (format-package-name name)))
-
-(deftestsuite test-make-empty-safe-package (root-suite)
-  ()
-  (:teardown (when (find-package "safe-test1")
-               (delete-package "safe-test1")))
-  :test (is-package
-         (ensure (packagep (make-empty-safe-package "test1")))))
-
 (defun make-safe-package (name)
    "Should make a totally independent package. All normal safe stuff should be in this by default.
 
@@ -122,7 +110,7 @@ Some questions to consider:
 (deftestsuite base-packages (root-suite)
   ()
   (:setup
-   (mapc #'make-empty-safe-package +base-empty-packages+))
+   (mapc #'make-empty-package +base-empty-packages+))
   (:teardown
    (mapc #'delete-safe-package +base-empty-packages+)))
 
