@@ -132,17 +132,6 @@ verify that the result is correct.")
            (values "arglist" "+")
            :test #'string=))))
 
-(deftestsuite test-function-lambda-list-to-string
-    (basic-irc-suite)
-  ()
-  (:test (pass-+
-          (:documentation "We need to get a string")
-          (ensure (stringp (function-lambda-list-to-string "+")))))
-  (:test (pass-1
-          (:documentation "Invalid input like the number 1 in a string
-needs to return a sensible result.")
-          (ensure (stringp (function-lambda-list-to-string "1"))))))
-
 
 (defpackage #:nispbot-basic-commands
   (:use :cl :lift :nispbot))
