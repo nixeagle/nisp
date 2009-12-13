@@ -19,8 +19,6 @@
 
 (in-package :nisp-safe)
 
-(deftestsuite root-suite (nisp::root-suite) ())
-
 (defvar *prepared-safe-packages*
   '(:safe-arithmetic
     :safe-arithmetic-trig
@@ -47,14 +45,6 @@ Some questions to consider:
   - Is it safe to read using a read function defined in this package? My off the cuff guess is 'not a good idea'. Too much chance for iffy behavior unless it can be proven safe."
   (nyi name))
 
-(deftestsuite make-safe-package (root-suite)
-  ((keyword :test-keyword)
-   (string "test-string"))
-  :test (pass-keyword
-         (ensure (packagep (make-safe-package keyword))))
-  :test (pass-string
-         (ensure (packagep (make-safe-package string)))))
-
 (defun delete-safe-package (name)
   "Delete package NAME unless its already deleted."
   (when (packagep (find-package name))
@@ -73,21 +63,6 @@ Some questions to consider:
   ;; broken for :keywords and possibly other things too.
   (error "Accessing packages outside of the current one is disabled."))
 
-(deftestsuite base-packages (root-suite)
-  ((base-empty-packages (list '"test1" '"test2" '"test3")))
-  (:setup
-   (mapc #'make-empty-package base-empty-packages))
-  (:teardown
-   (mapc #'delete-safe-package base-empty-packages)))
-
-(deftestsuite test-colon-reader (base-packages)
-  ()
-  ;; This is not even remotely correct arguments passed, the point is
-  ;; to verify that we send an error
-  :test (expect-error
-         (ensure-condition 'simple-error
-                        (colon-reader nil nil))))
-
 (defun make-readtable ()
   "Create readtable that prevents any syntax that can cause a package
   change."
@@ -95,16 +70,34 @@ Some questions to consider:
     (set-macro-character #\: #'colon-reader nil *readtable*)
     *readtable*))
 
-(deftestsuite test-make-readtable (root-suite)
-  ()
-  :test (colon-macro-function-bound?
-         (ensure (functionp (get-macro-character #\: (make-readtable))))))
-
 (defmacro with-safe-readtable (&body body)
   "Use readtable for all read calls in body.If readtable is not passed,
 we default to instantiating a new one using make-readtable"
   `(let ((*readtable* *safe-readtable*))
      ,@body))
+
+;;; Moving this down here for now after make-readtable is defined
+;;; because this depends on that function being defined.
+(defparameter *safe-readtable* (make-readtable)
+  "The safe readtable that is used by the with-safe-readtable macro.
+
+This is currently a parameter but should be made into a constant at some
+point so a warning or error can block it being changed in a running
+program.")
+
+(defmacro with-safe-package (name &body body)
+  "Use the given package name to read some code."
+  `(with-package ,name
+     (with-safe-readtable
+       ,@body)))
+
+;;;; Tests
+(deftestsuite root-suite (nisp::root-suite) ())
+
+(deftestsuite test-make-readtable (root-suite)
+  ()
+  :test (colon-macro-function-bound?
+         (ensure (functionp (get-macro-character #\: (make-readtable))))))
 
 (deftestsuite test-with-safe-readtable (base-packages)
   ()
@@ -134,24 +127,32 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
             (with-safe-readtable
               (read-using-package "test1" "cl::+")))))))
 
-;;; Moving this down here for now after make-readtable is defined
-;;; because this depends on that function being defined.
-(defparameter *safe-readtable* (make-readtable)
-  "The safe readtable that is used by the with-safe-readtable macro.
-
-This is currently a parameter but should be made into a constant at some
-point so a warning or error can block it being changed in a running
-program.")
-
 (deftestsuite test-*safe-readtable* (root-suite)
     ()
     :documentation "Make sure we get a readtable."
     :test (is-readtable
            (ensure (readtablep *safe-readtable*))))
 
-(defmacro with-safe-package (name &body body)
-  "Use the given package name to read some code."
-  `(with-package ,name
-     (with-safe-readtable
-       ,@body)))
+;;; Tests
+(deftestsuite make-safe-package (root-suite)
+  ((keyword :test-keyword)
+   (string "test-string"))
+  :test (pass-keyword
+         (ensure (packagep (make-safe-package keyword))))
+  :test (pass-string
+         (ensure (packagep (make-safe-package string)))))
 
+(deftestsuite base-packages (root-suite)
+  ((base-empty-packages (list '"test1" '"test2" '"test3")))
+  (:setup
+   (mapc #'make-empty-package base-empty-packages))
+  (:teardown
+   (mapc #'delete-safe-package base-empty-packages)))
+
+(deftestsuite test-colon-reader (base-packages)
+  ()
+  ;; This is not even remotely correct arguments passed, the point is
+  ;; to verify that we send an error
+  :test (expect-error
+         (ensure-condition 'simple-error
+                        (colon-reader nil nil))))
