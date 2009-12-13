@@ -36,14 +36,16 @@ On the todo list is to create a class that allows multiple instances and
 tracks currently interned packages and whatnot.")
 
 (defun make-safe-package (name)
-   "Should make a totally independent package. All normal safe stuff should be in this by default.
+  "Should make a totally independent package. All normal safe stuff should be in this by default.
 
 Some questions to consider:
   - Is it safe to set *readtable* in the package on creation. By this is it possible for a malicious user to modify this?
     - What happens when I set it to nil?
     - Can I replace colon-reader with another more permissive function? If so how?
   - Is it safe to read using a read function defined in this package? My off the cuff guess is 'not a good idea'. Too much chance for iffy behavior unless it can be proven safe."
-  (nyi name))
+  (with-package (make-empty-package name)
+    (cl::use-package nisp-safe::*prepared-safe-packages*)
+    *package*))
 
 (defun delete-safe-package (name)
   "Delete package NAME unless its already deleted."
