@@ -10,7 +10,7 @@
 is likely to be very temporary as we plan on moving into a
 CLOS style.")
 
-(defparameter *eighthbit* "platinum.eighthbit.net"
+(defparameter *server* "platinum.eighthbit.net"
   "The network to connect to. Currently we can connect only
 to one network at a time. This is a bug and will be fixed.")
 

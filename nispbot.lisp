@@ -19,22 +19,52 @@
 
 (defvar *connection*)
 
-(defun start-connection ()
-  "Simple connection function for basic testing."
-  (set '*connection* (connect :nickname *nickname*
-                             :server *eighthbit*))
-  (join-all-channels)
-  (irc:add-hook *connection* 'irc:irc-privmsg-message #'command-hook)
-  (irc:start-background-message-handler *connection*)
-;  (irc:read-message-loop *connection*)
-  )
+(defvar *nispbot*)
 
-(defun join-all-channels ()
+(defclass irc-bot ()
+  ((nick :accessor bot-nick
+         :initform *nickname*
+         :initarg :nick)
+   (server :accessor bot-server
+           :initform *server*
+           :initarg :server)
+   (connection :accessor bot-connection
+               :initarg :connection
+               :initform nil)))
+
+(defun make-irc-bot (nick server)
+  (make-instance 'irc-bot
+                 :nick nick
+                 :server server))
+
+(defgeneric start-connection (instance))
+
+(defmethod start-connection ((bot irc-bot))
+  (setf (bot-connection bot)
+        (connect :nickname (bot-nick bot)
+                 :server (bot-server bot)))
+  (join-all-channels (bot-connection bot))
+  (irc:add-hook (bot-connection bot)
+                'irc:irc-privmsg-message
+                #'command-hook)
+  (irc:read-message-loop (bot-connection bot)))
+
+;; (defun start-connection ()
+;;   "Simple connection function for basic testing."
+;;   (set '*connection* (connect :nickname *nickname*
+;;                              :server *eighthbit*))
+;;   (join-all-channels)
+;;   (irc:add-hook *connection* 'irc:irc-privmsg-message #'command-hook)
+;;   (irc:start-background-message-handler *connection*)
+;; ;  (irc:read-message-loop *connection*)
+;;   )
+
+(defun join-all-channels (&optional (connection *connection*))
   "Join all channels in *channels*. Later we will expand this to work
 for any arbitrary connection or list of channels."
   (mapc
    (lambda (channel)
-     (join *connection* channel))
+     (join connection channel))
    nispbot-config::*channels*))
 
 (defun command-hook (message)

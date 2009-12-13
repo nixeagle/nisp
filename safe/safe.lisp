@@ -139,6 +139,8 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
 (deftestsuite make-safe-package (root-suite)
   ((keyword :test-keyword)
    (string "test-string"))
+  (:teardown (delete-package :test-keyword)
+             (delete-package "test-string"))
   :test (pass-keyword
          (ensure (packagep (make-safe-package keyword))))
   :test (pass-string
