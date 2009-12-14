@@ -71,7 +71,8 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
 
 (defpackage #:safe-external-tests
   (:use :lift
-        :safe-external)
+        :safe-external
+        :safe-closure)
   (:documentation "This package is largely reserved for testing "))
 
 ;(use-package *prepared-safe-packages* (find-package :safe-external-tests))
@@ -81,6 +82,12 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
 (deftestsuite root-suite (nisp::root-suite)
   ()
   (:documentation "The root of all external (sandbox accessable) function tests."))
+
+(deftestsuite safe-closure-suite (root-suite)
+  ()
+  (:documentation "Items in safe-closure have the requirement of
+allowing operations on a safe-package without the user of the safe
+package being allowed to know which package they are in." ))
 
 (deftestsuite test-range (root-suite)
   ()
@@ -111,3 +118,4 @@ are largely undocumented in the lift test framework.")
               ((start a-double-float)
                (end a-single-float))
             (run-range start end)))))
+
