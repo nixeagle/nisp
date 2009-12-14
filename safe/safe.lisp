@@ -31,7 +31,8 @@
            #:mapc
            #:mapcar
            #:list
-           #:lambda))
+           #:lambda
+           #:range))
 
 (in-package :nisp-safe)
 
@@ -202,3 +203,9 @@ program.")
 (defun safe-testing!::describe (object)
   "Special describe function for our sandbox testing stuff."
   (swank::describe-to-string object))
+
+(defun safe-testing!::range (start end)
+  "Generate a list of integers from start to end."
+  (if (> start end)
+      (loop for x from start downto end collect x)
+      (loop for x from start to end collect x)))
