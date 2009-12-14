@@ -21,21 +21,14 @@
 
 (defvar *nispbot*)
 
-(defclass irc-bot ()
-  ((nick :accessor bot-nick
-         :initform *nickname*
-         :initarg :nick)
-   (server :accessor bot-server
-           :initform *server*
-           :initarg :server)
-   (connection :accessor bot-connection
-               :initarg :connection
-               :initform nil)))
+(defclass irc-bot (irc:connection)
+  ((comchar :accessor irc-bot-comchar
+            :initarg :comchar
+            :initform #\,)))
 
 (defun make-irc-bot (nick server)
-  (make-instance 'irc-bot
-                 :nick nick
-                 :server server))
+  (connect :nickname nick :connection-type 'irc-bot
+           :server server))
 
 (defgeneric start-connection (instance))
 
@@ -49,58 +42,52 @@
                 #'command-hook)
   (irc:read-message-loop (bot-connection bot)))
 
-;; (defun start-connection ()
-;;   "Simple connection function for basic testing."
-;;   (set '*connection* (connect :nickname *nickname*
-;;                              :server *eighthbit*))
-;;   (join-all-channels)
-;;   (irc:add-hook *connection* 'irc:irc-privmsg-message #'command-hook)
-;;   (irc:start-background-message-handler *connection*)
-;; ;  (irc:read-message-loop *connection*)
-;;   )
+(defgeneric join-all-channels (instance)
+  (:documentation "Join all channels in *channels*. Later we will expand this to work for any arbitrary connection or list of channels."))
 
-(defun join-all-channels (&optional (connection *connection*))
-  "Join all channels in *channels*. Later we will expand this to work
-for any arbitrary connection or list of channels."
+(defmethod join-all-channels ((bot irc-bot))
   (mapc
    (lambda (channel)
-     (join connection channel))
+     (join bot channel))
    nispbot-config::*channels*))
+
+(defgeneric reset-command-hook (instance))
+(defmethod reset-command-hook ((bot irc-bot))
+  (irc:remove-hooks bot 'irc:irc-privmsg-message)
+  (irc:add-hook bot 'irc:irc-privmsg-message #'command-hook))
+
+(defgeneric parse-eval-request (instance message))
+(defmethod parse-eval-request ((bot irc-bot) (msg irc-privmsg-message))
+  "might want to return our own message type eventually"
+  (when (is-eval-request bot msg)
+    (substring (second (arguments msg)) 1)))
+
+(defgeneric is-eval-request (instance message))
+(defmethod is-eval-request ((bot irc-bot) (msg irc-privmsg-message))
+  (eq (char (second (arguments msg)) 0)
+            (irc-bot-comchar bot)))
+
+
 
 (defun command-hook (message)
   (declare (notinline command-hook))
+                                        ;  (print message)
   "For now lets try to parse just one command"
-  (let ((msg-text (second (arguments message)))
-        (target (first (arguments message))))
-    (handler-case
-        (progn
-          (multiple-value-bind (bot-cmd)
-              (parse-bot-command msg-text)
-            (when bot-cmd
-              (with-timeout (1)
-                (privmsg (connection message)
-                         target
-                         (strip-newline
-                          (format nil "~S"
-                                  (multiple-value-bind (res)
-                                      (eval (read-bot-message bot-cmd))
-                                    res))))))
-            ))
-      (error (condition) (privmsg (connection message)
-                                  target
-                                  (format nil "~A" condition))))))
-
-;; (when (string-equal bot-cmd "arglist")
-;;               (privmsg (connection message)
-;;                        target
-;;                        (function-lambda-list-to-string ar)))
-
-
-(defun parse-bot-command (msg-text)
-  "Parse an irc message and split command out from the rest."
-  (register-groups-bind (command)
-        ("^,(.+)" msg-text)
-    (values command)))
+  
+  (let (( forms (parse-eval-request (connection message) message)))
+    (when forms
+      (handler-case
+          (with-timeout (1)
+            (privmsg (connection message)
+                     (first (arguments message))
+                     (strip-newline
+                      (format nil "~S"
+                              (multiple-value-bind (res)
+                                  (eval (read-bot-message forms))
+                                res)))))
+        (error (condition) (privmsg (connection message)
+                                    target
+                                    (format nil "~A" condition)))))))
 
 (defun read-bot-message (msg-text)
   "Return a form ready to be funcall'd"
