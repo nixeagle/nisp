@@ -1,12 +1,5 @@
 (in-package :nisp-safe-system)
 
-(defpackage #:nisp-empty-package
-  (:use :cl :lift :nisp-util)
-  (:export #:with-empty-package
-           #:make-empty-package
-           #:with-package
-           #:gen-empty-package
-           ))
 
 
 

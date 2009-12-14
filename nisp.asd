@@ -5,6 +5,7 @@
 (in-package #:nispbot-system)
 (defpackage #:nisp-safe-system
   (:use :cl :asdf))
+
 (defsystem :nisp
   :version "0.0.3"
   :author "James S <dev@nixeagle.org>"
@@ -32,7 +33,8 @@
    (:file "nisp-introspect")
    (:module "safe"
             :components
-            ((:file "package")
+            (
+             (:file "package")
              (:file "empty-package")
              (:file "arithmetic")
              (:file "safe")))

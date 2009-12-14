@@ -24,7 +24,9 @@
 (defclass irc-bot (irc:connection)
   ((comchar :accessor irc-bot-comchar
             :initarg :comchar
-            :initform #\,)))
+            :initform #\,)
+   (safe :accessor irc-bot-safe
+         :initform (make-safe))))
 
 (defun make-irc-bot (nick server)
   (connect :nickname nick :connection-type 'irc-bot
@@ -67,13 +69,10 @@
   (eq (char (second (arguments msg)) 0)
             (irc-bot-comchar bot)))
 
-
-
 (defun command-hook (message)
   (declare (notinline command-hook))
                                         ;  (print message)
   "For now lets try to parse just one command"
-  
   (let (( forms (parse-eval-request (connection message) message)))
     (when forms
       (handler-case
@@ -83,14 +82,22 @@
                      (strip-newline
                       (format nil "~S"
                               (multiple-value-bind (res)
-                                  (eval (read-bot-message forms))
+                                  (eval (safe-read message forms))
                                 res)))))
         (error (condition) (privmsg (connection message)
-                                    target
+                                    (first (arguments message))
                                     (format nil "~A" condition)))))))
+
+(defmethod safe-read ((msg irc-privmsg-message)
+                       (forms string) &optional owner)
+  (declare (ignore owner))
+  (safe-read (irc-bot-safe (connection msg))
+             forms
+             (host msg)))
 
 (defun read-bot-message (msg-text)
   "Return a form ready to be funcall'd"
+  (safe-read (irc-bot-safe ))
   (multiple-value-bind (res)
       (with-package (gen-empty-package)
         (cl::use-package :nisp-unsafe-iteration)
