@@ -2,7 +2,7 @@
 
 ;; Tests
 (deftestsuite base-packages (root-suite)
-  ((base-empty-packages (list '"test1" '"test2" '"test3")))
+  ((base-empty-packages '"test1"))
   (:setup
    (mapc #'make-empty-package base-empty-packages))
   (:teardown
