@@ -23,7 +23,7 @@
 
 (defpackage #:safe-testing!
   (:use)
-  (:shadowing-import-from :cl #:setq #:defun #:loop #:mapc #:mapcar #:list #:lambda)
+  (:shadowing-import-from :cl #:setq #:defun #:loop #:mapc #:mapcar #:list #:lambda :t :nil)
   (:export #:setq
            #:describe
            #:defun
@@ -32,7 +32,9 @@
            #:mapcar
            #:list
            #:lambda
-           #:range))
+           #:range
+           :t
+           :nil))
 
 (in-package :nisp-safe)
 
