@@ -69,6 +69,23 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
          (ensure-condition 'simple-error
                         (colon-reader nil nil))))
 
+(deftestsuite test-list-to-pairs (root-suite)
+  ()
+  (:test (even-list
+          (:documentation "Even lists should return two values, car and cdr.")
+          (list-to-pairs (list 1 2))
+          (ensure-same (list-to-pairs)
+                       (values 1 2))))
+  (:test (empty-list
+          (:documentation "Empty lists return two nils")
+          (ensure-same (list-to-pairs)
+                       (values nil nil))))
+  (:test (odd-list
+          (:documentation "Odd lists should error")
+          (ensure-condition (simple-error)
+            (list-to-pairs (list 1))
+            (list-to-pairs)))))
+
 (defpackage #:safe-external-tests
   (:use :lift
         :safe-external

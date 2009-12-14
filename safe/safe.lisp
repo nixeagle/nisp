@@ -24,7 +24,7 @@
 (defpackage #:safe-testing!
   (:use)
   (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list #:lambda :t :nil)
-  (:export 
+  (:export
            #:loop
            #:mapc
            #:mapcar
@@ -41,7 +41,7 @@
 
 (defpackage #:safe-closure
   (:use)
-  (:export #:reset))
+  (:export #:reset #:setq :nisp-test))
 
 (in-package :nisp-safe)
 
@@ -171,6 +171,7 @@ program.")
                              :package package
                              :owner owner)))
     (add-package safe (safe-package-use safe))
+    (populate-safe-package-closures safe)
     safe))
 (defmethod create-safe-package ((package string) &optional owner)
   (let ((safe (make-instance 'safe-package
@@ -244,3 +245,12 @@ program.")
     "Reset the sandbox you are in. Generally this will delete the sandbox and create a new one in its place."
     (delete-safe-package safe-package)
     (create-safe-package safe-package)))
+(let ((closed-list))
+  (defun list-to-pairs (&optional new-list)
+    "Convert list to pairs, givin list only set the list, not return a pair."
+    (if new-list
+        (setq closed-list new-list)
+        (when closed-list
+          (unless (evenp (list-length closed-list))
+            (error "List has odd number of elements."))
+          (values (pop closed-list) (pop closed-list))))))
