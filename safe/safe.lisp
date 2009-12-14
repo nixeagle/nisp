@@ -25,13 +25,14 @@
   (:use)
   (:shadowing-import-from :cl #:setq #:defun #:loop #:mapc #:mapcar #:list #:lambda :t :nil)
   (:export #:setq
-           #:describe
+
            #:defun
            #:loop
            #:mapc
            #:mapcar
            #:list
            #:lambda
+           #:describe
            #:range
            :t
            :nil))
@@ -202,12 +203,18 @@ program.")
 (defmethod safe-read ((safe safe) (forms string) &optional owner)
   (safe-read (safe-select safe owner) forms))
 
-(defun safe-testing!::describe (object)
+
+(defpackage #:safe-external
+  (:use)
+  (:export #:range))
+
+(defun safe-external::describe (object)
   "Special describe function for our sandbox testing stuff."
   (swank::describe-to-string object))
 
-(defun safe-testing!::range (start end)
+(defun safe-external::range (start end)
   "Generate a list of integers from start to end."
   (if (> start end)
       (loop for x from start downto end collect x)
       (loop for x from start to end collect x)))
+

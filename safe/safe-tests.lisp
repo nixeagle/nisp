@@ -4,9 +4,9 @@
 (deftestsuite base-packages (root-suite)
   ((base-empty-packages '"test1"))
   (:setup
-   (mapc #'make-empty-package base-empty-packages))
+   (make-empty-package base-empty-packages))
   (:teardown
-   (mapc #'delete-safe-package-old base-empty-packages)))
+   (delete-safe-package-old base-empty-packages)))
 
 (deftestsuite root-suite (nisp::root-suite) ())
 
@@ -53,8 +53,8 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
 (deftestsuite make-safe-package (root-suite)
   ((keyword :test-keyword)
    (string "test-string"))
-  (:teardown (delete-package :test-keyword)
-             (delete-package "test-string"))
+  (:teardown (delete-safe-package-old keyword)
+             (delete-safe-package-old string))
   :test (pass-keyword
          (ensure (packagep (make-safe-package keyword))))
   :test (pass-string
@@ -70,10 +70,11 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
                         (colon-reader nil nil))))
 
 (defpackage #:safe-external-tests
-  (:use :lift)
+  (:use :lift
+        :safe-external)
   (:documentation "This package is largely reserved for testing "))
 
-(use-package *prepared-safe-packages* (find-package :safe-external-tests))
+;(use-package *prepared-safe-packages* (find-package :safe-external-tests))
 (in-package :safe-external-tests)
 
 
@@ -90,13 +91,13 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
   (:test (count-up
           (:documentation "The usual case, counting from START to END")
           (ensure-same (range 0 10)
-                       (list 0 1 2 3 4 5 6 7 8 9 10))))
+                       (cl:list 0 1 2 3 4 5 6 7 8 9 10))))
   (:test (count-down
           (:documentation
            "A tad unusual, but we expect given a START greater then END
 to count _down_ from START to END.")
           (ensure-same (range 5 -5)
-                       (list 5 4 3 2 1 0 -1 -2 -3 -4 -5))))
+                       (cl:list 5 4 3 2 1 0 -1 -2 -3 -4 -5))))
   (:test (random-integer-combos
           (:documentation "Playing around with random test cases. These
 are largely undocumented in the lift test framework.")
