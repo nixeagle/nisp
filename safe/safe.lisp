@@ -208,8 +208,10 @@ program.")
   (:use)
   (:export #:range))
 
+
 (defun safe-external::describe (object)
   "Special describe function for our sandbox testing stuff."
+  ;; Needs rewritten to not depend on swank!
   (swank::describe-to-string object))
 
 (defun safe-external::range (start end)
