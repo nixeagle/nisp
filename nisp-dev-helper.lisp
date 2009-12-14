@@ -1,7 +1,14 @@
 (defpackage #:nisp-dev-helper
-  (:use :cl :nispbot :trivial-shell :lift :tinaa))
+  (:use :cl :nispbot :trivial-shell :lift :tinaa)
+  (:export #:start-nispbot-instance))
 
 (in-package :nisp-dev-helper)
+
+(defun start-nispbot-instance (&optional (nick "nisp"))
+  (setq nispbot::*nispbot* (nispbot::make-irc-bot nick "irc.eighthbit.net"))
+  (irc:start-background-message-handler nispbot::*nispbot*)
+  (nispbot::join-all-channels nispbot::*nispbot*)
+  (nispbot::reset-command-hook nispbot::*nispbot*))
 
 (defun generate-html-output ()
     (progn
