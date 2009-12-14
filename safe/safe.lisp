@@ -23,23 +23,29 @@
 
 (defpackage #:safe-testing!
   (:use)
-  (:shadowing-import-from :cl #:setq #:defun #:loop #:mapc #:mapcar #:list #:lambda :t :nil)
-  (:export #:setq
-
-           #:defun
+  (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list #:lambda :t :nil)
+  (:export 
            #:loop
            #:mapc
            #:mapcar
            #:list
            #:lambda
            #:describe
-           #:range
            :t
            :nil))
 
+(defpackage #:safe-external
+  (:use)
+;  (:shadow help)
+  (:export #:range help))
+
+(defpackage #:safe-closure
+  (:use)
+  (:export #:reset))
+
 (in-package :nisp-safe)
 
-(defvar *prepared-safe-packages*
+(defparameter *prepared-safe-packages*
   '(:safe-arithmetic
     :safe-arithmetic-trig
     :safe-arithmetic-comparision
@@ -48,6 +54,8 @@
     :safe-arithmetic-implentation-constants
     :safe-arithmetic-random
     :nisp-safe-introspect
+    :safe-external
+    :safe-closure
     :safe-testing!)
   "Listing of packages that have been prepared or deemed to be safe.
 This is the default list, the idea is depending on the situation mix and
@@ -152,6 +160,12 @@ program.")
         :initform *prepared-safe-packages*)))
 
 (defgeneric create-safe-package (package &optional owner))
+(defmethod create-safe-package ((package safe-package) &optional owner)
+  (declare (ignore owner))
+  (setf (safe-package package)
+        (make-empty-package (concatenate 'string "SAFE-"
+                                    (safe-package-owner package))))
+   (add-package package (safe-package-use package)))
 (defmethod create-safe-package ((package package) &optional owner)
   (let ((safe (make-instance 'safe-package
                              :package package
@@ -163,6 +177,7 @@ program.")
                              :package (make-empty-package package)
                              :owner owner)))
     (add-package safe (safe-package-use safe))
+    (populate-safe-package-closures safe)
     safe))
 #+ (or)
 (defmethod create-safe-package :after ((package string) &optional owner)
@@ -176,7 +191,8 @@ program.")
 (defgeneric add-package (safe-package package-name)
   (:documentation "add symbols from another package"))
 (defmethod add-package ((package safe-package) package-name)
-  (use-package package-name (safe-package package)))
+  (with-safe-package (safe-package package)
+    (use-package package-name (safe-package package))))
 
 (defgeneric remove-package (safe-package package-name)
   (:documentation "remove symbols from another package"))
@@ -204,9 +220,7 @@ program.")
   (safe-read (safe-select safe owner) forms))
 
 
-(defpackage #:safe-external
-  (:use)
-  (:export #:range))
+
 
 
 (defun safe-external::describe (object)
@@ -220,3 +234,13 @@ program.")
       (loop for x from start downto end collect x)
       (loop for x from start to end collect x)))
 
+(defparameter safe-external::help "Welcome to nisp-safe! This is a tool for evaluating common lisp in a safe environment. You can define your own functions, your own variables and even this message. Ask for help on a function with (describe 'function-name)."
+  "The help message when a user types the word help in.")
+
+
+(defun nisp-safe::populate-safe-package-closures (safe-package)
+  "Reset the functions that have some hidden state."
+  (defun safe-closure::reset ()
+    "Reset the sandbox you are in. Generally this will delete the sandbox and create a new one in its place."
+    (delete-safe-package safe-package)
+    (create-safe-package safe-package)))

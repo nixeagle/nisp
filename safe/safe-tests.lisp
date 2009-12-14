@@ -2,9 +2,9 @@
 
 ;; Tests
 (deftestsuite base-packages (root-suite)
-  ((base-empty-packages '"test1"))
+  ()
   (:setup
-   (make-empty-package base-empty-packages))
+   (make-empty-package "test1"))
   (:teardown
    (delete-safe-package-old base-empty-packages)))
 
