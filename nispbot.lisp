@@ -73,14 +73,15 @@
   (declare (notinline command-hook))
                                         ;  (print message)
   "For now lets try to parse just one command"
-  (let (( forms (parse-eval-request (connection message) message)))
+  (let ((forms (parse-eval-request (connection message) message))
+        ( *print-readably* t))
     (when forms
       (handler-case
           (with-timeout (1)
             (privmsg (connection message)
                      (first (arguments message))
                      (strip-newline
-                      (format nil "~S"
+                      (format nil "~A"
                               (multiple-value-bind (res)
                                   (eval (safe-read message forms))
                                 res)))))

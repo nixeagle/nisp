@@ -21,6 +21,18 @@
            #:make-safe
            ))
 
+(defpackage #:safe-testing!
+  (:use)
+  (:shadowing-import-from :cl #:setq #:defun #:loop #:mapc #:mapcar #:list #:lambda)
+  (:export #:setq
+           #:describe
+           #:defun
+           #:loop
+           #:mapc
+           #:mapcar
+           #:list
+           #:lambda))
+
 (in-package :nisp-safe)
 
 (defvar *prepared-safe-packages*
@@ -31,7 +43,8 @@
     :safe-arithmetic-boole
     :safe-arithmetic-implentation-constants
     :safe-arithmetic-random
-    :nisp-safe-introspect)
+    :nisp-safe-introspect
+    :safe-testing!)
   "Listing of packages that have been prepared or deemed to be safe.
 This is the default list, the idea is depending on the situation mix and
 match what capacities you want to allow untrusted code to do.
@@ -136,12 +149,16 @@ program.")
 
 (defgeneric create-safe-package (package &optional owner))
 (defmethod create-safe-package ((package package) &optional owner)
-  (make-instance 'safe-package :package package :owner owner))
+  (let ((safe (make-instance 'safe-package
+                             :package package
+                             :owner owner)))
+    (add-package safe (safe-package-use safe))
+    safe))
 (defmethod create-safe-package ((package string) &optional owner)
   (let ((safe (make-instance 'safe-package
                              :package (make-empty-package package)
                              :owner owner)))
-    (add-package safe *prepared-safe-packages*)
+    (add-package safe (safe-package-use safe))
     safe))
 #+ (or)
 (defmethod create-safe-package :after ((package string) &optional owner)
@@ -250,3 +267,8 @@ program.")
 ;;   :test (expect-error
 ;;          (ensure-condition 'simple-error
 ;;                         (colon-reader nil nil))))
+
+
+(defun safe-testing!::describe (object)
+  "Special describe function for our sandbox testing stuff."
+  (swank::describe-to-string object))
