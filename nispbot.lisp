@@ -143,14 +143,6 @@ verify that the result is correct.")
                         :delimiters '(#\Space))
                        '("Some" "string" "to" "test" "on")))))
 
-(deftestsuite test-parse-bot-command (basic-irc-suite)
-  ()
-  (:test (short-command
-          (ensure-same
-           (parse-bot-command ",arglist +")
-           (values "arglist +")
-           :test #'string=))))
-
 
 (defpackage #:nispbot-basic-commands
   (:use :cl :lift :nispbot))
