@@ -1,10 +1,19 @@
-* Shadowing import stuff
+* TODO Shadowing import stuff
 move from import-from to shadowing-import-from for all packages using
 define-export-system. This lets us be one step removed from the common
 lisp package and limits damage to the overall (lisp) system should
 something manage to
 
 
-* Sandbox level segragation
+* TODO Sandbox level segragation
 I should be able to create sandboxes with different sets of imports
 and use different ones depending on who is accessing them.
+
+
+* TODO Rename safe-external package to something else
+As it stands the name implies these are external to the safe
+package. Most of what is in here are variables and functions directly
+related *to* safe. As such the name is a misnomer.
+
+* TODO Define a useful documentation function
+Right now documentation is dependent on swank.
