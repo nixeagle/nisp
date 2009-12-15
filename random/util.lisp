@@ -7,7 +7,7 @@
 
 (deftestsuite nisp-util (nisp::root-suite) ())
 
-(defvar *printable-ascii-character*
+(define-constant +printable-ascii-characters+
   ;; Thanks to baddog of eighthbit.net for generating these.
   (list #\  #\! #\" #\# #\$ #\% #\& #\' #\( #\) #\* #\+ #\, #\- #\.
         #\/ #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9 #\: #\; #\< #\=
@@ -20,7 +20,7 @@
 
 (defun ascii-character-range (start end)
   "Iterate over the printable ASCII chars and return a list of the subset."
-  (loop for char in *printable-ascii-character*
+  (loop for char in +printable-ascii-characters+
          when (and (char<= start char)
                    (char>= end char)) collect char))
 
