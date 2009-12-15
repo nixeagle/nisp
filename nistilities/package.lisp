@@ -2,5 +2,6 @@
   (:use :cl :lift)
   (:export #:define-constant
            #:strip-newlines
-           #:ascii-character-range))
+           #:ascii-character-range
+           #:range))
 

@@ -113,53 +113,6 @@ Please note that at this time we know the reader macro prevents things that it s
 allowing operations on a safe-package without the user of the safe
 package being allowed to know which package they are in." ))
 
-(deftestsuite test-range (root-suite)
-  ()
-  (:documentation
-   "Perform tests on range convenience function. In general it should handle any useful range.")
-  (:function
-   (run-range (start end)
-              (ensure (cl:listp (range start end)))
-              (ensure (cl:< 0 (cl:list-length (range start end))))))
-  (:test (count-up
-          (:documentation "The usual case, counting from START to END")
-          (ensure-same (range 0 10)
-                       (cl:list 0 1 2 3 4 5 6 7 8 9 10))))
-  (:test (count-down
-          (:documentation
-           "A tad unusual, but we expect given a START greater then END
-to count _down_ from START to END.")
-          (ensure-same (range 5 -5)
-                       (cl:list 5 4 3 2 1 0 -1 -2 -3 -4 -5))))
-  (:test (random-integer-combos
-          (:documentation
-           "Playing around with random test cases. These are largely
-undocumented in the lift test framework.")
-          (lift:ensure-random-cases 10
-              ((start an-integer)
-               (end an-integer))
-            (run-range start end))))
-  (:test (random-float-combos
-          (:documentation
-           "Make sure that no combination of floats break range.")
-          (lift:ensure-random-cases 10
-              ((start a-double-float)
-               (end a-single-float))
-            (run-range start end))))
-  (:test (count-up-with-char
-          (:documentation "Count up from a lower START char to a higher
-END char.")
-          (ensure-same (range #\a #\c)
-                       (cl:list #\a #\b #\c))))
-  (:test (count-down-from-char
-          (:documentation "Count down from a higher START to a lower END
-char.")
-          (ensure-same (range #\c #\a)
-                       (cl:list #\c #\b #\a))))
-  (:test (count-down-from-char-passing-strings
-          (:documentation "Passing two one letter strings is valid input")
-          (ensure-same (range "c" "a")
-                       (cl:list #\c #\b #\a)))))
 
 (deftestsuite test-setq (safe-closure-suite)
   ()

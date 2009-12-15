@@ -24,18 +24,21 @@
 (defpackage #:safe-testing!
   (:use)
   (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list :t :nil)
+  (:shadowing-import-from :nistilities
+                          #:range)
   (:export
            #:loop
            #:mapc
            #:mapcar
            #:list
+           #:range
            :t
            :nil))
 
 (defpackage #:safe-external
   (:use)
 ;  (:shadow help)
-  (:export #:range help))
+  (:export help))
 
 (defpackage #:safe-closure
   (:use)
@@ -224,23 +227,6 @@ program.")
   "Special describe function for our sandbox testing stuff."
   ;; Needs rewritten to not depend on swank!
   (swank::describe-to-string object))
-
-(defgeneric safe-external::range (start end)
-  (:documentation "Generate a list of integers from start to end."))
-(defmethod safe-external::range ((start number) (end number))
-  (if (> start end)
-      (loop for x from start downto end collect x)
-      (loop for x from start to end collect x)))
-
-(defmethod safe-external::range ((start string) (end string))
-  (unless (= 1 (length start) (length end))
-    (error "Cannot represent strings with length > 1 as a character."))
-  (safe-external::range (character start) (character end)))
-
-(defmethod safe-external::range (start end)
-  (if (char>= start end)
-      (nreverse (ascii-character-range end start))
-      (ascii-character-range start end)))
 
 (defparameter safe-external::help "Welcome to nisp-safe! This is a tool for evaluating common lisp in a safe environment. Currently you can set your own variables with (setq quux \"bar\") and reset your 'sandbox' with (reset). Each user gets their own area."
   "The help message when a user types the word help in.")

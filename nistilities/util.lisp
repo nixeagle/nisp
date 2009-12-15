@@ -5,8 +5,8 @@
 ;;; For the lack of any better place to put these for now...
 ;(setq *test-describe-if-not-successful?* t)
 
-(deftestsuite root-suite () ())
-(deftestsuite nistilities (root-suite) ())
+
+(deftestsuite nistilities-suite () ())
 
 (define-constant +printable-ascii-characters+
   ;; Thanks to baddog of eighthbit.net for generating these.
@@ -39,7 +39,7 @@ If NAME is not given assume *package* instead"
             for s being the symbols of (find-package package)
             collect s))))
 
-(deftestsuite count-symbols (nistilities)
+(deftestsuite count-symbols (nistilities-suite)
   ((i (count-symbols :nistilities)))
   (:test (is-integer (ensure (integerp i))))
   (:test (is-positive (ensure (<= 0 i))))
@@ -78,7 +78,7 @@ Note that the newline is not replaced by a space!"
       unless (eq char #\Newline) collect char)
    'string))
 
-(deftestsuite test-strip-newlines (nistilities)
+(deftestsuite test-strip-newlines (nistilities-suite)
   ()
   (:test (pass-string
           (:documentation "Base case")
@@ -92,5 +92,71 @@ Newline") "StringNewline")))
           (ensure-same (strip-newlines "String
 Newline" #\Space)
                        "String Newline"))))
+
+(defgeneric range (start end)
+  (:documentation "Generate a list of integers from start to end."))
+(defmethod range ((start number) (end number))
+  (if (> start end)
+      (loop for x from start downto end collect x)
+      (loop for x from start to end collect x)))
+
+(defmethod range ((start string) (end string))
+  (unless (= 1 (length start) (length end))
+    (error "Cannot represent strings with length > 1 as a character."))
+  (range (character start) (character end)))
+
+(defmethod range (start end)
+  (if (char>= start end)
+      (nreverse (ascii-character-range end start))
+      (ascii-character-range start end)))
+
+(deftestsuite test-range (nistilities-suite)
+  ()
+  (:documentation
+   "Perform tests on range convenience function. In general it should handle any useful range.")
+  (:function
+   (run-range (start end)
+              (ensure (cl:listp (range start end)))
+              (ensure (cl:< 0 (cl:list-length (range start end))))))
+  (:test (count-up
+          (:documentation "The usual case, counting from START to END")
+          (ensure-same (range 0 10)
+                       (cl:list 0 1 2 3 4 5 6 7 8 9 10))))
+  (:test (count-down
+          (:documentation
+           "A tad unusual, but we expect given a START greater then END
+to count _down_ from START to END.")
+          (ensure-same (range 5 -5)
+                       (cl:list 5 4 3 2 1 0 -1 -2 -3 -4 -5))))
+  (:test (random-integer-combos
+          (:documentation
+           "Playing around with random test cases. These are largely
+undocumented in the lift test framework.")
+          (lift:ensure-random-cases 10
+              ((start an-integer)
+               (end an-integer))
+            (run-range start end))))
+  (:test (random-float-combos
+          (:documentation
+           "Make sure that no combination of floats break range.")
+          (lift:ensure-random-cases 10
+              ((start a-double-float)
+               (end a-single-float))
+            (run-range start end))))
+  (:test (count-up-with-char
+          (:documentation "Count up from a lower START char to a higher
+END char.")
+          (ensure-same (range #\a #\c)
+                       (cl:list #\a #\b #\c))))
+  (:test (count-down-from-char
+          (:documentation "Count down from a higher START to a lower END
+char.")
+          (ensure-same (range #\c #\a)
+                       (cl:list #\c #\b #\a))))
+  (:test (count-down-from-char-passing-strings
+          (:documentation "Passing two one letter strings is valid input")
+          (ensure-same (range "c" "a")
+                       (cl:list #\c #\b #\a)))))
+
 
 ;;; end file
