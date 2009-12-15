@@ -10,15 +10,15 @@
   (:teardown
    (delete-safe-package-old "test1")))
 
-
-
 (deftestsuite test-make-readtable (root-suite)
   ()
+  (:documentation "Make sure that a new read table also comes with #\\\: function bound.")
   :test (colon-macro-function-bound?
          (ensure (functionp (get-macro-character #\: (make-readtable))))))
 
 (deftestsuite test-with-safe-readtable (base-packages)
   ()
+  (:documentation "Test the readtable stuff with a focus towards attempting to break the assumptions made.")
   :test (modify-readtable
          (:documentation
           "Make sure that inside this form *readtable* is set to
@@ -65,9 +65,14 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
 
 (deftestsuite test-colon-reader (base-packages)
   ()
+  (:documentation "Verify that the reader function for #\\\: throws an error when it is supposed to and permits what it is not supposed to throw an error on. Currently this latter part is largely forgotten as we prefer to default to sane (overly restrictive) then too loose with regards to package access.
+
+Please note that at this time we know the reader macro prevents things that it should not prevent. Example(s) follow.
+  - :keyword")
   ;; This is not even remotely correct arguments passed, the point is
   ;; to verify that we send an error
   :test (expect-error
+         (:documentation "Calling the custom reader function should automaticallythrow an error at this point. This is what I (nixeagle) term defaulting to sane defaults. Deny everything!")
          (ensure-condition 'simple-error
                         (colon-reader nil nil))))
 
