@@ -48,7 +48,7 @@ but make sure to explain what went wrong in the format string."
 (ensure-predicate integerp (string "abc") )
 ;(ensure (foobar a) )
 
-(defun strip-newlines (string)
+(defun strip-newlines (string &optional (replace-char nil))
   "Given a string, remove all newlines.
 
 This is very irc specific where lines need to be all on one line.
@@ -56,14 +56,24 @@ This is very irc specific where lines need to be all on one line.
 Note that the newline is not replaced by a space!"
   (coerce
    (loop for char in (coerce string 'list)
-      if (not (eq #\Newline  char))
-      collect char)
+      when (and replace-char (eq char #\Newline)) collect replace-char
+      unless (eq char #\Newline) collect char)
    'string))
 
-(deftestsuite strip-newlines (nisp-util)
+(deftestsuite test-strip-newlines (nisp-util)
   ()
   (:test (pass-string
           (:documentation "Base case")
-          (ensure (stringp (strip-newlines "some string"))))))
+          (ensure (stringp (strip-newlines "some string")))))
+  (:test (on-a-string-with-newlines
+          (:documentation "With new lines. Please do not fix the newline in this test.")
+          (ensure-same (strip-newlines "String
+Newline") "StringNewline")))
+  (:test (remove-newlines-leave-space
+          (:documentation "Make sure we can replace newlines with another char")
+          (ensure-same (strip-newlines "String
+Newline" #\Space)
+                       "String Newline"))))
+(princ "\\\n a")
 
 ;;; end file
