@@ -7,7 +7,7 @@
         :nispbot-config
         :nisp-empty-package
         :nisp-safe
-        :nisp-util)
+        :nistilities)
   (:shadowing-import-from :cl-irc :pass))
 
 (in-package :nispbot)

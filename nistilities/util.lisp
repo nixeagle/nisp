@@ -1,13 +1,13 @@
 ;;;; Extra functions
 
-(in-package :nisp-util)
+(in-package :nistilities)
 
 ;;; For the lack of any better place to put these for now...
 ;(setq *test-describe-if-not-successful?* t)
 
-(deftestsuite nisp-util (nisp::root-suite) ())
+(deftestsuite nistilities (nisp::root-suite) ())
 
-(define-constant +printable-ascii-characters+
+(defvar *printable-ascii-characters*
   ;; Thanks to baddog of eighthbit.net for generating these.
   (list #\  #\! #\" #\# #\$ #\% #\& #\' #\( #\) #\* #\+ #\, #\- #\.
         #\/ #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9 #\: #\; #\< #\=
@@ -20,7 +20,7 @@
 
 (defun ascii-character-range (start end)
   "Iterate over the printable ASCII chars and return a list of the subset."
-  (loop for char in +printable-ascii-characters+
+  (loop for char in *printable-ascii-characters*
          when (and (char<= start char)
                    (char>= end char)) collect char))
 
@@ -38,8 +38,8 @@ If NAME is not given assume *package* instead"
             for s being the symbols of (find-package package)
             collect s))))
 
-(deftestsuite count-symbols (nisp-util)
-  ((i (count-symbols :nisp-util)))
+(deftestsuite count-symbols (nistilities)
+  ((i (count-symbols :nistilities)))
   (:test (is-integer (ensure (integerp i))))
   (:test (is-positive (ensure (<= 0 i))))
   (:run-setup :once-per-suite)
@@ -77,7 +77,7 @@ Note that the newline is not replaced by a space!"
       unless (eq char #\Newline) collect char)
    'string))
 
-(deftestsuite test-strip-newlines (nisp-util)
+(deftestsuite test-strip-newlines (nistilities)
   ()
   (:test (pass-string
           (:documentation "Base case")

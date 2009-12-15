@@ -19,7 +19,7 @@
 ;;; user will not cause clashes by experiments of the other.
 
 (defpackage #:nisp-empty-package
-  (:use :cl :lift :nisp-util)
+  (:use :cl :lift :nistilities)
   (:export #:with-empty-package
            #:make-empty-package
            #:with-package
@@ -113,7 +113,7 @@ This is mostly motivated for use in test cases."
   :test (expect-package
          (ensure (packagep empty-package)))
   :test (expect-zero-elements
-         (ensure-same (nisp-util::count-symbols empty-name) 0)))
+         (ensure-same (nistilities::count-symbols empty-name) 0)))
 
 (deftestsuite test-with-empty-package (root-suite)
   ()
@@ -127,7 +127,7 @@ not do the cleanup work properly")
             (ensure (not (packagep (with-empty-package *package*))))))
   :test (package-has-no-symbols
          (ensure (with-empty-package
-                   (= 0 (nisp-util::count-symbols)))))
+                   (= 0 (nistilities::count-symbols)))))
   :test (multiple-return-values
          (ensure-same 
           (multiple-value-list

@@ -12,7 +12,7 @@
         :lift
         :metatilities
         :nisp-empty-package
-        :nisp-util)
+        :nistilities)
   (:export #:with-safe-package
            #:with-safe-readtable
            :safe

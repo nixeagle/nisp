@@ -3,7 +3,7 @@
 ;;
 ;;;; Changelog
 ;; 2009-12-08 - add doc string
-(in-package :nisp-util)
+(in-package :nistilities)
 
 (defmacro define-constant (name value &optional doc)
   "Define a truely constant constant that is never modified once it is evaluated."

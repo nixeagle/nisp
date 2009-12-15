@@ -22,7 +22,7 @@
   :serial t
   :components
   ((:file "main-test-suite")
-   (:module "random"
+   (:module "nistilities"
             :serial t
             :components
             ((:file "package")
