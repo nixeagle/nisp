@@ -42,6 +42,7 @@
    (:file "config-dist")
    (:file "config")
    (:file "nispbot")
+   (:file "nispbot-tests")
    (:file "nisp-dev-helper")))
 
 ;; (defsystem :nispbot

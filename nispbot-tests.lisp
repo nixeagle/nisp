@@ -3,12 +3,6 @@
 (deftestsuite root-suite (nisp::root-suite) ())
 (deftestsuite basic-irc-suite (root-suite) ())
 
-(deftestsuite strip-newline (root-suite)
-  ()
-  (:test (pass-string
-          (:documentation "Base case")
-          (ensure (stringp (strip-newline "some string"))))))
-
 (deftestsuite test-make-irc-message (basic-irc-suite)
   ()
   (:test (format-private-message

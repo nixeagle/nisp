@@ -47,3 +47,23 @@ but make sure to explain what went wrong in the format string."
 
 (ensure-predicate integerp (string "abc") )
 ;(ensure (foobar a) )
+
+(defun strip-newlines (string)
+  "Given a string, remove all newlines.
+
+This is very irc specific where lines need to be all on one line.
+
+Note that the newline is not replaced by a space!"
+  (coerce
+   (loop for char in (coerce string 'list)
+      if (not (eq #\Newline  char))
+      collect char)
+   'string))
+
+(deftestsuite strip-newlines (nisp-util)
+  ()
+  (:test (pass-string
+          (:documentation "Base case")
+          (ensure (stringp (strip-newlines "some string"))))))
+
+;;; end file

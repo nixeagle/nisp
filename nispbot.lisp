@@ -6,7 +6,8 @@
         :cl-irc :cl-ppcre
         :nispbot-config
         :nisp-empty-package
-        :nisp-safe)
+        :nisp-safe
+        :nisp-util)
   (:shadowing-import-from :cl-irc :pass))
 
 (in-package :nispbot)
@@ -28,18 +29,6 @@
 (defun make-irc-bot (nick server)
   (connect :nickname nick :connection-type 'irc-bot
            :server server))
-
-(defgeneric start-connection (instance))
-
-(defmethod start-connection ((bot irc-bot))
-  (setf (bot-connection bot)
-        (connect :nickname (bot-nick bot)
-                 :server (bot-server bot)))
-  (join-all-channels (bot-connection bot))
-  (irc:add-hook (bot-connection bot)
-                'irc:irc-privmsg-message
-                #'command-hook)
-  (irc:read-message-loop (bot-connection bot)))
 
 (defgeneric join-all-channels (instance)
   (:documentation "Join all channels in *channels*. Later we will expand this to work for any arbitrary connection or list of channels."))
@@ -69,17 +58,12 @@
 (defgeneric safe-eval (instance forms))
 (defmethod safe-eval ((message irc:irc-privmsg-message) forms)
   (let ((read-result (safe-read message forms)))
-    
     (multiple-value-bind (res)
                  (let ((*package* (nisp-safe::safe-package
                            (safe-select (irc-bot-safe (connection message))
                                                      (host message)))))
-                   (cl::eval
-                    read-result)
-                   )
-      res)
-    (eval read-result))
-  )
+                   (cl::eval read-result))
+      res)))
 
 (defun command-hook (message)
   (declare (notinline command-hook))
@@ -92,7 +76,7 @@
           (with-timeout (1)
             (privmsg (connection message)
                      (first (arguments message))
-                     (strip-newline
+                     (strip-newlines
                       (format nil "~A"
                               (safe-eval message forms)))))
         (error (condition) (privmsg (connection message)
@@ -105,20 +89,6 @@
   (safe-read (irc-bot-safe (connection msg))
              forms
              (host msg)))
-
-(defun strip-newline (string)
-  "Given a string, remove all newlines.
-
-This is very irc specific where lines need to be all on one line.
-
-Note that the newline is not replaced by a space!"
-  (coerce
-   (loop for char in (coerce string 'list)
-      if (not (eq #\Newline  char))
-      collect char)
-   'string))
-
-
 
 
 (defpackage #:nispbot-basic-commands
