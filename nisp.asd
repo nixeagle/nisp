@@ -29,8 +29,7 @@
    (:module "safe"
             :serial t
             :components
-            (
-             (:file "package")
+            ((:file "package")
              (:file "empty-package")
              (:file "arithmetic")
              (:file "safe")
