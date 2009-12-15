@@ -91,6 +91,5 @@ Newline") "StringNewline")))
           (ensure-same (strip-newlines "String
 Newline" #\Space)
                        "String Newline"))))
-(princ "\\\n a")
 
 ;;; end file
