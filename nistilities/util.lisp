@@ -8,7 +8,7 @@
 (deftestsuite root-suite () ())
 (deftestsuite nistilities (root-suite) ())
 
-(defvar *printable-ascii-characters*
+(define-constant +printable-ascii-characters+
   ;; Thanks to baddog of eighthbit.net for generating these.
   (list #\  #\! #\" #\# #\$ #\% #\& #\' #\( #\) #\* #\+ #\, #\- #\.
         #\/ #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9 #\: #\; #\< #\=
@@ -17,11 +17,11 @@
         #\\ #\] #\^ #\_ #\` #\a #\b #\c #\d #\e #\f #\g #\h #\i #\j
         #\k #\l #\m #\n #\o #\p #\q #\r #\s #\t #\u #\v #\w #\x #\y
         #\z #\{ #\| #\} #\~)
-  "Printable ASCII chars")
+  "Printable ASCII chars. This is defined as a constant list for now because I cannot figure out how to change from an ascii character code to the character representation.")
 
 (defun ascii-character-range (start end)
   "Iterate over the printable ASCII chars and return a list of the subset."
-  (loop for char in *printable-ascii-characters*
+  (loop for char in +printable-ascii-characters+
          when (and (char<= start char)
                    (char>= end char)) collect char))
 
