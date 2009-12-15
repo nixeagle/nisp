@@ -5,7 +5,8 @@
 ;;; For the lack of any better place to put these for now...
 ;(setq *test-describe-if-not-successful?* t)
 
-(deftestsuite nistilities (nisp::root-suite) ())
+(deftestsuite root-suite () ())
+(deftestsuite nistilities (root-suite) ())
 
 (defvar *printable-ascii-characters*
   ;; Thanks to baddog of eighthbit.net for generating these.

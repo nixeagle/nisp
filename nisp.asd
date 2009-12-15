@@ -14,6 +14,7 @@
   :description "Nixeagle's random lisp experiments"
   :depends-on (:cl-ppcre
                :metatilities
+               :nistilities
                :tinaa
                :lift
                :cl-irc
@@ -22,13 +23,6 @@
   :serial t
   :components
   ((:file "main-test-suite")
-   (:module "nistilities"
-            :serial t
-            :components
-            ((:file "package")
-             (:file "util")
-             (:file "defconstant")
-             (:file "random")))
    (:file "package")
    (:file "nisp-asdf")
    (:file "nisp-introspect")
