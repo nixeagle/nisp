@@ -297,7 +297,7 @@ program.")
     "Special macro defined to wrap around the base setq given by the
 lisp implentation. The primary thing we do in this macro is be sure to intern new symbols in the safe-package and not allow modification of symbols exported from other packages." 
     `(mapcar #'safe-closure::setq-pair
-             ',(list-to-pairs things)))
+             ',(group things 2)))
   
   (defun safe-closure::setq-pair (pair)
     (let ((f (safe-closure::safe-intern (first pair)))
