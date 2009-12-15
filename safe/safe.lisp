@@ -37,8 +37,7 @@
 
 (defpackage #:safe-external
   (:use)
-;  (:shadow help)
-  (:export help))
+  (:export help test-results))
 
 (defpackage #:safe-closure
   (:use)
@@ -223,6 +222,9 @@ program.")
 (defparameter safe-external::help "Welcome to nisp-safe! This is a tool for evaluating common lisp in a safe environment. Currently you can set your own variables with (setq quux \"bar\") and reset your 'sandbox' with (reset). Each user gets their own area."
   "The help message when a user types the word help in.")
 
+(defparameter safe-external::test-results "http://paste.nixeagle.org/lift-nisp/"
+  "Location of the latest test run results.")
+
 (defgeneric build-symbol-name (package symbol))
 
 (defmethod build-symbol-name ((safe-package safe-package) (symbol symbol))
@@ -280,6 +282,7 @@ lisp implentation. The primary thing we do in this macro is be sure to intern ne
   (defun safe-closure::setq-pair (pair)
     (let ((f (safe-closure::safe-intern (first pair)))
           (l (second pair)))
+      (setq f (first pair))     ;Set a copy... leaving f interned right
       (safe-closure::setq-trace2 f l)))
 
   ;; THIS IS SO WRONG! But it works. Find out why and do this right!
