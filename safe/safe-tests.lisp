@@ -69,22 +69,22 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
          (ensure-condition 'simple-error
                         (colon-reader nil nil))))
 
-(deftestsuite test-list-to-pairs (root-suite)
+(deftestsuite test-list-to-pair (root-suite)
   ()
   (:test (even-list
           (:documentation "Even lists should return two values, car and cdr.")
-          (list-to-pairs (list 1 2))
-          (ensure-same (list-to-pairs)
+          (list-to-pair (list 1 2))
+          (ensure-same (list-to-pair)
                        (values 1 2))))
   (:test (empty-list
           (:documentation "Empty lists return two nils")
-          (ensure-same (list-to-pairs)
+          (ensure-same (list-to-pair)
                        (values nil nil))))
   (:test (odd-list
           (:documentation "Odd lists should error")
           (ensure-condition (simple-error)
-            (list-to-pairs (list 1))
-            (list-to-pairs)))))
+            (list-to-pair (list 1))
+            (list-to-pair)))))
 
 (defpackage #:safe-external-tests
   (:use :lift
@@ -108,6 +108,8 @@ package being allowed to know which package they are in." ))
 
 (deftestsuite test-range (root-suite)
   ()
+  (:documentation
+   "Perform tests on range convenience function. In general it should handle any useful range.")
   (:function
    (run-range (start end)
               (ensure (cl:listp (range start end)))
@@ -123,16 +125,36 @@ to count _down_ from START to END.")
           (ensure-same (range 5 -5)
                        (cl:list 5 4 3 2 1 0 -1 -2 -3 -4 -5))))
   (:test (random-integer-combos
-          (:documentation "Playing around with random test cases. These
-are largely undocumented in the lift test framework.")
+          (:documentation
+           "Playing around with random test cases. These are largely
+undocumented in the lift test framework.")
           (lift:ensure-random-cases 10
               ((start an-integer)
                (end an-integer))
             (run-range start end))))
   (:test (random-float-combos
-          (:documentation "Make sure that no combination of floats break range.")
+          (:documentation
+           "Make sure that no combination of floats break range.")
           (lift:ensure-random-cases 10
               ((start a-double-float)
                (end a-single-float))
-            (run-range start end)))))
+            (run-range start end))))
+  (:test (count-up-with-char
+          (:documentation "Count up from a lower START char to a higher
+END char.")
+          (ensure-same (range #\a #\c)
+                       (list #\a #\b #\c))))
+  (:test (count-down-from-char
+          (:documentation "Count down from a higher START to a lower END
+char.")
+          (ensure-same (range #\c #\a)
+                       (list #\c #\b #\a)))))
+
+(deftestsuite test-setq (safe-closure-suite)
+  ()
+  (:documentation "Verify that no form of setq permitted in a safe
+package is allowed to modify symbols outside of the package.")
+ #+ () (:test (change-help-variable-locally
+          (:documentation "help is an exported symbol, we need to be able to make changes without modifying the external package.")
+          (ensure ))))
 

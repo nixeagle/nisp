@@ -238,15 +238,32 @@ program.")
 (defparameter safe-external::help "Welcome to nisp-safe! This is a tool for evaluating common lisp in a safe environment. You can define your own functions, your own variables and even this message. Ask for help on a function with (describe 'function-name)."
   "The help message when a user types the word help in.")
 
+(defgeneric build-symbol-name (package symbol))
 
-(defun nisp-safe::populate-safe-package-closures (safe-package)
-  "Reset the functions that have some hidden state."
-  (defun safe-closure::reset ()
-    "Reset the sandbox you are in. Generally this will delete the sandbox and create a new one in its place."
-    (delete-safe-package safe-package)
-    (create-safe-package safe-package)))
+(defmethod build-symbol-name ((safe-package safe-package) (symbol symbol))
+  (intern (concatenate 'string
+           (package-name (safe-package safe-package))
+           "::"
+           (symbol-name symbol))))
+
+(defgeneric safe-package-intern (package object)
+  (:documentation "intern a new copy of object and setting that copy to the value of the other package's object."))
+
+(defmethod safe-package-intern ((safe-package safe-package) (symbol symbol))
+  (shadow symbol (safe-package safe-package))
+
+  (let ((new-symbol
+         (intern (concatenate 'string (symbol-name symbol)
+                       #+ ()       "::"
+                        #+()      (package-name (safe-package safe-package)))
+                 (safe-package safe-package))))
+         
+    new-symbol))
+;; (defmacro define-variable-nisp (string value &optional (documentation "None given"))
+;;   `(defvar ,string ,value ,documentation))
+
 (let ((closed-list))
-  (defun list-to-pairs (&optional new-list)
+  (defun list-to-pair (&optional new-list)
     "Convert list to pairs, givin list only set the list, not return a pair."
     (if new-list
         (setq closed-list new-list)
@@ -254,3 +271,57 @@ program.")
           (unless (evenp (list-length closed-list))
             (error "List has odd number of elements."))
           (values (pop closed-list) (pop closed-list))))))
+
+(defun list-to-pairs (list)
+  (list-to-pair list)
+  (loop as pair = (multiple-value-list (list-to-pair))
+     while (= (list-length pair) 2)
+       collect pair))
+
+(defmacro setq-single (var value)
+  (list 'cl:setq var value))
+
+
+(defun nisp-safe::populate-safe-package-closures (safe-package)
+  "Reset the functions that have some hidden state."
+  (defun safe-closure::reset ()
+    "Reset the sandbox you are in. Generally this will delete the sandbox and create a new one in its place."
+    (delete-safe-package safe-package)
+    (create-safe-package safe-package))
+  (defmacro safe-closure::setq (&rest things)
+    "Special macro defined to wrap around the base setq given by the
+lisp implentation. The primary thing we do in this macro is be sure to intern new symbols in the safe-package and not allow modification of symbols exported from other packages."
+    (let (
+          (variable (gensym))
+          (value (gensym)))
+      `(mapcar #'safe-closure::setq-pair
+             ',(list-to-pairs things))
+      
+      
+      #+ (or) (dolist (var )
+                `(let ((,variable )
+                       (,value (second ,var)))
+                   (setq-single ,variable ,value)))))
+  (defun safe-closure::setq-pair (pair)
+    (let ((f (safe-closure::safe-intern (first pair)))
+          (l (second pair)))
+      (safe-closure::setq-trace2 f l)
+      ;(macroexpand-1 `)
+      ))
+
+  ;; THIS IS SO WRONG! But it works. Find out why and do this right!
+  (defun safe-closure::setq-trace2 (first2 last2)
+    (eval `(setq ,first2 ,last2)))
+  
+  (defun safe-closure::safe-intern (thing)
+    "Given a thing, intern it if its something that can cause package classes otherwise just leave it alone."
+    (if (typep thing 'symbol)
+        (safe-package-intern safe-package thing)
+        thing))
+  
+  (defun safe-closure::nisp-test (&rest things)
+    (let ((*package* (safe-package safe-package)))
+      (prin1-to-string (macroexpand-1 `(safe-closure::setq ,things)))
+      #+ ()      (mapcar #'safe-closure::safe-intern things))
+    #+ ()   (mapcar #'class-of things)))
+

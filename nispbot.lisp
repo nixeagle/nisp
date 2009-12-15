@@ -69,6 +69,21 @@
   (eq (char (second (arguments msg)) 0)
             (irc-bot-comchar bot)))
 
+(defgeneric safe-eval (instance forms))
+(defmethod safe-eval ((message irc:irc-privmsg-message) forms)
+  (let ((read-result (safe-read message forms)))
+    
+    (multiple-value-bind (res)
+                 (let ((*package* (nisp-safe::safe-package
+                           (safe-select (irc-bot-safe (connection message))
+                                                     (host message)))))
+                   (cl::eval
+                    read-result)
+                   )
+      res)
+    (eval read-result))
+  )
+
 (defun command-hook (message)
   (declare (notinline command-hook))
                                         ;  (print message)
@@ -81,10 +96,8 @@
             (privmsg (connection message)
                      (first (arguments message))
                      (strip-newline
-                      (format nil "~A"
-                              (multiple-value-bind (res)
-                                  (eval (safe-read message forms))
-                                res)))))
+                      (format nil "~S"
+                              (safe-eval message forms)))))
         (error (condition) (privmsg (connection message)
                                     (first (arguments message))
                                     (format nil "~A" condition)))))))
