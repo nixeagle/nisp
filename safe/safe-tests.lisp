@@ -2,7 +2,9 @@
 (in-package #:nisp-safe)
 
 ;; Tests
-(deftestsuite root-suite (nisp::root-suite) ())
+(deftestsuite root-suite (nisp::root-suite)
+  ()
+  (:categories))
 (deftestsuite base-packages (root-suite)
   ()
   (:setup

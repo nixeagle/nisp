@@ -6,7 +6,9 @@
 ;(setq *test-describe-if-not-successful?* t)
 
 
-(deftestsuite nistilities-suite () ())
+(deftestsuite nistilities-suite ()
+  ()
+  (:categories :all-nisp-tests))
 
 (define-constant +printable-ascii-characters+
   ;; Thanks to baddog of eighthbit.net for generating these.
