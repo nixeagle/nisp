@@ -231,7 +231,7 @@ program.")
       (loop for x from start downto end collect x)
       (loop for x from start to end collect x)))
 
-(defparameter safe-external::help "Welcome to nisp-safe! This is a tool for evaluating common lisp in a safe environment. You can define your own functions, your own variables and even this message. Ask for help on a function with (describe 'function-name)."
+(defparameter safe-external::help "Welcome to nisp-safe! This is a tool for evaluating common lisp in a safe environment. Currently you can set your own variables with (setq quux \"bar\") and reset your 'sandbox' with (reset). Each user gets their own area."
   "The help message when a user types the word help in.")
 
 (defgeneric build-symbol-name (package symbol))
@@ -249,9 +249,7 @@ program.")
   (shadow symbol (safe-package safe-package))
 
   (let ((new-symbol
-         (intern (concatenate 'string (symbol-name symbol)
-                       #+ ()       "::"
-                        #+()      (package-name (safe-package safe-package)))
+         (intern (concatenate 'string (symbol-name symbol))
                  (safe-package safe-package))))
          
     new-symbol))

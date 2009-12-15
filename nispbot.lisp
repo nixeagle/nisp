@@ -96,7 +96,7 @@
             (privmsg (connection message)
                      (first (arguments message))
                      (strip-newline
-                      (format nil "~S"
+                      (format nil "~A"
                               (safe-eval message forms)))))
         (error (condition) (privmsg (connection message)
                                     (first (arguments message))
@@ -108,17 +108,6 @@
   (safe-read (irc-bot-safe (connection msg))
              forms
              (host msg)))
-
-(defun read-bot-message (msg-text)
-  "Return a form ready to be funcall'd"
-  (safe-read (irc-bot-safe ))
-  (multiple-value-bind (res)
-      (with-package (gen-empty-package)
-        (cl::use-package :nisp-unsafe-iteration)
-        (cl::use-package nisp-safe::*prepared-safe-packages*)
-        (with-safe-readtable
-          (read-from-string msg-text)))
-    res))
 
 (defun strip-newline (string)
   "Given a string, remove all newlines.
