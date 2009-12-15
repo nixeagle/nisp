@@ -7,6 +7,23 @@
 
 (deftestsuite nisp-util (nisp::root-suite) ())
 
+(defvar *printable-ascii-character*
+  ;; Thanks to baddog of eighthbit.net for generating these.
+  (list #\  #\! #\" #\# #\$ #\% #\& #\' #\( #\) #\* #\+ #\, #\- #\.
+        #\/ #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9 #\: #\; #\< #\=
+        #\> #\? #\@ #\A #\B #\C #\D #\E #\F #\G #\H #\I #\J #\K #\L
+        #\M #\N #\O #\P #\Q #\R #\S #\T #\U #\V #\W #\X #\Y #\Z #\[
+        #\\ #\] #\^ #\_ #\` #\a #\b #\c #\d #\e #\f #\g #\h #\i #\j
+        #\k #\l #\m #\n #\o #\p #\q #\r #\s #\t #\u #\v #\w #\x #\y
+        #\z #\{ #\| #\} #\~)
+  "Printable ASCII chars")
+
+(defun ascii-character-range (start end)
+  "Iterate over the printable ASCII chars and return a list of the subset."
+  (loop for char in *printable-ascii-character*
+         when (and (char<= start char)
+                   (char>= end char)) collect char))
+
 ;;;This is a terrible implentation, but I cannot figure out how to tell
 ;;;the compiler that I want to simply iterate and count instead of
 ;;;consing and making a list of symbols then counting it. This will do

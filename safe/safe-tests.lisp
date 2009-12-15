@@ -1,6 +1,8 @@
-(in-package :nisp-safe)
+
+(in-package #:nisp-safe)
 
 ;; Tests
+(deftestsuite root-suite (nisp::root-suite) ())
 (deftestsuite base-packages (root-suite)
   ()
   (:setup
@@ -8,7 +10,7 @@
   (:teardown
    (delete-safe-package-old "test1")))
 
-(deftestsuite root-suite (nisp::root-suite) ())
+
 
 (deftestsuite test-make-readtable (root-suite)
   ()
@@ -143,18 +145,20 @@ undocumented in the lift test framework.")
           (:documentation "Count up from a lower START char to a higher
 END char.")
           (ensure-same (range #\a #\c)
-                       (list #\a #\b #\c))))
+                       (cl:list #\a #\b #\c))))
   (:test (count-down-from-char
           (:documentation "Count down from a higher START to a lower END
 char.")
           (ensure-same (range #\c #\a)
-                       (list #\c #\b #\a)))))
+                       (cl:list #\c #\b #\a))))
+  (:test (count-down-from-char-passing-strings
+          (:documentation "Passing two one letter strings is valid input")
+          (ensure-same (range "c" "a")
+                       (cl:list #\c #\b #\a)))))
 
 (deftestsuite test-setq (safe-closure-suite)
   ()
   (:documentation "Verify that no form of setq permitted in a safe
-package is allowed to modify symbols outside of the package.")
- #+ () (:test (change-help-variable-locally
-          (:documentation "help is an exported symbol, we need to be able to make changes without modifying the external package.")
-          (ensure ))))
+package is allowed to modify symbols outside of the package."))
+
 
