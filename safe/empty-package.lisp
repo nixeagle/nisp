@@ -18,14 +18,6 @@
 ;;; include giving each 'user' their own namespace so experiments by one
 ;;; user will not cause clashes by experiments of the other.
 
-(defpackage #:nisp-empty-package
-  (:use :cl :lift :nistilities)
-  (:export #:with-empty-package
-           #:make-empty-package
-           #:with-package
-           #:gen-empty-package
-           ))
-
 (in-package :nisp-empty-package)
 
 (deftestsuite root-suite (nisp::root-suite) ())

@@ -7,20 +7,6 @@
 ;;; Please note this code is highly experimental, if it blows up the
 ;;; moon, its not my fault ;)
 
-(defpackage #:nisp-safe
-  (:use :common-lisp
-        :lift
-        :metatilities
-        :nisp-empty-package
-        :nistilities)
-  (:export #:with-safe-package
-           #:with-safe-readtable
-           :safe
-           #:safe-read
-           #:safe-select
-           #:make-safe
-           ))
-
 (defpackage #:safe-testing!
   (:use)
   (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list :t :nil)
@@ -225,24 +211,16 @@ program.")
 (defparameter safe-external::test-results "http://paste.nixeagle.org/lift-nisp/"
   "Location of the latest test run results.")
 
-(defgeneric build-symbol-name (package symbol))
-
-(defmethod build-symbol-name ((safe-package safe-package) (symbol symbol))
-  (intern (concatenate 'string
-           (package-name (safe-package safe-package))
-           "::"
-           (symbol-name symbol))))
-
 (defgeneric safe-package-intern (package object)
   (:documentation "intern a new copy of object and setting that copy to the value of the other package's object."))
 
 (defmethod safe-package-intern ((safe-package safe-package) (symbol symbol))
+  ;; It is critical that the old symbol be shadowed. Please note that
+  ;; we do not set a value to the new symbol in this function.
   (shadow symbol (safe-package safe-package))
-
   (let ((new-symbol
          (intern (concatenate 'string (symbol-name symbol))
                  (safe-package safe-package))))
-         
     new-symbol))
 
 (let ((closed-list))
@@ -275,7 +253,7 @@ program.")
     "Special macro defined to wrap around the base setq given by the
 lisp implentation. The primary thing we do in this macro is be sure to intern new symbols in the safe-package and not allow modification of symbols exported from other packages." 
     `(mapcar #'safe-closure::setq-pair
-             ',(group things 2)))
+             ',(group things 2)))  ;;; metautilities group being used here.
   
   (defun safe-closure::setq-pair (pair)
     (let ((f (safe-closure::safe-intern (first pair)))

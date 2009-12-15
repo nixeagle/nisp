@@ -22,3 +22,25 @@
 ;;; things required to get some minimal support going
 (define-export-system :nisp-safe-misc :cl
   #:list)
+
+(defpackage #:nisp-empty-package
+  (:use :cl :lift :nistilities)
+  (:export #:with-empty-package
+           #:make-empty-package
+           #:with-package
+           #:gen-empty-package
+           ))
+
+(defpackage #:nisp-safe
+  (:use :common-lisp
+        :lift
+        :metatilities
+        :nisp-empty-package
+        :nistilities)
+  (:export #:with-safe-package
+           #:with-safe-readtable
+           :safe-set
+           #:safe-read
+           #:safe-select
+           #:make-safe
+           ))
