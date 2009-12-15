@@ -7,6 +7,7 @@
 (defun start-nispbot-instance (&optional (nick "nisp"))
   (setq nispbot::*nispbot* (nispbot::make-irc-bot nick "irc.eighthbit.net"))
   (irc:start-background-message-handler nispbot::*nispbot*)
+  (sleep 3) 
   (nispbot::join-all-channels nispbot::*nispbot*)
   (nispbot::reset-command-hook nispbot::*nispbot*))
 
