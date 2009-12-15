@@ -23,6 +23,7 @@
   :components
   ((:file "main-test-suite")
    (:module "random"
+            :serial t
             :components
             ((:file "package")
              (:file "util")
@@ -32,6 +33,7 @@
    (:file "nisp-asdf")
    (:file "nisp-introspect")
    (:module "safe"
+            :serial t
             :components
             (
              (:file "package")
