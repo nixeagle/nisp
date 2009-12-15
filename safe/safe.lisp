@@ -220,10 +220,6 @@ program.")
 (defmethod safe-read ((safe safe) (forms string) &optional owner)
   (safe-read (safe-select safe owner) forms))
 
-
-
-
-
 (defun safe-external::describe (object)
   "Special describe function for our sandbox testing stuff."
   ;; Needs rewritten to not depend on swank!
@@ -290,24 +286,14 @@ program.")
     (create-safe-package safe-package))
   (defmacro safe-closure::setq (&rest things)
     "Special macro defined to wrap around the base setq given by the
-lisp implentation. The primary thing we do in this macro is be sure to intern new symbols in the safe-package and not allow modification of symbols exported from other packages."
-    (let (
-          (variable (gensym))
-          (value (gensym)))
-      `(mapcar #'safe-closure::setq-pair
-             ',(list-to-pairs things))
-      
-      
-      #+ (or) (dolist (var )
-                `(let ((,variable )
-                       (,value (second ,var)))
-                   (setq-single ,variable ,value)))))
+lisp implentation. The primary thing we do in this macro is be sure to intern new symbols in the safe-package and not allow modification of symbols exported from other packages." 
+    `(mapcar #'safe-closure::setq-pair
+             ',(list-to-pairs things)))
+  
   (defun safe-closure::setq-pair (pair)
     (let ((f (safe-closure::safe-intern (first pair)))
           (l (second pair)))
-      (safe-closure::setq-trace2 f l)
-      ;(macroexpand-1 `)
-      ))
+      (safe-closure::setq-trace2 f l)))
 
   ;; THIS IS SO WRONG! But it works. Find out why and do this right!
   (defun safe-closure::setq-trace2 (first2 last2)

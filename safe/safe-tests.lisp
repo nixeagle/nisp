@@ -6,7 +6,7 @@
   (:setup
    (make-empty-package "test1"))
   (:teardown
-   (delete-safe-package-old base-empty-packages)))
+   (delete-safe-package-old "test1")))
 
 (deftestsuite root-suite (nisp::root-suite) ())
 
