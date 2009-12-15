@@ -10,14 +10,17 @@
 is likely to be very temporary as we plan on moving into a
 CLOS style.")
 
-(defparameter *server* "platinum.eighthbit.net"
+(defvar *server* "platinum.eighthbit.net"
   "The network to connect to. Currently we can connect only
 to one network at a time. This is a bug and will be fixed.")
 
-(defparameter *channels* '("#chan1"  "#chan2" "chan3")
+(defvar *channels* '("#chan1"  "#chan2" "chan3")
   "Default list of channels to join on connection. When the bot goes
   object orianted this will follow, but no matter what it will remain a
   list in the simplest case.")
+
+(defvar *password* nil
+  "Default password for irc instances.")
 
 (deftestsuite test-*channels* (root-suite)
   ()

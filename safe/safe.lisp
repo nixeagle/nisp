@@ -125,29 +125,29 @@ program.")
        ,@body)))
 
 
-(defclass safe ()
-  ((packages :accessor safe-packages
+(defclass safe-set ()
+  ((packages :accessor safe-set
              :initform (make-hash-table :test 'equal)))
   (:documentation "Primary class for groupings of safe packages and manipulation of these packages."))
 
 (defgeneric safe-select (safe owner))
-(defmethod safe-select ((safe safe) (owner string))
+(defmethod safe-select ((safe safe-set) (owner string))
   "Select a package, if the package does not exist create one and return it."
-  (or (gethash owner (safe-packages safe))
-      (setf (gethash owner (safe-packages safe))
+  (or (gethash owner (safe-set safe))
+      (setf (gethash owner (safe-set safe))
             (create-safe-package (concatenate 'string "SAFE-" owner)
                                  owner))))
 (defgeneric safe-delete-package-list (safe)
   (:documentation "Delete the list of packages known to a safe object."))
-(defmethod safe-delete-package-list ((safe safe))
+(defmethod safe-delete-package-list ((safe safe-set))
   (maphash (lambda (key package)
              (declare (ignore key))
              (delete-safe-package package))
-           (safe-packages safe))
-  (clrhash (safe-packages safe)))
+           (safe-set safe))
+  (clrhash (safe-set safe)))
 
 (defun make-safe ()
-  (make-instance 'safe))
+  (make-instance 'safe-set))
 
 (defclass safe-package ()
   ((package :accessor safe-package
@@ -211,7 +211,7 @@ program.")
           (read-from-string forms)
         result))))
 
-(defmethod safe-read ((safe safe) (forms string) &optional owner)
+(defmethod safe-read ((safe safe-set) (forms string) &optional owner)
   (safe-read (safe-select safe owner) forms))
 
 (defun safe-external::describe (object)
@@ -244,8 +244,6 @@ program.")
                  (safe-package safe-package))))
          
     new-symbol))
-;; (defmacro define-variable-nisp (string value &optional (documentation "None given"))
-;;   `(defvar ,string ,value ,documentation))
 
 (let ((closed-list))
   (defun list-to-pair (&optional new-list)

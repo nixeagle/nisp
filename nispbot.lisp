@@ -28,10 +28,11 @@
 
 (defun make-irc-bot (nick server)
   (connect :nickname nick :connection-type 'irc-bot
-           :server server))
+           :server server
+           :password nispbot-config::*password*))
 
 (defgeneric join-all-channels (instance)
-  (:documentation "Join all channels in *channels*. Later we will expand this to work for any arbitrary connection or list of channels."))
+  (:documentation "Join all channels in *channels*. Later this will be expanded to use the connection's channel list."))
 
 (defmethod join-all-channels ((bot irc-bot))
   (mapc
