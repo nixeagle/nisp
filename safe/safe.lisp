@@ -23,14 +23,12 @@
 
 (defpackage #:safe-testing!
   (:use)
-  (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list #:lambda :t :nil)
+  (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list:t :nil)
   (:export
            #:loop
            #:mapc
            #:mapcar
            #:list
-           #:lambda
-           #:describe
            :t
            :nil))
 
