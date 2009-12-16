@@ -141,7 +141,7 @@ not a safe thing to do outside of testing!")
    (pass-package (ensure-packagep (find-package :safe-package-test-package)))
    (pass-safe-package
     (ensure-packagep
-     (find-package (make-safe-package :safe-package-test-package))))))
+     (find-package (create-safe-package :safe-package-test-package))))))
 
 (defpackage #:safe-external-tests
   (:use :lift

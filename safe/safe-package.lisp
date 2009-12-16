@@ -72,6 +72,16 @@ The optional OWNER parameter defines who owns the package. There is no restricti
     (populate-safe-package-closures safe)
     safe))
 
+(defgeneric get-package (package-designator)
+  (:documentation
+   "Find the package given a safe-package or a string and return that package."))
+(defmethod get-package ((package safe-package))
+  (get-package (safe-package package)))
+
+(defmethod get-package (package-designator)
+  (find-package package-designator))
+
+
 (defgeneric package-use-from (package import-from)
   (:documentation
    "Import into PACKAGE the external symbols of IMPORT-FROM."))
