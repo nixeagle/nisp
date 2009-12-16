@@ -78,23 +78,6 @@ Please note that at this time we know the reader macro prevents things that it s
          (ensure-condition 'simple-error
                         (colon-reader nil nil))))
 
-(deftestsuite test-list-to-pair (root-suite)
-  ()
-  (:test (even-list
-          (:documentation "Even lists should return two values, car and cdr.")
-          (list-to-pair (list 1 2))
-          (ensure-same (list-to-pair)
-                       (values 1 2))))
-  (:test (empty-list
-          (:documentation "Empty lists return two nils")
-          (ensure-same (list-to-pair)
-                       (values nil nil))))
-  (:test (odd-list
-          (:documentation "Odd lists should error")
-          (ensure-condition (simple-error)
-            (list-to-pair (list 1))
-            (list-to-pair)))))
-
 (defpackage #:safe-external-tests
   (:use :lift
         :safe-external
