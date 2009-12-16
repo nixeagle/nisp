@@ -127,6 +127,22 @@ not a safe thing to do outside of testing!")
           (ensure (package-use-from (find-package
                                      :safe-package-test-package) "NISP")))))
 
+(deftestsuite test-get-package (safe-package-fixture)
+  ()
+  (:documentation "Test that getting a package works as expected for all types.")
+  (:function
+   (ensure-packagep (x)
+                    (ensure (packagep (get-package x))
+                            :report "Input ~A is not a package object."
+                            :arguments (x))))
+  (:tests
+   (pass-string (ensure-packagep "SAFE-PACKAGE-TEST-PACKAGE"))
+   (pass-keyword (ensure-packagep :safe-package-test-package))
+   (pass-package (ensure-packagep (find-package :safe-package-test-package)))
+   (pass-safe-package
+    (ensure-packagep
+     (find-package (make-safe-package :safe-package-test-package))))))
+
 (defpackage #:safe-external-tests
   (:use :lift
         :safe-external
