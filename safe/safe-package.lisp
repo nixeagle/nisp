@@ -72,13 +72,38 @@ The optional OWNER parameter defines who owns the package. There is no restricti
     (populate-safe-package-closures safe)
     safe))
 
+(deprecated
+  "Being renamed to safe-package-import"
+  (defgeneric add-package (safe-package package-name)
+    (:documentation "add symbols from another package")))
 
-(defgeneric add-package (safe-package package-name)
-  (:documentation "add symbols from another package"))
 (defmethod add-package ((package safe-package) package-name)
   (with-safe-package (safe-package package)
     (use-package package-name (safe-package package))))
 
+(defgeneric package-use-from (package import-from)
+  (:documentation
+   "Import into PACKAGE the external symbols of IMPORT-FROM."))
+
+(defmethod package-use-from ((package safe-package)
+                                     import-from)
+  ;; Do not specialize on import-from here.
+  (package-use-from (safe-package package)
+                            import-from))
+
+(defmethod package-use-from ((package package)
+                                import-from)
+  (use-package import-from package))
+
+(defmethod package-use-from ((package string)
+                             import-from)
+  (package-use-from (find-package package)
+                       import-from))
+
+(defmethod package-use-from ((package symbol)
+                             import-from)
+    (package-use-from (find-package package)
+                       import-from))
 
 (defgeneric remove-package (safe-package package-name)
   (:documentation "remove symbols from another package"))

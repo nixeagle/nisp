@@ -113,6 +113,20 @@ mapping to *existing* packages")
   (:setup (run-create-safe-package "SAFE-PACKAGE-TEST-PACKAGE"))
   (:teardown (run-delete-safe-package "SAFE-PACKAGE-TEST-PACKAGE")))
 
+(deftestsuite test-package-use-from (safe-package-fixture)
+  ()
+  (:documentation "Verify that different parameters to import do not
+cause issues and that the imports do what they are supposed to
+do. Nothing should be shadowed by default.")
+  (:test (import-from-nisp-package
+          (:documentation "Import :nisp and see what happens. This is
+not a safe thing to do outside of testing!")
+          (ensure (package-use-from "SAFE-PACKAGE-TEST-PACKAGE" :nisp))
+          (ensure (package-use-from :safe-package-test-package :nisp))
+          (ensure (package-use-from :safe-package-test-package "NISP"))
+          (ensure (package-use-from (find-package
+                                     :safe-package-test-package) "NISP")))))
+
 (defpackage #:safe-external-tests
   (:use :lift
         :safe-external
