@@ -7,41 +7,7 @@
 ;;; Please note this code is highly experimental, if it blows up the
 ;;; moon, its not my fault ;)
 
-(defpackage #:safe-testing!
-  (:use)
-  (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list :t :nil)
-  (:shadowing-import-from :nistilities
-                          #:range)
-  (:export
-           #:loop
-           #:mapc
-           #:mapcar
-           #:list
-           #:range
-           :t
-           :nil))
-
-(defpackage #:safe-external
-  (:use)
-  (:export help test-results))
-
-(defpackage #:safe-closure
-  (:use)
-  (:export #:reset #:setq :nisp-test))
-
 (in-package :nisp-safe)
-
-(defun make-safe-package (name)
-  "Should make a totally independent package. All normal safe stuff should be in this by default.
-
-Some questions to consider:
-  - Is it safe to set *readtable* in the package on creation. By this is it possible for a malicious user to modify this?
-    - What happens when I set it to nil?
-    - Can I replace colon-reader with another more permissive function? If so how?
-  - Is it safe to read using a read function defined in this package? My off the cuff guess is 'not a good idea'. Too much chance for iffy behavior unless it can be proven safe."
-  (with-package (make-empty-package name)
-    (cl::use-package nisp-safe::*prepared-safe-packages*)
-    *package*)) 
 
 (deprecated
   "Moving to all safe-package operations being on safe-package and or safe."

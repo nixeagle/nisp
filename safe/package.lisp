@@ -44,3 +44,28 @@
            #:safe-select
            #:make-safe-set
            ))
+
+
+
+;;; Used as subpackages for sandboxed code
+(defpackage #:safe-testing!
+  (:use)
+  (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list :t :nil)
+  (:shadowing-import-from :nistilities
+                          #:range)
+  (:export
+           #:loop
+           #:mapc
+           #:mapcar
+           #:list
+           #:range
+           :t
+           :nil))
+
+(defpackage #:safe-external
+  (:use)
+  (:export help test-results))
+
+(defpackage #:safe-closure
+  (:use)
+  (:export #:reset #:setq :nisp-test))

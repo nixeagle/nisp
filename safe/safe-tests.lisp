@@ -77,6 +77,11 @@ Please note that at this time we know the reader macro prevents things that it s
          (ensure-condition 'simple-error
                         (colon-reader nil nil))))
 
+(deftestsuite safe-package-suite () ())
+
+(deftestsuite test-*prepared-safe-packages* (safe-package-suite)
+  ())
+
 (defpackage #:safe-external-tests
   (:use :lift
         :safe-external
@@ -84,6 +89,7 @@ Please note that at this time we know the reader macro prevents things that it s
   (:documentation "This package is largely reserved for testing "))
 
 ;(use-package *prepared-safe-packages* (find-package :safe-external-tests))
+
 (in-package :safe-external-tests)
 
 
@@ -102,5 +108,3 @@ package being allowed to know which package they are in." ))
   ()
   (:documentation "Verify that no form of setq permitted in a safe
 package is allowed to modify symbols outside of the package."))
-
-
