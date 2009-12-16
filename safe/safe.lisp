@@ -166,22 +166,6 @@ program.")
 (defparameter safe-external::test-results "http://paste.nixeagle.org/lift-nisp/"
   "Location of the latest test run results.")
 
-(let ((closed-list))
-  (defun list-to-pair (&optional new-list)
-    "Convert list to pairs, givin list only set the list, not return a pair."
-    (if new-list
-        (setq closed-list new-list)
-        (when closed-list
-          (unless (evenp (list-length closed-list))
-            (error "List has odd number of elements."))
-          (values (pop closed-list) (pop closed-list))))))
-
-(defun list-to-pairs (list)
-  (list-to-pair list)
-  (loop as pair = (multiple-value-list (list-to-pair))
-     while (= (list-length pair) 2)
-       collect pair))
-
 (defmacro setq-single (var value)
   (list 'cl:setq var value))
 
