@@ -1,6 +1,23 @@
 (in-package :nisp-safe)
 
+(defparameter *prepared-safe-packages*
+  '(:safe-arithmetic
+    :safe-arithmetic-trig
+    :safe-arithmetic-comparision
+    :safe-arithmetic-type-manipulation
+    :safe-arithmetic-boole
+    :safe-arithmetic-implentation-constants
+    :safe-arithmetic-random
+    :nisp-safe-introspect
+    :safe-external
+    :safe-closure
+    :safe-testing!)
+  "Listing of packages that have been prepared or deemed to be safe.
+This is the default list, the idea is depending on the situation mix and
+match what capacities you want to allow untrusted code to do.
 
+On the todo list is to create a class that allows multiple instances and
+tracks currently interned packages and whatnot.")
 
 (defclass safe-package ()
   ((package :accessor safe-package
@@ -15,6 +32,11 @@
         :initform *prepared-safe-packages*))
   (:documentation "Container class for handling safe packages and doing various operations with them."))
 
+(defmacro with-safe-package (name &body body)
+  "Use the given package name to read some code."
+  `(with-package ,name
+     (with-safe-readtable
+       ,@body)))
 
 (defgeneric create-safe-package (package &optional owner)
   (:documentation "Make a brand new safe package.

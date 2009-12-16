@@ -42,5 +42,5 @@
            :safe-set
            #:safe-read
            #:safe-select
-           #:make-safe
+           #:make-safe-set
            ))

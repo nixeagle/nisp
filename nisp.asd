@@ -32,6 +32,7 @@
             ((:file "package")
              (:file "empty-package")
              (:file "arithmetic")
+             (:file "readtable")
              (:file "safe-package")
              (:file "safe")
              (:file "safe-tests")))

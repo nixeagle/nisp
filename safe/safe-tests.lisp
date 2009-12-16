@@ -55,14 +55,13 @@ AGAIN DO NOT EVEN THINK ABOUT USING WHILE THIS TEST FAILS!")
 
 ;;; Tests
 (deftestsuite make-safe-package (root-suite)
-  ((keyword :test-keyword)
-   (string "test-string"))
-  (:teardown (delete-safe-package-old keyword)
-             (delete-safe-package-old string))
+  ()
+  (:teardown (delete-safe-package-old :test-keyword)
+             (delete-safe-package-old "test-string"))
   :test (pass-keyword
-         (ensure (packagep (make-safe-package keyword))))
+         (ensure (packagep (make-safe-package :test-keyword))))
   :test (pass-string
-         (ensure (packagep (make-safe-package string)))))
+         (ensure (packagep (make-safe-package "test-string")))))
 
 
 (deftestsuite test-colon-reader (base-packages)

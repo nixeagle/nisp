@@ -149,7 +149,7 @@
   #:random)
 
 ;;; These do modifications to variables, eg side effects.
-(sb-int:sane-package)
+
 (defpackage #:safe-arithmetic!
   (:use :cl)
   (:export

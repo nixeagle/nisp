@@ -90,9 +90,3 @@
   (safe-read (irc-bot-safe (connection msg))
              forms
              (host msg)))
-
-
-(defpackage #:nispbot-basic-commands
-  (:use :cl :lift :nispbot))
-
-(in-package :nispbot-basic-commands)

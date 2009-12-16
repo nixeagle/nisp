@@ -31,25 +31,6 @@
 
 (in-package :nisp-safe)
 
-(defparameter *prepared-safe-packages*
-  '(:safe-arithmetic
-    :safe-arithmetic-trig
-    :safe-arithmetic-comparision
-    :safe-arithmetic-type-manipulation
-    :safe-arithmetic-boole
-    :safe-arithmetic-implentation-constants
-    :safe-arithmetic-random
-    :nisp-safe-introspect
-    :safe-external
-    :safe-closure
-    :safe-testing!)
-  "Listing of packages that have been prepared or deemed to be safe.
-This is the default list, the idea is depending on the situation mix and
-match what capacities you want to allow untrusted code to do.
-
-On the todo list is to create a class that allows multiple instances and
-tracks currently interned packages and whatnot.")
-
 (defun make-safe-package (name)
   "Should make a totally independent package. All normal safe stuff should be in this by default.
 
@@ -60,7 +41,7 @@ Some questions to consider:
   - Is it safe to read using a read function defined in this package? My off the cuff guess is 'not a good idea'. Too much chance for iffy behavior unless it can be proven safe."
   (with-package (make-empty-package name)
     (cl::use-package nisp-safe::*prepared-safe-packages*)
-    *package*))
+    *package*)) 
 
 (deprecated
   "Moving to all safe-package operations being on safe-package and or safe."
@@ -73,42 +54,6 @@ Some questions to consider:
   "read STRING using package NAME."
   (let ((*package* (find-package name)))
     (read-from-string string)))
-
-(defun colon-reader (stream char)
-  "Signal an error if a colon is used to access another package."
-  (declare (ignore stream char))
-  ;; For now we just error out. This is a safe thing to do as far as
-  ;; disabling package access goes, but in the process use of : is
-  ;; broken for :keywords and possibly other things too.
-  (error "Accessing packages outside of the current one is disabled."))
-
-(defun make-readtable ()
-  "Create readtable that prevents any syntax that can cause a package
-  change."
-  (let ((*readtable* (copy-readtable nil)))
-    (set-macro-character #\: #'colon-reader nil *readtable*)
-    *readtable*))
-
-(defmacro with-safe-readtable (&body body)
-  "Use readtable for all read calls in body.If readtable is not passed,
-we default to instantiating a new one using make-readtable"
-  `(let ((*readtable* *safe-readtable*))
-     ,@body))
-
-;;; Moving this down here for now after make-readtable is defined
-;;; because this depends on that function being defined.
-(defparameter *safe-readtable* (make-readtable)
-  "The safe readtable that is used by the with-safe-readtable macro.
-
-This is currently a parameter but should be made into a constant at some
-point so a warning or error can block it being changed in a running
-program.")
-
-(defmacro with-safe-package (name &body body)
-  "Use the given package name to read some code."
-  `(with-package ,name
-     (with-safe-readtable
-       ,@body)))
 
 
 (defclass safe-set ()
