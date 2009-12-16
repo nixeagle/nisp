@@ -28,3 +28,24 @@ Both nisp and nistilities tests
 Use (lift:run-tests :suite 'test-mixin). However I need to generate one
 of those that is specific only to nisp related stuff. mixin seems to run
 all defined test-suites no matter what project is associated with them.
+
+* WAIT Implement symbol->string
+  :LOGBOOK:
+  - State "WAIT"       from "TODO"       [2009-12-16 Wed 19:49] \\
+    Passing on this for the time being, I really would like to avoid having
+    to do more string manipulation then strictly needed with respect to
+    packages and symbols.
+  :END:
+Basic idea is taking any symbol and returning a string with a specified
+package (defaulting to current one), and the name of the symbol.
+
+* Safety
+Section for general issues and notes with respect to keeping the system
+safe for arbitrary code execution.
+
+*** *readtable* in package
+    It is probably not a very good idea to put this in the package
+    itself and instead associate the readtable with the wrapper object
+    safe-package. If the readtable is not stored in the package itself
+    or the readtable is somehow made into a constant that cannot be
+    changed ever inside the package... we should be safe.
