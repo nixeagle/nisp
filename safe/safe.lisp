@@ -132,11 +132,6 @@ program.")
            (safe-set safe))
   (clrhash (safe-set safe)))
 
-(deprecated
-  "Please use make-safe-set instead."
-  (defun make-safe ()
-    (make-instance 'safe-set)))
-
 (defun make-safe-set ()
   "Make a new instance of a safe package set."
   (make-instance 'safe-set))

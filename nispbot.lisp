@@ -24,7 +24,7 @@
             :initarg :comchar
             :initform #\,)
    (safe :accessor irc-bot-safe
-         :initform (make-safe))))
+         :initform (make-safe-set))))
 
 (defun make-irc-bot (nick server)
   (connect :nickname nick :connection-type 'irc-bot
