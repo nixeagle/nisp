@@ -56,30 +56,21 @@ The optional OWNER parameter defines who owns the package. There is no restricti
   (setf (safe-package package)
         (make-empty-package (concatenate 'string "SAFE-"
                                     (safe-package-owner package))))
-   (add-package package (safe-package-use package)))
+   (package-use-from package (safe-package-use package)))
 (defmethod create-safe-package ((package package) &optional owner)
   (let ((safe (make-instance 'safe-package
                              :package package
                              :owner owner)))
-    (add-package safe (safe-package-use safe))
+    (package-use-from safe (safe-package-use safe))
     (populate-safe-package-closures safe)
     safe))
 (defmethod create-safe-package ((package string) &optional owner)
   (let ((safe (make-instance 'safe-package
                              :package (make-empty-package package)
                              :owner owner)))
-    (add-package safe (safe-package-use safe))
+    (package-use-from safe (safe-package-use safe))
     (populate-safe-package-closures safe)
     safe))
-
-(deprecated
-  "Being renamed to safe-package-import"
-  (defgeneric add-package (safe-package package-name)
-    (:documentation "add symbols from another package")))
-
-(defmethod add-package ((package safe-package) package-name)
-  (with-safe-package (safe-package package)
-    (use-package package-name (safe-package package))))
 
 (defgeneric package-use-from (package import-from)
   (:documentation
