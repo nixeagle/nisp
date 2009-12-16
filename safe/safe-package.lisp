@@ -15,7 +15,6 @@
   "Listing of packages that have been prepared or deemed to be safe.
 This is the default list, the idea is depending on the situation mix and
 match what capacities you want to allow untrusted code to do.
-
 On the todo list is to create a class that allows multiple instances and
 tracks currently interned packages and whatnot.")
 

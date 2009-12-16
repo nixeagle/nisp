@@ -77,10 +77,41 @@ Please note that at this time we know the reader macro prevents things that it s
          (ensure-condition 'simple-error
                         (colon-reader nil nil))))
 
-(deftestsuite safe-package-suite () ())
+(deftestsuite safe-package-suite ()
+  ()
+  (:documentation "Tests for correct safe package objects."))
 
 (deftestsuite test-*prepared-safe-packages* (safe-package-suite)
-  ())
+  ()
+  (:documentation "Prepared safe packages should be a list of keywords
+mapping to *existing* packages")
+  (:function
+   (keyword-package-p (possible-package)
+                      (ensure (packagep (find-package possible-package))
+                              :report "Keyword ~S does not refer to a package"
+                              :arguments (possible-package))))
+  (:test (is-a-list
+          (:documentation "If this is not a list, we are out of luck.")
+          (ensure (listp *prepared-safe-packages*))))
+  (:test (list-of-keywords
+          (:documentation "all values in the list should be :keywords")
+          (ensure-same (member-if-not #'keywordp *prepared-safe-packages*)
+                       nil)))
+  (:test (list-of-packages
+          (:documentation "All the items in the list should refer to a package. Please note that we expect to return nil, on failure we will return the erroring element.")
+          (mapc (lambda (x) (keyword-package-p x))
+                *prepared-safe-packages*))))
+
+(deftestsuite safe-package-fixture (safe-package-suite)
+  ()
+  (:function
+   (run-create-safe-package (name)
+                            (create-safe-package name "SAFE-PACKAGE-TEST-OWNER")))
+  (:function
+   (run-delete-safe-package (name)
+                            (delete-safe-package name)))
+  (:setup (run-create-safe-package "SAFE-PACKAGE-TEST-PACKAGE"))
+  (:teardown (run-delete-safe-package "SAFE-PACKAGE-TEST-PACKAGE")))
 
 (defpackage #:safe-external-tests
   (:use :lift
