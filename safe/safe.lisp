@@ -114,7 +114,7 @@ program.")
 (defclass safe-set ()
   ((packages :accessor safe-set
              :initform (make-hash-table :test 'equal)))
-  (:documentation "Primary class for groupings of safe packages and manipulation of these packages."))
+  (:documentation "Primary class for groupings of safe packages and manipulation of these packages. These are used to group related packages together and perform operations on sets of packages."))
 
 (defgeneric safe-select (safe owner))
 (defmethod safe-select ((safe safe-set) (owner string))
@@ -132,59 +132,14 @@ program.")
            (safe-set safe))
   (clrhash (safe-set safe)))
 
-(defun make-safe ()
+(deprecated
+  "Please use make-safe-set instead."
+  (defun make-safe ()
+    (make-instance 'safe-set)))
+
+(defun make-safe-set ()
+  "Make a new instance of a safe package set."
   (make-instance 'safe-set))
-
-(defclass safe-package ()
-  ((package :accessor safe-package
-            :initarg :package)
-   (creation-time :initform (get-universal-time)
-                  :accessor package-creation-time)
-   (readtable :accessor safe-package-readtable
-              :initform (make-readtable))
-   (owner :accessor safe-package-owner
-          :initarg :owner)
-   (use :accessor safe-package-use
-        :initform *prepared-safe-packages*)))
-
-(defgeneric create-safe-package (package &optional owner))
-(defmethod create-safe-package ((package safe-package) &optional owner)
-  (declare (ignore owner))
-  (setf (safe-package package)
-        (make-empty-package (concatenate 'string "SAFE-"
-                                    (safe-package-owner package))))
-   (add-package package (safe-package-use package)))
-(defmethod create-safe-package ((package package) &optional owner)
-  (let ((safe (make-instance 'safe-package
-                             :package package
-                             :owner owner)))
-    (add-package safe (safe-package-use safe))
-    (populate-safe-package-closures safe)
-    safe))
-(defmethod create-safe-package ((package string) &optional owner)
-  (let ((safe (make-instance 'safe-package
-                             :package (make-empty-package package)
-                             :owner owner)))
-    (add-package safe (safe-package-use safe))
-    (populate-safe-package-closures safe)
-    safe))
-
-(defgeneric add-package (safe-package package-name)
-  (:documentation "add symbols from another package"))
-(defmethod add-package ((package safe-package) package-name)
-  (with-safe-package (safe-package package)
-    (use-package package-name (safe-package package))))
-
-(defgeneric remove-package (safe-package package-name)
-  (:documentation "remove symbols from another package"))
-
-(defgeneric clear-safe-package (safe-package))
-
-(defgeneric delete-safe-package (safe-package))
-(defmethod delete-safe-package ((package safe-package))
-  (delete-package (package-name (safe-package package))))
-(defmethod delete-safe-package ((name string))
-  (delete-package name))
 
 (defgeneric safe-read (package forms &optional owner)
   (:documentation "(read input using the namespace of the safe package"))
@@ -210,18 +165,6 @@ program.")
 
 (defparameter safe-external::test-results "http://paste.nixeagle.org/lift-nisp/"
   "Location of the latest test run results.")
-
-(defgeneric safe-package-intern (package object)
-  (:documentation "intern a new copy of object and setting that copy to the value of the other package's object."))
-
-(defmethod safe-package-intern ((safe-package safe-package) (symbol symbol))
-  ;; It is critical that the old symbol be shadowed. Please note that
-  ;; we do not set a value to the new symbol in this function.
-  (shadow symbol (safe-package safe-package))
-  (let ((new-symbol
-         (intern (concatenate 'string (symbol-name symbol))
-                 (safe-package safe-package))))
-    new-symbol))
 
 (let ((closed-list))
   (defun list-to-pair (&optional new-list)

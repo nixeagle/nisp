@@ -32,6 +32,7 @@
             ((:file "package")
              (:file "empty-package")
              (:file "arithmetic")
+             (:file "safe-package")
              (:file "safe")
              (:file "safe-tests")))
    (:file "config-dist")
