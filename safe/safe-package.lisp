@@ -51,12 +51,12 @@ tracks currently interned packages and whatnot.")
 The optional OWNER parameter defines who owns the package. There is no restriction on what owner can be, but a string is suggested at this time. In the future this parameter may be removed! Its ugly and a kludge."))
 
 (defmethod create-safe-package ((package safe-package) &optional owner)
+  "If you hand a safe package in, you get that package back."
   (declare (ignore owner))
-  ;; If we have a package, why do we need to create a new one?
-  (setf (safe-package package)
-        (make-empty-package (concatenate 'string "SAFE-"
-                                    (safe-package-owner package))))
-   (package-use-from package (safe-package-use package)))
+  ;; Not 100% positive this is the best behavior, but better then the
+  ;; previous behavior that tried to make a new safe package.
+  package)
+
 (defmethod create-safe-package ((package package) &optional owner)
   (let ((safe (make-instance 'safe-package
                              :package package
@@ -65,6 +65,13 @@ The optional OWNER parameter defines who owns the package. There is no restricti
     (populate-safe-package-closures safe)
     safe))
 (defmethod create-safe-package ((package string) &optional owner)
+  (let ((safe (make-instance 'safe-package
+                             :package (make-empty-package package)
+                             :owner owner)))
+    (package-use-from safe (safe-package-use safe))
+    (populate-safe-package-closures safe)
+    safe))
+(defmethod create-safe-package ((package symbol) &optional owner)
   (let ((safe (make-instance 'safe-package
                              :package (make-empty-package package)
                              :owner owner)))
@@ -82,29 +89,14 @@ The optional OWNER parameter defines who owns the package. There is no restricti
   (find-package package-designator))
 
 
-(defgeneric package-use-from (package import-from)
+(defgeneric package-use-from (package-designator import-from)
   (:documentation
    "Import into PACKAGE the external symbols of IMPORT-FROM."))
 
-(defmethod package-use-from ((package safe-package)
-                                     import-from)
+(defmethod package-use-from (package-designator
+                             import-from)
   ;; Do not specialize on import-from here.
-  (package-use-from (safe-package package)
-                            import-from))
-
-(defmethod package-use-from ((package package)
-                                import-from)
-  (use-package import-from package))
-
-(defmethod package-use-from ((package string)
-                             import-from)
-  (package-use-from (find-package package)
-                       import-from))
-
-(defmethod package-use-from ((package symbol)
-                             import-from)
-    (package-use-from (find-package package)
-                       import-from))
+  (use-package import-from (get-package package-designator)))
 
 
 

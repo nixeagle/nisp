@@ -25,7 +25,10 @@
 (defclass safe-set ()
   ((packages :accessor safe-set
              :initform (make-hash-table :test 'equal)))
-  (:documentation "Primary class for groupings of safe packages and manipulation of these packages. These are used to group related packages together and perform operations on sets of packages."))
+  (:documentation
+   "Primary class for groupings of safe packages and manipulation of
+these packages. These are used to group related packages together and
+perform operations on sets of packages."))
 
 (defgeneric safe-select (safe owner))
 (defmethod safe-select ((safe safe-set) (owner string))

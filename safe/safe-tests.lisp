@@ -14,7 +14,8 @@
 
 (deftestsuite test-make-readtable (root-suite)
   ()
-  (:documentation "Make sure that a new read table also comes with #\\\: function bound.")
+  (:documentation
+   "Make sure that a new read table also comes with #\\\: function bound.")
   :test (colon-macro-function-bound?
          (ensure (functionp (get-macro-character #\: (make-readtable))))))
 
@@ -103,10 +104,11 @@ mapping to *existing* packages")
                 *prepared-safe-packages*))))
 
 (deftestsuite safe-package-fixture (safe-package-suite)
-  ()
+  ((~package~))
   (:function
    (run-create-safe-package (name)
-                            (create-safe-package name "SAFE-PACKAGE-TEST-OWNER")))
+                            (setq ~package~
+                             (create-safe-package name "SAFE-PACKAGE-TEST-OWNER"))))
   (:function
    (run-delete-safe-package (name)
                             (delete-safe-package name)))
@@ -140,8 +142,7 @@ not a safe thing to do outside of testing!")
    (pass-keyword (ensure-packagep :safe-package-test-package))
    (pass-package (ensure-packagep (find-package :safe-package-test-package)))
    (pass-safe-package
-    (ensure-packagep
-     (find-package (create-safe-package :safe-package-test-package))))))
+    (ensure-packagep ~package~))))
 
 (defpackage #:safe-external-tests
   (:use :lift
