@@ -106,10 +106,16 @@ The optional OWNER parameter defines who owns the package. There is no restricti
 
 (defgeneric clear-safe-package (safe-package))
 
-(defgeneric delete-safe-package (safe-package))
+(defgeneric delete-safe-package (safe-package)
+  ;; This is pretty ineffeciant if given a safe-package, however its not
+  ;; that big of a deal to do 3 or 4 calls here as deleting a package is
+  ;; something done fairly rarely.
+  (:documentation "Given a package related object, delete the package."))
 (defmethod delete-safe-package ((package safe-package))
-  (delete-package (package-name (safe-package package))))
-(defmethod delete-safe-package ((name string))
+  (delete-safe-package (safe-package package)))
+(defmethod delete-safe-package ((package package))
+  (delete-safe-package (package-name)))
+(defmethod delete-safe-package (name)
   (delete-package name))
 
 
