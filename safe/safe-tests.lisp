@@ -120,14 +120,18 @@ mapping to *existing* packages")
   (:documentation "Verify that different parameters to import do not
 cause issues and that the imports do what they are supposed to
 do. Nothing should be shadowed by default.")
-  (:test (import-from-nisp-package
-          (:documentation "Import :nisp and see what happens. This is
-not a safe thing to do outside of testing!")
-          (ensure (package-use-from "SAFE-PACKAGE-TEST-PACKAGE" :nisp))
-          (ensure (package-use-from :safe-package-test-package :nisp))
-          (ensure (package-use-from :safe-package-test-package "NISP"))
-          (ensure (package-use-from (find-package
-                                     :safe-package-test-package) "NISP")))))
+  (:tests
+   (pass-string-and-keyword    
+    (ensure (package-use-from "SAFE-PACKAGE-TEST-PACKAGE" :nisp)))
+   (pass-keyword-and-keyword
+    (ensure (package-use-from :safe-package-test-package :nisp)))
+   (pass-keyword-and-string
+    (ensure (package-use-from :safe-package-test-package "NISP")))
+   (pass-package
+    (ensure (package-use-from (find-package
+                               :safe-package-test-package) "NISP")))
+   (pass-safe-package
+    (ensure (package-use-from ~package~ "NISP")))))
 
 (deftestsuite test-get-package (safe-package-fixture)
   ()
