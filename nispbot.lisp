@@ -82,7 +82,24 @@
                               (safe-eval message forms)))))
         (error (condition) (privmsg (connection message)
                                     (first (arguments message))
-                                    (format nil "~A" condition)))))))
+                                    (format nil "~A" condition)))))
+))
+
+(defun parse-links (string)
+  (let ((it ()))
+  (cl-ppcre:do-matches-as-strings (var "\\\[\\\[(.*?)\\\]\\\]" string it)
+    (describe var)
+    (push var it))))
+
+(defun matches-list (reg &rest strings)
+  (let ((ret ()))
+    (dolist (str strings ret)
+      (push
+       (second (multiple-value-list
+                (cl-ppcre:scan-to-strings reg str))) ret))))
+
+(parse-links "abc [[foo]] bar [[baz]] a")
+
 
 (defmethod safe-read ((msg irc-privmsg-message)
                        (forms string) &optional owner)

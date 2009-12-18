@@ -92,7 +92,7 @@ lisp implentation. The primary thing we do in this macro is be sure to intern ne
              ',(group things 2)))  ;;; metautilities group being used here.
   
   (defun safe-closure::setq-pair (pair)
-    (let ((f (safe-closure::safe-intern (first pair)))
+    (let ((f (shadowing-intern safe-package (first pair)))
           (l (second pair)))
       (setq f (first pair))     ;Set a copy... leaving f interned right
       (safe-closure::setq-trace2 f l)))
@@ -104,7 +104,7 @@ lisp implentation. The primary thing we do in this macro is be sure to intern ne
   (defun safe-closure::safe-intern (thing)
     "Given a thing, intern it if its something that can cause package classes otherwise just leave it alone."
     (if (typep thing 'symbol)
-        (safe-package-intern safe-package thing)
+        (shadowing-intern safe-package thing)
         thing))
   
   (defun safe-closure::nisp-test (&rest things)
@@ -112,4 +112,3 @@ lisp implentation. The primary thing we do in this macro is be sure to intern ne
       (prin1-to-string (macroexpand-1 `(safe-closure::setq ,things)))
       #+ ()      (mapcar #'safe-closure::safe-intern things))
     #+ ()   (mapcar #'class-of things)))
-

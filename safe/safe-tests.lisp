@@ -103,50 +103,74 @@ mapping to *existing* packages")
           (mapc (lambda (x) (keyword-package-p x))
                 *prepared-safe-packages*))))
 
-(deftestsuite safe-package-fixture (safe-package-suite)
-  ((~package~))
-  (:function
-   (run-create-safe-package (name)
-                            (setq ~package~
-                             (create-safe-package name "SAFE-PACKAGE-TEST-OWNER"))))
-  (:function
-   (run-delete-safe-package (name)
-                            (delete-safe-package name)))
-  (:setup (run-create-safe-package "SAFE-PACKAGE-TEST-PACKAGE"))
-  (:teardown (run-delete-safe-package "SAFE-PACKAGE-TEST-PACKAGE")))
 
-(deftestsuite test-package-use-from (safe-package-fixture)
-  ()
-  (:documentation "Verify that different parameters to import do not
-cause issues and that the imports do what they are supposed to
-do. Nothing should be shadowed by default.")
-  (:tests
-   (pass-string-and-keyword    
-    (ensure (package-use-from "SAFE-PACKAGE-TEST-PACKAGE" :nisp)))
-   (pass-keyword-and-keyword
-    (ensure (package-use-from :safe-package-test-package :nisp)))
-   (pass-keyword-and-string
-    (ensure (package-use-from :safe-package-test-package "NISP")))
-   (pass-package
-    (ensure (package-use-from (find-package
-                               :safe-package-test-package) "NISP")))
-   (pass-safe-package
-    (ensure (package-use-from ~package~ "NISP")))))
+;; (deftestsuite safe-package-fixture (safe-package-suite)
+;;   ((~package~))
+;;   (:setup (setq ~package~ (create-safe-package  "SAFE-PACKAGE-TEST-PACKAGE"
+;;                                                "SAFE-PACKAGE-TEST-OWNER")))
+;;   (:teardown (delete-safe-package  "SAFE-PACKAGE-TEST-PACKAGE")))
 
-(deftestsuite test-get-package (safe-package-fixture)
-  ()
-  (:documentation "Test that getting a package works as expected for all types.")
-  (:function
-   (ensure-packagep (x)
-                    (ensure (packagep (get-package x))
-                            :report "Input ~A is not a package object."
-                            :arguments (x))))
-  (:tests
-   (pass-string (ensure-packagep "SAFE-PACKAGE-TEST-PACKAGE"))
-   (pass-keyword (ensure-packagep :safe-package-test-package))
-   (pass-package (ensure-packagep (find-package :safe-package-test-package)))
-   (pass-safe-package
-    (ensure-packagep ~package~))))
+;; (defmacro with-safe-package-fixture (&body body)
+;;   `(let ((~package~ (create-safe-package  "SAFE-PACKAGE-TEST-PACKAGE"
+;;                                           "SAFE-PACKAGE-TEST-OWNER")))
+;;      (prog1
+;;          (progn
+;;            ,@body)
+;;        '(delete-package :safe-package-test-package))))
+
+;; (deftestsuite test-package-use-from (safe-package-suite)
+;;   ()
+;;   (:documentation "Verify that different parameters to import do not
+;; cause issues and that the imports do what they are supposed to
+;; do. Nothing should be shadowed by default.")
+;;   (:test
+;;    (pass-string-and-keyword
+;;     (with-safe-package-fixture
+;;       (ensure (package-use-from "SAFE-PACKAGE-TEST-PACKAGE" :nisp)))))
+;;   (:test
+;;    (pass-keyword-and-keyword
+;;     (with-safe-package-fixture
+;;       (ensure (package-use-from :safe-package-test-package :nisp)))))
+;;   (:test
+;;    (pass-keyword-and-string
+;;     (with-safe-package-fixture
+;;       (ensure (package-use-from :safe-package-test-package "NISP")))))
+;;   (:tests
+;;    (pass-package
+;;     (with-safe-package-fixture
+;;       (ensure (package-use-from (find-package
+;;                                  :safe-package-test-package) "NISP"))))
+;;    (pass-safe-package
+;;     (with-safe-package-fixture
+;;       (ensure (package-use-from ~package~ "NISP"))))))
+  
+;; (deftestsuite test-get-package (safe-package-suite)
+;;   ()
+;;   (:documentation "Test that getting a package works as expected for all types.")
+;;   (:function
+;;    (ensure-packagep (x)
+                    
+;;                     (ensure (with-safe-package-fixture (packagep (get-package x)))
+;;                             :report "Input ~A is not a package object."
+;;                             :arguments (x))))
+;;   (:tests
+;;    (pass-string
+    
+;;     (ensure-packagep "SAFE-PACKAGE-TEST-PACKAGE"))
+;;    (pass-keyword
+    
+;;     (ensure-packagep :safe-package-test-package))
+;;    (pass-package
+    
+;;     (ensure-packagep (find-package :safe-package-test-package)))))
+
+;; (deftestsuite test-shadowing-intern ()
+;;   ()
+;;   (:documentation "Verify that interning a symbol works as expected.")
+;;   (:test
+;;    (intern-in-safe
+;;     (ensure-same (with-safe-package-fixture (shadowing-intern ~package~ '+))
+;;                  nil)    ) ))
 
 (defpackage #:safe-external-tests
   (:use :lift

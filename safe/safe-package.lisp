@@ -1,5 +1,11 @@
 (in-package :nisp-safe)
 
+;;; utilities first
+
+
+
+;;; implentation
+
 (defparameter *prepared-safe-packages*
   '(:safe-arithmetic
     :safe-arithmetic-trig
@@ -114,19 +120,16 @@ The optional OWNER parameter defines who owns the package. There is no restricti
 (defmethod delete-safe-package ((package safe-package))
   (delete-safe-package (safe-package package)))
 (defmethod delete-safe-package ((package package))
-  (delete-safe-package (package-name)))
+  (delete-safe-package (package-name package)))
 (defmethod delete-safe-package (name)
   (delete-package name))
 
 
-(defgeneric safe-package-intern (package object)
+(defgeneric shadowing-intern (package object)
   (:documentation "intern a new copy of object and setting that copy to the value of the other package's object."))
 
-(defmethod safe-package-intern ((safe-package safe-package) (symbol symbol))
-  ;; It is critical that the old symbol be shadowed. Please note that
-  ;; we do not set a value to the new symbol in this function.
-  (shadow symbol (safe-package safe-package))
-  (let ((new-symbol
-         (intern (concatenate 'string (symbol-name symbol))
-                 (safe-package safe-package))))
-    new-symbol))
+(defmethod shadowing-intern ((safe-package safe-package) (symbol symbol))
+  ;; It is critical that the old symbol be shadowed.
+  (with-package (safe-package safe-package)
+    (shadowing-import symbol (safe-package safe-package))
+    (find-symbol (symbol-name symbol))))  

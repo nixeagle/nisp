@@ -12,7 +12,8 @@
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
   :description "Nixeagle's random lisp experiments"
-  :depends-on (:cl-ppcre
+  :depends-on (:functional-tests
+               :cl-ppcre
                :metatilities
                :nistilities
                :tinaa

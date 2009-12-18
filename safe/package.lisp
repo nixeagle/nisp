@@ -57,7 +57,7 @@
            #:loop
            #:mapc
            #:mapcar
-           #:list
+a           #:list
            #:range
            :t
            :nil))
@@ -68,4 +68,4 @@
 
 (defpackage #:safe-closure
   (:use)
-  (:export #:reset #:setq :nisp-test))
+  (:export #:reset :nisp-test))
