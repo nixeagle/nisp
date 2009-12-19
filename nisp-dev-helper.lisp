@@ -4,7 +4,7 @@
 
 (in-package :nisp-dev-helper)
 
-(defun start-nispbot-instance (&optional (nick "nisp"))
+(defun start-nispbot-instance (&optional (nick nispbot-config::*nickname*))
   (setq nispbot::*nispbot* (nispbot::make-irc-bot nick "irc.eighthbit.net"))
   (irc:start-background-message-handler nispbot::*nispbot*)
   (sleep 3) 
