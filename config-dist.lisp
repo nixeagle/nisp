@@ -28,6 +28,9 @@ to one network at a time. This is a bug and will be fixed.")
 (defvar *developer-host* ""
   "Set this to person running the bot, allows extra commands.")
 
+(defvar *bot-hosts* ()
+  "List of hosts to ignore by default.")
+
 (deftestsuite test-*channels* (root-suite)
   ()
   :test (is-list

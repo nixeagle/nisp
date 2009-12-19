@@ -68,8 +68,8 @@
   (is-eval-request bot (second (arguments msg))))
 ;;; return something more useful then this...
 (defmethod is-eval-request ((bot irc-bot) (msg string))
-  (eq (char msg 0)
-      (irc-bot-comchar bot)))
+  (and (< 0 (length string))
+       (eq (char msg 0) (irc-bot-comchar bot))))
 
 (defgeneric safe-eval (instance forms))
 (defmethod safe-eval ((message irc:irc-privmsg-message) forms)
