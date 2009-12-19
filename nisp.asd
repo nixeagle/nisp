@@ -12,7 +12,7 @@
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
   :description "Nixeagle's random lisp experiments"
-  :weakly-depends-on (               :tinaa)
+;  :weakly-depends-on (               :tinaa)
   :depends-on (:functional-tests
                :cl-ppcre
                :metatilities
