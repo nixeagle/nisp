@@ -22,6 +22,12 @@ to one network at a time. This is a bug and will be fixed.")
 (defvar *password* nil
   "Default password for irc instances.")
 
+(defvar *comchar* #\!
+  "Bot will parse all messages strting with this char.")
+
+(defvar *developer-host* ""
+  "Set this to person running the bot, allows extra commands.")
+
 (deftestsuite test-*channels* (root-suite)
   ()
   :test (is-list

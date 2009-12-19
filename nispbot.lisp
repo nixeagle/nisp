@@ -22,7 +22,10 @@
 (defclass irc-bot (irc:connection)
   ((comchar :accessor irc-bot-comchar
             :initarg :comchar
-            :initform #\,)
+            :initform nispbot-config::*comchar*)
+   (developer-host :accessor irc-bot-developer-host
+                   :initarg :developer-host
+                   :initform nispbot-config::*developer-host*)
    (safe :accessor irc-bot-safe
          :initform (make-safe-set))))
 
@@ -50,11 +53,23 @@
   "might want to return our own message type eventually"
   (when (is-eval-request bot msg)
     (substring (second (arguments msg)) 1)))
+(defmethod parse-eval-request ((bot irc-bot) (msg string))
+  (when (is-eval-request bot msg)
+    (substring msg 1)))
+(defmethod parse-eval-request (bot msg)
+  "If we get nil as a message, return nil"
+  (declare (ignore bot))
+  (when msg
+    (error "Failed to parse message ~A" msg))
+  nil)
 
 (defgeneric is-eval-request (instance message))
 (defmethod is-eval-request ((bot irc-bot) (msg irc-privmsg-message))
-  (eq (char (second (arguments msg)) 0)
-            (irc-bot-comchar bot)))
+  (is-eval-request bot (second (arguments msg))))
+;;; return something more useful then this...
+(defmethod is-eval-request ((bot irc-bot) (msg string))
+  (eq (char msg 0)
+      (irc-bot-comchar bot)))
 
 (defgeneric safe-eval (instance forms))
 (defmethod safe-eval ((message irc:irc-privmsg-message) forms)
@@ -70,16 +85,30 @@
   (declare (notinline command-hook))
                                         ;  (print message)
   "For now lets try to parse just one command"
-  (let ((forms (parse-eval-request (connection message) message))
+  (let* ((forms (parse-eval-request (connection message) message))
+         (admin-request (parse-eval-request (connection message)
+                                            forms))
         ( *print-readably* t))
     (when forms
       (handler-case
           (with-timeout (1)
-            (privmsg (connection message)
+            (if (and (string= nispbot-config::*developer-host*
+                               (host message))
+                     admin-request)
+                ;; User is person running the bot, so allow any lisp to
+                ;; be evaluated by that person.
+                (privmsg (connection message)
                      (first (arguments message))
                      (strip-newlines
                       (format nil "~A"
-                              (safe-eval message forms)))))
+                              (with-package :nispbot
+                                (eval (read-from-string admin-request))))))
+                ;; Untrusted users, eval their stuff in sandboxes
+                (privmsg (connection message)
+                         (first (arguments message))
+                         (strip-newlines
+                          (format nil "~A"
+                                  (safe-eval message forms))))))
         (error (condition) (privmsg (connection message)
                                     (first (arguments message))
                                     (format nil "~A" condition)))))
