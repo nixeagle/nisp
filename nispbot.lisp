@@ -68,7 +68,7 @@
   (is-eval-request bot (second (arguments msg))))
 ;;; return something more useful then this...
 (defmethod is-eval-request ((bot irc-bot) (msg string))
-  (and (< 0 (length string))
+  (and (< 0 (length msg))
        (eq (char msg 0) (irc-bot-comchar bot))))
 
 (defgeneric safe-eval (instance forms))
@@ -109,6 +109,7 @@
                          (strip-newlines
                           (format nil "~A"
                                   (safe-eval message forms))))))
+        (end-of-file (condition) (values nil condition))
         (error (condition) (privmsg (connection message)
                                     (first (arguments message))
                                     (format nil "~A" condition)))))
