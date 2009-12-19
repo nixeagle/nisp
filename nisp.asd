@@ -16,8 +16,6 @@
                :cl-ppcre
                :metatilities
                :nistilities
-
-               :lift
                :cl-irc
                :trivial-timeout
                :trivial-shell)
