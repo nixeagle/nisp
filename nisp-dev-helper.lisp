@@ -1,5 +1,5 @@
 (defpackage #:nisp-dev-helper
-  (:use :cl :nispbot :trivial-shell :lift :tinaa)
+  (:use :cl :nispbot :trivial-shell :lift)
   (:export #:start-nispbot-instance))
 
 (in-package :nisp-dev-helper)
@@ -36,9 +36,10 @@
   (trivial-shell::shell-command "cd /home/james/lisp/nisp/lift-tests/; git status; git add --all; git commit -m \"Automatic commit\"; git push vps:repos/nisp-tests.git master:master"))
 
 
-(defun generate-tinaa-docs ()
-  (tinaa:document-system
-   'asdf-system :nisp "/home/james/lisp/nisp/lift-tests/tinaa/")
+;; (defun generate-tinaa-docs ()
+;;   (use-package :tinaa)
+;;   (tinaa:document-system
+;;    'asdf-system :nisp "/home/james/lisp/nisp/lift-tests/tinaa/")
 #+ (or)   (trivial-shell::shell-command "scp -r /home/james/lisp/nisp/tinaa/* vps:paste/nisp/tinaa/"))
 
 ;;;;Old code
