@@ -40,7 +40,7 @@
 ;;   (use-package :tinaa)
 ;;   (tinaa:document-system
 ;;    'asdf-system :nisp "/home/james/lisp/nisp/lift-tests/tinaa/")
-#+ (or)   (trivial-shell::shell-command "scp -r /home/james/lisp/nisp/tinaa/* vps:paste/nisp/tinaa/"))
+;#+ (or)   (trivial-shell::shell-command "scp -r /home/james/lisp/nisp/tinaa/* vps:paste/nisp/tinaa/"))
 
 ;;;;Old code
  ;; (trivial-shell::shell-command "scp /home/james/lisp/nisp/lift-tests/html/* vps:paste/nisp/")
