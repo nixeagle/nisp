@@ -29,10 +29,3 @@ to one network at a time. This is a bug and will be fixed.")
           "Please use *channels* which is currently a list of
 strings. *channel is depreciated.")
          (ensure (listp *channels*))))
-
-;; (test *channel*-is-nil
-;;   "Please use *channels* which is currently a list of strings. *channel is depreciated."
-;;   (is (eq nil *channel*)))
-
-;; (test *channels*-is-a-list
-;;   (is (listp *channels*)))
