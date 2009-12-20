@@ -89,19 +89,19 @@
                                             forms)))
     (when forms
       (handler-case
-          (trivial-timeout:with-timeout (1)
-            (if (and (string= nispbot-config::*developer-host*
-                               (host message))
-                     admin-request)
-                ;; User is person running the bot, so allow any lisp to
-                ;; be evaluated by that person.
-                (privmsg (connection message)
-                     (first (arguments message))
-                     (strip-newlines
-                      (format nil "~A"
-                              (with-package :nispbot
-                                (eval (read-from-string admin-request))))))
-                ;; Untrusted users, eval their stuff in sandboxes
+          (if (and (string= nispbot-config::*developer-host*
+                            (host message))
+                   admin-request)
+              ;; User is person running the bot, so allow any lisp to
+              ;; be evaluated by that person.
+              (privmsg (connection message)
+                       (first (arguments message))
+                       (strip-newlines
+                        (format nil "~A"
+                                (with-package :nispbot
+                                  (eval (read-from-string admin-request))))))
+              (trivial-timeout:with-timeout (1)
+              ;; Untrusted users, eval their stuff in sandboxes
                 (privmsg (connection message)
                          (first (arguments message))
                          (strip-newlines
