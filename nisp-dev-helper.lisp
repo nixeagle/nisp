@@ -11,7 +11,7 @@
   (nispbot::join-all-channels nispbot::*nispbot*)
   (nispbot::reset-command-hook nispbot::*nispbot*))
 
-(defun generate-html-output ()
+#+nil (defun generate-html-output ()
     (progn
       (write "")
       (setf (lift::test-result-property *test-result* :style-sheet) "test-style.css")
@@ -26,7 +26,7 @@
       
       (update-lift-nisp)))
 
-(defun update-lift-nisp ()
+#+nil (defun update-lift-nisp ()
   "Currently a quick hack to upload test restuls and data using git to track history. This beats scp in several ways.
 
   1. we get history tracking
