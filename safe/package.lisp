@@ -50,15 +50,17 @@
 ;;; Used as subpackages for sandboxed code
 (defpackage #:safe-testing!
   (:use)
-  (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list :t :nil)
+  (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list
+                            #:documentation :t :nil)
   (:shadowing-import-from :nistilities
                           #:range)
   (:export
            #:loop
            #:mapc
            #:mapcar
-a           #:list
+           #:list
            #:range
+           #:documentation
            :t
            :nil))
 

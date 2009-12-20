@@ -87,8 +87,7 @@
   "For now lets try to parse just one command"
   (let* ((forms (parse-eval-request (connection message) message))
          (admin-request (parse-eval-request (connection message)
-                                            forms))
-        ( *print-readably* t))
+                                            forms)))
     (when forms
       (handler-case
           (with-timeout (1)
