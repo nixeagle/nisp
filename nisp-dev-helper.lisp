@@ -1,5 +1,5 @@
 (defpackage #:nisp-dev-helper
-  (:use :cl :nispbot :trivial-shell :lift)
+  (:use :cl :nispbot)
   (:export #:start-nispbot-instance))
 
 (in-package :nisp-dev-helper)
