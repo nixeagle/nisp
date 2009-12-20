@@ -2,7 +2,6 @@
   (:use :common-lisp :lift
         :nisp
         :metatilities
-        :trivial-timeout
         :cl-irc :cl-ppcre
         :nispbot-config
         :nisp-empty-package
@@ -90,7 +89,7 @@
                                             forms)))
     (when forms
       (handler-case
-          (with-timeout (1)
+          (trivial-timeout:with-timeout (1)
             (if (and (string= nispbot-config::*developer-host*
                                (host message))
                      admin-request)
