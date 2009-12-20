@@ -114,6 +114,7 @@
                                     (format nil "~A" condition)))))
 ))
 
+#+nil
 (defun parse-links (string)
   (let ((it ()))
   (cl-ppcre:do-matches-as-strings (var "\\\[\\\[(.*?)\\\]\\\]" string it)
@@ -127,12 +128,15 @@
        (second (multiple-value-list
                 (cl-ppcre:scan-to-strings reg str))) ret))))
 
-(parse-links "abc [[foo]] bar [[baz]] a")
-
 
 (defmethod safe-read ((msg irc-privmsg-message)
                        (forms string) &optional owner)
+  "Read given IRC message in the package corresponding to requesters hostmask"
   (declare (ignore owner))
   (safe-read (irc-bot-safe (connection msg))
              forms
              (host msg)))
+
+(defun pull ()
+  "Pull the source from github."
+  (trivial-shell:shell-command "git pull"))
