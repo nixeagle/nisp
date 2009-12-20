@@ -110,8 +110,7 @@
         (end-of-file (condition) (values nil condition))
         (error (condition) (privmsg (connection message)
                                     (first (arguments message))
-                                    (format nil "~A" condition)))))
-))
+                                    (format nil "~A" condition)))))))
 
 #+nil
 (defun parse-links (string)
