@@ -139,3 +139,4 @@
 (defun pull ()
   "Pull the source from github."
   (trivial-shell:shell-command "git pull"))
+
