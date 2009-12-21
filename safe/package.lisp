@@ -48,6 +48,10 @@
 
 
 ;;; Used as subpackages for sandboxed code
+(defpackage #:nisp-introspect
+  (:use :cl :lift)
+  (:export #:function-lambda-list))
+
 (defpackage #:safe-testing!
   (:use)
   (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list

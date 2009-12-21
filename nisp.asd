@@ -1,10 +1,33 @@
 ;; system definition file
 (in-package :cl-user)
+(defpackage #:nisp-safe-system
+  (:use :cl :asdf))
+(in-package :nisp-safe-system)
+
+(defsystem :nisp-safe
+  :version "0.0.3"
+  :author "James S <dev@nixeagle.org>"
+  :maintainer "James S <dev@nixeagle.org>"
+  :license "GPLv2 or later"
+  :depends-on (:lift
+               :cl-walker
+               :nistilities)
+  :components
+  ((:module "safe"
+            :serial t
+            :components
+            ((:file "package")
+             (:file "nisp-introspect")
+             (:file "empty-package")
+             (:file "arithmetic")
+             (:file "readtable")
+             (:file "safe-package")
+             (:file "safe")
+             (:file "safe-tests")))))
+
 (defpackage #:nispbot-system
   (:use :cl :asdf))
 (in-package #:nispbot-system)
-(defpackage #:nisp-safe-system
-  (:use :cl :asdf))
 
 (defsystem :nisp
   :version "0.0.3"
@@ -17,6 +40,7 @@
                :metatilities
                :nistilities
                :cl-irc
+               :nisp-safe
                :trivial-timeout
                :trivial-shell)
   :serial t
@@ -24,17 +48,6 @@
   ((:file "main-test-suite")
    (:file "package")
    (:file "nisp-asdf")
-   (:file "nisp-introspect")
-   (:module "safe"
-            :serial t
-            :components
-            ((:file "package")
-             (:file "empty-package")
-             (:file "arithmetic")
-             (:file "readtable")
-             (:file "safe-package")
-             (:file "safe")
-             (:file "safe-tests")))
    (:file "config-dist")
    (:file "config")
    (:file "nispbot")
