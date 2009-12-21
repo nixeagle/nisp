@@ -156,11 +156,17 @@ is bootstrapped some more.")
   (declare (type (or function)))
   (not (not (get fbound :ftests))))
 
-#+nil
+
 (defun add-test-to-plist (fbound input result)
   "Add a test with FBOUND using INPUT expecting RESULT."
-  
-  )
+  (declare (type (or symbol) fbound)
+           (type (or list) input))
+  (setf (get fbound :ftests) (list (make-io-set input result))))
+
+(defun get-fbound-plist-tests (fbound)
+  (declare (type (or symbol) fbound))
+  (the list (get fbound :ftests)))
+
 ;(equalp (make-function-test #'+) (make-function-test #'+))
 
 
