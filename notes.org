@@ -68,3 +68,10 @@ instead
 
 * TODO Make CL-WALKER ASDF installable
 At least give it a system definition.
+
+* BUG TRIVIAL-TIMEOUT style-warning
+-+  style-warning (1)
+ `-- The variable COM.METABANG.TRIVIAL-TIMEOUT::C is defined but never used.
+-+  warning (1)
+ `-- COMPILE-FILE warned while performing #<COMPILE-OP NIL {100617AD41}> on
+     #<CL-SOURCE-FILE "nispbot" {1004A69201}>.
