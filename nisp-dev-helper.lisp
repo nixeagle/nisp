@@ -11,6 +11,18 @@
   (nispbot::join-all-channels nispbot::*nispbot*)
   (nispbot::reset-command-hook nispbot::*nispbot*))
 
+(defun start-freenode-instance ()
+  (defparameter nispbot::*freenode*
+    (make-instance 'nispbot::irc-bot
+                   :nickname "nisp"
+                   :server "irc.freenode.net"
+                   :password nispbot-config::*freenode-password*)
+    (irc:start-background-message-handler nispbot::*freenode*)
+    (sleep 3)
+    (irc:join nispbot::*freenode* "#botters")
+    (nispbot::reset-command-hook nispbot::*freenode*))
+  "Quickie to get something up on freenode")
+
 #+nil (defun generate-html-output ()
     (progn
       (write "")
