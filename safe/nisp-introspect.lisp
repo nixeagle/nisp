@@ -1,7 +1,7 @@
 ;;; Introspection of lisp systems. May be portable one day.
 (in-package :nisp-introspect)
 
-(deftestsuite root-suite (nisp::root-suite) ())
+(deftestsuite root-suite () ())
 
 (defgeneric function-lambda-list (symbol)
   (:documentation

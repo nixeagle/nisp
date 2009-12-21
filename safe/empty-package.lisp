@@ -20,7 +20,7 @@
 
 (in-package :nisp-empty-package)
 
-(deftestsuite root-suite (nisp::root-suite) ())
+(deftestsuite root-suite () ())
 
 (defun make-empty-package (name)
   "Create an empty package called NAME.

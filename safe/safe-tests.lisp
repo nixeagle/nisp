@@ -2,7 +2,7 @@
 (in-package #:nisp-safe)
 
 ;; Tests
-(deftestsuite root-suite (nisp::root-suite)
+(deftestsuite root-suite ()
   ()
   (:categories))
 (deftestsuite base-packages (root-suite)
@@ -183,7 +183,7 @@ mapping to *existing* packages")
 (in-package :safe-external-tests)
 
 
-(deftestsuite root-suite (nisp::root-suite)
+(deftestsuite root-suite ()
   ()
   (:documentation "The root of all external (sandbox accessable) function tests."))
 
