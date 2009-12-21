@@ -5,7 +5,7 @@
 (in-package :nisp-safe-system)
 
 (defsystem :nisp-safe
-  :version "0.0.3"
+  :version "0.0.1"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
@@ -30,7 +30,7 @@
 (in-package #:nispbot-system)
 
 (defsystem :nisp
-  :version "0.0.3"
+  :version "0.0.4"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
