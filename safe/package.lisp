@@ -33,7 +33,6 @@
 (defpackage #:nisp-safe
   (:use :common-lisp
         :lift
-        :metatilities
         :nisp-empty-package
         :nistilities)
   (:export #:with-safe-package
