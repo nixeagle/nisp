@@ -30,6 +30,8 @@ to one network at a time. This is a bug and will be fixed.")
 
 (defvar *bot-hosts* ()
   "List of hosts to ignore by default.")
+(defvar *freenode-password* ""
+  "Temporary for storing the password to freenode.")
 
 (deftestsuite test-*channels* (root-suite)
   ()
