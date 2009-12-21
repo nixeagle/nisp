@@ -146,5 +146,21 @@ is bootstrapped some more.")
 (defmethod add-test-set ((test function-test) input value &optional output)
   (setf (test-sets test) (list (make-io-set input value :output output))))
 
+#+nil
+(defgeneric add-test-to-plist (fbound input value)
+  (:documentation "Add a test case to a function's plist"))
+
+(defun fbound-plist-tests-p (fbound)
+  "Return t if FBOUND has a plist with tests."
+  (not (not (get fbound :ftests))))
+
+#+nil
+(defun add-test-to-plist (fbound input result)
+  "Add a test with FBOUND using INPUT expecting RESULT."
+  
+  )
+;(equalp (make-function-test #'+) (make-function-test #'+))
+
+
 
 
