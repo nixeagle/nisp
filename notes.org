@@ -58,10 +58,13 @@ with no restrictions other then a timer.
 Its huge, the dependencies conflict when we do asdf-install:install
 ... and was generally a bad day overall. I don't use that much out of
 that utility set, so its not worth requiring the whole thing.
-* Changing symbol names too much
+* BUG Changing symbol names too much
 To the bot this should work:
 : ? (documentation 'list 'function)
 
 We get 
 : ? (DOCUMENTATION 'LIST '|SAFE-nixeagle::EighthBit::staff|::FUNCTION)
 instead
+
+* TODO Make CL-WALKER ASDF installable
+At least give it a system definition.
