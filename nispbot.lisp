@@ -89,7 +89,7 @@
                                             forms)))
     (when forms
       (handler-case
-          (if (and (string= nispbot-config::*developer-host*
+          (if (and (string= (irc-bot-developer-host (connection message))
                             (host message))
                    admin-request)
               ;; User is person running the bot, so allow any lisp to

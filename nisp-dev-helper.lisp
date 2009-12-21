@@ -15,7 +15,7 @@
 (defun start-freenode-instance ()
   "Quickie to get something up on freenode"
   (setq nispbot::*freenode*
-    (make-instance 'nispbot::irc-bot
+    (irc:connect :connection-type 'nispbot::irc-bot
                    :nickname "nisp"
                    :server "irc.freenode.net"
                    :password nispbot-config::*freenode-password*))
