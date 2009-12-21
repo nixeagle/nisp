@@ -152,6 +152,8 @@ is bootstrapped some more.")
 
 (defun fbound-plist-tests-p (fbound)
   "Return t if FBOUND has a plist with tests."
+  ;; look up what a macro is as far as typing
+  (declare (type (or function)))
   (not (not (get fbound :ftests))))
 
 #+nil
