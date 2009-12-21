@@ -9,12 +9,15 @@
 
 (in-package :nisp-safe)
 
-(deprecated
-  "Moving to all safe-package operations being on safe-package and or safe."
-  (defun delete-safe-package-old (name)
-    "Delete package NAME unless its already deleted."
-    (when (packagep (find-package name))
-      (delete-package name))))
+
+
+(defun delete-safe-package-old (name)
+  "Delete package NAME unless its already deleted.
+
+DEPRECIATED
+Moving to all safe-package operations being on safe-package and or safe."
+  (when (packagep (find-package name))
+    (delete-package name)))
 
 (defun read-using-package (name string)
   "read STRING using package NAME."
