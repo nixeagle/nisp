@@ -1,15 +1,14 @@
 (in-package :nisp-safe-system)
 
-
-
-
-
-
 (defmacro define-export-system (name from &rest symbol-list)
   `(defpackage ,name
      (:use)
      (:import-from ,from ,@(values symbol-list))
      (:export ,@(values symbol-list))))
+
+(defpackage #:nisp-introspect
+  (:use :cl :lift)
+  (:export #:function-lambda-list))
 
 (define-export-system :nisp-safe-introspect :nisp-introspect
   #:function-lambda-list)
@@ -48,10 +47,6 @@
 
 
 ;;; Used as subpackages for sandboxed code
-(defpackage #:nisp-introspect
-  (:use :cl :lift)
-  (:export #:function-lambda-list))
-
 (defpackage #:safe-testing!
   (:use)
   (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list
