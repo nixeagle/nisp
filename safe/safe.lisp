@@ -70,7 +70,7 @@ perform operations on sets of packages."))
   ;; Needs rewritten to not depend on swank!
   (swank::describe-to-string object))
 
-(defparameter safe-external::help "Welcome to nisp-safe! This is a tool for evaluating common lisp in a safe environment. Currently you can set your own variables with (setq quux \"bar\") and reset your 'sandbox' with (reset). Each user gets their own area."
+(defparameter safe-external::help "Welcome to nisp-safe! This is a tool for evaluating common lisp in a safe environment. Currently you can reset your 'sandbox' with (reset). Each user gets their own area."
   "The help message when a user types the word help in.")
 
 (defparameter safe-external::test-results "http://paste.nixeagle.org/lift-nisp/"
