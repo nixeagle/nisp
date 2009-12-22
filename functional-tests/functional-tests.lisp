@@ -180,9 +180,10 @@ is bootstrapped some more.")
            (type (or list) input))
   (set-fbound-plist-tests fbound (make-io-set input result)))
 
+(declaim (ftype (function (fbound) (values list &optional))
+                get-fbound-plist-tests))
 (defun get-fbound-plist-tests (fbound)
-  (declare (type fbound fbound))
-  (the list (get fbound :ftests)))
+  (get fbound :ftests))
 
 (defun set-fbound-plist-tests (fbound &rest io-sets)
   "Destructively replace the old plist tests with IO-SETS"
