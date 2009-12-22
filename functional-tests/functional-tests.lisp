@@ -76,7 +76,10 @@ is bootstrapped some more.")
 
 (defclass io-expected-result ()
   ((output :initarg :output
-           :accessor result-output)
+           :accessor result-output
+           :initform ""
+           :type (or string nil)
+           :documentation "Output as if to *standard-output*.")
    (value :initarg :value
           :accessor result-value
           :documentation "Any lisp form that produces the expected value.")
@@ -104,7 +107,10 @@ is bootstrapped some more.")
          :accessor io-set-name
          :type string)         ;Needed?
    (input :initarg :input
-          :accessor io-set-input)
+          :accessor io-set-input
+          :type list
+          :documentation "Lambda list as it would be passed into the
+ real function.")
    (result-log :initform ()
                :accessor io-set-result-log)))
 
@@ -151,10 +157,18 @@ is bootstrapped some more.")
 (defgeneric add-test-to-plist (fbound input value)
   (:documentation "Add a test case to a function's plist"))
 
+;;; Don't use this for anything with heavy computation, we can do it
+;;; here as this is a test framework, not a load heavy appliction
+(deftype fbound ()
+  "An fbound symbol"
+  '(and symbol
+    (satisfies fboundp)))
+
 (defun fbound-plist-tests-p (fbound)
   "Return t if FBOUND has a plist with tests."
   ;; look up what a macro is as far as typing
-  (declare (type (or function)))
+;  (declare (type symbol fbound))
+  (declare (type fbound fbound))
   (not (not (get fbound :ftests))))
 
 
