@@ -176,26 +176,25 @@ is bootstrapped some more.")
 
 (defun add-test-to-plist (fbound input result)
   "Add a test with FBOUND using INPUT expecting RESULT."
-  (declare (type (or symbol) fbound)
+  (declare (type fbound fbound)
            (type (or list) input))
   (set-fbound-plist-tests fbound (make-io-set input result)))
 
 (defun get-fbound-plist-tests (fbound)
-  (declare (type (or symbol) fbound))
+  (declare (type fbound fbound))
   (the list (get fbound :ftests)))
 
 (defun set-fbound-plist-tests (fbound &rest io-sets)
   "Destructively replace the old plist tests with IO-SETS"
-  (declare (type symbol fbound))
-  (check-type fbound (satisfies fboundp))
+  (declare (type fbound fbound))
   (the list (setf (get fbound :ftests) io-sets)))
 
 (defgeneric map-fbound-plist-tests (fbound)
   (:documentation "Run all tests in the list"))
 (defmethod map-fbound-plist-tests ((fbound symbol))
   "On a symbol run the symbol's plist"
-  (check-type fbound (satisfies fboundp))
-  (check-type (getf (symbol-plist fbound) :ftest) list)
+  (declare (type fbound fbound))
+  (check-type (getf (symbol-plist fbound) :ftests) list)
   (mapcar (lambda (test)
             (declare (type io-set test))
             (run-test-set (symbol-function fbound) test))
