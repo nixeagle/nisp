@@ -1,0 +1,18 @@
+General changelog for listing changes starting from v0.0.4 and up.
+
+* 0
+*** 0
+***** 4
+      Major changes include:
+
+     - splitting nisp-safe from nisp
+     - removing metatilities as a dependency from nisp-safe
+     - add dependency on cl-walker to nisp-safe. This is not used yet but is
+       very likely to be used in the near future.
+     - nisp-introspect has been moved into the nisp-safe system for now. The
+       future of this one generic method system is uncertain. It is very
+       likely not required and was written before I knew some things.
+     - nispbot is now an object that superclasses connection
+     - nisp-safe now works with objects
+     - stub of new test framework focused on functional programming started.
+     - many other changes, see changelog for reference [2009-12-22 Tue]

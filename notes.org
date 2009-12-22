@@ -77,3 +77,5 @@ At least give it a system definition.
      #<CL-SOURCE-FILE "nispbot" {1004A69201}>.
 * TODO Define property-list type
   Verify input is a property list etc.
+* TODO move NEXT-PRIME out of :i
+  Best place for this one is in nistilities as its own subsystem.
