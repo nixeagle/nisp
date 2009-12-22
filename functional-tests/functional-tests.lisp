@@ -144,7 +144,8 @@ is bootstrapped some more.")
 (defgeneric add-test-set (fbound input value &optional output)
   (:documentation "Add another set of input->values"))
 (defmethod add-test-set ((test function-test) input value &optional output)
-  (setf (test-sets test) (list (make-io-set input value :output output))))
+  (setf (test-sets test)
+        (list (make-io-set input value :output output))))
 
 #+nil
 (defgeneric add-test-to-plist (fbound input value)
@@ -170,9 +171,8 @@ is bootstrapped some more.")
 (defun set-fbound-plist-tests (fbound &rest io-sets)
   "Destructively replace the old plist tests with IO-SETS"
   (declare (type symbol fbound))
-  (unless (fboundp fbound)
-    (error "~S is not fbound" fbound))
-  (the list  (setf (get fbound :ftests) io-sets)))
+  (check-type fbound (satisfies fboundp))
+  (the list (setf (get fbound :ftests) io-sets)))
 
 (defgeneric map-fbound-plist-tests (fbound)
   (:documentation "Run all tests in the list"))

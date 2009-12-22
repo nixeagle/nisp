@@ -75,3 +75,5 @@ At least give it a system definition.
 -+  warning (1)
  `-- COMPILE-FILE warned while performing #<COMPILE-OP NIL {100617AD41}> on
      #<CL-SOURCE-FILE "nispbot" {1004A69201}>.
+* TODO Define property-list type
+  Verify input is a property list etc.
