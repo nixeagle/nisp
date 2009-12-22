@@ -23,7 +23,7 @@
   "If we get a string, read it and re-call."
   (function-lambda-list (read-from-string symbol)))
 
-
+#+sbcl
 (deftestsuite test-function-lambda-list (root-suite)
   ((plus-arg-list '(&REST SB-KERNEL::ARGS)))
   :test (pass-valid-symbol
