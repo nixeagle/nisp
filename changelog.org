@@ -16,3 +16,7 @@ General changelog for listing changes starting from v0.0.4 and up.
      - nisp-safe now works with objects
      - stub of new test framework focused on functional programming started.
      - many other changes, see changelog for reference [2009-12-22 Tue]
+
+***** 5-pre
+      - functional-tests
+        - Added deftype fbound
