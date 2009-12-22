@@ -180,9 +180,9 @@ is bootstrapped some more.")
   "On a symbol run the symbol's plist"
   (check-type fbound (satisfies fboundp))
   (check-type (getf (symbol-plist fbound) :ftest) list)
-  (mapcar (lambda (io-set-test)
-            (declare (type io-set io-set-test))
-            (run-test-set (symbol-function fbound) io-set-test))
+  (mapcar (lambda (test)
+            (declare (type io-set test))
+            (run-test-set (symbol-function fbound) test))
           (get-fbound-plist-tests fbound)))
 
 ;(equalp (make-function-test #'+) (make-function-test #'+))
