@@ -62,9 +62,18 @@
 
 (in-package :functional-tests)
 
+;;; Probably not going to get used at this point. We don't want to have
+;;; ONE list that everyone has to share
 (defparameter *functional-tests-list* ()
   "Temporary global special for holding function-test objects until this
 is bootstrapped some more.")
+
+;;; Don't use this for anything with heavy computation, we can do it
+;;; here as this is a test framework, not a load heavy appliction
+(deftype fbound ()
+  "An fbound symbol."
+  '(and symbol
+    (satisfies fboundp)))
 
 (defclass function-test ()
   ((fbound-object :initarg :fbound
@@ -156,13 +165,6 @@ is bootstrapped some more.")
 #+nil
 (defgeneric add-test-to-plist (fbound input value)
   (:documentation "Add a test case to a function's plist"))
-
-;;; Don't use this for anything with heavy computation, we can do it
-;;; here as this is a test framework, not a load heavy appliction
-(deftype fbound ()
-  "An fbound symbol"
-  '(and symbol
-    (satisfies fboundp)))
 
 (defun fbound-plist-tests-p (fbound)
   "Return t if FBOUND has a plist with tests."
