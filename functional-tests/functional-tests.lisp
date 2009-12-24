@@ -128,8 +128,9 @@ is bootstrapped some more.")
           :type list
           :documentation "Lambda list as it would be passed into the
  real function.")
-   (result-log :initform ()
-               :accessor io-set-result-log)))
+   (log :initform (make-instance 'io-log)
+        :accessor io-set-log
+        :type io-log)))
 
 (defun make-io-expected-result (value &key signal output)
   (make-instance 'io-expected-result
