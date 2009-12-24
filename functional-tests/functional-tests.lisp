@@ -147,7 +147,7 @@ is bootstrapped some more.")
 ;;;; Getting and setting plists
 (declaim (ftype (function (fbound) (values list &optional))
                 get-fbound-plist-tests)
-         (ftype (function (fbound &rest t)
+         (ftype (function (fbound &rest io-set)
                           (values list &optional))
                 set-fbound-plist-tests)
          (ftype (function (io-set (or io-set list))
@@ -165,9 +165,6 @@ is bootstrapped some more.")
 
 (defun fbound-plist-tests-p (fbound)
   "Return t if FBOUND has a plist with tests."
-  ;; look up what a macro is as far as typing
-;  (declare (type symbol fbound))
-  (declare (type fbound fbound))
   (not (not (get fbound +plist-keyword+))))
 
 (defun io-set-equalp (x y)
