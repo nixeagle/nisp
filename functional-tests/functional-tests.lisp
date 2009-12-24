@@ -104,6 +104,13 @@ is bootstrapped some more.")
    (trace :initarg :trace
           :accessor result-trace)))
 
+(defclass io-log ()
+  ((results :initform ()
+            :accessor io-log-results
+            :initarg :results
+            :type list))
+  (:documentation "Keeps track of an io-set's test results."))
+
 ;;; A set is a result with included input to get the result.
 ;;; We also log results on a set level. Of course results are io-results
 ;;; as the input never changes.
