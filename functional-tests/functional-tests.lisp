@@ -167,20 +167,13 @@ is bootstrapped some more.")
 
 (defgeneric add-test-set (fbound input value &optional output)
   (:documentation "Add another set of input->values"))
-(defmethod add-tdest-set ((test function-test) input value &optional output)
+(defmethod add-test-set ((test function-test) input value &optional output)
   (setf (test-sets test)
         (list (make-io-set input value :output output))))
 
 #+nil
 (defgeneric add-test-to-plist (fbound input value)
   (:documentation "Add a test case to a function's plist"))
-
-
-(defun add-test-to-plist (fbound input result)
-  "Add a test with FBOUND using INPUT expecting RESULT."
-  (declare (type fbound fbound)
-           (type (or list) input))
-  (set-fbound-plist-tests fbound (make-io-set input result)))
 
 ;;;; Getting and setting plists
 (declaim (ftype (function (fbound) (values list &optional))
