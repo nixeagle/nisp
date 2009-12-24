@@ -145,6 +145,13 @@ is bootstrapped some more.")
                  :signal (or signal "")
                  :output (or output "")))
 
+(defun make-io-actual-result ()
+  "Brand new expected result.
+
+From the moment of creation until the test ends consists of the total
+runtime of this set of results."
+  (make-instance 'io-actual-result))
+
 ;;;; Getting and setting plists
 (declaim (ftype (function (fbound) (values list &optional))
                 get-fbound-plist-tests)
