@@ -41,6 +41,5 @@ General changelog for listing changes starting from v0.0.4 and up.
           - Pass a keyword, symbol, or package and get a list of symbols
             that have tests on them. This works for the plist tests only
             right now.
-
-
             
+***** 6-pre

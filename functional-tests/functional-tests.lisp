@@ -199,10 +199,7 @@ is bootstrapped some more.")
                 fbound-plist-tests-p)
          (ftype (function (fbound)
                           (values (member nil) &optional))
-                clear-fbound-plist-tests)
-         (ftype (function (possible-package)
-                          (values &rest io-set))
-                find-tested-symbols))
+                clear-fbound-plist-tests))
 
 (defun fbound-plist-tests-p (fbound)
   "Return t if FBOUND has a plist with tests."
@@ -264,6 +261,14 @@ Tests are equal if they test the same input"
             (run-test-set (symbol-function fbound) test))
           (get-fbound-plist-tests fbound)))
 
+
+;;;; Query stuff
+;;; Our primary purpose here is to locate and find different
+;;; tests. Without this things are pretty difficult. Because of the test
+;;; framework model we are mostly based on a per package basis.
+(declaim (ftype (function (possible-package)
+                          (values &rest io-set))
+                find-tested-symbols))
 (defun find-tested-symbols (package-spec)
   "List symbols that have at least one test to run"
   (loop for x being the present-symbols in package-spec
