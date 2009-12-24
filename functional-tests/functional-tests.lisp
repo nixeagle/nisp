@@ -83,14 +83,6 @@ is bootstrapped some more.")
   "A package or symbol that can be a package"
   '(or symbol package))
 
-(defclass function-test ()
-  ((fbound-object :initarg :fbound
-                  :accessor test-fbound
-                  :documentation "Any object that can be funcalled")
-   (io-sets :initarg :sets
-            :accessor test-sets
-            :initform ())))
-
 (defclass io-expected-result ()
   ((output :initarg :output
            :accessor result-output
@@ -146,34 +138,11 @@ is bootstrapped some more.")
                  :output (or output "")))
 
 
-(defun make-function-test (function &rest io-sets)
-  (make-instance 'function-test :fbound function
-                 :sets io-sets))
-
 (defgeneric run-test-set (test input)
   (:documentation "Run a test set and get results"))
 (defmethod run-test-set ((test function) (input io-set))
   "The easiest case, we get as input the objects we want to run a single test set"
   (apply test (io-set-input input)))
-(defmethod run-test-set ((test function-test) (set io-set))
-  (run-test-set (test-fbound test) set))
-(defmethod run-test-set ((test function-test) (set (eql :all)))
-  (mapcar (lambda (x) (run-test-set test x))
-          (test-sets test)))
-
-(defmacro define-function-test (function-name)
-  "Very basic, will be rewritten."
-  `(push (make-function-test #',function-name) *functional-tests-list*))
-
-(defgeneric add-test-set (fbound input value &optional output)
-  (:documentation "Add another set of input->values"))
-(defmethod add-test-set ((test function-test) input value &optional output)
-  (setf (test-sets test)
-        (list (make-io-set input value :output output))))
-
-#+nil
-(defgeneric add-test-to-plist (fbound input value)
-  (:documentation "Add a test case to a function's plist"))
 
 ;;;; Getting and setting plists
 (declaim (ftype (function (fbound) (values list &optional))
