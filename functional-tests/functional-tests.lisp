@@ -68,6 +68,10 @@
   "Temporary global special for holding function-test objects until this
 is bootstrapped some more.")
 
+(defparameter +plist-keyword+ :functional-tests
+  "Inserting tests in")
+
+
 ;;; Don't use this for anything with heavy computation, we can do it
 ;;; here as this is a test framework, not a load heavy appliction
 (deftype fbound ()
@@ -158,7 +162,7 @@ is bootstrapped some more.")
 
 (defgeneric add-test-set (fbound input value &optional output)
   (:documentation "Add another set of input->values"))
-(defmethod add-test-set ((test function-test) input value &optional output)
+(defmethod add-tdest-set ((test function-test) input value &optional output)
   (setf (test-sets test)
         (list (make-io-set input value :output output))))
 
@@ -171,7 +175,7 @@ is bootstrapped some more.")
   ;; look up what a macro is as far as typing
 ;  (declare (type symbol fbound))
   (declare (type fbound fbound))
-  (not (not (get fbound :ftests))))
+  (not (not (get fbound +plist-keyword+))))
 
 
 (defun add-test-to-plist (fbound input result)
@@ -180,22 +184,24 @@ is bootstrapped some more.")
            (type (or list) input))
   (set-fbound-plist-tests fbound (make-io-set input result)))
 
+;;;; Getting and setting plists
 (declaim (ftype (function (fbound) (values list &optional))
                 get-fbound-plist-tests))
+
 (defun get-fbound-plist-tests (fbound)
-  (get fbound :ftests))
+  (get fbound +plist-keyword+))
 
 (defun set-fbound-plist-tests (fbound &rest io-sets)
   "Destructively replace the old plist tests with IO-SETS"
   (declare (type fbound fbound))
-  (the list (setf (get fbound :ftests) io-sets)))
+  (the list (setf (get fbound +plist-keyword+) io-sets)))
 
 (defgeneric map-fbound-plist-tests (fbound)
   (:documentation "Run all tests in the list"))
 (defmethod map-fbound-plist-tests ((fbound symbol))
   "On a symbol run the symbol's plist"
   (declare (type fbound fbound))
-  (check-type (getf (symbol-plist fbound) :ftests) list)
+  (check-type (getf (symbol-plist fbound) +plist-keyword+) list)
   (mapcar (lambda (test)
             (declare (type io-set test))
             (run-test-set (symbol-function fbound) test))
