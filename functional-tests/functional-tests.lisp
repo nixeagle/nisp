@@ -62,9 +62,26 @@
 
 (in-package :functional-tests)
 
+;;; Probably not going to get used at this point. We don't want to have
+;;; ONE list that everyone has to share
 (defparameter *functional-tests-list* ()
   "Temporary global special for holding function-test objects until this
 is bootstrapped some more.")
+
+(defparameter +plist-keyword+ :functional-tests
+  "Inserting tests in")
+
+
+;;; Don't use this for anything with heavy computation, we can do it
+;;; here as this is a test framework, not a load heavy appliction
+(deftype fbound ()
+  "An fbound symbol."
+  '(and symbol
+    (satisfies fboundp)))
+
+(deftype possible-package ()
+  "A package or symbol that can be a package"
+  '(or symbol package))
 
 (defclass function-test ()
   ((fbound-object :initarg :fbound
@@ -76,7 +93,10 @@ is bootstrapped some more.")
 
 (defclass io-expected-result ()
   ((output :initarg :output
-           :accessor result-output)
+           :accessor result-output
+           :initform ""
+           :type (or string nil)
+           :documentation "Output as if to *standard-output*.")
    (value :initarg :value
           :accessor result-value
           :documentation "Any lisp form that produces the expected value.")
@@ -102,9 +122,13 @@ is bootstrapped some more.")
 (defclass io-set (io-expected-result)
   ((name :initarg :name
          :accessor io-set-name
+         :initform ""
          :type string)         ;Needed?
    (input :initarg :input
-          :accessor io-set-input)
+          :accessor io-set-input
+          :type list
+          :documentation "Lambda list as it would be passed into the
+ real function.")
    (result-log :initform ()
                :accessor io-set-result-log)))
 
@@ -118,8 +142,8 @@ is bootstrapped some more.")
   (make-instance 'io-set
                  :input input
                  :value value
-                 :signal signal
-                 :output output))
+                 :signal (or signal "")
+                 :output (or output "")))
 
 
 (defun make-function-test (function &rest io-sets)
@@ -143,49 +167,104 @@ is bootstrapped some more.")
 
 (defgeneric add-test-set (fbound input value &optional output)
   (:documentation "Add another set of input->values"))
-(defmethod add-test-set ((test function-test) input value &optional output)
-  (setf (test-sets test) (list (make-io-set input value :output output))))
+(defmethod add-tdest-set ((test function-test) input value &optional output)
+  (setf (test-sets test)
+        (list (make-io-set input value :output output))))
 
 #+nil
 (defgeneric add-test-to-plist (fbound input value)
   (:documentation "Add a test case to a function's plist"))
 
-(defun fbound-plist-tests-p (fbound)
-  "Return t if FBOUND has a plist with tests."
-  ;; look up what a macro is as far as typing
-  (declare (type (or function)))
-  (not (not (get fbound :ftests))))
-
 
 (defun add-test-to-plist (fbound input result)
   "Add a test with FBOUND using INPUT expecting RESULT."
-  (declare (type (or symbol) fbound)
+  (declare (type fbound fbound)
            (type (or list) input))
   (set-fbound-plist-tests fbound (make-io-set input result)))
 
+;;;; Getting and setting plists
+(declaim (ftype (function (fbound) (values list &optional))
+                get-fbound-plist-tests)
+         (ftype (function (fbound &rest t)
+                          (values list &optional))
+                set-fbound-plist-tests)
+         (ftype (function (io-set (or io-set list))
+                          (values boolean &optional))
+                io-set-equalp)
+         (ftype (function (fbound io-set)
+                          (values boolean &optional))
+                fbound-plist-test-p)
+         (ftype (function (fbound)
+                          (values boolean &optional))
+                fbound-plist-tests-p)
+         (ftype (function (fbound)
+                          (values (member nil) &optional))
+                clear-fbound-plist-tests)
+         (ftype (function (possible-package)
+                          (values &rest io-set))
+                find-tested-symbols))
+
+(defun fbound-plist-tests-p (fbound)
+  "Return t if FBOUND has a plist with tests."
+  ;; look up what a macro is as far as typing
+;  (declare (type symbol fbound))
+  (declare (type fbound fbound))
+  (not (not (get fbound +plist-keyword+))))
+
+(defun io-set-equalp (x y)
+  "Two io-sets test for the same thing if their input is the same."
+  ;; We do not really care about the other values as we presume this
+  ;; test is being done for io-sets operating on the same function. If
+  ;; this assumption is false, the test will give invalid results.
+  (equal (io-set-input x)
+         (io-set-input (if (listp y) (car y) y))))
+
+(defun fbound-plist-test-p (fbound test)
+  "T if FBOUND has TEST.
+Tests are equal if they test the same input"
+  (member test (get-fbound-plist-tests fbound)
+          :test #'io-set-equalp))
+
+(defgeneric remove-fbound-plist-test (fbound test)
+  (:documentation "Remove one TEST from FBOUND's list.")
+  (:method ((fbound symbol) (test io-set))
+      (apply #'set-fbound-plist-tests fbound
+       (remove test (get-fbound-plist-tests fbound)
+               :test #'io-set-equalp))))
+
+(defgeneric add-fbound-plist-test (fbound test &optional result)
+  (:documentation "Append a new test to FBOUND's list.")
+  (:method ((fbound symbol) (test io-set) &optional result)
+           "Append io-set TEST to FBOUND."
+           (declare (ignore result))
+           (apply #'set-fbound-plist-tests
+                  fbound (adjoin test (get-fbound-plist-tests fbound)
+                    :test #'io-set-equalp))))
+
 (defun get-fbound-plist-tests (fbound)
-  (declare (type (or symbol) fbound))
-  (the list (get fbound :ftests)))
+  "Get the list of tests"
+  (get fbound +plist-keyword+))
 
 (defun set-fbound-plist-tests (fbound &rest io-sets)
   "Destructively replace the old plist tests with IO-SETS"
-  (declare (type symbol fbound))
-  (unless (fboundp fbound)
-    (error "~S is not fbound" fbound))
-  (the list  (setf (get fbound :ftests) io-sets)))
+  (setf (get fbound +plist-keyword+) io-sets))
+
+(defun clear-fbound-plist-tests (fbound)
+  "Remove all tests on FBOUND"
+  (set-fbound-plist-tests fbound))
 
 (defgeneric map-fbound-plist-tests (fbound)
   (:documentation "Run all tests in the list"))
 (defmethod map-fbound-plist-tests ((fbound symbol))
   "On a symbol run the symbol's plist"
-  (check-type (symbol-plist fbound) list)
-  (mapcar (lambda (io-set-test)
-            (declare (type io-set io-set-test))
-            (run-test-set (symbol-function fbound) io-set-test))
+  (declare (type fbound fbound))
+  (check-type (getf (symbol-plist fbound) +plist-keyword+) list)
+  (mapcar (lambda (test)
+            (declare (type io-set test))
+            (run-test-set (symbol-function fbound) test))
           (get-fbound-plist-tests fbound)))
 
-;(equalp (make-function-test #'+) (make-function-test #'+))
-
-
-
-
+(defun find-tested-symbols (package-spec)
+  "List symbols that have at least one test to run"
+  (loop for x being the present-symbols in package-spec
+       when (and (fboundp x) (fbound-plist-tests-p x)) collect x))

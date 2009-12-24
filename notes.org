@@ -75,7 +75,24 @@ At least give it a system definition.
 -+  warning (1)
  `-- COMPILE-FILE warned while performing #<COMPILE-OP NIL {100617AD41}> on
      #<CL-SOURCE-FILE "nispbot" {1004A69201}>.
+
 * BUG Clozure drops to debugger on nispbot input
   Not totally sure why atm, needs fixed at some point. The problem is
   the timeout seems to also abort the debugger which is different
   behavior then with sbcl.
+
+* TODO Define property-list type
+  Verify input is a property list etc.
+* TODO move NEXT-PRIME out of :i
+  Best place for this one is in nistilities as its own subsystem.
+
+* Ideas
+*** Possible test form
+(test list
+      (input 1 2 3 4 output 1 2 3 4)
+      (input 1 2 output 1 2))
+
+(test list
+      (input (1 2 3 4) output (1 2 3 4))
+      (input (1 2) output (1 2)))
+

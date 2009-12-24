@@ -1,0 +1,46 @@
+General changelog for listing changes starting from v0.0.4 and up.
+
+* 0
+*** 0
+***** 4
+      Major changes include:
+
+     - splitting nisp-safe from nisp
+     - removing metatilities as a dependency from nisp-safe
+     - add dependency on cl-walker to nisp-safe. This is not used yet but is
+       very likely to be used in the near future.
+     - nisp-introspect has been moved into the nisp-safe system for now. The
+       future of this one generic method system is uncertain. It is very
+       likely not required and was written before I knew some things.
+     - nispbot is now an object that superclasses connection
+     - nisp-safe now works with objects
+     - stub of new test framework focused on functional programming started.
+     - many other changes, see changelog for reference [2009-12-22 Tue]
+
+***** 5
+      Tests sort of run, no way to automatically verify the results yet,
+      but its possible to add tests to a fbound symbol, remove them, map
+      over them/run them returning the results and get a list of all
+      fbound symbols with a test on them.
+
+      - functional-tests
+        - Added deftype fbound
+        - Added is-set-equalp
+        - Added fbound-plist-test-p
+        - Added remove-fbound-plist-test
+        - Added add-fbound-plist-test
+        - Added clear-fbound-plist-test
+        - Modified set-fbound-plist-tests
+          - Removed (declare ...) and (the ...) and placed them in an
+            ftype instead of inside the function proper.
+        - Mdified make-io-set
+          - Type checks were added to the io-set class, and they failed
+            when the io-set was created with :output output where output
+            was nil.
+        - Added find-tested-symbols
+          - Pass a keyword, symbol, or package and get a list of symbols
+            that have tests on them. This works for the plist tests only
+            right now.
+
+
+            
