@@ -79,6 +79,10 @@ is bootstrapped some more.")
   '(and symbol
     (satisfies fboundp)))
 
+(deftype possible-package ()
+  "A package or symbol that can be a package"
+  '(or symbol package))
+
 (defclass function-test ()
   ((fbound-object :initarg :fbound
                   :accessor test-fbound
@@ -171,13 +175,6 @@ is bootstrapped some more.")
 (defgeneric add-test-to-plist (fbound input value)
   (:documentation "Add a test case to a function's plist"))
 
-(defun fbound-plist-tests-p (fbound)
-  "Return t if FBOUND has a plist with tests."
-  ;; look up what a macro is as far as typing
-;  (declare (type symbol fbound))
-  (declare (type fbound fbound))
-  (not (not (get fbound +plist-keyword+))))
-
 
 (defun add-test-to-plist (fbound input result)
   "Add a test with FBOUND using INPUT expecting RESULT."
@@ -198,8 +195,21 @@ is bootstrapped some more.")
                           (values boolean &optional))
                 fbound-plist-test-p)
          (ftype (function (fbound)
+                          (values boolean &optional))
+                fbound-plist-tests-p)
+         (ftype (function (fbound)
                           (values (member nil) &optional))
-                clear-fbound-plist-tests))
+                clear-fbound-plist-tests)
+         (ftype (function (possible-package)
+                          (values &rest io-set))
+                find-tested-symbols))
+
+(defun fbound-plist-tests-p (fbound)
+  "Return t if FBOUND has a plist with tests."
+  ;; look up what a macro is as far as typing
+;  (declare (type symbol fbound))
+  (declare (type fbound fbound))
+  (not (not (get fbound +plist-keyword+))))
 
 (defun io-set-equalp (x y)
   "Two io-sets test for the same thing if their input is the same."
@@ -231,8 +241,6 @@ Tests are equal if they test the same input"
                   fbound (adjoin test (get-fbound-plist-tests fbound)
                     :test #'io-set-equalp))))
 
-
-
 (defun get-fbound-plist-tests (fbound)
   "Get the list of tests"
   (get fbound +plist-keyword+))
@@ -256,8 +264,10 @@ Tests are equal if they test the same input"
             (run-test-set (symbol-function fbound) test))
           (get-fbound-plist-tests fbound)))
 
-;(equalp (make-function-test #'+) (make-function-test #'+))
-
+(defun find-tested-symbols (package-spec)
+  "List symbols that have at least one test to run"
+  (loop for x being the present-symbols in package-spec
+       when (and (fboundp x) (fbound-plist-tests-p x)) collect x))
 
 
 
