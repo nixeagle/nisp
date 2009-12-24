@@ -66,8 +66,13 @@ We get
 : ? (DOCUMENTATION 'LIST '|SAFE-nixeagle::EighthBit::staff|::FUNCTION)
 instead
 
-* TODO Make CL-WALKER ASDF installable
-At least give it a system definition.
+* DONE Make CL-WALKER ASDF installable
+  CLOSED: [2009-12-24 Thu 20:36]
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2009-12-24 Thu 20:36]
+  :END:
+  At least give it a system definition.
+  - Never had to be done
 
 * BUG TRIVIAL-TIMEOUT style-warning
 -+  style-warning (1)
@@ -85,6 +90,10 @@ At least give it a system definition.
   Verify input is a property list etc.
 * TODO move NEXT-PRIME out of :i
   Best place for this one is in nistilities as its own subsystem.
+
+* TODO Split functional-tests from nisp
+  This is starting to become independent of :nisp itself. I don't want
+  to force others to pull in all of nisp for just that framework.
 
 * Ideas
 *** Possible test form
