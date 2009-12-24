@@ -145,13 +145,6 @@ is bootstrapped some more.")
                  :signal (or signal "")
                  :output (or output "")))
 
-
-(defgeneric run-test-set (test input)
-  (:documentation "Run a test set and get results"))
-(defmethod run-test-set ((test function) (input io-set))
-  "The easiest case, we get as input the objects we want to run a single test set"
-  (apply test (io-set-input input)))
-
 ;;;; Getting and setting plists
 (declaim (ftype (function (fbound) (values list &optional))
                 get-fbound-plist-tests)
@@ -225,7 +218,7 @@ Tests are equal if they test the same input"
   (check-type (getf (symbol-plist fbound) +plist-keyword+) list)
   (mapcar (lambda (test)
             (declare (type io-set test))
-            (run-test-set (symbol-function fbound) test))
+            (run-test-set  test (symbol-function fbound)))
           (get-fbound-plist-tests fbound)))
 
 
@@ -240,3 +233,13 @@ Tests are equal if they test the same input"
   "List symbols that have at least one test to run"
   (loop for x being the present-symbols in package-spec
        when (and (fboundp x) (fbound-plist-tests-p x)) collect x))
+
+
+;;;; Running the tests
+;;; Run iosets, log the results of these runs.
+
+(defgeneric run-test-set (input io-set)
+  (:documentation "Run a test set and get results")
+  (:method ((input io-set) (test function))
+    "The easiest case, we get as input the objects we want to run a single test set"
+      (apply test (io-set-input input))))
