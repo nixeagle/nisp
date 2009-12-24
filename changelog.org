@@ -43,3 +43,6 @@ General changelog for listing changes starting from v0.0.4 and up.
             right now.
             
 ***** 6-pre
+******* functional-tests
+        - Remove add-test-to-plist
+          - Replaced by add-fbound-plist-test.
