@@ -118,6 +118,7 @@ is bootstrapped some more.")
 (defclass io-set (io-expected-result)
   ((name :initarg :name
          :accessor io-set-name
+         :initform ""
          :type string)         ;Needed?
    (input :initarg :input
           :accessor io-set-input
@@ -137,8 +138,8 @@ is bootstrapped some more.")
   (make-instance 'io-set
                  :input input
                  :value value
-                 :signal signal
-                 :output output))
+                 :signal (or signal "")
+                 :output (or output "")))
 
 
 (defun make-function-test (function &rest io-sets)
@@ -186,15 +187,63 @@ is bootstrapped some more.")
 
 ;;;; Getting and setting plists
 (declaim (ftype (function (fbound) (values list &optional))
-                get-fbound-plist-tests))
+                get-fbound-plist-tests)
+         (ftype (function (fbound &rest t)
+                          (values list &optional))
+                set-fbound-plist-tests)
+         (ftype (function (io-set (or io-set list))
+                          (values boolean &optional))
+                io-set-equalp)
+         (ftype (function (fbound io-set)
+                          (values boolean &optional))
+                fbound-plist-test-p)
+         (ftype (function (fbound)
+                          (values (member nil) &optional))
+                clear-fbound-plist-tests))
+
+(defun io-set-equalp (x y)
+  "Two io-sets test for the same thing if their input is the same."
+  ;; We do not really care about the other values as we presume this
+  ;; test is being done for io-sets operating on the same function. If
+  ;; this assumption is false, the test will give invalid results.
+  (equal (io-set-input x)
+         (io-set-input (if (listp y) (car y) y))))
+
+(defun fbound-plist-test-p (fbound test)
+  "T if FBOUND has TEST.
+Tests are equal if they test the same input"
+  (member test (get-fbound-plist-tests fbound)
+          :test #'io-set-equalp))
+
+(defgeneric remove-fbound-plist-test (fbound test)
+  (:documentation "Remove one TEST from FBOUND's list.")
+  (:method ((fbound symbol) (test io-set))
+      (apply #'set-fbound-plist-tests fbound
+       (remove test (get-fbound-plist-tests fbound)
+               :test #'io-set-equalp))))
+
+(defgeneric add-fbound-plist-test (fbound test &optional result)
+  (:documentation "Append a new test to FBOUND's list.")
+  (:method ((fbound symbol) (test io-set) &optional result)
+           "Append io-set TEST to FBOUND."
+           (declare (ignore result))
+           (apply #'set-fbound-plist-tests
+                  fbound (adjoin test (get-fbound-plist-tests fbound)
+                    :test #'io-set-equalp))))
+
+
 
 (defun get-fbound-plist-tests (fbound)
+  "Get the list of tests"
   (get fbound +plist-keyword+))
 
 (defun set-fbound-plist-tests (fbound &rest io-sets)
   "Destructively replace the old plist tests with IO-SETS"
-  (declare (type fbound fbound))
-  (the list (setf (get fbound +plist-keyword+) io-sets)))
+  (setf (get fbound +plist-keyword+) io-sets))
+
+(defun clear-fbound-plist-tests (fbound)
+  "Remove all tests on FBOUND"
+  (set-fbound-plist-tests fbound))
 
 (defgeneric map-fbound-plist-tests (fbound)
   (:documentation "Run all tests in the list"))

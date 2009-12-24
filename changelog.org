@@ -20,3 +20,15 @@ General changelog for listing changes starting from v0.0.4 and up.
 ***** 5-pre
       - functional-tests
         - Added deftype fbound
+        - Added is-set-equalp
+        - Added fbound-plist-test-p
+        - Added remove-fbound-plist-test
+        - Added add-fbound-plist-test
+        - Added clear-fbound-plist-test
+        - Modified set-fbound-plist-tests
+          - Removed (declare ...) and (the ...) and placed them in an
+            ftype instead of inside the function proper.
+        - Mdified make-io-set
+          - Type checks were added to the io-set class, and they failed
+            when the io-set was created with :output output where output
+            was nil.
