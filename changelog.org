@@ -42,7 +42,20 @@ General changelog for listing changes starting from v0.0.4 and up.
             that have tests on them. This works for the plist tests only
             right now.
             
-***** 6-pre
+***** 6
 ******* functional-tests
         - Remove add-test-to-plist
           - Replaced by add-fbound-plist-test.
+        - Remove _function-test_ class
+          - Has no use as we use symbol plists instead of a seperate
+            class now. Makes the chore of tracking tests easier to just
+            associate with the function being tested directly
+        - Remove make-function-test
+        - Remove some specializers of run-test-set
+        - Remove _define-function-test_
+          - Macro for function-test creation, not used anymore since
+            function-test is gone.
+        - Remove add-test-set
+        - Remove add-test-to-plist
+          - This was largely useless as it could only add one test.
+        - Add class [[io-log]].

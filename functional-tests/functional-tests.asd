@@ -6,7 +6,7 @@
   (:use :cl :asdf))
 
 (defsystem :functional-tests
-  :version "0.0.5"
+  :version "0.0.6"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
