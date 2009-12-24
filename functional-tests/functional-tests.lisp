@@ -268,6 +268,3 @@ Tests are equal if they test the same input"
   "List symbols that have at least one test to run"
   (loop for x being the present-symbols in package-spec
        when (and (fboundp x) (fbound-plist-tests-p x)) collect x))
-
-
-

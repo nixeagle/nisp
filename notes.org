@@ -79,3 +79,13 @@ At least give it a system definition.
   Verify input is a property list etc.
 * TODO move NEXT-PRIME out of :i
   Best place for this one is in nistilities as its own subsystem.
+
+* Ideas
+*** Possible test form
+(test list
+      (input 1 2 3 4 output 1 2 3 4)
+      (input 1 2 output 1 2))
+
+(test list
+      (input (1 2 3 4) output (1 2 3 4))
+      (input (1 2) output (1 2)))
