@@ -62,12 +62,6 @@
 
 (in-package :functional-tests)
 
-;;; Probably not going to get used at this point. We don't want to have
-;;; ONE list that everyone has to share
-(defparameter *functional-tests-list* ()
-  "Temporary global special for holding function-test objects until this
-is bootstrapped some more.")
-
 (defparameter +plist-keyword+ :functional-tests
   "Inserting tests in")
 
