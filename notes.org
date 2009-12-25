@@ -104,14 +104,3 @@ instead
 
   Update: Now has its own asd definition, needs to be split into its own
   repository at some point in the future.
-
-* Ideas
-*** Possible test form
-(test list
-      (input 1 2 3 4 output 1 2 3 4)
-      (input 1 2 output 1 2))
-
-(test list
-      (input (1 2 3 4) output (1 2 3 4))
-      (input (1 2) output (1 2)))
-

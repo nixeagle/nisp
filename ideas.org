@@ -1,0 +1,14 @@
+Org file for organizing ideas relating to nisp.
+
+* General ideas
+
+
+* Functional Tests
+*** Possible test form
+(test list
+      (input 1 2 3 4 output 1 2 3 4)
+      (input 1 2 output 1 2))
+
+(test list
+      (input (1 2 3 4) output (1 2 3 4))
+      (input (1 2) output (1 2)))
