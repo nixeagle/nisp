@@ -239,3 +239,12 @@ Tests are equal if they test the same input"
               (declare (type io-set test))
               (run-test-set test (symbol-function fbound)))
             (get-fbound-plist-tests fbound))))
+
+(defgeneric last-test-result (object)
+  (:documentation "Get the last io-result in OBJECT")
+  (:method ((log io-log))
+    "Last result in the log."
+    (let ((log-entries (io-log-results log)))
+      (when (single log-entries)
+        (error "Run some tests! The log has no entries."))
+      (first (io-log-results log)))))
