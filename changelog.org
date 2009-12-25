@@ -17,6 +17,9 @@ General changelog for listing changes starting from v0.0.4 and up.
      - stub of new test framework focused on functional programming started.
      - many other changes, see changelog for reference [2009-12-22 Tue]
 
+     * Additional note: admin eval was added somewhere around this
+       release. [2009-12-25 Fri] 
+
 ***** 5
       Tests sort of run, no way to automatically verify the results yet,
       but its possible to add tests to a fbound symbol, remove them, map
@@ -40,7 +43,7 @@ General changelog for listing changes starting from v0.0.4 and up.
         - Added find-tested-symbols
           - Pass a keyword, symbol, or package and get a list of symbols
             that have tests on them. This works for the plist tests only
-            right now.
+            right now. [2009-12-24 Thu]
             
 ***** 6
 ******* functional-tests
@@ -58,7 +61,7 @@ General changelog for listing changes starting from v0.0.4 and up.
         - Remove add-test-set
         - Remove add-test-to-plist
           - This was largely useless as it could only add one test.
-        - Add class [[io-log]].
+        - Add class [[io-log]]. [2009-12-24 Thu]
 
 ***** 7
 ******* functional-tests
@@ -77,4 +80,31 @@ General changelog for listing changes starting from v0.0.4 and up.
             - IO-SET IO-ACTUAL-RESULT
         - Rename [[map-plist-tests]] --> [[run-test-set]]
           - Right now does the same thing, just with a more logical
-            name.
+            name. [2009-12-24 Thu]
+
+***** 8
+******* functional-tests
+        - Add [[compare-last-test-result]]
+          - Method args: IO-SET
+            - Return t on test pass and nil on test failure
+          - Method args: FBOUND
+            - Return a list of test results.
+        - Add slot end-time to [[io-actual-result]]
+          - Old run-time is now end-time, runtime is the difference
+            between creation-time and end-time.
+        - Remove slot run-time from [[io-actual-result]]
+          - We can compute this by taking end-time - start-time.
+        - *Rename* _io-actual-result_ -> [[io-result]]
+          - Lets do this now before any api starts settling in. Its
+            clearer this way rather then messing with the distinction
+            between io-expected-result and io-result. Just remember that
+            io-result is the interesting part, eg with test results.
+        - Remove \*functional-tests-list\*
+          - Not needed anymore as we don't want to restrict ourselves to
+            just one global tests list. Since we removed function-test
+            last revision this variable does not really have a good use
+            anymore.[2009-12-25 Fri]
+
+******* Notes/Tasks
+        Irrelevant to actual development progress, but the notes.org
+        file has been split out into tasks.org. [2009-12-25 Fri]
