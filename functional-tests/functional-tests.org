@@ -1,3 +1,5 @@
+#+CATEGORY: ft
+
 This is a starting sketch up of functional-tests documentation. This
 file is written with the help of org-mode, an emacs mode for doing
 outlines.
@@ -8,6 +10,19 @@ outlines.
   even on the radar. In short tests are always done on a single function
   at a time, specifiying inputs and expected outputs.
 
+* API
+*** TODO run-time OBJECT
+***** TODO Method: run-time IO-RESULT
+
+***** TODO Method: run-time IO-LOG
+
+***** TODO Method: run-time IO-SET
+
+***** TODO Method: run-time FBOUND-SYMBOL
+
+***** TODO Method: run-time PACKAGE-SPEC
+
+***** TODO Method: run-time <List of any of the above>
 
 * Old code comments
 
