@@ -54,10 +54,15 @@ safe for arbitrary code execution.
 When a double comchar is given, the bot does a straight eval in :nispbot
 with no restrictions other then a timer.
 
-* TODO Remove metatilities as a build dep if possible
-Its huge, the dependencies conflict when we do asdf-install:install
-... and was generally a bad day overall. I don't use that much out of
-that utility set, so its not worth requiring the whole thing.
+* TODO Remove metatilities as a build dep [2/3]
+  Its huge, the dependencies conflict when we do asdf-install:install
+  ... and was generally a bad day overall. I don't use that much out of
+  that utility set, so its not worth requiring the whole thing.
+
+  - [X] functional-tests
+  - [X] nisp-safe
+  - [ ] nisp
+
 * BUG Changing symbol names too much
 To the bot this should work:
 : ? (documentation 'list 'function)
