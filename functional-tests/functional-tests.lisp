@@ -95,11 +95,11 @@ is bootstrapped some more.")
    (condition :initarg :signal
               :accessor result-condition)))
 
-(defclass io-actual-result (io-expected-result)
+(defclass io-result (io-expected-result)
   ((creation-time :initform (get-universal-time)
                   ;; No real need to modify creation time
                   :reader result-creation-time
-                  :documentation "Time that the io-actual-result is created.")
+                  :documentation "Time that the io-result is created.")
    (end-time :initform 0
              :accessor result-end-time
              :documentation "Test completion time.")
@@ -148,12 +148,12 @@ is bootstrapped some more.")
                  :output (or output "")))
 
 ;;;; Working with the actual results
-(defun make-io-actual-result ()
+(defun make-io-result ()
   "Brand new expected result.
 
 From the moment of creation until the test ends consists of the total
 runtime of this set of results."
-  (make-instance 'io-actual-result))
+  (make-instance 'io-result))
 
 ;;;; Getting and setting plists
 (declaim (ftype (function (fbound) (values list &optional))
@@ -241,7 +241,7 @@ Tests are equal if they test the same input"
   ;; Need to capture output, trace, handle errors
   (:method ((input io-set) (test function))
     "The easiest case, we get as input the objects we want to run a single test set"
-    (let ((result-set (make-io-actual-result)))
+    (let ((result-set (make-io-result)))
       (setf (result-value result-set)
             (apply test (io-set-input input)))
       ;; Set the end of the test, needs to be its own function
@@ -252,10 +252,10 @@ Tests are equal if they test the same input"
 
 (defgeneric log-test-result (object result)
   (:documentation "Log results to object's test log")
-  (:method ((object io-log) (result io-actual-result))
+  (:method ((object io-log) (result io-result))
     "Log RESULT to object's result log"
     (push result (io-log-results object)))
-  (:method ((object io-set) (result io-actual-result))
+  (:method ((object io-set) (result io-result))
     "Log RESULT to io-set's log."
     (log-test-result (io-set-log object) result)))
 
