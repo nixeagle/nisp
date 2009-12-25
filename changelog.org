@@ -59,3 +59,22 @@ General changelog for listing changes starting from v0.0.4 and up.
         - Remove add-test-to-plist
           - This was largely useless as it could only add one test.
         - Add class [[io-log]].
+
+***** 7
+******* functional-tests
+        - Change [[run-test-set]]
+          - Argument order swapped so the set describing the test is
+            specified first, then the object to test.
+        - Add [[make-io-actual-result]]
+          - Largely will be used to track the start of the test and
+            operate with the results of the test. This is the object
+            that will get stored in [[io-log]].
+        - Add [[log-test-result]]
+          - Generic function that takes a test result object and stores
+            it in the io-set object's io-log object. Two primary methods
+            defined.
+            - IO-LOG IO-ACTUAL-RESULT
+            - IO-SET IO-ACTUAL-RESULT
+        - Rename [[map-plist-tests]] --> [[run-test-set]]
+          - Right now does the same thing, just with a more logical
+            name.
