@@ -87,7 +87,7 @@ is bootstrapped some more.")
   ((output :initarg :output
            :accessor result-output
            :initform ""
-           :type (or string nil)
+           :type string
            :documentation "Output as if to *standard-output*.")
    (value :initarg :value
           :accessor result-value
