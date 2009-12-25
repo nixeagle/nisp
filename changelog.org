@@ -108,3 +108,16 @@ General changelog for listing changes starting from v0.0.4 and up.
 ******* Notes/Tasks
         Irrelevant to actual development progress, but the notes.org
         file has been split out into tasks.org. [2009-12-25 Fri]
+
+***** 9
+******* functional-tests
+        - Add [[last-test-result]]
+          - Add method: (IO-LOG)
+        - Add [[run-time]]
+          - Add method: (IO-RESULT)
+          - Add method: (IO-LOG)
+          - Add method: (IO-SET)
+          - Add method: (FBOUND)
+          - Add method: (PACKAGE)
+          - Add method: (LIST)
+        - Add [[single]]

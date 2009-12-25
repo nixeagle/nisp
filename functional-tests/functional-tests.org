@@ -11,21 +11,20 @@ outlines.
   at a time, specifiying inputs and expected outputs.
 
 * API
-*** TODO run-time OBJECT
-      
+*** TODO run-time OBJECT [6/6]
       - Methods:
-        - [ ] IO-RESULT
+        - [X] IO-RESULT
           - This should be the simplest case as an IO-RESULT object has
             creation-time and end-time.
-        - [ ] IO-LOG
+        - [X] IO-LOG
           - Compute the result of a list of IO-RESULTs
-        - [ ] IO-SET
+        - [X] IO-SET
           - Same, but use the IO-LOG object that the IO-SET has
-        - [ ] FBOUND-SYMBOL
+        - [X] FBOUND-SYMBOL
           - Do so for every IO-SET and return a list
-        - [ ] PACKAGE-SPEC
+        - [X] PACKAGE-SPEC
           - Do so for every FBOUND in the package
-        - [ ] <List of any of the above>
+        - [X] <List of any of the above>
           - Call the appropriate method depending on what the list has.
 
 * Old code comments
