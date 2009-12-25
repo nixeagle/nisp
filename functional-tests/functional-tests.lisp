@@ -100,9 +100,6 @@ is bootstrapped some more.")
                   ;; No real need to modify creation time
                   :reader result-creation-time
                   :documentation "Time that the io-actual-result is created.")
-   (run-time :initform nil
-             :accessor result-run-time
-             :initarg :run-time)
    (end-time :initform 0
              :accessor result-end-time
              :documentation "Test completion time.")
