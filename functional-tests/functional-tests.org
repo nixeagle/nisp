@@ -1,5 +1,15 @@
-This is a starting sketch up of functional-tests documentation.
+This is a starting sketch up of functional-tests documentation. This
+file is written with the help of org-mode, an emacs mode for doing
+outlines.
 
+* General idea
+  Very basically this test framework assumes that each function is able
+  to be tested on its own. Functions with side effects right now are not
+  even on the radar. In short tests are always done on a single function
+  at a time, specifiying inputs and expected outputs.
+
+
+* Old code comments
 
 ;;;test framework idea: embed the test and expected results in the
 ;;;docstring itself in addition to more specialized tests by
