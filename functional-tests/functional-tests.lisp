@@ -97,10 +97,15 @@ is bootstrapped some more.")
 
 (defclass io-actual-result (io-expected-result)
   ((creation-time :initform (get-universal-time)
-                  :accessor result-creation-time)
+                  ;; No real need to modify creation time
+                  :reader result-creation-time
+                  :documentation "Time that the io-actual-result is created.")
    (run-time :initform nil
              :accessor result-run-time
              :initarg :run-time)
+   (end-time :initform 0
+             :accessor result-end-time
+             :documentation "Test completion time.")
    (trace :initarg :trace
           :accessor result-trace)))
 
@@ -242,7 +247,8 @@ Tests are equal if they test the same input"
     (let ((result-set (make-io-actual-result)))
       (setf (result-value result-set)
             (apply test (io-set-input input)))
-      (setf (result-run-time result-set)
+      ;; Set the end of the test, needs to be its own function
+      (setf (result-end-time result-set)
             (get-universal-time))
       (log-test-result input result-set)
       result-set)))
