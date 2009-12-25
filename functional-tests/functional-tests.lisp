@@ -218,18 +218,6 @@ Tests are equal if they test the same input"
   "Remove all tests on FBOUND"
   (set-fbound-plist-tests fbound))
 
-(defgeneric map-fbound-plist-tests (fbound)
-  (:documentation "Run all tests in the list"))
-(defmethod map-fbound-plist-tests ((fbound symbol))
-  "On a symbol run the symbol's plist"
-  (declare (type fbound fbound))
-  (check-type (getf (symbol-plist fbound) +plist-keyword+) list)
-  (mapcar (lambda (test)
-            (declare (type io-set test))
-            (run-test-set  test (symbol-function fbound)))
-          (get-fbound-plist-tests fbound)))
-
-
 ;;;; Query stuff
 ;;; Our primary purpose here is to locate and find different
 ;;; tests. Without this things are pretty difficult. Because of the test
@@ -267,3 +255,16 @@ Tests are equal if they test the same input"
   (:method ((object io-set) (result io-actual-result))
     "Log RESULT to io-set's log."
     (log-test-result (io-set-log object) result)))
+
+;;; Making a pretty big assumption that the fbound object will have all
+;;; the information we need to actually run a test
+(defgeneric run-fbound-set (fbound)
+  (:documentation "Run all tests on the set.")
+  (:method ((fbound symbol))
+    "Run all tests listed in FBOUND's plist."
+    (declare (type fbound fbound))
+    (check-type (getf (symbol-plist fbound) +plist-keyword+) list)
+    (mapcar (lambda (test)
+              (declare (type io-set test))
+              (run-test-set test (symbol-function fbound)))
+            (get-fbound-plist-tests fbound))))
