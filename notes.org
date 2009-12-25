@@ -55,6 +55,7 @@ When a double comchar is given, the bot does a straight eval in :nispbot
 with no restrictions other then a timer.
 
 * TODO Remove metatilities as a build dep [2/3]
+  DEADLINE: <2009-12-27 Sun>
   Its huge, the dependencies conflict when we do asdf-install:install
   ... and was generally a bad day overall. I don't use that much out of
   that utility set, so its not worth requiring the whole thing.
@@ -97,8 +98,12 @@ instead
   Best place for this one is in nistilities as its own subsystem.
 
 * TODO Split functional-tests from nisp
+  DEADLINE: <2009-12-29 Tue>
   This is starting to become independent of :nisp itself. I don't want
   to force others to pull in all of nisp for just that framework.
+
+  Update: Now has its own asd definition, needs to be split into its own
+  repository at some point in the future.
 
 * Ideas
 *** Possible test form
