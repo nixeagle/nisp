@@ -145,6 +145,7 @@ is bootstrapped some more.")
                  :signal (or signal "")
                  :output (or output "")))
 
+;;;; Working with the actual results
 (defun make-io-actual-result ()
   "Brand new expected result.
 
@@ -247,6 +248,22 @@ Tests are equal if they test the same input"
 
 (defgeneric run-test-set (input io-set)
   (:documentation "Run a test set and get results")
+  ;; Need to capture output, trace, handle errors
   (:method ((input io-set) (test function))
     "The easiest case, we get as input the objects we want to run a single test set"
-      (apply test (io-set-input input))))
+    (let ((result-set (make-io-actual-result)))
+      (setf (result-value result-set)
+            (apply test (io-set-input input)))
+      (setf (result-run-time result-set)
+            (get-universal-time))
+      (log-test-result input result-set)
+      result-set)))
+
+(defgeneric log-test-result (object result)
+  (:documentation "Log results to object's test log")
+  (:method ((object io-log) (result io-actual-result))
+    "Log RESULT to object's result log"
+    (push result (io-log-results object)))
+  (:method ((object io-set) (result io-actual-result))
+    "Log RESULT to io-set's log."
+    (log-test-result (io-set-log object) result)))
