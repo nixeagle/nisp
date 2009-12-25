@@ -240,6 +240,36 @@ Tests are equal if they test the same input"
               (run-test-set test (symbol-function fbound)))
             (get-fbound-plist-tests fbound))))
 
+(defgeneric run-time (object)
+  ;; Keep in mind it only makes sense to ask about the runtime of the
+  ;; last test run. Though a query about the whole test log could be
+  ;; made using this by passing a list of io-sets in.
+  (:documentation "Compute the runtime of the test.")
+  (:method ((result io-result))
+    "Return an integer with result run-time."
+    (- (result-end-time result)
+       (result-creation-time result)))
+  (:method ((log io-log))
+    "Return an integer of the last run io-result."
+    (run-time (last-test-result log)))
+  (:method ((set io-set))
+    "Get last run-time for IO-SET."
+    (run-time (io-set-log set)))
+  (:method ((fbound-symbol symbol))
+    "Get list of last test runtimes for FBOUND-SYMBOL."
+    (if (fboundp fbound-symbol)
+        (mapcar #'run-time (get-fbound-plist-tests fbound-symbol))
+        (run-time (find-package fbound-symbol))))
+  (:method ((package package))
+    "Get runtimes for all tests in package"
+    (mapcar #'run-time (find-tested-symbols package)))
+  (:method ((lst list))
+    "Get runtimes for every element in the list.
+
+This returns a list with runtimes, note that this may mean sublists if
+the list has an fbound symbol in it or a package."
+    (mapcar #'run-time lst)))
+
 (defgeneric last-test-result (object)
   (:documentation "Get the last io-result in OBJECT")
   (:method ((log io-log))
