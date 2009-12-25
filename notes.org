@@ -1,43 +1,3 @@
-* TODO Shadowing import stuff
-move from import-from to shadowing-import-from for all packages using
-define-export-system. This lets us be one step removed from the common
-lisp package and limits damage to the overall (lisp) system should
-something manage to
-
-
-* TODO Sandbox level segragation
-I should be able to create sandboxes with different sets of imports
-and use different ones depending on who is accessing them.
-
-
-* TODO Rename safe-external package to something else
-As it stands the name implies these are external to the safe
-package. Most of what is in here are variables and functions directly
-related *to* safe. As such the name is a misnomer.
-
-* TODO Define a useful documentation function
-Right now documentation is dependent on swank.
-
-* DONE Enable test again for nistilities
-  CLOSED: [2009-12-15 Tue 21:00]
-  :LOGBOOK:
-  - State "DONE"       from "TODO"       [2009-12-15 Tue 21:00]
-  :END:
-Both nisp and nistilities tests
-
-Use (lift:run-tests :suite 'test-mixin). However I need to generate one
-of those that is specific only to nisp related stuff. mixin seems to run
-all defined test-suites no matter what project is associated with them.
-
-* WAIT Implement symbol->string
-  :LOGBOOK:
-  - State "WAIT"       from "TODO"       [2009-12-16 Wed 19:49] \\
-    Passing on this for the time being, I really would like to avoid having
-    to do more string manipulation then strictly needed with respect to
-    packages and symbols.
-  :END:
-Basic idea is taking any symbol and returning a string with a specified
-package (defaulting to current one), and the name of the symbol.
 
 * Safety
 Section for general issues and notes with respect to keeping the system
@@ -51,15 +11,32 @@ safe for arbitrary code execution.
     changed ever inside the package... we should be safe.
 
 
-* TODO Remove metatilities as a build dep [2/3]
-  DEADLINE: <2009-12-27 Sun>
-  Its huge, the dependencies conflict when we do asdf-install:install
-  ... and was generally a bad day overall. I don't use that much out of
-  that utility set, so its not worth requiring the whole thing.
 
-  - [X] functional-tests
-  - [X] nisp-safe
-  - [ ] nisp
+* TODO Shadowing import stuff
+move from import-from to shadowing-import-from for all packages using
+define-export-system. This lets us be one step removed from the common
+lisp package and limits damage to the overall (lisp) system should
+something manage to
+
+
+* TODO Sandbox level segragation
+I should be able to create sandboxes with different sets of imports
+and use different ones depending on who is accessing them.
+
+
+
+
+
+* WAIT Implement symbol->string
+  :LOGBOOK:
+  - State "WAIT"       from "TODO"       [2009-12-16 Wed 19:49] \\
+    Passing on this for the time being, I really would like to avoid having
+    to do more string manipulation then strictly needed with respect to
+    packages and symbols.
+  :END:
+Basic idea is taking any symbol and returning a string with a specified
+package (defaulting to current one), and the name of the symbol.
+
 
 * BUG Changing symbol names too much
 To the bot this should work:
@@ -77,27 +54,7 @@ instead
   At least give it a system definition.
   - Never had to be done
 
-* BUG TRIVIAL-TIMEOUT style-warning
--+  style-warning (1)
- `-- The variable COM.METABANG.TRIVIAL-TIMEOUT::C is defined but never used.
--+  warning (1)
- `-- COMPILE-FILE warned while performing #<COMPILE-OP NIL {100617AD41}> on
-     #<CL-SOURCE-FILE "nispbot" {1004A69201}>.
 
-* BUG Clozure drops to debugger on nispbot input
-  Not totally sure why atm, needs fixed at some point. The problem is
-  the timeout seems to also abort the debugger which is different
-  behavior then with sbcl.
 
-* TODO Define property-list type
-  Verify input is a property list etc.
-* TODO move NEXT-PRIME out of :i
-  Best place for this one is in nistilities as its own subsystem.
 
-* TODO Split functional-tests from nisp
-  DEADLINE: <2009-12-29 Tue>
-  This is starting to become independent of :nisp itself. I don't want
-  to force others to pull in all of nisp for just that framework.
 
-  Update: Now has its own asd definition, needs to be split into its own
-  repository at some point in the future.
