@@ -84,6 +84,8 @@ is bootstrapped some more.")
   '(or symbol package))
 
 (defclass io-expected-result ()
+  ;; Should this get changed to io-expected or does that lose clarity as
+  ;; far as what is going on?
   ((output :initarg :output
            :accessor result-output
            :initform ""
