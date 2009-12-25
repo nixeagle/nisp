@@ -50,9 +50,6 @@ safe for arbitrary code execution.
     or the readtable is somehow made into a constant that cannot be
     changed ever inside the package... we should be safe.
 
-* Developers have straight eval
-When a double comchar is given, the bot does a straight eval in :nispbot
-with no restrictions other then a timer.
 
 * TODO Remove metatilities as a build dep [2/3]
   DEADLINE: <2009-12-27 Sun>
