@@ -256,6 +256,18 @@ Tests are equal if they test the same input"
     "Log RESULT to io-set's log."
     (log-test-result (io-set-log object) result)))
 
+(defgeneric compare-last-test-result (fbound)
+  ;; If no expected result, we should assume regression testing, which
+  ;; means verify the result against test history
+  (:documentation "Compare the last test result with the expected result.")
+  (:method ((set io-set))
+    (equal (result-value set)
+           (result-value (first (io-log-results (io-set-log set))))))
+  (:method ((fbound symbol))
+    (declare (type fbound fbound))
+    (mapcar #'compare-last-test-result
+            (get-fbound-plist-tests fbound))))
+
 ;;; Making a pretty big assumption that the fbound object will have all
 ;;; the information we need to actually run a test
 (defgeneric run-fbound-set (fbound)
