@@ -233,12 +233,14 @@ Tests are equal if they test the same input"
   (:documentation "Run all tests on the set.")
   (:method ((fbound symbol))
     "Run all tests listed in FBOUND's plist."
-    (declare (type fbound fbound))
-    (check-type (getf (symbol-plist fbound) +plist-keyword+) list)
-    (mapcar (lambda (test)
-              (declare (type io-set test))
-              (run-test-set test (symbol-function fbound)))
-            (get-fbound-plist-tests fbound))))
+    (if (fboundp fbound)
+        (mapcar (lambda (test)
+                  (declare (type io-set test))
+                  (run-test-set test (symbol-function fbound)))
+                (get-fbound-plist-tests fbound))
+        (run-fbound-set (find-package fbound))))
+  (:method ((fbound package))
+    (mapcar #'run-time (find-tested-symbols fbound))))
 
 (defgeneric run-time (object)
   ;; Keep in mind it only makes sense to ask about the runtime of the
