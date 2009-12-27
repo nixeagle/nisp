@@ -277,4 +277,23 @@ the list has an fbound symbol in it or a package."
     (let ((log-entries (io-log-results log)))
       (when (single log-entries)
         (error "Run some tests! The log has no entries."))
-      (first (io-log-results log)))))
+      (first (io-log-results log))))
+  (:method ((set io-set))
+    (last-test-result (io-set-log set)))
+  (:method ((result io-result))
+    "Degenerate case, if we get an io-result, spit the same one back."
+    result)
+    (:method ((fbound-symbol symbol))
+    "Get list of last test runtimes for FBOUND-SYMBOL."
+    (if (fboundp fbound-symbol)
+        (mapcar #'last-test-result (get-fbound-plist-tests fbound-symbol))
+        (last-test-result (find-package fbound-symbol))))
+  (:method ((package package))
+    "Get runtimes for all tests in package"
+    (mapcar #'last-test-result (find-tested-symbols package)))
+  (:method ((lst list))
+    "Get runtimes for every element in the list.
+
+This returns a list with runtimes, note that this may mean sublists if
+the list has an fbound symbol in it or a package."
+    (mapcar #'last-test-result lst)))
