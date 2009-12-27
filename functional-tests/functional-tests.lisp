@@ -111,28 +111,32 @@ From the moment of creation until the test ends consists of the total
 runtime of this set of results."
   (make-instance 'io-result))
 
-;;;; Getting and setting plists
+;;;; Getting and setting plists ----------------------------------------
 (declaim (ftype (function (fbound) (values list &optional))
                 get-fbound-plist-tests)
          (ftype (function (fbound &rest io-set)
                           (values list &optional))
                 set-fbound-plist-tests)
-         (ftype (function (io-set (or io-set list))
-                          (values boolean &optional))
-                io-set-equalp)
-         (ftype (function (fbound io-set)
-                          (values boolean &optional))
-                fbound-plist-test-p)
-         (ftype (function (fbound)
-                          (values boolean &optional))
-                fbound-plist-tests-p)
          (ftype (function (fbound)
                           (values (member nil) &optional))
                 clear-fbound-plist-tests))
 
-(defun fbound-plist-tests-p (fbound)
-  "Return t if FBOUND has a plist with tests."
-  (not (not (get fbound +plist-keyword+))))
+(defun get-fbound-plist-tests (fbound)
+  "Get the list of tests"
+  (get fbound +plist-keyword+))
+
+(defun set-fbound-plist-tests (fbound &rest io-sets)
+  "Destructively replace the old plist tests with IO-SETS"
+  (setf (get fbound +plist-keyword+) io-sets))
+
+(defun clear-fbound-plist-tests (fbound)
+  "Remove all tests on FBOUND"
+  (set-fbound-plist-tests fbound))
+
+;;;; Equality ----------------------------------------------------------
+(declaim (ftype (function (io-set (or io-set list))
+                          (values boolean &optional))
+                io-set-equalp))
 
 (defun io-set-equalp (x y)
   "Two io-sets test for the same thing if their input is the same."
@@ -141,6 +145,21 @@ runtime of this set of results."
   ;; this assumption is false, the test will give invalid results.
   (equal (io-set-input x)
          (io-set-input (if (listp y) (car y) y))))
+
+
+(declaim 
+         (ftype (function (fbound io-set)
+                          (values boolean &optional))
+                fbound-plist-test-p)
+         (ftype (function (fbound)
+                          (values boolean &optional))
+                fbound-plist-tests-p))
+
+(defun fbound-plist-tests-p (fbound)
+  "Return t if FBOUND has a plist with tests."
+  (not (not (get fbound +plist-keyword+))))
+
+
 
 (defun fbound-plist-test-p (fbound test)
   "T if FBOUND has TEST.
@@ -163,18 +182,6 @@ Tests are equal if they test the same input"
            (apply #'set-fbound-plist-tests
                   fbound (adjoin test (get-fbound-plist-tests fbound)
                     :test #'io-set-equalp))))
-
-(defun get-fbound-plist-tests (fbound)
-  "Get the list of tests"
-  (get fbound +plist-keyword+))
-
-(defun set-fbound-plist-tests (fbound &rest io-sets)
-  "Destructively replace the old plist tests with IO-SETS"
-  (setf (get fbound +plist-keyword+) io-sets))
-
-(defun clear-fbound-plist-tests (fbound)
-  "Remove all tests on FBOUND"
-  (set-fbound-plist-tests fbound))
 
 ;;;; Query stuff
 ;;; Our primary purpose here is to locate and find different
