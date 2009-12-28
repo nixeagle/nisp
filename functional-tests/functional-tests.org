@@ -11,7 +11,11 @@ outlines.
   at a time, specifiying inputs and expected outputs.
 
 * API
-*** TODO run-time OBJECT [6/6]
+*** DONE run-time OBJECT [6/6]
+    CLOSED: [2009-12-25 Fri 23:45]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2009-12-25 Fri 23:45]
+    :END:
       - Methods:
         - [X] IO-RESULT
           - This should be the simplest case as an IO-RESULT object has
@@ -26,6 +30,29 @@ outlines.
           - Do so for every FBOUND in the package
         - [X] <List of any of the above>
           - Call the appropriate method depending on what the list has.
+
+*** DONE last-test-result [6/6]
+    CLOSED: [2009-12-28 Mon 20:55]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2009-12-28 Mon 20:55]
+    :END:
+    Return a single test result or a list of test results depending on
+    what the single argument passed in is.
+
+    - Methods:
+      - [X] IO-LOG
+      - [X] IO-SET
+      - [X] IO-RESULT
+      - [X] FBOUND-SYMBOL
+      - [X] PACKAGE-SPEC
+      - [X] <list of any of the above>
+
+* Thoughts
+  Should the type of test to run be a generic function using eql to
+  select which test type to run? This is attractive as detailed test
+  failure messages can be given for each predicate or test and adding
+  more is just defining more methods to add to the combination.
+
 
 * Old code comments
 
