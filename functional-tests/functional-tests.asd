@@ -3,8 +3,6 @@
 (defpackage #:functional-tests-system
   (:use :cl :asdf))
 (in-package #:functional-tests-system)
-(defpackage #:functional-tests-system
-  (:use :cl :asdf))
 
 (defsystem :functional-tests
   :version "0.0.9"
