@@ -146,26 +146,9 @@ runtime of this set of results."
   (equal (io-set-input x)
          (io-set-input (if (listp y) (car y) y))))
 
-
-(declaim 
-         (ftype (function (fbound io-set)
-                          (values boolean &optional))
-                fbound-plist-test-p)
-         (ftype (function (fbound)
-                          (values boolean &optional))
-                fbound-plist-tests-p))
-
-(defun fbound-plist-tests-p (fbound)
-  "Return t if FBOUND has a plist with tests."
-  (not (not (get fbound +plist-keyword+))))
-
-
-
-(defun fbound-plist-test-p (fbound test)
-  "T if FBOUND has TEST.
-Tests are equal if they test the same input"
-  (member test (get-fbound-plist-tests fbound)
-          :test #'io-set-equalp))
+;;;; Adding and removing tests -----------------------------------------
+;;; Given any test related object, add or remove a test from that
+;;; object's test list
 
 (defgeneric remove-fbound-plist-test (fbound test)
   (:documentation "Remove one TEST from FBOUND's list.")
@@ -183,13 +166,38 @@ Tests are equal if they test the same input"
                   fbound (adjoin test (get-fbound-plist-tests fbound)
                     :test #'io-set-equalp))))
 
-;;;; Query stuff
+
+(declaim (ftype (function (fbound io-set)
+                          (values boolean &optional))
+                fbound-plist-test-p)
+         (ftype (function (fbound)
+                          (values boolean &optional))
+                fbound-plist-tests-p))
+
+;;;; "Type" checking ---------------------------------------------------
+;;; Check if an object has a test.
+
+(defun fbound-plist-tests-p (fbound)
+  "Return t if FBOUND has a plist with tests."
+  ;; Absolutely needs a better name, this is just plural of another
+  ;; function name: bad bad!
+  (not (not (get fbound +plist-keyword+))))
+
+(defun fbound-plist-test-p (fbound test)
+  "T if FBOUND has TEST.
+
+Tests are equal if they test the same input"
+  (member test (get-fbound-plist-tests fbound)
+          :test #'io-set-equalp))
+
+;;;; Query stuff -------------------------------------------------------
 ;;; Our primary purpose here is to locate and find different
 ;;; tests. Without this things are pretty difficult. Because of the test
 ;;; framework model we are mostly based on a per package basis.
 (declaim (ftype (function (possible-package)
                           (values &rest io-set))
                 find-tested-symbols))
+
 (defun find-tested-symbols (package-spec)
   "List symbols that have at least one test to run"
   (loop for x being the present-symbols in package-spec
