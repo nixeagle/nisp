@@ -1,6 +1,3 @@
-(defpackage #:functional-tests
-  (:use :cl))
-
 (in-package :functional-tests)
 
 (defparameter +plist-keyword+ :functional-tests
@@ -17,25 +14,6 @@
 (deftype possible-package ()
   "A package or symbol that can be a package"
   '(or symbol package))
-
-;;; Definition taken from reading on lisp
-(defun single (1ist)
-  "Return t if input is a list of one element.
-
-Example:
- (single 5)
-=> NIL
-
- (single t)
-=> NIL
-
- (single (list t))
-=> T
-
- (single (list \"Something\"))
-=> T
-"
-  (and (consp 1ist) (not (last 1ist))))
 
 (defclass io-expected-result ()
   ;; Should this get changed to io-expected or does that lose clarity as

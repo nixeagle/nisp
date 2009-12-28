@@ -13,4 +13,8 @@
   :description "Testing by the function"
   :serial t
   :components
-  ((:file "functional-tests")))
+  ((:file "util")
+   (:file "functional-tests" :depends-on ("util"))))
+
+(defpackage #:functional-tests
+  (:use :cl))
