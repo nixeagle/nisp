@@ -65,6 +65,11 @@
           :type list
           :documentation "Lambda list as it would be passed into the
  real function.")
+   (test :initarg :test
+         :accessor io-set-test
+         :type function
+         :initform #'equal
+         :documentation "Predicate to test results with.")
    (log :initform (make-instance 'io-log)
         :accessor io-set-log
         :type io-log)))
