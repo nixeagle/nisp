@@ -1,3 +1,4 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10;  indent-tabs-mode: nil -*-
 (in-package :cl-user)
 (defpackage #:functional-tests-system
   (:use :cl :asdf))
