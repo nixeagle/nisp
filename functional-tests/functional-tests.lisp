@@ -27,6 +27,11 @@
    (value :initarg :value
           :accessor result-value
           :documentation "Any lisp form that produces the expected value.")
+   (test :initarg :test
+         :accessor result-test
+         :type keyword
+         :initform :equal
+         :documentation "Predicate to test results with.")
    (condition :initarg :signal
               :accessor result-condition)))
 
@@ -55,7 +60,7 @@
 ;;; Please note that a set is not associated with any particular
 ;;; function by default. It is just an abstract "in -> out" construct
 ;;; that tries to maintain a history of past in -> out results
-(defclass io-set (io-expected-result)
+(defclass io-set ()
   ((name :initarg :name
          :accessor io-set-name
          :initform ""
@@ -65,12 +70,9 @@
           :type list
           :documentation "Lambda list as it would be passed into the
  real function.")
-   (test :initarg :test
-         :accessor io-set-test
-         :type function
-         :initform #'equal
-         :documentation "Predicate to test results with.")
-   (io-set-expected-result )
+   (expected-result :accessor io-set-expected-result
+                    :initarg :expected-result
+                    :type io-expected-result)
    (log :initform (make-instance 'io-log)
         :accessor io-set-log
         :type io-log)))
