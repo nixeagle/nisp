@@ -70,6 +70,11 @@
           :type list
           :documentation "Lambda list as it would be passed into the
  real function.")
+   (fbound :initarg :fbound
+           :accessor io-set-fbound
+           :initform nil
+           :type (or fbound nil)
+           :documentation "fbound object to test.")
    (expected-result :accessor io-set-expected-result
                     :initarg :expected-result
                     :type io-expected-result)
