@@ -77,18 +77,18 @@
         :accessor io-set-log
         :type io-log)))
 
-(defun make-io-expected-result (value &key signal output)
+(defun make-io-expected-result (value &key (signal "") (output ""))
   (make-instance 'io-expected-result
                  :value value
                  :signal signal
                  :output output))
 
-(defun make-io-set (input value &key signal output)
+(defun make-io-set (input value &key (signal "") (output ""))
   (make-instance 'io-set
                  :input input
-                 :value value
-                 :signal (or signal "")
-                 :output (or output "")))
+                 :expected-result (make-io-expected-result value
+                                                           :signal signal
+                                                           :output output)))
 
 ;;;; Working with the actual results
 (defun make-io-result ()
