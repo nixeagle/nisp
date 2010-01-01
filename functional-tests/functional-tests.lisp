@@ -241,10 +241,12 @@ Tests are equal if they test the same input"
   (:documentation "Apply TEST to results1 and results2")
   (:method (
             (test (eql 'equal)) (results1 io-set) (results2 io-result))
-    (values (funcall test 
+    (if (funcall test 
                    (result-value results2)
                    (result-value (io-set-expected-result results1)))
-            (io-set-fbound results1))))
+        t
+        (values nil
+         (io-set-fbound results1)))))
 
 (defgeneric compare-last-test-result (fbound)
   ;; If no expected result, we should assume regression testing, which
