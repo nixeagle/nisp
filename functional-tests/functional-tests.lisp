@@ -152,16 +152,14 @@ runtime of this set of results."
                   fbound (adjoin test (get-fbound-plist-tests fbound)
                     :test #'io-set-equalp))))
 
-
+;;;; "Type" checking ---------------------------------------------------
+;;; Check if an object has a test.
 (declaim (ftype (function (fbound io-set)
                           (values boolean &optional))
                 fbound-plist-test-p)
          (ftype (function (fbound)
                           (values boolean &optional))
                 fbound-plist-tests-p))
-
-;;;; "Type" checking ---------------------------------------------------
-;;; Check if an object has a test.
 
 (defun fbound-plist-tests-p (fbound)
   "Return t if FBOUND has a plist with tests."
@@ -207,6 +205,22 @@ Tests are equal if they test the same input"
       (log-test-result input result-set)
       result-set)))
 
+(defgeneric run-fbound-set (fbound)
+  ;; Making a pretty big assumption that the fbound object will have all
+  ;; the information we need to actually run a test
+  (:documentation "Run all tests on the set.")
+  (:method ((fbound symbol))
+    "Run all tests listed in FBOUND's plist."
+    (if (fboundp fbound)
+        (mapcar (lambda (test)
+                  (declare (type io-set test))
+                  (run-test-set test (symbol-function fbound)))
+                (get-fbound-plist-tests fbound))
+        (run-fbound-set (find-package fbound))))
+  (:method ((fbound package))
+    (mapcar #'run-time (find-tested-symbols fbound))))
+
+
 (defgeneric log-test-result (object result)
   (:documentation "Log results to object's test log")
   (:method ((object io-log) (result io-result))
@@ -228,20 +242,6 @@ Tests are equal if they test the same input"
     (mapcar #'compare-last-test-result
             (get-fbound-plist-tests fbound))))
 
-(defgeneric run-fbound-set (fbound)
-  ;; Making a pretty big assumption that the fbound object will have all
-  ;; the information we need to actually run a test
-  (:documentation "Run all tests on the set.")
-  (:method ((fbound symbol))
-    "Run all tests listed in FBOUND's plist."
-    (if (fboundp fbound)
-        (mapcar (lambda (test)
-                  (declare (type io-set test))
-                  (run-test-set test (symbol-function fbound)))
-                (get-fbound-plist-tests fbound))
-        (run-fbound-set (find-package fbound))))
-  (:method ((fbound package))
-    (mapcar #'run-time (find-tested-symbols fbound))))
 
 (defgeneric run-time (object)
   ;; Keep in mind it only makes sense to ask about the runtime of the
@@ -300,3 +300,4 @@ the list has an fbound symbol in it or a package."
 This returns a list with runtimes, note that this may mean sublists if
 the list has an fbound symbol in it or a package."
     (mapcar #'last-test-result lst)))
+
