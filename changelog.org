@@ -121,3 +121,31 @@ General changelog for listing changes starting from v0.0.4 and up.
           - Add method: (PACKAGE)
           - Add method: (LIST)
         - Add [[single]]
+
+***** 10
+******* functional-tests
+        - Modify [[last-test-result]]
+          - Add method: (IO-SET)
+            - Direct 1 to 1 relationship with IO-LOG
+          - Add method: (IO-RESULT)
+            - Degenerate case
+          - Add method: (FBOUND)
+          - Add method: (PACKAGE)
+          - Add method: (LIST)
+        - Modify [[run-fbound-set]]
+          - Add method: (PACKAGE)
+            - Run all tests in the given package. Probably will not do
+              what would be reasonably expected yet.
+        - Modify [[io-set]]
+          - Add slot: test
+            - What test to perform to determine if a test passes or not.
+        - Remove [[clear-fbound-plist-test]]
+          - No real use, not using it is actually shorter then using it.
+
+******* nisp.ldap
+        Import from eighthbit-website
+        - Modify [[*default-host*]]
+          - Spelling mistake corrected: localhsot to localhost
+
+******* nispbot
+        - Add [[safe-closure::ldap-entry]]

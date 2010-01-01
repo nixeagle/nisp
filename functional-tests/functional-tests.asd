@@ -5,7 +5,7 @@
 (in-package #:functional-tests-system)
 
 (defsystem :functional-tests
-  :version "0.0.9"
+  :version "0.0.10"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
