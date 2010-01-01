@@ -88,12 +88,14 @@
                  :signal signal
                  :output output))
 
-(defun make-io-set (input value &key (signal "") (output ""))
+(defun make-io-set (input value &key (signal "") (output "")
+                    (fbound nil))
   (make-instance 'io-set
                  :input input
                  :expected-result (make-io-expected-result value
                                                            :signal signal
-                                                           :output output)))
+                                                           :output output)
+                 :fbound fbound))
 
 ;;;; Working with the actual results
 (defun make-io-result ()
