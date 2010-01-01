@@ -63,26 +63,33 @@ The optional OWNER parameter defines who owns the package. There is no restricti
   ;; previous behavior that tried to make a new safe package.
   package)
 
+(defvar *populate-functions* '(populate-safe-package-closures)
+  "List of functions to populate packages with")
+(defun populate-functions (package)
+  "Populate package with functions"
+  (dolist (it *populate-functions*)
+    (funcall (symbol-function it) package)))
+
 (defmethod create-safe-package ((package package) &optional owner)
   (let ((safe (make-instance 'safe-package
                              :package package
                              :owner owner)))
     (package-use-from safe (safe-package-use safe))
-    (populate-safe-package-closures safe)
+    (populate-functions safe)
     safe))
 (defmethod create-safe-package ((package string) &optional owner)
   (let ((safe (make-instance 'safe-package
                              :package (make-empty-package package)
                              :owner owner)))
     (package-use-from safe (safe-package-use safe))
-    (populate-safe-package-closures safe)
+    (populate-functions safe)
     safe))
 (defmethod create-safe-package ((package symbol) &optional owner)
   (let ((safe (make-instance 'safe-package
                              :package (make-empty-package package)
                              :owner owner)))
     (package-use-from safe (safe-package-use safe))
-    (populate-safe-package-closures safe)
+    (populate-functions safe)
     safe))
 
 (defgeneric get-package (package-designator)
