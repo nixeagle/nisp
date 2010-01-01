@@ -237,13 +237,21 @@ Tests are equal if they test the same input"
     "Log RESULT to io-set's log."
     (log-test-result (io-set-log object) result)))
 
+(defgeneric result-equal-p (test io-set result)
+  (:documentation "Apply TEST to results1 and results2")
+  (:method (
+            (test (eql 'equal)) (results1 io-set) (results2 io-result))
+    (values (funcall test 
+                   (result-value results2)
+                   (result-value (io-set-expected-result results1)))
+            (io-set-fbound results1))))
+
 (defgeneric compare-last-test-result (fbound)
   ;; If no expected result, we should assume regression testing, which
   ;; means verify the result against test history
   (:documentation "Compare the last test result with the expected result.")
   (:method ((set io-set))
-    (equal (result-value (io-set-expected-result set))
-           (result-value (last-test-result set))))
+    (result-equal-p 'equal set (last-test-result set)))
   (:method ((fbound symbol))
     (declare (type fbound fbound))
     (mapcar #'compare-last-test-result
