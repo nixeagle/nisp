@@ -149,3 +149,29 @@ General changelog for listing changes starting from v0.0.4 and up.
 
 ******* nispbot
         - Add [[safe-closure::ldap-entry]]
+
+***** 11
+******* functional-tests
+        - Modify [[io-set]]
+          - Add slot: expected-result
+          - Remove slot: test
+          - No longer inherit from io-expected-result
+        - Modify [[io-expected-result]]
+          - Add slot: test
+        - Modify [[make-io-set]] to use [[make-io-expected-result]] instead of
+          filling in slots that [[io-set]] no longer has.
+          - Arguments signal and output default to ""
+          - Add key: fbound
+            - This defaults to nil and is intended to contain the
+              function name that the tests are against. Not strictly
+              required but having it makes remembering the function
+              being tested against much easier then passing it around.
+        - Modify [[make-io-expected-result]]
+          - Arguments signal and output default to ""
+        - Modify [[compare-last-test-result]]
+          - Since the location of the expected result moved, move the
+            compare check with it.
+        - Add [[result-equal-p]]
+          - This is the underlaying method that we will use to select
+            predicates to apply on test results. Right now it works with
+            the function 'equal.
