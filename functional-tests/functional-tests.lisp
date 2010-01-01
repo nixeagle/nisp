@@ -113,10 +113,6 @@ runtime of this set of results."
   "Destructively replace the old plist tests with IO-SETS"
   (setf (get fbound +plist-keyword+) io-sets))
 
-(defun clear-fbound-plist-tests (fbound)
-  "Remove all tests on FBOUND"
-  (set-fbound-plist-tests fbound))
-
 ;;;; Equality ----------------------------------------------------------
 (declaim (ftype (function (io-set (or io-set list))
                           (values boolean &optional))
