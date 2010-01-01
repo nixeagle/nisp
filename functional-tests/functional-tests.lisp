@@ -236,7 +236,7 @@ Tests are equal if they test the same input"
   (:documentation "Compare the last test result with the expected result.")
   (:method ((set io-set))
     (equal (result-value (io-set-expected-result set))
-           (result-value (first (io-log-results (io-set-log set))))))
+           (result-value (last-test-result set))))
   (:method ((fbound symbol))
     (declare (type fbound fbound))
     (mapcar #'compare-last-test-result
