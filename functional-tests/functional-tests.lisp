@@ -70,6 +70,7 @@
          :type function
          :initform #'equal
          :documentation "Predicate to test results with.")
+   (io-set-expected-result )
    (log :initform (make-instance 'io-log)
         :accessor io-set-log
         :type io-log)))
@@ -96,6 +97,9 @@ runtime of this set of results."
   (make-instance 'io-result))
 
 ;;;; Getting and setting plists ----------------------------------------
+;;; Because tests are always stored in the fbound object's plist, these
+;;; methods are jsut getter and setter methods to those plists. We have
+;;; get and set. 
 (declaim (ftype (function (fbound) (values list &optional))
                 get-fbound-plist-tests)
          (ftype (function (fbound &rest io-set)
@@ -184,7 +188,7 @@ Tests are equal if they test the same input"
        when (and (fboundp x) (fbound-plist-tests-p x)) collect x))
 
 
-;;;; Running the tests
+;;;; Running the tests -------------------------------------------------
 ;;; Run iosets, log the results of these runs.
 
 (defgeneric run-test-set (input io-set)
@@ -222,9 +226,9 @@ Tests are equal if they test the same input"
     (mapcar #'compare-last-test-result
             (get-fbound-plist-tests fbound))))
 
-;;; Making a pretty big assumption that the fbound object will have all
-;;; the information we need to actually run a test
 (defgeneric run-fbound-set (fbound)
+  ;; Making a pretty big assumption that the fbound object will have all
+  ;; the information we need to actually run a test
   (:documentation "Run all tests on the set.")
   (:method ((fbound symbol))
     "Run all tests listed in FBOUND's plist."
