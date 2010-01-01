@@ -90,3 +90,5 @@ instead
   :END:
   At least give it a system definition.
   - Never had to be done
+* BUG (reset) makes no new sandbox                                :sandbox:
+  , (reset) returns the old box, and seems to fail in making a new one.
