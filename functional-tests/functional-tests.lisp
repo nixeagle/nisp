@@ -235,7 +235,7 @@ Tests are equal if they test the same input"
   ;; means verify the result against test history
   (:documentation "Compare the last test result with the expected result.")
   (:method ((set io-set))
-    (equal (result-value set)
+    (equal (result-value (io-set-expected-result set))
            (result-value (first (io-log-results (io-set-log set))))))
   (:method ((fbound symbol))
     (declare (type fbound fbound))
