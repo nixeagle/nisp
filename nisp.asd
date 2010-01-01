@@ -39,6 +39,7 @@
                :cl-ppcre
                :metatilities
                :nistilities
+               :nisp.ldap
                :cl-irc
                :nisp-safe
                :trivial-timeout
