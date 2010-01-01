@@ -82,6 +82,32 @@ perform operations on sets of packages."))
 (defmacro setq-single (var value)
   (list 'cl:setq var value))
 
+;;; Also from metatilities
+(defun group (list n)
+  "Return the elements of `list' grouped in sublists of length `n,'
+which should be a positive integer.  For example, the list '(a b c d)
+grouped by 2 yields '((a b) (c d)).  Definition of `group' taken from On
+Lisp, by Paul Graham.  The definition is not hugely efficient, so this
+function is appropriate for parsing macro args, but no for inner loops.
+
+Example:
+ (group (range 1 10) 2)
+=> ((1 2) (3 4) (5 6) (7 8) (9 10))
+
+ (group (range 1 10) 5)
+=> ((1 2 3 4 5) (6 7 8 9 10))
+
+ (group (range 1 10) 7)
+=> ((1 2 3 4 5 6 7) (8 9 10))
+"
+  (check-type list list)
+  (check-type n (integer 1 #.most-positive-fixnum))
+  (labels ((next (list n acc)
+	     (let ((rest (nthcdr n list)))
+	       (if (consp rest)
+		   (next rest n (cons (subseq list 0 n) acc))
+		   (nreverse (cons list acc))))))
+    (next list n nil)))
 
 (defun nisp-safe::populate-safe-package-closures (safe-package)
   "Reset the functions that have some hidden state."
