@@ -82,14 +82,15 @@
 
 (defun nisp-safe::populate-ldap-stuff (safe-package)
   (declare (ignore safe-package))
-  (defun safe-closure::ldap-entry (string)
-    (nisp.ldap::print-single-entry string)))
+  (defun safe-closure::ldap-entry (string &optional attrs)
+    (nisp.ldap::print-single-entry string :attrs attrs)))
 
 (defun command-hook (message)
   (declare (notinline command-hook))
                                         ;  (print message)
   "For now lets try to parse just one command"
-  (setq nisp-safe::*populate-functions*
+  (setq 
+   nisp-safe::*populate-functions*
         (adjoin 'nisp-safe::populate-ldap-stuff
                 nisp-safe::*populate-functions*))
   (let* ((forms (parse-eval-request (connection message) message))
