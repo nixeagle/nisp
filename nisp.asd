@@ -39,6 +39,7 @@
                :cl-ppcre
                :metatilities
                :nistilities
+               :nisp.ldap
                :nisp.8b-ldap
                :cl-irc
                :nisp-safe
