@@ -4,3 +4,6 @@
 [submodule "nistilities"]
 	path = nistilities
 	url = ../nisp.nistilities
+[submodule "cl-irc"]
+	path = cl-irc
+	url = git://github.com/nixeagle/cl-irc.git
