@@ -1,0 +1,40 @@
+* TODO Rename safe-external package to something else
+As it stands the name implies these are external to the safe
+package. Most of what is in here are variables and functions directly
+related *to* safe. As such the name is a misnomer.
+
+* TODO Define a useful documentation function
+Right now documentation is dependent on swank.
+
+* TODO Shadowing import stuff
+move from import-from to shadowing-import-from for all packages using
+define-export-system. This lets us be one step removed from the common
+lisp package and limits damage to the overall (lisp) system should
+something manage to
+
+* TODO Sandbox level segragation
+I should be able to create sandboxes with different sets of imports
+and use different ones depending on who is accessing them.
+
+
+
+* WAIT Implement symbol->string
+  :LOGBOOK:
+  - State "WAIT"       from "TODO"       [2009-12-16 Wed 19:49] \\
+    Passing on this for the time being, I really would like to avoid having
+    to do more string manipulation then strictly needed with respect to
+    packages and symbols.
+  :END:
+Basic idea is taking any symbol and returning a string with a specified
+package (defaulting to current one), and the name of the symbol.
+
+* BUG Changing symbol names too much
+To the bot this should work:
+: ? (documentation 'list 'function)
+
+We get 
+: ? (DOCUMENTATION 'LIST '|SAFE-nixeagle::EighthBit::staff|::FUNCTION)
+instead
+* BUG (reset) makes no new sandbox                                :sandbox:
+  , (reset) returns the old box, and seems to fail in making a new one.
+  
