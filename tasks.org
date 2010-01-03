@@ -14,15 +14,18 @@ Use (lift:run-tests :suite 'test-mixin). However I need to generate one
 of those that is specific only to nisp related stuff. mixin seems to run
 all defined test-suites no matter what project is associated with them.
 
-* TODO Remove metatilities as a build dep [2/3]
-  DEADLINE: <2009-12-27 Sun>
+* DONE Remove metatilities as a build dep [3/3]
+  DEADLINE: <2009-12-27 Sun> CLOSED: [2010-01-03 Sun 07:30]
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2010-01-03 Sun 07:30]
+  :END:
   Its huge, the dependencies conflict when we do asdf-install:install
   ... and was generally a bad day overall. I don't use that much out of
   that utility set, so its not worth requiring the whole thing.
 
   - [X] functional-tests
   - [X] nisp-safe
-  - [ ] nisp
+  - [X] nisp
 
 * BUG TRIVIAL-TIMEOUT style-warning
 -+  style-warning (1)
@@ -42,7 +45,10 @@ all defined test-suites no matter what project is associated with them.
   Best place for this one is in nistilities as its own subsystem.
 
 * TODO Split functional-tests from nisp
-  DEADLINE: <2009-12-29 Tue>
+  DEADLINE: <2010-01-05 Tue>
+  :PROPERTIES:
+  :CREATED:  <2010-01-03 Sun 07:31>
+  :END:
   This is starting to become independent of :nisp itself. I don't want
   to force others to pull in all of nisp for just that framework.
 
