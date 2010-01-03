@@ -1,7 +1,7 @@
 (defpackage #:nispbot
   (:use :common-lisp :lift
         :nisp
-        :metatilities
+       
         :cl-irc :cl-ppcre
         :nispbot-config
         :nisp.ldap

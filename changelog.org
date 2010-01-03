@@ -175,3 +175,16 @@ General changelog for listing changes starting from v0.0.4 and up.
           - This is the underlaying method that we will use to select
             predicates to apply on test results. Right now it works with
             the function 'equal.
+
+***** 12      
+******* Split ldap out                                           :nisp_ldap:
+        This got split out into nisp.8b-ldap and nisp.ldap. The general
+        ldap helpers are in nisp.ldap, anything specific to 8b is in
+        that package. This also got spun out into its own
+        submodule. I'll still be doing changelogs of submodules here in
+        the primary nisp package.
+
+******* No more dependency on metatilities                   :nispbot:nisp:
+        This is finally removed, build time is now about one second as
+        compared to the approx 7 or 8 for metatilities to do its thing.
+        

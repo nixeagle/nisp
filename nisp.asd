@@ -5,7 +5,7 @@
 (in-package :nisp-safe-system)
 
 (defsystem :nisp-safe
-  :version "0.0.10"
+  :version "0.0.12"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
@@ -30,14 +30,13 @@
 (in-package #:nispbot-system)
 
 (defsystem :nisp
-  :version "0.0.10"
+  :version "0.0.12"
   :author "James S <dev@nixeagle.org>"
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
   :description "Nixeagle's random lisp experiments"
   :depends-on (:functional-tests
                :cl-ppcre
-               :metatilities
                :nistilities
                :nisp.ldap
                :nisp.8b-ldap
