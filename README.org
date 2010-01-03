@@ -1,0 +1,5 @@
+Some quick notes
+
+* Dependencies
+  Need svn cl-irc, not the latest tarball!
+  : svn checkout svn://common-lisp.net/project/cl-irc/svn
