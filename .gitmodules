@@ -1,3 +1,6 @@
 [submodule "ldap"]
 	path = ldap
 	url = ../nisp.ldap
+[submodule "nistilities"]
+	path = nistilities
+	url = ../nisp.nistilities
