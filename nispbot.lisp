@@ -4,6 +4,8 @@
         :metatilities
         :cl-irc :cl-ppcre
         :nispbot-config
+        :nisp.ldap
+        :nisp.8b-ldap
         :nisp-empty-package
         :nisp-safe
         :nistilities)
@@ -83,7 +85,9 @@
 (defun nisp-safe::populate-ldap-stuff (safe-package)
   (declare (ignore safe-package))
   (defun safe-closure::ldap-entry (string &optional attrs)
-    (nisp.ldap::print-single-entry string :attrs attrs)))
+    (one-line-ldif (get-single-entry string :attrs attrs)))
+  (defun safe-closure::ircUser (string)
+    (safe-closure:ldap-entry (concatenate 'string "uid=" string))))
 
 (defun command-hook (message)
   (declare (notinline command-hook))

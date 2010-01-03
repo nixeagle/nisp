@@ -68,4 +68,4 @@
 
 (defpackage #:safe-closure
   (:use)
-  (:export #:reset :nisp-test #:ldap-entry))
+  (:export #:reset :nisp-test #:ldap-entry #:ircUser))
