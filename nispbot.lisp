@@ -53,17 +53,17 @@
 (defmethod parse-eval-request ((bot irc-bot) (msg irc-privmsg-message))
   "might want to return our own message type eventually"
   (when (is-eval-request bot msg)
-    (substring (second (arguments msg)) 1)))
+    (subseq (second (arguments msg)) 1)))
 (defmethod parse-eval-request ((bot irc-bot) (msg string))
   (when (is-eval-request bot msg)
-    (substring msg 1)))
+    (subseq msg 1)))
 (defmethod parse-eval-request (bot msg)
   "If we get nil as a message, return nil"
   (declare (ignore bot))
   (when msg
     (error "Failed to parse message ~A" msg))
   nil)
-
+ 
 (defgeneric is-eval-request (instance message))
 (defmethod is-eval-request ((bot irc-bot) (msg irc-privmsg-message))
   (is-eval-request bot (second (arguments msg))))
