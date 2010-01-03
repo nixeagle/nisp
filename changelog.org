@@ -1,3 +1,5 @@
+#+STARTUP: hidestars
+
 General changelog for listing changes starting from v0.0.4 and up.
 
 * 0
