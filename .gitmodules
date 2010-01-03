@@ -7,3 +7,6 @@
 [submodule "cl-irc"]
 	path = cl-irc
 	url = git://github.com/nixeagle/cl-irc.git
+[submodule "cl-walker"]
+	path = cl-walker
+	url = git://github.com/nixeagle/cl-walker.git
