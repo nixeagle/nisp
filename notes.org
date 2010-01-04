@@ -55,3 +55,15 @@ safe for arbitrary code execution.
 
 * Depend on :contextl
   asdf installable. One error I had to tell sbcl 1.0.34 to ignore.
+
+Some quick notes
+
+* Dependencies
+  Need svn cl-irc, not the latest tarball!
+  : svn checkout svn://common-lisp.net/project/cl-irc/svn
+
+*** cl-ldap
+    - [ ] gentoo linux
+    - [X] FBSD8
+      - It and all its dependencies compiled without one error in sbcl
+        1.0.31

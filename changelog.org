@@ -190,3 +190,49 @@ General changelog for listing changes starting from v0.0.4 and up.
         This is finally removed, build time is now about one second as
         compared to the approx 7 or 8 for metatilities to do its thing.
         
+***** 13
+******* asdf/ added
+        This directory is full of symlinks to various dependencies and
+        nisp system definitions. The idea here is you can add this
+        directory to your asdf:*central-registry* sorta like this:
+        : (pushnew "/home/nixeagle/lisp/nisp/asdf/" asdf:*central-registry* :test #'equal)
+
+        The advantage here is no symlinking is required.
+
+******* submodules
+        Various portions of the nisp codebase got split out into
+        seperate submodules as they are not directly part of each
+        other. Additinally submodules for hu.dwim packages were added
+        after importing them from darcs.
+
+********* nisp.nistilities
+          These are my general utilities that do not depend on anything
+          else. The whole point is the functions defined here are self
+          contained.
+
+********* hu.dwim packages
+          These packages caused me a considerable amount of grief. None
+          of these are asdf installable. The location of these packages
+          are contained within the various repositories. Their primary
+          site is [[http://dwim.hu/][dwim.hu]]. For a bit I was very confused as it defaults
+          to hungarian unless you have javascript enabled. Listed below
+          are packages I forked for the purpose of submoduling them.
+
+          - hu.dwim.def
+          - hu.dwim.defclass-star
+          - hu.dwim.common-lisp
+          - hu.dwim.asdf
+            - _why_ is there this package?
+          - hu.dwim.walker
+            - The whole reason I had to do this ;). Not using it yet,
+              but I plan to.
+            - Please note that this is _not_ a direct mirror of the
+              darcs repository. See next line.
+          - A single function from hu.dwim.util which is now contained
+            in nisp.dwim.handle-otherwise
+            - It was very curious to me that hu.dwim.walker depends on
+              hu.dwim.util for just this one function. I split it out
+              because hu.dwim.util has an insane number of dependencies
+              and requiring all of those dependencies for a single
+              function that does not depend on anything other then
+              hu.dwim.def seemed to me to be a bit on the absurd side.

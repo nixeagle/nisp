@@ -3,7 +3,6 @@
 *** 2010-01 January
 ***** 2010-01-04 Monday
 ******* Mon Jan  4 02:21:31 2010 (Create handle-otherwise)
-        Create handle-otherwise
             :PROPERTIES:
             :TIME: <2010-01-04 Mon 02:18>
             :VERSION: 0.0.1
