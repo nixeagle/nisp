@@ -10,7 +10,7 @@
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
   :depends-on (:lift
-               :cl-walker
+               :hu.dwim.walker
                :nistilities)
   :components
   ((:module "safe"
