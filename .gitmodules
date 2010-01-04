@@ -10,3 +10,6 @@
 [submodule "cl-walker"]
 	path = cl-walker
 	url = ../cl-walker
+[submodule "hu.dwim.asdf"]
+	path = hu.dwim.asdf
+	url = ../hu.dwim.asdf
