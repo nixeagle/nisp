@@ -19,3 +19,6 @@
 [submodule "hu.dwim.common-lisp"]
 	path = hu.dwim.common-lisp
 	url = ../hu.dwim.common-lisp
+[submodule "hu.dwim.defclass-star"]
+	path = hu.dwim.defclass-star
+	url = ../hu.dwim.defclass-star
