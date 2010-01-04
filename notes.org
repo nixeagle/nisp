@@ -30,3 +30,24 @@ safe for arbitrary code execution.
 
 
 
+
+* Submodules
+  cl-walker is interesting because its in a darcs repo. Right now I have
+  a copy of the darcs repo at ~/lisp/darcs-cl-walker/
+
+  The command to update this from ~/lisp is:
+  : ~/repos/bzr-fastimport/exporters/darcs/darcs-fast-export darcs-cl-walker/hu.dwim.walker_0/ |(cd cl-walker.git; git fast-import)
+
+  Then cd to ~/lisp/cl-walker/ and do:
+  : git pull
+  : git push github master
+
+  Then go to ~/lisp/nisp/
+  : git submodule update
+  : git commit -m "updated cl-walker"
+  : git push
+
+
+* TODO Make :hu.dwim.asdf a submodule
+
+  : darcs get http://dwim.hu/darcs/hu.dwim.asdf/
