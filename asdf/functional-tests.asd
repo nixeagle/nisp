@@ -1,0 +1,1 @@
+../functional-tests/functional-tests.asd

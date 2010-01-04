@@ -1,0 +1,1 @@
+../cl-irc/trunk/cl-irc.asd

@@ -1,0 +1,1 @@
+../ldap/nisp.ldap.asd
