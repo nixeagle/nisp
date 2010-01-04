@@ -1,5 +1,6 @@
 (defpackage #:nisp.dwim.handle-otherwise
-  (:use :cl))
+  (:use :cl)
+  (:export #:handle-otherwise))
 
 (in-package :nisp.dwim.handle-otherwise)
 
