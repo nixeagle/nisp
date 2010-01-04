@@ -1,0 +1,15 @@
+
+* 2010
+*** 2010-01 January
+***** 2010-01-04 Monday
+******* Mon Jan  4 02:21:31 2010 (Create handle-otherwise)
+        Create handle-otherwise
+            :PROPERTIES:
+            :TIME: <2010-01-04 Mon 02:18>
+            :VERSION: 0.0.1
+            :END:
+        
+            Split out from
+            http://dwim.hu/darcsweb/darcsweb.cgi?r=HEAD%20hu.dwim.util;a=headblob;f=source/util.lisp
+            Revision:
+            20091230184121-e3083-18de47cba5a58c8edec3c84ae45dc0a2f69a01da.gz
