@@ -13,3 +13,9 @@
 [submodule "hu.dwim.asdf"]
 	path = hu.dwim.asdf
 	url = ../hu.dwim.asdf
+[submodule "hu.dwim.def"]
+	path = hu.dwim.def
+	url = ../hu.dwim.def
+[submodule "hu.dwim.common-lisp"]
+	path = hu.dwim.common-lisp
+	url = ../hu.dwim.common-lisp
