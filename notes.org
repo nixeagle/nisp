@@ -51,3 +51,7 @@ safe for arbitrary code execution.
 * TODO Make :hu.dwim.asdf a submodule
 
   : darcs get http://dwim.hu/darcs/hu.dwim.asdf/
+
+
+* Depend on :contextl
+  asdf installable. One error I had to tell sbcl 1.0.34 to ignore.
