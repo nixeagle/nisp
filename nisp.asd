@@ -41,6 +41,7 @@
                :nisp.ldap
                :nisp.8b-ldap
                :cl-irc
+               :closer-mop              ;nisp.mop
                :nisp-safe
                :trivial-timeout
                :trivial-shell)
@@ -53,7 +54,8 @@
    (:file "config")
    (:file "nispbot")
    (:file "nispbot-tests")
-   (:file "nisp-dev-helper")))
+   (:file "nisp-dev-helper")
+   (:file "mop")))
 
 ;; (defsystem :nispbot
 ;;   :author "James S <dev@nixeagle.org>"
