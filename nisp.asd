@@ -25,9 +25,9 @@
              (:file "safe")
              (:file "safe-tests")))))
 
-(defpackage #:nispbot-system
+(defpackage #:nisp-system
   (:use :cl :asdf))
-(in-package #:nispbot-system)
+(in-package #:nisp-system)
 
 (defsystem :nisp
   :version "0.0.13"
@@ -41,7 +41,7 @@
                :nisp.ldap
                :nisp.8b-ldap
                :cl-irc
-               :closer-mop              ;nisp.mop
+               :closer-mop
                :nisp-safe
                :trivial-timeout
                :trivial-shell)
@@ -50,10 +50,6 @@
   ((:file "main-test-suite")
    (:file "package")
    (:file "nisp-asdf")
-   (:file "config-dist")
-   (:file "config")
-   (:file "nispbot")
-   (:file "nispbot-tests")
    (:file "nisp-dev-helper")
    (:file "mop")))
 

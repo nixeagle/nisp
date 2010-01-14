@@ -1,0 +1,12 @@
+(in-package :nispbot-config)
+
+(defparameter *nickname* "nisp")
+(defparameter *server* "platinum.eighthbit.net")
+; (defparameter *channel* "#lisp, #bots, #offtopic")
+(defparameter *channels* '("#lisp" "#bots" "#offtopic" "#illusion" "#programming"))
+(defparameter *password* "ThePowerOfNispBot")
+(defparameter *developer-host* "nixeagle::EighthBit::staff")
+(defparameter *admin-hosts* '("nixeagle::EighthBit::staff"))
+(defparameter *comchar* #\,)
+(defparameter *bot-hosts* (list "nisp::nixeagle::bot"))
+(defparameter *freenode-password* "ThePower")

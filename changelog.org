@@ -242,3 +242,9 @@ General changelog for listing changes starting from v0.0.4 and up.
         I added the submodule, but forgot to require it.
 ******* Change *default-host* to *admin-hosts*
         =*default-host*= is now depreciated. =*admin-hosts*= is a list.
+******* nispbot moved to irc-bot/
+        This includes the following files:
+        - config-dist.lisp
+        - config.lisp
+        - nispbot.lisp
+        - nispbot-tests.lisp
