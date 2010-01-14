@@ -50,7 +50,6 @@
   ((:file "main-test-suite")
    (:file "package")
    (:file "nisp-asdf")
-   (:file "nisp-dev-helper")
    (:file "mop")))
 
 ;; (defsystem :nispbot

@@ -154,3 +154,11 @@
   "Pull the source from github."
   (trivial-shell:shell-command "git pull"))
 
+
+;; From nisp-dev-helper
+(defun start-nispbot-instance (&optional (nick nispbot-config::*nickname*))
+  (setq nispbot::*nispbot* (nispbot::make-irc-bot nick "irc.eighthbit.net"))
+  (irc:start-background-message-handler nispbot::*nispbot*)
+  (sleep 3) 
+  (nispbot::join-all-channels nispbot::*nispbot*)
+  (nispbot::reset-command-hook nispbot::*nispbot*))
