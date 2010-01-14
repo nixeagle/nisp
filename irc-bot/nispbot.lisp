@@ -17,6 +17,20 @@
 
 (defvar *nispbot*)
 
+(defclass comchar ()
+  ((comchar :type standard-char
+             :reader comchar
+             :initarg :char
+             :initarg :comchar
+             :documentation "Single character that the program responds to."))
+  (:documentation "Represents an irc bot comchar.
+
+This is a single character, usually a symbol that the bot responds
+to. This class will signal an error if a comchar is set in the range of
+[a-zA-z0-9].")
+  (:default-initargs :comchar #\!))
+
+
 (defclass irc-bot (irc:connection)
   ((comchar :accessor irc-bot-comchar
             :initarg :comchar
