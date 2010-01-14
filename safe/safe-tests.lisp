@@ -179,22 +179,3 @@ mapping to *existing* packages")
   (:documentation "This package is largely reserved for testing "))
 
 ;(use-package *prepared-safe-packages* (find-package :safe-external-tests))
-
-(in-package :safe-external-tests)
-
-
-(deftestsuite root-suite ()
-  ()
-  (:documentation "The root of all external (sandbox accessable) function tests."))
-
-(deftestsuite safe-closure-suite (root-suite)
-  ()
-  (:documentation "Items in safe-closure have the requirement of
-allowing operations on a safe-package without the user of the safe
-package being allowed to know which package they are in." ))
-
-
-(deftestsuite test-setq (safe-closure-suite)
-  ()
-  (:documentation "Verify that no form of setq permitted in a safe
-package is allowed to modify symbols outside of the package."))
