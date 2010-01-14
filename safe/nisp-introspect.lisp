@@ -15,7 +15,7 @@
                   (type-of symbol)))))
 
 (defmethod function-lambda-list (symbol)
-    #+sbcl (sb-introspect:function-lambda-list symbol))
+    #+sbcl (sb-introspect::function-lambda-list symbol))
 
 
 
