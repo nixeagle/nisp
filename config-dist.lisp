@@ -1,5 +1,9 @@
 ;;; Please note that this config layout is very temporary.  Expect
 ;;; breaking changes, though notice will be given in some form.
+(defpackage #:nispbot-config
+  (:use :common-lisp :lift
+        )
+  (:export *channel* *nickname* *eighthbit*))
 
 (in-package :nispbot-config)
 
