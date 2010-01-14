@@ -23,6 +23,7 @@
 (defclass irc-bot (irc:connection)
   ((comchar :accessor irc-bot-comchar
             :initarg :comchar
+            :type standard-char
             :initform nispbot-config::*comchar*)
    (developer-host :accessor irc-bot-developer-host
                    :initarg :developer-host
