@@ -2,7 +2,8 @@
 (asdf:load-system :closer-mop)
 (defpackage #:nisp.mop
   (:use :cl)
-  (:import-from :closer-mop #:class-slots :defmethod))
+  (:shadowing-import-from :closer-mop :defmethod)
+  (:import-from :closer-mop #:class-slots))
 
 (in-package :nisp.mop)
 
