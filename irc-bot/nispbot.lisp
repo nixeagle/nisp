@@ -15,8 +15,6 @@
 ;;; cl-ppcre registers. Do we need this? --nixeagle
 (setq *allow-named-registers* t)
 
-(defvar *connection*)
-
 (defvar *nispbot*)
 
 (defclass irc-bot (irc:connection)
