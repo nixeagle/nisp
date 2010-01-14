@@ -43,6 +43,7 @@
                :cl-irc
                :closer-mop
                :nisp-safe
+               :alexandria
                :trivial-timeout
                :trivial-shell)
   :serial t
