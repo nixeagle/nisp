@@ -99,6 +99,8 @@ to. This class will signal an error if a comchar is set in the range of
 
 (defun nisp-safe::populate-ldap-stuff (safe-package)
   (declare (ignore safe-package))
+  (defun safe-closure::hello ()
+    (nisp.hello:hello))
   (defun safe-closure::ldap-entry (string &optional attrs)
     (one-line-ldif (get-single-entry string :attrs attrs)))
   (defun safe-closure::ircUser (string)
