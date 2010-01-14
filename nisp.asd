@@ -42,7 +42,6 @@
                :nisp.8b-ldap
                :cl-irc
                :closer-mop
-               :nisp-safe
                :alexandria
                :trivial-timeout
                :trivial-shell)
@@ -51,6 +50,7 @@
   ((:file "main-test-suite")
    (:file "package")
    (:file "nisp-asdf")
+   (:file "nisp-hello")
    (:file "mop")))
 
 ;; (defsystem :nispbot
