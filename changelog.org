@@ -248,3 +248,7 @@ General changelog for listing changes starting from v0.0.4 and up.
         - config.lisp
         - nispbot.lisp
         - nispbot-tests.lisp
+******* depend on alexandria
+        - Required for random-elt. Dependency is alright as it does not
+          have any more dependencies of its own, plus its a general purpose library
+          all in the public domain.
