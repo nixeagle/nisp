@@ -28,8 +28,12 @@ to one network at a time. This is a bug and will be fixed.")
 (defvar *developer-host* ""
   "Set this to person running the bot, allows extra commands.")
 
+(defvar *admin-hosts* ()
+  "List of people who are allowed to run full eval with no restrictions.")
+
 (defvar *bot-hosts* ()
   "List of hosts to ignore by default.")
+
 (defvar *freenode-password* ""
   "Temporary for storing the password to freenode.")
 
