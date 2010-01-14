@@ -53,9 +53,10 @@ safe for arbitrary code execution.
   : darcs get http://dwim.hu/darcs/hu.dwim.asdf/
 
 
-* Depend on :contextl
+* Depend on :contextl :depend:
   asdf installable. One error I had to tell sbcl 1.0.34 to ignore.
 
+* Depend on :anaphora :depend:
 Some quick notes
 
 * Dependencies

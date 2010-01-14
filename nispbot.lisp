@@ -1,7 +1,6 @@
 (defpackage #:nispbot
   (:use :common-lisp :lift
         :nisp
-       
         :cl-irc :cl-ppcre
         :nispbot-config
         :nisp.ldap
@@ -95,7 +94,6 @@
 
 (defun command-hook (message)
   (declare (notinline command-hook))
-                                        ;  (print message)
   "For now lets try to parse just one command"
   (setq 
    nisp-safe::*populate-functions*

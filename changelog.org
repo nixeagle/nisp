@@ -236,3 +236,9 @@ General changelog for listing changes starting from v0.0.4 and up.
               and requiring all of those dependencies for a single
               function that does not depend on anything other then
               hu.dwim.def seemed to me to be a bit on the absurd side.
+
+***** 14
+******* Missed dwim.defclass-star
+        I added the submodule, but forgot to require it.
+******* Change *default-host* to *admin-hosts*
+        =*default-host*= is now depreciated. =*admin-hosts*= is a list.
