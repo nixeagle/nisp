@@ -28,6 +28,9 @@
    (developer-host :accessor irc-bot-developer-host
                    :initarg :developer-host
                    :initform nispbot-config::*developer-host*)
+   (admin-hosts :accessor irc-bot-admin-hosts
+                :initarg :admin-hosts
+                :initform nispbot-config::*admin-hosts*)
    (safe :accessor irc-bot-safe
          :initform (make-safe-set))))
 
@@ -103,8 +106,8 @@
                                             forms)))
     (when forms
       (handler-case
-          (if (and (string= (irc-bot-developer-host (connection message))
-                            (host message))
+          (if (and (member (host message) 
+                           (irc-bot-admin-hosts (connection message)) :test #'string=)
                    admin-request)
               ;; User is person running the bot, so allow any lisp to
               ;; be evaluated by that person.
