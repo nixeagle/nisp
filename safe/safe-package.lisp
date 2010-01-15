@@ -131,6 +131,13 @@ The optional OWNER parameter defines who owns the package. There is no restricti
 (defmethod delete-safe-package (name)
   (delete-package name))
 
+(defmethod (setf reset) ((package safe-package))
+  "Reset SAFE-PACKAGE by reloading all symbols."
+  (delete-package (safe-package package))
+  (setf (safe-package package) 
+        (make-empty-package (concatenate 'string "SAFE-" (safe-package-owner package))))
+  (package-use-from package (safe-package-use package))
+  (populate-functions package))
 
 (defgeneric shadowing-intern (package object)
   (:documentation "intern a new copy of object and setting that copy to the value of the other package's object."))

@@ -113,8 +113,9 @@ Example:
   "Reset the functions that have some hidden state."
   (defun safe-closure::reset ()
     "Reset the sandbox you are in. Generally this will delete the sandbox and create a new one in its place."
-    (delete-safe-package safe-package)
-    (create-safe-package safe-package))
+    (setf (nisp-safe::reset) safe-package))
+    
+
   (defmacro safe-closure::setq (&rest things)
     "Special macro defined to wrap around the base setq given by the
 lisp implentation. The primary thing we do in this macro is be sure to intern new symbols in the safe-package and not allow modification of symbols exported from other packages." 
