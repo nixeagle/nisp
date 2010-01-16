@@ -155,10 +155,10 @@ valid-comchar.")
                          (strip-newlines
                           (format nil "~A"
                                   (safe-eval message forms))))))
-        (end-of-file (condition) (values nil condition))
+;        (end-of-file (condition) (values nil condition))
         (error (condition) (privmsg (connection message)
                                     (first (arguments message))
-                                    (format nil "~A" condition)))))))
+                                    (strip-newlines (format nil "~A" condition))))))))
 
 #+nil
 (defun parse-links (string)
