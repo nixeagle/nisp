@@ -17,6 +17,15 @@
 
 (defvar *nispbot*)
 
+(deftype valid-comchar ()
+  "Usable characters for irc comchars.
+
+Most anything else in the ASCII set can't be used as they occur as part
+of normal conversation and an IRC bot that interferes with that is not
+a very friendly bot."
+  '(member #\! #\# #\$ #\% #\& #\( #\) #\* #\+ #\, #\- #\:
+    #\; #\< #\= #\> #\@ #\[ #\\ #\] #\^ #\_ #\` #\{ #\| #\} #\~))
+
 (defclass comchar ()
   ((comchar :type standard-char
              :reader comchar
