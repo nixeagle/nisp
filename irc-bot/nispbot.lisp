@@ -27,6 +27,9 @@ a very friendly bot."
           #\< #\= #\> #\@ #\[ #\\ #\] #\_ #\` #\{ #\| #\} #\~))
 
 
+(defgeneric comchar (object))
+(defgeneric (setf comchar) (character object))
+
 (defclass comchar ()
   ((comchar :type valid-comchar 
              :reader comchar
