@@ -27,7 +27,7 @@ a very friendly bot."
     #\; #\< #\= #\> #\@ #\[ #\\ #\] #\^ #\_ #\` #\{ #\| #\} #\~))
 
 (defclass comchar ()
-  ((comchar :type standard-char
+  ((comchar :type valid-comchar 
              :reader comchar
              :initarg :char
              :initarg :comchar
@@ -35,8 +35,8 @@ a very friendly bot."
   (:documentation "Represents an irc bot comchar.
 
 This is a single character, usually a symbol that the bot responds
-to. This class will signal an error if a comchar is set in the range of
-[a-zA-z0-9].")
+to. This class will signal an error if a comchar is not of the type
+valid-comchar.")
   (:default-initargs :comchar #\!))
 
 
