@@ -1,6 +1,6 @@
 ;(require :asdf)
 (pushnew "/usr/share/common-lisp/systems/" asdf:*central-registry*)
-#+ (or)
+
 (pushnew "/home/james/lisp/asdf/" asdf:*central-registry* :test #'equal)
 (pushnew "/home/james/lisp/nisp/asdf/" asdf:*central-registry* :test #'equal)
 
