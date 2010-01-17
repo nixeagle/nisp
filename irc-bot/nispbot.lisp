@@ -24,13 +24,17 @@
     digit-character
     (member #\A #\B #\C #\D #\E #\F)))
 
+(deftype special-character ()
+  "Represents extra non-digit/letter characters."
+  '(member #\| #\[ #\] #\` #\^ #\\ #\_ #\{ #\}))
+
 (deftype nickname-start-character ()
   "Valid character at the start of an IRC nickname."
   ;; These are taken from advice from duckinator on eighthbit.net/offtopic
   ;; Also see rfc 2812 sec: 2.3.1
   '(or 
     letter-character
-    (member #\| #\[ #\] #\` #\^ #\\ #\{ #\})))
+    special-character))
 
 (deftype nickname-character ()
   "Valid character after the first character of an IRC nickname."
