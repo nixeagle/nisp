@@ -1,3 +1,7 @@
+(in-package :cl-user)
+(defpackage #:nisp.irc
+  (:use :common-lisp))
+(in-package :nisp.irc)
 (defpackage #:nispbot
   (:use :common-lisp :lift
         :nisp
