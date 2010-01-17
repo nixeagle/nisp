@@ -14,6 +14,9 @@
     #\E #\F #\G #\H #\I #\J #\K #\L #\M #\N #\O #\P #\Q #\R #\S #\T
     #\U #\V #\W #\X #\Y #\Z))
 
+(deftype digit-character ()
+  '(member #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9))
+
 (deftype nickname-start-character ()
   "Valid character at the start of an IRC nickname."
   ;; These are taken from advice from duckinator on eighthbit.net/offtopic
@@ -26,7 +29,7 @@
   "Valid character after the first character of an IRC nickname."
   ;; Taken from advice from duckinator on eighthbit.net/offtopic
   '(or nickname-start-character
-    (member #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9 #\-)))
+    (member digit-character #\-)))
 
 (defun nickname-string-p (string)
   ;; Declaring the type here causes some problems with sbcl's
