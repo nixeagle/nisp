@@ -223,7 +223,7 @@ valid-comchar.")
                          (first (arguments message))
                          (strip-newlines
                           (format nil "~A"
-                                  (with-package :nispbot
+                                  (with-package :nisp.irc
                                     (eval (read-from-string admin-request)))))))
               (trivial-timeout:with-timeout (1)
               ;; Untrusted users, eval their stuff in sandboxes
