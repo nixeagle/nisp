@@ -40,12 +40,36 @@
     (vector character ,size)
     (satisfies nickname-string-p)))
 
+;; The meaning of these is specified in rfc2811
 (deftype channel-start-character ()
   "Valid starting prefix of a channel name.
 
 On most IRC networks # indicates a normal channel."
   ;; rfc2821 sec 1.3
   '(member #\& #\# #\+ #\!))
+
+(deftype channel-character ()
+  "Valid character in the name portion of a channel name."
+  ;; rfc2821 sec 1.3
+  `(and character
+        (not (member #\Bel #\, #\Space #\:))))
+
+(defun channel-string-p (string)
+  (and (typep (char string 0) 'channel-start-character)
+       (every 
+        (lambda (x)
+          (declare (type character x))
+          (typep x 'channel-character))
+        (subseq string 1))))
+
+;; Don't forget that these are also case insensitive.
+(deftype channel-string (&optional size)
+  "Valid channel name.
+
+Needs to be m/[#!+&][^ \x007,:]+/"
+  `(and 
+    (vector character ,size)
+    (satisfies channel-string-p)))
 
 (defgeneric nickname (object))
 (defgeneric (setf nickname) (nick object))
