@@ -6,3 +6,8 @@ Notes on the nisp.irc framework
     - extra case'd characters 
       - Lowercase: ={= =}= =|= =^=
       - Uppercase: =[= =]= =\= =~=
+      - NOTE: unreal does not do this casemapping.
+        - CASEMAPPING=ascii means ={= and =[=
+* Messages
+*** Ending chars
+    Always end with \r\n, in lisp: =(#\Return #\Newline)=
