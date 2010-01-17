@@ -18,6 +18,12 @@
   "Number character from 0 to 9 in base 10."
   '(member #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9))
 
+(deftype hex-digit-character ()
+  "Number character from 0 to F in base 16"
+  '(or
+    digit-character
+    (member #\A #\B #\C #\D #\E #\F)))
+
 (deftype nickname-start-character ()
   "Valid character at the start of an IRC nickname."
   ;; These are taken from advice from duckinator on eighthbit.net/offtopic
