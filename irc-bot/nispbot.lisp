@@ -34,13 +34,12 @@
 (defgeneric (setf nickname) (nick object))
 (defgeneric normalize-nickname (object))
 
-
 (defclass nickname ()
-  ((nickname :type string
-              :reader nickname
-              :initarg :nick
-              :initarg :nickname
-              :documentation "IRC user nickname")))
+  ((nickname :type nickname-string
+             :reader nickname
+             :initarg :nick
+             :initarg :nickname
+             :documentation "IRC user nickname")))
 
 (defmethod normalize-nickname ((object nickname))
   (normalize-nickname  (slot-value object 'nickname)))
