@@ -58,7 +58,7 @@ On most IRC networks # indicates a normal channel."
   "Valid character in the name portion of a channel name."
   ;; rfc2821 sec 1.3
   `(and character
-        (not (member #\Bel #\, #\Space #\:))))
+        (not (member #\Nul #\Bel #\, #\Space #\:))))
 
 (defun channel-string-p (string)
   (and (typep (char string 0) 'channel-start-character)
