@@ -10,10 +10,11 @@
 (deftype nickname-start-character ()
   "Valid character at the start of an IRC nickname."
   ;; These are taken from advice from duckinator on eighthbit.net/offtopic
-  '(member #\| #\[ #\] #\` #\\ #\{ #\} #\a #\b #\c #\d #\e #\f #\g #\h #\i
-    #\j #\k #\l #\m #\n #\o #\p #\q #\r #\s #\t #\u #\v #\w #\x #\y #\z #\A
-    #\B #\C #\D #\E #\F #\G #\H #\I #\J #\K #\L #\M #\N #\O #\P #\Q #\R #\S
-    #\T #\U #\V #\W #\X #\Y #\Z))
+  ;; Also see rfc 2812 sec: 2.3.1
+  '(member #\| #\[ #\] #\` #\^ #\\ #\{ #\} #\a #\b #\c #\d #\e #\f #\g #\h
+    #\i #\j #\k #\l #\m #\n #\o #\p #\q #\r #\s #\t #\u #\v #\w #\x #\y #\z
+    #\A #\B #\C #\D #\E #\F #\G #\H #\I #\J #\K #\L #\M #\N #\O #\P #\Q #\R
+    #\S #\T #\U #\V #\W #\X #\Y #\Z))
 
 (deftype nickname-character ()
   "Valid character after the first character of an IRC nickname."
