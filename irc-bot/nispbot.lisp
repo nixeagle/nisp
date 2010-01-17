@@ -3,6 +3,10 @@
   (:use :common-lisp))
 (in-package :nisp.irc)
 
+(defmacro ct (form type)
+  `(let ((x ,form))
+     (check-type x ,type (format nil "~S: ~A" ',type (documentation ',type 'type)))))
+
 (deftype nickname-start-character ()
   "Valid character at the start of an IRC nickname."
   ;; These are taken from advice from duckinator on eighthbit.net/offtopic
