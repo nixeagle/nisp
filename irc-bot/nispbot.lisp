@@ -2,6 +2,21 @@
 (defpackage #:nisp.irc
   (:use :common-lisp))
 (in-package :nisp.irc)
+
+(deftype nickname-start-character ()
+  "Valid character at the start of an IRC nickname."
+  ;; These are taken from advice from duckinator on eighthbit.net/offtopic
+  '(member #\| #\[ #\] #\` #\\ #\{ #\} #\a #\b #\c #\d #\e #\f #\g #\h #\i
+    #\j #\k #\l #\m #\n #\o #\p #\q #\r #\s #\t #\u #\v #\w #\x #\y #\z #\A
+    #\B #\C #\D #\E #\F #\G #\H #\I #\J #\K #\L #\M #\N #\O #\P #\Q #\R #\S
+    #\T #\U #\V #\W #\X #\Y #\Z))
+
+(deftype nickname-character ()
+  "Valid character after the first character of an IRC nickname."
+  ;; Taken from advice from duckinator on eighthbit.net/offtopic
+  '(or nickname-start-character
+    (member #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9 #\-)))
+
 (defpackage #:nispbot
   (:use :common-lisp :lift
         :nisp
