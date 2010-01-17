@@ -1,0 +1,8 @@
+Notes on the nisp.irc framework
+
+* Characters
+  - The protocol is based on 8bit octects.
+    - delimiters and keywords are usable from a US-ASCII terminal
+    - extra case'd characters 
+      - Lowercase: ={= =}= =|= =^=
+      - Uppercase: =[= =]= =\= =~=
