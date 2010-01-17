@@ -103,6 +103,21 @@ Note that this type is incompletely defined."
 (defmethod (setf nickname) ((nickname string) (object nickname))
   (setf (slot-value object 'nickname) nickname))
 
+(defclass channel ()
+  ())
+
+(defclass mode ()
+  ())
+
+(defclass message ()
+  ())
+
+(defclass user ()
+  ())
+
+(defclass host ()
+  ())
+
 (defpackage #:nispbot
   (:use :common-lisp :lift
         :nisp
