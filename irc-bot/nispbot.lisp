@@ -71,6 +71,18 @@ Needs to be m/[#!+&][^ \x007,:]+/"
     (vector character ,size)
     (satisfies channel-string-p)))
 
+(deftype valid-integer-command ()
+  "IRC numerical commands must be in the range 000 to 999."
+  ;; This type does not verify that command is 001, only that it is 1
+  `(integer 0 999))
+
+;; Need some work to figure out how to validate strings.
+(deftype valid-command ()
+  "Commands must be an integer or a string.
+
+Note that this type is incompletely defined."
+  `(or valid-integer-command))
+
 (defgeneric nickname (object))
 (defgeneric (setf nickname) (nick object))
 (defgeneric normalize-nickname (object))
