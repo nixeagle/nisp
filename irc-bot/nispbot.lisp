@@ -53,11 +53,7 @@ valid-comchar.")
         (character char)))
 
 (defclass irc-bot (irc:connection comchar)
-  (#+ (or) (comchar :reader comchar
-            :initarg :comchar
-            :type valid-comchar 
-            :initform nispbot-config::*comchar*)
-   (developer-host :accessor irc-bot-developer-host
+  ((developer-host :accessor irc-bot-developer-host
                    :initarg :developer-host
                    :initform nispbot-config::*developer-host*)
    (admin-hosts :accessor irc-bot-admin-hosts
