@@ -7,6 +7,19 @@
   `(let ((x ,form))
      (check-type x ,type (format nil "~S: ~A" ',type (documentation ',type 'type)))))
 
+(defun length<= (sequence upto-count)
+  "When SEQUENCE is longer then UPTO-COUNT return nil.
+
+If SEQUENCE is shorter then UPTO-COUNT return its length."
+  (loop for char across sequence
+          counting char into count 
+          when (> count upto-count) return nil
+     finally (return count)))
+#+ (or)
+(progn
+  (assert (length<= "aaaaa" 5))
+  (assert (length<= "aaaa" 5)))
+
 (deftype letter-character () 
   "Represents an uppercase or lowercase letter in ASCII."
   '(member #\a #\b #\c #\d #\e #\f #\g #\h #\i #\j #\k #\l #\m #\n
