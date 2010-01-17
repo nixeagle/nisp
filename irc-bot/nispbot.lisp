@@ -37,9 +37,11 @@
 
 (defmethod (setf nickname) ((nickname string) (object nickname))
   (setf (slot-value object 'nickname) nickname))
+
 (defpackage #:nispbot
   (:use :common-lisp :lift
         :nisp
+        :nisp.irc
         :cl-irc :cl-ppcre
         :nispbot-config
         :nisp.ldap
@@ -47,6 +49,7 @@
         :nisp-empty-package
         :nisp-safe
         :nistilities)
+  (:shadowing-import-from :nisp.irc :nickname)
   (:shadowing-import-from :cl-irc :pass))
 
 (in-package :nispbot)
