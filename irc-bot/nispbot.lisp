@@ -23,7 +23,11 @@
     (member #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9 #\-)))
 
 (defun nickname-string-p (string)
-  (declare (type string string))
+  ;; Declaring the type here causes some problems with sbcl's
+  ;; type derivatives. The last thing I want is:
+  ;; (satisifies nickname-string-p) to get called _3_ times.
+  ;; 
+  ;; (declare (type base-string string))
   (and (typep (char string 0) 'nickname-start-character)
        (every 
         (lambda (x)
@@ -32,8 +36,10 @@
         (subseq string 1))))
 
 (deftype nickname-string (&optional size)
-  `(and (string ,size)
-        (satisfies nickname-string-p)))
+  `(and 
+    (vector character ,size)
+    (satisfies nickname-string-p)))
+
 (deftype channel-start-character ()
   "Valid starting prefix of a channel name.
 
