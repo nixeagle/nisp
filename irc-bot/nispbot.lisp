@@ -17,6 +17,26 @@
   '(or nickname-start-character
     (member #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9 #\-)))
 
+(defgeneric nickname (object))
+(defgeneric (setf nickname) (nick object))
+(defgeneric normalize-nickname (object))
+
+
+(defclass nickname ()
+  ((nickname :type string
+              :reader nickname
+              :initarg :nick
+              :initarg :nickname
+              :documentation "IRC user nickname")))
+
+(defmethod normalize-nickname ((object nickname))
+  (normalize-nickname  (slot-value object 'nickname)))
+
+(defmethod normalize-nickname ((nickname string))
+  (string-downcase nickname))
+
+(defmethod (setf nickname) ((nickname string) (object nickname))
+  (setf (slot-value object 'nickname) nickname))
 (defpackage #:nispbot
   (:use :common-lisp :lift
         :nisp
