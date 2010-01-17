@@ -260,3 +260,16 @@ valid-comchar.")
   (sleep 3) 
   (nispbot::join-all-channels nispbot::*nispbot*)
   (nispbot::reset-command-hook nispbot::*nispbot*))
+
+(defvar *freenode*)
+(defun start-freenode-instance ()
+  "Quickie to get something up on freenode"
+  (setq nispbot::*freenode*
+        (irc:connect :connection-type 'nispbot::irc-bot
+                     :nickname nispbot-config::*nickname*
+                     :server "irc.freenode.net"
+                     :password nispbot-config::*freenode-password*))
+  (irc:start-background-message-handler nispbot::*freenode*)
+  (sleep 3)
+  (irc:join nispbot::*freenode* "#botters")
+  (nispbot::reset-command-hook nispbot::*freenode*))
