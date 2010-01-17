@@ -31,7 +31,7 @@ a very friendly bot."
 (defgeneric (setf comchar) (character object))
 
 (defclass comchar ()
-  ((comchar :type valid-comchar 
+  ((comchar :type valid-comchar
              :reader comchar
              :initarg :char
              :initarg :comchar
@@ -43,11 +43,19 @@ to. This class will signal an error if a comchar is not of the type
 valid-comchar.")
   (:default-initargs :comchar #\!))
 
+(defmethod (setf comchar) ((char character) (object comchar))
+  (declare (type base-char char))
+  (setf (slot-value object 'comchar) char))
 
-(defclass irc-bot (irc:connection)
-  ((comchar :accessor irc-bot-comchar
+(defmethod (setf comchar) ((char string) (object comchar))
+  (declare (type (base-string 1) char))
+  (setf (slot-value object 'comchar)
+        (character char)))
+
+(defclass irc-bot (irc:connection comchar)
+  (#+ (or) (comchar :reader comchar
             :initarg :comchar
-            :type standard-char
+            :type valid-comchar 
             :initform nispbot-config::*comchar*)
    (developer-host :accessor irc-bot-developer-host
                    :initarg :developer-host
@@ -57,6 +65,7 @@ valid-comchar.")
                 :initform nispbot-config::*admin-hosts*)
    (safe :accessor irc-bot-safe
          :initform (make-safe-set))))
+
 
 (defun make-irc-bot (nick server)
   (connect :nickname nick :connection-type 'irc-bot
@@ -98,7 +107,7 @@ valid-comchar.")
 ;;; return something more useful then this...
 (defmethod is-eval-request ((bot irc-bot) (msg string))
   (and (< 0 (length msg))
-       (eq (char msg 0) (irc-bot-comchar bot))))
+       (eq (char msg 0) (comchar bot))))
 
 (defgeneric safe-eval (instance forms))
 (defmethod safe-eval ((message irc:irc-privmsg-message) forms)
