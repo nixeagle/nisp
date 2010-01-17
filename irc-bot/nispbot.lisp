@@ -24,7 +24,7 @@ Most anything else in the ASCII set can't be used as they occur as part
 of normal conversation and an IRC bot that interferes with that is not
 a very friendly bot."
   '(member #\! #\# #\% #\) #\+ #\, #\-
-          #\< #\= #\> #\@ #\[ #\\ #\] #\_ #\` #\{ #\| #\} #\~))
+    #\@ #\\ #\] #\_ #\` #\{ #\| #\} #\~))
 
 
 (defgeneric comchar (object))
