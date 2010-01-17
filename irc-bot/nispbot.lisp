@@ -34,6 +34,12 @@
 (deftype nickname-string (&optional size)
   `(and (string ,size)
         (satisfies nickname-string-p)))
+(deftype channel-start-character ()
+  "Valid starting prefix of a channel name.
+
+On most IRC networks # indicates a normal channel."
+  ;; rfc2821 sec 1.3
+  '(member #\& #\# #\+ #\!))
 
 (defgeneric nickname (object))
 (defgeneric (setf nickname) (nick object))
