@@ -128,6 +128,7 @@ Note that this type is incompletely defined."
 
 (defgeneric maximum-length (object))
 (defgeneric (setf maximum-length) (length object))
+(defgeneric valid-length-p (object &optional sequence))
 (defclass maximum-length ()
   ((maximum-length :type maximum-message-length 
                    :reader maximum-length
@@ -138,6 +139,10 @@ Note that this type is incompletely defined."
 
 (defmethod (setf maximum-length) ((length integer) (object maximum-length))
   (setf (slot-value object 'maximum-length) length))
+
+(defmethod valid-length-p ((length maximum-length) &optional 
+                           sequence)
+  (length<= sequence (maximum-length length)))
 
 (defgeneric nickname (object))
 (defgeneric (setf nickname) (nick object))
@@ -150,6 +155,9 @@ Note that this type is incompletely defined."
              :initarg :nickname
              :initform (error "Nickname must be provided.")
              :documentation "IRC user nickname")))
+(defmethod valid-length-p ((nickname nickname) &optional sequence)
+  (declare (ignore sequence))
+  (call-next-method nickname (nickname nickname)))
 
 (defmethod normalize-nickname ((object nickname))
   (normalize-nickname  (slot-value object 'nickname)))
