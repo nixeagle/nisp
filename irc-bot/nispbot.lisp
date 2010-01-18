@@ -168,8 +168,7 @@ NICK has several constraints.
   (:default-initargs :maximum-length 9)) ;Based on rfc2812
 
 (defmethod valid-length-p ((nickname nickname) &optional sequence)
-  (declare (ignore sequence))
-  (call-next-method nickname (nickname nickname)))
+  (call-next-method nickname (or sequence (nickname nickname))))
 
 (defmethod normalize-nickname ((object nickname))
   (normalize-nickname  (slot-value object 'nickname)))
