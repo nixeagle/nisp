@@ -177,6 +177,7 @@ NICK has several constraints.
   (string-downcase nickname))
 
 (defmethod (setf nickname) ((nickname string) (object nickname))
+  (assert (valid-length-p object nickname))
   (setf (slot-value object 'nickname) nickname))
 
 (defclass channel ()
