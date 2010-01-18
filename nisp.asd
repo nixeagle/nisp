@@ -11,6 +11,8 @@
   :license "GPLv2 or later"
   :depends-on (:lift
                :hu.dwim.walker
+               :metabang-bind
+               :iterate
                :nistilities)
   :components
   ((:module "safe"
@@ -38,9 +40,11 @@
   :depends-on (:functional-tests
                :cl-ppcre
                :nistilities
+               :metabang-bind
                :nisp.ldap
                :nisp.8b-ldap
                :cl-irc
+               :iterate
                :closer-mop
                :alexandria
                :trivial-timeout

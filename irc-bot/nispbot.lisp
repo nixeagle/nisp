@@ -1,6 +1,6 @@
 (in-package :cl-user)
 (defpackage #:nisp.irc
-  (:use :common-lisp))
+  (:use :common-lisp :iterate :metabang-bind))
 (in-package :nisp.irc)
 
 (defmacro ct (form type)
