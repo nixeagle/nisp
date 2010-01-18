@@ -116,6 +116,10 @@ Needs to be m/[#!+&][^ \x007,:]+/"
 Note that this type is incompletely defined."
   `(or valid-integer-command))
 
+(deftype maximum-message-length ()
+  "Longest SIZE an IRC message may be."
+  '(integer 1 512))
+
 (defgeneric nickname (object))
 (defgeneric (setf nickname) (nick object))
 (defgeneric normalize-nickname (object))
