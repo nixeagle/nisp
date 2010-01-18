@@ -48,17 +48,8 @@
 ;;; Used as subpackages for sandboxed code
 (defpackage #:safe-testing!
   (:use)
-  (:shadowing-import-from :cl #:loop #:mapc #:mapcar #:list
-                            #:documentation :t :nil)
-  (:shadowing-import-from :nistilities
-                          #:range)
+  (:shadowing-import-from :cl :t :nil)
   (:export
-           #:loop
-           #:mapc
-           #:mapcar
-           #:list
-           #:range
-           #:documentation
            :t
            :nil))
 
@@ -73,7 +64,7 @@
   :values
 
 
-  :cons :list :loop :mapcar :mapc)
+  :cons :list :mapcar :mapc)
 
 (defpackage #:safe-closure
   (:use)
