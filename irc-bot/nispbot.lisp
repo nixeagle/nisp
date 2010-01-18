@@ -40,49 +40,50 @@ If SEQUENCE is shorter then UPTO-COUNT return its length."
   (assert (length<= "aaaaa" 5))
   (assert (length<= "aaaa" 5)))
 
-(deftype letter-character () 
+(deftype letter-char () 
   "Represents an uppercase or lowercase letter in ASCII."
   '(member #\a #\b #\c #\d #\e #\f #\g #\h #\i #\j #\k #\l #\m #\n
     #\o #\p #\q #\r #\s #\t #\u #\v #\w #\x #\y #\z #\A #\B #\C #\D
     #\E #\F #\G #\H #\I #\J #\K #\L #\M #\N #\O #\P #\Q #\R #\S #\T
     #\U #\V #\W #\X #\Y #\Z))
 
-(deftype digit-character ()
+(deftype dec-digit-char ()
   "Number character from 0 to 9 in base 10."
   '(member #\0 #\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9))
 
-(deftype hex-digit-character ()
+(deftype hex-digit-char ()
   "Number character from 0 to F in base 16"
   '(or
-    digit-character
+    dec-digit-char
     (member #\A #\B #\C #\D #\E #\F)))
 
-(deftype special-character ()
+(deftype special-char ()
   "Represents extra non-digit/letter characters."
   '(member #\| #\[ #\] #\` #\^ #\\ #\_ #\{ #\}))
 
-(deftype nickname-start-character ()
+
+(deftype nickname-start-char ()
   "Valid character at the start of an IRC nickname."
   ;; These are taken from advice from duckinator on eighthbit.net/offtopic
   ;; Also see rfc 2812 sec: 2.3.1
   '(or 
-    letter-character
-    special-character))
+    letter-char
+    special-char))
 
-(deftype nickname-character ()
+(deftype nickname-char ()
   "Valid character after the first character of an IRC nickname."
   ;; Taken from advice from duckinator on eighthbit.net/offtopic
-  '(or nickname-start-character
-    (member digit-character #\-)))
+  '(or nickname-start-char
+    (member dec-digit-char #\-)))
 ;; The meaning of these is specified in rfc2811
-(deftype channel-start-character ()
+(deftype channel-start-char ()
   "Valid starting prefix of a channel name.
 
 On most IRC networks # indicates a normal channel."
   ;; rfc2821 sec 1.3
   '(member #\& #\# #\+ #\!))
 
-(deftype channel-character ()
+(deftype channel-char ()
   "Valid character in the name portion of a channel name."
   ;; rfc2821 sec 1.3
   `(and character
@@ -101,8 +102,8 @@ On most IRC networks # indicates a normal channel."
                        (declare (type character x))
                        (typep x ',character-type))
                      (subseq string 1))))))
-  (define-string-p nickname-string-p nickname-start-character nickname-character)
-  (define-string-p channel-string-p channel-start-character channel-character))
+  (define-string-p nickname-string-p nickname-start-char nickname-char)
+  (define-string-p channel-string-p channel-start-char channel-char))
 
 (deftype nickname-string ()
   `(and 
