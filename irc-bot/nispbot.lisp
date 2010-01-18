@@ -141,7 +141,7 @@ Type documentation:
   (define-type-predicate special-char)
   (define-type-predicate channel-char)
   (define-type-predicate positive-fixnum)
-  (define-type-predicate user-char)
+  (define-type-predicate username-char)
   (define-type-predicate nickname-char))
 
 (deftype channel-char ()
@@ -150,7 +150,7 @@ Type documentation:
   `(and character
         (not (member #\Nul #\Bel #\, #\Space #\:))))
 
-(deftype user-char ()
+(deftype username-char ()
   "Valid char in the user portion.
 
 In detail, this refers to the <user>@<hostmask> form."
@@ -159,7 +159,7 @@ In detail, this refers to the <user>@<hostmask> form."
         (not (or newline-char 
                  (member #\Nul #\Space #\@)))))
 
-(deftype user-string ()
+(deftype username-string ()
   "Represents the user part of <user>@<hostmask>."
   '(array user-char))
 
