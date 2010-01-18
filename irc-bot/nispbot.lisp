@@ -103,7 +103,7 @@ In detail, this refers to the <user>@<hostmask> form."
 
 (deftype user-string ()
   "Represents the user part of <user>@<hostmask>."
-  `(array user-char))
+  '(array user-char))
 
 (macrolet ((define-string-p 
                (name start-character-type character-type
