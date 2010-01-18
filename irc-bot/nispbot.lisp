@@ -74,25 +74,6 @@ If SEQUENCE is shorter then UPTO-COUNT return its length."
   ;; Taken from advice from duckinator on eighthbit.net/offtopic
   '(or nickname-start-character
     (member digit-character #\-)))
-
-(defun nickname-string-p (string)
-  ;; Declaring the type here causes some problems with sbcl's
-  ;; type derivatives. The last thing I want is:
-  ;; (satisifies nickname-string-p) to get called _3_ times.
-  ;; 
-  ;; (declare (type base-string string))
-  (and (typep (char string 0) 'nickname-start-character)
-       (every 
-        (lambda (x)
-          (declare (type character x))
-          (typep x 'nickname-character))
-        (subseq string 1))))
-
-(deftype nickname-string ()
-  `(and 
-    (vector character)
-    (satisfies nickname-string-p)))
-
 ;; The meaning of these is specified in rfc2811
 (deftype channel-start-character ()
   "Valid starting prefix of a channel name.
@@ -107,13 +88,27 @@ On most IRC networks # indicates a normal channel."
   `(and character
         (not (member #\Nul #\Bel #\, #\Space #\:))))
 
-(defun channel-string-p (string)
-  (and (typep (char string 0) 'channel-start-character)
-       (every 
-        (lambda (x)
-          (declare (type character x))
-          (typep x 'channel-character))
-        (subseq string 1))))
+(macrolet ((define-string-p 
+               (name start-character-type character-type
+                     &optional docstring)
+             "Define predicates that check types of the form:
+<START-CHARACTER-TYPE><CHARACTER-TYPE>+."
+             `(defun ,name (string)
+                ,(or docstring "MISSING DOCSTRING: WRITE ME!")
+                (and (typep (char string 0) ',start-character-type)
+                    (every
+                     (lambda (x)
+                       (declare (type character x))
+                       (typep x ',character-type))
+                     (subseq string 1))))))
+  (define-string-p nickname-string-p nickname-start-character nickname-character)
+  (define-string-p channel-string-p channel-start-character channel-character))
+
+(deftype nickname-string ()
+  `(and 
+    (vector character)
+    (satisfies nickname-string-p)))
+
 
 ;; Don't forget that these are also case insensitive.
 (deftype channel-string (&optional size)
