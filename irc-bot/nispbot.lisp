@@ -215,11 +215,13 @@ NICK has several constraints.
         :nisp.irc
         :cl-irc :cl-ppcre
         :nispbot-config
+        :iterate
         :nisp.ldap
         :nisp.8b-ldap
         :nisp-empty-package
         :nisp-safe
         :nistilities)
+  (:shadowing-import-from :iterate :while)
   (:shadowing-import-from :nisp.irc :nickname)
   (:shadowing-import-from :cl-irc :pass))
 
