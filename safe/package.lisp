@@ -62,9 +62,18 @@
            :t
            :nil))
 
-(defpackage #:safe-external
-  (:use)
-  (:export help test-results))
+(define-export-system #:safe-external :cl
+  :string :integer :typep :character
+  :vector :array :sequence :atom :bignum
+  :class
+  :extended-char :base-char :ratio :real :symbol
+  :type :fixnum :type-of
+  
+  :and :or :not :member :mod :eql :eq :equal
+  :values
+
+
+  :cons :list :loop :mapcar :mapc)
 
 (defpackage #:safe-closure
   (:use)
