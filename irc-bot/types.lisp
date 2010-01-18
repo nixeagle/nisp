@@ -215,4 +215,5 @@ Note that this type is incompletely defined."
 (iter (for (symbol state) :in-packages :nisp.irc-types :having-access (:internal))
       (when (or (type-specifier-p symbol)
                 (fboundp symbol))
-        (export symbol :nisp.irc-types)))
+        (export symbol :nisp.irc-types)
+        (collect symbol)))
