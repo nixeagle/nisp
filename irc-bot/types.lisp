@@ -5,7 +5,10 @@
 
 (defmacro ct (form type)
   `(let ((x ,form))
-     (check-type x ,type (format nil "~S: ~A" ',type (documentation ',type 'type)))))
+     (check-type x ,type 
+                 (format nil "~S:~%~A" ',type 
+                         (documentation ',type 'type)))))
+
 ;; Idea for (documentation symbol 'type) taken from slime.lisp
 (defun type-specifier-p (symbol)
   "True if SYMBOL is a type."
