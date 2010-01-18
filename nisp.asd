@@ -44,6 +44,7 @@
                :nisp.ldap
                :nisp.8b-ldap
                :cl-irc
+               :split-sequence
                :iterate
                :closer-mop
                :alexandria
