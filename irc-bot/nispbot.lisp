@@ -7,10 +7,16 @@
   `(let ((x ,form))
      (check-type x ,type (format nil "~S: ~A" ',type (documentation ',type 'type)))))
 
+(deftype positive-fixnum ()
+  "A fixnum"
+  `(integer 1 ,most-positive-fixnum))
+
 (defun length<= (sequence upto-count)
   "When SEQUENCE is longer then UPTO-COUNT return nil.
 
 If SEQUENCE is shorter then UPTO-COUNT return its length."
+  (declare (type sequence sequence)
+           (type positive-fixnum upto-count))
   (loop for char across sequence
           counting char into count 
           when (> count upto-count) return nil
