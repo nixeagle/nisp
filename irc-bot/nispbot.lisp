@@ -145,7 +145,17 @@ Note that this type is incompletely defined."
   (length<= sequence (maximum-length length)))
 
 (defgeneric nickname (object))
-(defgeneric (setf nickname) (nick object))
+(defgeneric (setf nickname) (nick object)
+  (:documentation
+   "Set NICK on OBJECT.
+
+NICK has several constraints. 
+  - It must be a character string.
+  - It must start with NICKNAME-START-CHARACTER.
+  - Type of the second character on must be NICKNAME-CHARACTER.
+  - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
+    slot on OBJECT."))
+
 (defgeneric normalize-nickname (object))
 
 (defclass nickname (maximum-length)
