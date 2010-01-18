@@ -213,7 +213,9 @@ Note that this type is incompletely defined."
 (defgeneric maximum-length (object))
 (defgeneric (setf maximum-length) (length object))
 (defgeneric valid-length-p (object &optional sequence))
-(defclass maximum-length ()
+(defclass abstract-maximum-length ()
+  ())
+(defclass maximum-length (abstract-maximum-length)
   ((maximum-length :type maximum-message-length 
                    :reader maximum-length
                    :initarg :length
