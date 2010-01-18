@@ -13,6 +13,8 @@
   :description "irc bot"
   :depends-on (:nisp
                :cl-irc
+               :iterate
+               :metabang-bind
                :functional-tests
                :cl-ppcre
                :nistilities
