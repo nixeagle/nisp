@@ -68,9 +68,9 @@ If SEQUENCE is shorter then UPTO-COUNT return its length."
           (typep x 'nickname-character))
         (subseq string 1))))
 
-(deftype nickname-string (&optional size)
+(deftype nickname-string ()
   `(and 
-    (vector character ,size)
+    (vector character)
     (satisfies nickname-string-p)))
 
 ;; The meaning of these is specified in rfc2811
