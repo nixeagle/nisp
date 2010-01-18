@@ -7,6 +7,16 @@
   `(let ((x ,form))
      (check-type x ,type (format nil "~S: ~A" ',type (documentation ',type 'type)))))
 
+;; Idea for (documentation symbol 'type) taken from slime.lisp
+(defun type-specifier-p (symbol)
+  "True if SYMBOL is a type."
+  (or (documentation symbol 'type)
+      #+:sbcl
+      (multiple-value-bind (arglist exists)
+          (sb-introspect:deftype-lambda-list symbol)
+        (declare (ignore arglist))
+        exists)))
+
 (deftype positive-fixnum ()
   "A fixnum"
   `(integer 1 ,most-positive-fixnum))
