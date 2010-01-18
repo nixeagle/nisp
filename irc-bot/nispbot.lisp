@@ -14,8 +14,7 @@
       #+:sbcl
       (multiple-value-bind (arglist exists)
           (sb-introspect:deftype-lambda-list symbol)
-        (declare (ignore arglist))
-        exists)))
+        (values exists arglist))))
 
 (deftype type-specifier ()
   "Type specifier that can be used with TYPEP"
