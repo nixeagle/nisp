@@ -143,7 +143,7 @@ Note that this type is incompletely defined."
 (defgeneric (setf nickname) (nick object))
 (defgeneric normalize-nickname (object))
 
-(defclass nickname ()
+(defclass nickname (maximum-length)
   ((nickname :type nickname-string
              :reader nickname
              :initarg :nick
