@@ -26,5 +26,6 @@
   :components
   ((:file "config-dist")
    (:file "config")
+   (:file "types")
    (:file "nispbot")
    (:file "nispbot-tests")))
