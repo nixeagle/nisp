@@ -157,7 +157,7 @@ In detail, this refers to the <user>@<hostmask> form."
 
 (deftype username-string ()
   "Represents the user part of <user>@<hostmask>."
-  '(array user-char))
+  '(array username-char))
 
 (macrolet ((define-string-p 
                (name start-character-type character-type
