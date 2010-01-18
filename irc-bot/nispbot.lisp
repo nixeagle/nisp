@@ -11,9 +11,7 @@
         (collect symbol)
         (unintern symbol from-package)))
 
-(defmacro ct (form type)
-  `(let ((x ,form))
-     (check-type x ,type (format nil "~S: ~A" ',type (documentation ',type 'type)))))
+
 
 (defgeneric maximum-length (object))
 (defgeneric (setf maximum-length) (length object))
