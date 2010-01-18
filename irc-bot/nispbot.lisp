@@ -3,6 +3,13 @@
   (:use :common-lisp :iterate :metabang-bind :nisp.irc-types))
 (in-package :nisp.irc)
 
+(defun unintern-externals-from (package &optional (from-package *package*))
+  "Remove all exports from PACKAGE in FROM-PACKAGE."
+  (iter (for (symbol)
+             :in-packages package
+             :having-access (:external))
+        (collect symbol)
+        (unintern symbol from-package)))
 
 (defmacro ct (form type)
   `(let ((x ,form))
