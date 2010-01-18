@@ -46,13 +46,6 @@ If SEQUENCE is shorter then UPTO-COUNT return its length."
   (assert (length<= "aaaaa" 5))
   (assert (length<= "aaaa" 5)))
 
-(defun ipv4-address-string-p (ipv4-string)
-  (let ((sequence (split-sequence:split-sequence #\. ipv4-string)))
-    (and (= (length sequence) 4)
-         (every #'ipv4-octet-string-p sequence))))
-(deftype ipv4-address-string ()
-  '(satisfies ipv4-address-string-p))
-
 (deftype letter-char () 
   "Represents an uppercase or lowercase letter in ASCII."
   '(member #\a #\b #\c #\d #\e #\f #\g #\h #\i #\j #\k #\l #\m #\n
@@ -171,12 +164,18 @@ Type documentation:
   (define-type-predicate username-char)
   (define-type-predicate nickname-char))
 
-
 (defun ipv4-octet-string-p (octet-string)
   (typep (read-from-string octet-string) 'ipv4-octet))
 
 (deftype ipv4-octet-string ()
   `(satisfies ipv4-octet-string-p))
+
+(defun ipv4-address-string-p (ipv4-string)
+  (let ((sequence (split-sequence:split-sequence #\. ipv4-string)))
+    (and (= (length sequence) 4)
+         (every #'ipv4-octet-string-p sequence))))
+(deftype ipv4-address-string ()
+  '(satisfies ipv4-address-string-p))
 
 (defun username-string-p (string)
   (every #'username-char-p string))
