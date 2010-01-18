@@ -158,9 +158,11 @@ In detail, this refers to the <user>@<hostmask> form."
         (not (or newline-char 
                  (member #\Nul #\Space #\@)))))
 
+(defun username-string-p (string)
+  (every #'username-char-p string))
 (deftype username-string ()
   "Represents the user part of <user>@<hostmask>."
-  '(array username-char))
+  '(satisfies username-string-p))
 
 (macrolet ((define-string-p 
                (name start-character-type character-type
