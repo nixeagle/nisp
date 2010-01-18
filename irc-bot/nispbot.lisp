@@ -120,6 +120,19 @@ Note that this type is incompletely defined."
   "Longest SIZE an IRC message may be."
   '(integer 1 512))
 
+(defgeneric maximum-length (object))
+(defgeneric (setf maximum-length) (length object))
+(defclass maximum-length ()
+  ((maximum-length :type maximum-message-length 
+                   :reader maximum-length
+                   :initarg :length
+                   :initarg :maximum-length
+                   :initform (error "Maximum length must be specified.")
+                   :documentation "Maximum length a sequence may be.")))
+
+(defmethod (setf maximum-length) ((length integer) (object maximum-length))
+  (setf (slot-value object 'maximum-length) length))
+
 (defgeneric nickname (object))
 (defgeneric (setf nickname) (nick object))
 (defgeneric normalize-nickname (object))
