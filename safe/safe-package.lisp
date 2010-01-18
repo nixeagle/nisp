@@ -61,7 +61,14 @@ The optional OWNER parameter defines who owns the package. There is no restricti
   (declare (ignore owner))
   ;; Not 100% positive this is the best behavior, but better then the
   ;; previous behavior that tried to make a new safe package.
-  package)
+  (handler-case (progn (setf (safe-package package)
+                             (make-empty-package 
+                              (concatenate 'string "SAFE-"
+                                           (safe-package-owner package))))
+                       (package-use-from package (safe-package-use package))
+                       (populate-functions (safe-package package))
+                       package)
+    (error () package)))
 
 (defvar *populate-functions* '(populate-safe-package-closures)
   "List of functions to populate packages with")
