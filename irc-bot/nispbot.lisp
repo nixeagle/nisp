@@ -154,7 +154,9 @@ Note that this type is incompletely defined."
              :initarg :nick
              :initarg :nickname
              :initform (error "Nickname must be provided.")
-             :documentation "IRC user nickname")))
+             :documentation "IRC user nickname"))
+  (:default-initargs :maximum-length 9)) ;Based on rfc2812
+
 (defmethod valid-length-p ((nickname nickname) &optional sequence)
   (declare (ignore sequence))
   (call-next-method nickname (nickname nickname)))
