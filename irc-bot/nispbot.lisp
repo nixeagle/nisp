@@ -273,8 +273,11 @@ NICK has several constraints.
 (defclass message ()
   ())
 
-(defclass user ()
-  ())
+(defclass username (maximum-length)
+  ((user :type username-string
+         :reader username
+         :initarg username))
+  (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
 (defclass host ()
   ())
