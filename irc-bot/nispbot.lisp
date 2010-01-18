@@ -125,6 +125,7 @@ Note that this type is incompletely defined."
              :reader nickname
              :initarg :nick
              :initarg :nickname
+             :initform (error "Nickname must be provided.")
              :documentation "IRC user nickname")))
 
 (defmethod normalize-nickname ((object nickname))
