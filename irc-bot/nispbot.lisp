@@ -86,6 +86,45 @@ On most IRC networks # indicates a normal channel."
   ;; rfc2821 sec 1.3
   '(member #\& #\# #\+ #\!))
 
+(macrolet ((define-type-predicate (type-name &optional docstring)
+             "Define simple predicates that check TYPE-NAME.
+These predicates are the name of the type plus a trailing -p.
+
+For example the type foo-bar will have a predicate named foo-bar-p that
+takes one arguement.
+
+These predicates also have the docstring of TYPE-NAME included in
+addition to whatever DOCSTRING is given."
+             (flet ((type-name-substr ()
+                      (subseq (symbol-name type-name)
+                              (- (length (symbol-name type-name)) 2))))
+               (assert (not (string= (type-name-substr)
+                                     "-P"))
+                       (type-name) 
+                       "~% Types should not end in ~S" (type-name-substr)))
+             `(defun ,(intern (concatenate 'string (symbol-name type-name) "-P")) (object)
+                ,(concatenate 'string 
+                              (or docstring 
+                                  "MISSING DOCSTRING: WRITE ME!")
+                              "
+
+Type documentation:
+  " (or (documentation type-name 'type)
+        "None provided."))
+                (typep object ',type-name))))
+  (define-type-predicate hex-digit-char)
+  (define-type-predicate channel-start-char)
+  (define-type-predicate maximum-message-length)
+  (define-type-predicate dec-digit-char)
+  (define-type-predicate newline-char)
+  (define-type-predicate letter-char)
+  (define-type-predicate nickname-start-char)
+  (define-type-predicate special-char)
+  (define-type-predicate channel-char)
+  (define-type-predicate positive-fixnum)
+  (define-type-predicate user-char)
+  (define-type-predicate nickname-char))
+
 (deftype channel-char ()
   "Valid character in the name portion of a channel name."
   ;; rfc2821 sec 1.3
