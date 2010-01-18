@@ -29,14 +29,7 @@
 (deftype ipv4-octet ()
   `(integer 0 255))
 
-(defun ipv4-octet-p (octet)
-  (typep octet 'ipv4-octet))
 
-(defun ipv4-octet-string-p (octet-string)
-  (typep (read-from-string octet-string) 'ipv4-octet))
-
-(deftype ipv4-octet-string ()
-  `(satisfies ipv4-octet-string-p))
 
 (defun length<= (sequence upto-count)
   "When SEQUENCE is longer then UPTO-COUNT return nil.
@@ -107,6 +100,37 @@ On most IRC networks # indicates a normal channel."
   ;; rfc2821 sec 1.3
   '(member #\& #\# #\+ #\!))
 
+(deftype channel-char ()
+  "Valid character in the name portion of a channel name."
+  ;; rfc2821 sec 1.3
+  `(and character
+        (not (member #\Nul #\Bel #\, #\Space #\:))))
+
+(deftype username-char ()
+  "Valid char in the user portion.
+
+In detail, this refers to the <user>@<hostmask> form."
+  ;; Yes rfc2812 says #\Bel is ok here. Go figure.
+  `(and character
+        (not (or newline-char 
+                 (member #\Nul #\Space #\@)))))
+
+(deftype valid-integer-command ()
+  "IRC numerical commands must be in the range 000 to 999."
+  ;; This type does not verify that command is 001, only that it is 1
+  `(integer 0 999))
+
+;; Need some work to figure out how to validate strings.
+(deftype valid-command ()
+  "Commands must be an integer or a string.
+
+Note that this type is incompletely defined."
+  `(or valid-integer-command))
+
+(deftype maximum-message-length ()
+  "Longest SIZE an IRC message may be."
+  '(integer 1 512))
+
 (macrolet ((define-type-predicate (type-name &optional docstring)
              "Define simple predicates that check TYPE-NAME.
 These predicates are the name of the type plus a trailing -p.
@@ -133,6 +157,7 @@ Type documentation:
   " (or (documentation type-name 'type)
         "None provided."))
                 (typep object ',type-name))))
+  (define-type-predicate ipv4-octet)
   (define-type-predicate hex-digit-char)
   (define-type-predicate channel-start-char)
   (define-type-predicate maximum-message-length)
@@ -146,20 +171,12 @@ Type documentation:
   (define-type-predicate username-char)
   (define-type-predicate nickname-char))
 
-(deftype channel-char ()
-  "Valid character in the name portion of a channel name."
-  ;; rfc2821 sec 1.3
-  `(and character
-        (not (member #\Nul #\Bel #\, #\Space #\:))))
 
-(deftype username-char ()
-  "Valid char in the user portion.
+(defun ipv4-octet-string-p (octet-string)
+  (typep (read-from-string octet-string) 'ipv4-octet))
 
-In detail, this refers to the <user>@<hostmask> form."
-  ;; Yes rfc2812 says #\Bel is ok here. Go figure.
-  `(and character
-        (not (or newline-char 
-                 (member #\Nul #\Space #\@)))))
+(deftype ipv4-octet-string ()
+  `(satisfies ipv4-octet-string-p))
 
 (defun username-string-p (string)
   (every #'username-char-p string))
@@ -197,23 +214,6 @@ Needs to be m/[#!+&][^ \x007,:]+/"
   `(and 
     (vector character ,size)
     (satisfies channel-string-p)))
-
-(deftype valid-integer-command ()
-  "IRC numerical commands must be in the range 000 to 999."
-  ;; This type does not verify that command is 001, only that it is 1
-  `(integer 0 999))
-
-;; Need some work to figure out how to validate strings.
-(deftype valid-command ()
-  "Commands must be an integer or a string.
-
-Note that this type is incompletely defined."
-  `(or valid-integer-command))
-
-(deftype maximum-message-length ()
-  "Longest SIZE an IRC message may be."
-  '(integer 1 512))
-
 
 (iter (for (symbol state) :in-packages :nisp.irc-types :having-access (:internal))
       (when (or (type-specifier-p symbol)
