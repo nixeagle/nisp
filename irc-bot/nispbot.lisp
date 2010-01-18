@@ -93,6 +93,19 @@ On most IRC networks # indicates a normal channel."
   `(and character
         (not (member #\Nul #\Bel #\, #\Space #\:))))
 
+(deftype user-char ()
+  "Valid char in the user portion.
+
+In detail, this refers to the <user>@<hostmask> form."
+  ;; Yes rfc2812 says #\Bel is ok here. Go figure.
+  `(and character
+        (not (or newline-char 
+                 (member #\Nul #\Space #\@)))))
+
+(deftype user-string ()
+  "Represents the user part of <user>@<hostmask>."
+  `(array user-char))
+
 (macrolet ((define-string-p 
                (name start-character-type character-type
                      &optional docstring)
