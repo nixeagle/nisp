@@ -61,6 +61,10 @@ If SEQUENCE is shorter then UPTO-COUNT return its length."
   "Represents extra non-digit/letter characters."
   '(member #\| #\[ #\] #\` #\^ #\\ #\_ #\{ #\}))
 
+(deftype newline-char ()
+  "Found at the end of a line in IRC messages.
+In other words: \\\r\\\n"
+  '(member #\Return #\Newline))
 
 (deftype nickname-start-char ()
   "Valid character at the start of an IRC nickname."
