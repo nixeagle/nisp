@@ -17,6 +17,10 @@
         (declare (ignore arglist))
         exists)))
 
+(deftype type-specifier ()
+  "Type specifier that can be used with TYPEP"
+  '(satisfies type-specifier-p))
+
 (deftype positive-fixnum ()
   "A fixnum"
   `(integer 1 ,most-positive-fixnum))
