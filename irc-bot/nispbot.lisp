@@ -163,20 +163,16 @@ a very friendly bot."
 
 (defclass comchar ()
   ((comchar :type valid-comchar
-             :reader comchar
-             :initarg :char
-             :initarg :comchar
-             :documentation "Single character that the program responds to."))
+            :accessor comchar
+            :initarg :char
+            :initarg :comchar
+            :documentation "Single character that the program responds to."))
   (:documentation "Represents an irc bot comchar.
 
 This is a single character, usually a symbol that the bot responds
 to. This class will signal an error if a comchar is not of the type
 valid-comchar.")
   (:default-initargs :comchar #\,))
-
-(defmethod (setf comchar) ((char character) (object comchar))
-  (declare (type base-char char))
-  (setf (slot-value object 'comchar) char))
 
 (defmethod (setf comchar) ((char string) (object comchar))
   (declare (type (base-string 1) char))
