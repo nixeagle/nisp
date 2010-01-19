@@ -81,7 +81,8 @@ NICK has several constraints.
 (defclass username (maximum-length)
   ((user :type username-string
          :reader username
-         :initarg username))
+         :initarg :username
+         :initform (error "Username must be provided.")))
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
 (defclass host ()
