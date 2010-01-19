@@ -35,3 +35,9 @@
   "List all slots of STRUCTURE-DESIGNATOR."
   (if (typep structure-designator 'SB-KERNEL:DEFSTRUCT-DESCRIPTION)
       (sb-vm::dd-slots structure-designator)))
+
+;;;; Testing structure operations
+(defstruct 4-slot-structure a b c d)
+
+(defparameter *4slot* (make-4-slot-structure :a "hi" :b 23 :d "hello!"))
+
