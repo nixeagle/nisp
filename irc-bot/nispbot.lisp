@@ -46,7 +46,9 @@ NICK has several constraints.
          :accessor host)))
 
 (defclass abstract-identifier (abstract-nickname abstract-username abstract-host)
-  ())
+  ((user :type abstract-username)
+   (nickname :type abstract-nickname)
+   (host :type abstract-host)))
 
 
 (defgeneric maximum-length (object))
