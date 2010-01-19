@@ -79,10 +79,13 @@ NICK has several constraints.
   ())
 
 (defclass abstract-username ()
-  ())
+  ((user :reader username
+          :initarg :username)))
+
 (defclass abstract-nickname ()
-  ())
-(defclass abstract-identifier ()
+  ((nickname :reader nickname
+              :initarg :nickname)))
+
   ())
 
 
