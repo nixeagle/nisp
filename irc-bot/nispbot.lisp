@@ -17,9 +17,24 @@
          :initarg :username)))
 
 (defgeneric nickname (object))
+(defgeneric (setf nickname) (nick object)
+  (:documentation
+   "Set NICK on OBJECT.
+
+NICK has several constraints. 
+  - It must be a character string.
+  - It must start with NICKNAME-START-CHARACTER.
+  - Type of the second character on must be NICKNAME-CHARACTER.
+  - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
+    slot on OBJECT."))
+
 (defclass abstract-nickname ()
-  ((nickname :reader nickname
-             :initarg :nickname)))
+  ((nickname :type string
+             :accessor nickname
+             :initarg :nick
+             :initarg :nickname
+             :initform (error "Nickname must be provided.")
+             :documentation "IRC user nickname"))))
 
 ;;; Should be a hostname of some sort, what I'm not positive.
 (defgeneric host (object))
@@ -48,26 +63,10 @@
 (defmethod valid-length-p ((length abstract-maximum-length) &optional sequence)
   (length<= sequence (maximum-length length)))
 
-(defgeneric (setf nickname) (nick object)
-  (:documentation
-   "Set NICK on OBJECT.
-
-NICK has several constraints. 
-  - It must be a character string.
-  - It must start with NICKNAME-START-CHARACTER.
-  - Type of the second character on must be NICKNAME-CHARACTER.
-  - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
-    slot on OBJECT."))
-
 (defgeneric normalize-nickname (object))
 
 (defclass nickname (abstract-nickname maximum-length)
-  ((nickname :type nickname-string
-             :reader nickname
-             :initarg :nick
-             :initarg :nickname
-             :initform (error "Nickname must be provided.")
-             :documentation "IRC user nickname"))
+  ((nickname :type nickname-string))
   (:default-initargs :maximum-length 9)) ;Based on rfc2812
 
 (defmethod valid-length-p ((nickname nickname) &optional sequence)
