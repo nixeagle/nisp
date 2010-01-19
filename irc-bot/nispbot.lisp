@@ -100,12 +100,23 @@ NICK has several constraints.
 (defclass host ()
   ())
 
+(defclass identifier (abstract-identifier)
+  ((user :type username
+         :initarg :user
+         :initarg :username
+         :initform (error "Username must be provided."))))
+
 (defun make-username (username &rest initargs &key &allow-other-keys)
   "Make username instance unless USERNAME is of type abstract-username."
   (if (typep username 'abstract-username)
       username
       (apply #'make-instance 'username :username username initargs)))
 
+(defmethod initialize-instance ((instance identifier)
+                                &rest initargs &key &allow-other-keys)
+  (setf (getf initargs :username) 
+        (make-username (getf initargs :username)))
+  (apply #'call-next-method instance initargs))
 
 (in-package :nisp-system)
 (defpackage #:nispbot
