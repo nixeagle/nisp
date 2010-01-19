@@ -37,7 +37,7 @@ NICK has several constraints.
              :initarg :nick
              :initarg :nickname
              :initform (error "Nickname must be provided.")
-             :documentation "IRC user nickname"))))
+             :documentation "IRC user nickname")))
 
 ;;; Should be a hostname of some sort, what I'm not positive.
 (defgeneric host (object))
@@ -106,6 +106,23 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 
 (defclass host (abstract-host)
   ())
+
+(defclass host-address (host)
+  ())
+
+(defclass ipv4-host (host-address)
+  ((host :type ipv4-address-string))
+  (:documentation "Your normal host. 127.0.0.1 and so on."))
+
+(defclass ipv6-host (host-address)
+  ())
+
+(defclass host-name (host)
+  ((host :type string)))
+
+(defclass rfc-host-name (host-name)
+  ((host :documentation "Host with very small charset: [a-zA-Z0-9\\\-\\\.]."))
+  (:documentation "More restricted form of hostname, specified in rfc1123."))
 
 (defclass identifier (abstract-identifier)
   ((user :type username)
