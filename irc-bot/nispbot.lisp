@@ -80,6 +80,11 @@ NICK has several constraints.
 
 (defclass abstract-username ()
   ())
+(defclass abstract-nickname ()
+  ())
+(defclass abstract-identifier ()
+  ())
+
 
 (defclass username (abstract-username maximum-length)
   ((user :type username-string
