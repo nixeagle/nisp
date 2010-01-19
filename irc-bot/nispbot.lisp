@@ -127,7 +127,8 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 (defclass identifier (abstract-identifier)
   ((user :type username)
    (nickname :type nickname)
-   (host :type host)))
+   (host :type host))
+  (:documentation "Represents nickname!user@host"))
 
 (defun make-username (username &rest initargs &key &allow-other-keys)
   "Make username instance unless USERNAME is of type abstract-username."
