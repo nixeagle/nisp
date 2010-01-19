@@ -75,8 +75,11 @@ NICK has several constraints.
 (defmethod valid-length-p ((nickname nickname) &optional sequence)
   (call-next-method nickname (or sequence (nickname nickname))))
 
-(defmethod normalize-nickname ((object nickname))
-  (normalize-nickname  (slot-value object 'nickname)))
+(defmethod normalize-nickname ((object abstract-nickname))
+  "Lowercase all ASCII letters in OBJECT.
+
+This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
+  (normalize-nickname (slot-value object 'nickname)))
 
 (defmethod normalize-nickname ((nickname string))
   (string-downcase nickname))
