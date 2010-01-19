@@ -24,6 +24,9 @@
           (export symbol package-name)
           (collect symbol))))
 
+(deftype structure-designator ()
+  '(or symbol structure-class structure-object))
+
 #+sbcl
 (defun dd-name-equal-p (slot name-symbol)
   "Return t if the name of SLOT is eql to NAME-SYMBOL."
