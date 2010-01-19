@@ -86,6 +86,7 @@ NICK has several constraints.
   ((nickname :reader nickname
               :initarg :nickname)))
 
+(defclass abstract-identifier (abstract-nickname abstract-username)
   ())
 
 
