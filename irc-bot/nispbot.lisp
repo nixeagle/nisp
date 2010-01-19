@@ -88,6 +88,11 @@ NICK has several constraints.
          :initform (error "Username must be provided.")))
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
+(defun make-username (username &rest initargs &key &allow-other-keys)
+  (if (typep username 'abstract-username)
+      username
+      (apply #'make-instance 'username :username username initargs)))
+
 (defclass host ()
   ())
 
