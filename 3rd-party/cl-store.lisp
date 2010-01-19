@@ -1,5 +1,8 @@
 ;;; -*- Base: 10; Mode: LISP; Package: (DATABASE :USE LISP); Syntax: Common-Lisp -*-
 
+;;; Modifications made by Nixeagle (c) 2010. Modifications released
+;;; under the same conditions as the original source. 
+
 ;;; SAVE-OBJECT, Version 9X.2 (EXPERIMENTAL, patched),
 ;;; Effective Date: June 1994.
 ;;; Copyright (C) Kerry V. Koitzsch, 1992,1993,1994.
