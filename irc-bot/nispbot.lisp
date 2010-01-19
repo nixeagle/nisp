@@ -30,23 +30,20 @@
 (defclass abstract-identifier (abstract-nickname abstract-username abstract-host)
   ())
 
-(defclass abstract-maximum-length ()
-  ())
 
 (defgeneric maximum-length (object))
 (defgeneric (setf maximum-length) (length object))
 (defgeneric valid-length-p (object &optional sequence))
 
-(defclass maximum-length (abstract-maximum-length)
-  ((maximum-length :type maximum-message-length 
-                   :reader maximum-length
-                   :initarg :length
+(defclass abstract-maximum-length ()
+  ((maximum-length :type positive-fixnum
+                   :accessor maximum-length
                    :initarg :maximum-length
                    :initform (error "Maximum length must be specified.")
                    :documentation "Maximum length a sequence may be.")))
 
-(defmethod (setf maximum-length) ((length integer) (object maximum-length))
-  (setf (slot-value object 'maximum-length) length))
+(defclass maximum-length (abstract-maximum-length)
+  ((maximum-length :type maximum-message-length)))
 
 (defmethod valid-length-p ((length maximum-length) &optional 
                            sequence)
