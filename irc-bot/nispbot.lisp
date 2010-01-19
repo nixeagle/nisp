@@ -21,6 +21,11 @@
   ((nickname :reader nickname
              :initarg :nickname)))
 
+;;; Should be a hostname of some sort, what I'm not positive.
+(defgeneric host (object))
+(defclass abstract-host ()
+  ((host :initarg :host
+         :reader host)))
 
 (defclass abstract-identifier (abstract-nickname abstract-username abstract-host)
   ())
@@ -99,7 +104,7 @@ NICK has several constraints.
          :initform (error "Username must be provided.")))
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
-(defclass host ()
+(defclass host (abstract-host)
   ())
 
 (defclass identifier (abstract-identifier)
