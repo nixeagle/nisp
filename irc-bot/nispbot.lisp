@@ -13,8 +13,11 @@
 
 (defgeneric username (object))
 (defclass abstract-username ()
-  ((user :reader username
-         :initarg :username)))
+  ((user :type string
+         :accessor username 
+         :initarg :username
+         :initarg :user
+         :initform (error "Username must be provided."))))
 
 (defgeneric nickname (object))
 (defgeneric (setf nickname) (nick object)
@@ -93,10 +96,7 @@ NICK has several constraints.
 
 
 (defclass username (abstract-username maximum-length)
-  ((user :type username-string
-         :reader username
-         :initarg :username
-         :initform (error "Username must be provided.")))
+  ((user :type username-string))
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
 (defclass host (abstract-host)
