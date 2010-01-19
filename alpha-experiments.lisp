@@ -27,6 +27,23 @@
 (deftype structure-designator ()
   '(or symbol structure-class structure-object))
 
+(defgeneric object->defstruct-description (object)
+  (:documentation "Convert OBJECT to defstruct-description."))
+(defmethod object->defstruct-description ((object sb-kernel:defstruct-description))
+  "Return identity of OBJECT."
+  object)
+(defmethod object->defstruct-description ((symbol symbol))
+  "Find structure description for SYMBOL.
+
+This implies that SYMBOL actually refers to a structure."
+  (sb-pcl::find-defstruct-description symbol))
+(defmethod object->defstruct-description ((structure-instance structure-object))
+  "Find structure description for STRUCTURE-INSTANCE."
+  (object->defstruct-description (class-of structure-instance)))
+(defmethod object->defstruct-description ((class structure-class))
+  "Find structure description for CLASS"
+  (object->defstruct-description (class-name class)))
+
 #+sbcl
 (defun dd-name-equal-p (slot name-symbol)
   "Return t if the name of SLOT is eql to NAME-SYMBOL."
@@ -36,8 +53,8 @@
 #+sbcl
 (defun structure-slots (structure-designator)
   "List all slots of STRUCTURE-DESIGNATOR."
-  (if (typep structure-designator 'SB-KERNEL:DEFSTRUCT-DESCRIPTION)
-      (sb-vm::dd-slots structure-designator)))
+  (declare (type structure-designator structure-designator))
+  (sb-vm::dd-slots (object->defstruct-description structure-designator)))
 
 ;;;; Testing structure operations
 (defstruct 4-slot-structure a b c d)
