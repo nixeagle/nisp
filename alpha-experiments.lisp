@@ -1,6 +1,7 @@
 (in-package :cl-user)
 (defpackage #:nisp.alpha
-  (:use :common-lisp :iterate))
+  (:use :common-lisp :iterate)
+  (:nicknames :alpha :a))
 (in-package :nisp.alpha)
 
 ;; Idea for (documentation symbol 'type) taken from slime.lisp
