@@ -106,10 +106,7 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
   ())
 
 (defclass identifier (abstract-identifier)
-  ((user :type username
-         :initarg :user
-         :initarg :username
-         :initform (error "Username must be provided."))
+  ((user :type username)
    (nickname :type nickname)
    (host :type host)))
 
