@@ -89,6 +89,7 @@ NICK has several constraints.
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
 (defun make-username (username &rest initargs &key &allow-other-keys)
+  "Make username instance unless USERNAME is of type abstract-username."
   (if (typep username 'abstract-username)
       username
       (apply #'make-instance 'username :username username initargs)))
