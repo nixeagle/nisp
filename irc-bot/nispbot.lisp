@@ -78,7 +78,10 @@ NICK has several constraints.
 (defclass message ()
   ())
 
-(defclass username (maximum-length)
+(defclass abstract-username ()
+  ())
+
+(defclass username (abstract-username maximum-length)
   ((user :type username-string
          :reader username
          :initarg :username
