@@ -522,7 +522,7 @@ NEW MACINTOSH CHANGES:
 
 #+aclpc
 
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
   (in-package 'DATABASE :nicknames '(DB) :use '(LISP))
 
@@ -536,7 +536,7 @@ NEW MACINTOSH CHANGES:
   ) ;; end aclpc eval-when...
 
 #+cmu
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
   ;;kr010205: replaced the following (in-package ) with a (defpackage ) :
   ;;(in-package 'database :nicknames '(db) :use '(PCL LISP))
@@ -600,7 +600,7 @@ NEW MACINTOSH CHANGES:
   ) ;; end of sbcl evalwhen....
 
 #+lucid
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (setf (symbol-function 'hash-table-rehash-size)
         #'lcl::hash-table-rehash-size)
   (setf (symbol-function 'hash-table-size) #'lcl::hash-table-size)
@@ -621,7 +621,7 @@ NEW MACINTOSH CHANGES:
   (in-package "DATABASE" :nicknames '(DB) :use '(PCL LISP)))
 
 #+pcl
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (when (equal pcl::*pcl-system-date* "July 92 PCL (beta)")
     (pushnew :july-pcl *features*))
   (when (equal pcl::*pcl-system-date* "March 92 PCL (3a)")
@@ -639,12 +639,12 @@ NEW MACINTOSH CHANGES:
 
 ;;; KOT added this, made some directives simpler below.
 #+(or allegro-v4.0 allegro-v4.1 allegro-v4.2)
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (pushnew :allegro-v4 *features*))
 
 ;;; KOT first cut, this might not be portable but should work.  See if
 ;;; function-lambda-expression is defined, and if so can use it below.
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (let ((apropos (apropos-list "FUNCTION-LAMBDA-EXPRESSION"
                                (find-package :user))))
     (when (some #'fboundp apropos)
@@ -659,14 +659,14 @@ NEW MACINTOSH CHANGES:
 ;;; Tracing defun eval-when follows....
 
 #+ignore
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   
   (shadow '(defun))
 
 (in-package :DATABASE :nicknames '(DB) :use '(LISP))
 
   (defmacro DEFUN (name &rest args)
-    `(eval-when (load eval compile)
+    `(eval-when (:compile-toplevel :load-toplevel :execute)
        (when (fboundp ',name)
 	     (format t "Warning: ~s was already defined!~%" ',name))
        (format t "now compiling: ~a.~%" ',name)
@@ -674,7 +674,7 @@ NEW MACINTOSH CHANGES:
 
 #+ignore
   (defmacro DEFMETHOD (name &rest args)
-    `(eval-when (load eval compile)
+    `(eval-when (:compile-toplevel :load-toplevel :execute)
        (when (fboundp ',name)
 	     (format t "Warning: METHOD ~s was already defined!~%" ',name))
        (format t "now compiling method: ~a.~%" ',name)
@@ -701,7 +701,7 @@ the saved object on reload.")
 (defvar *list-hash-table* nil "Gets initialized by function INIT-LIST-HTAB.")
 
 #-akcl ;;; new, AKCL (PCL defclass) doesnt like this one!
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (setf *print-circle* t)
   )
 
@@ -743,7 +743,7 @@ the saved object on reload.")
 
 
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   ;; KOT -- older version of this had the defvar at top level, and the (if)
   ;; form in the eval-when.  Allegro V4 (at least) bombed on this, saying
   ;; *allow-defstruct-save* didn't yet exist in this case.  This fixes it,
@@ -1006,7 +1006,7 @@ the saved object on reload.")
 
 ;;; KOT wrapped eval-when around -- think it makes later compilation cleaner
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   (setf *vendor-defstruct-slot-descriptors-function*
     #+symbolics #'(lambda(name)
                     (let ((desc (get-defstruct-descriptor name)))
@@ -1044,7 +1044,7 @@ the saved object on reload.")
 
 ;;; KOT wrapped eval-when around -- think it makes later compilation cleaner
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   (setf *vendor-defstruct-predicate-function*
     #+aclpc #'(lambda (x)(and (not (hash-table-p x))
                               (typep x 'structure-object)))
@@ -1402,13 +1402,13 @@ the saved object on reload.")
 (setf *test-for-circularities* T)
 
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   (when *test-for-circularities* (pushnew :CIRCULAR-TESTS *FEATURES*)))
 
 ;;;======================================================================
 
 #+akcl
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   ;; HASH-TABLE-SIZE does not seem to exist in AKCL!
   (when (not (fboundp 'hash-table-size))
     (defun HASH-TABLE-SIZE (htab)
@@ -1439,7 +1439,7 @@ the saved object on reload.")
 ;;; lispm has it, CMU has it.
 
 #-(or cmu lispm aclpc)
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   
   #+need-row-major-aref 
   (defun ROW-MAJOR-AREF (array index)
@@ -1671,7 +1671,7 @@ the saved object on reload.")
 
 #-lucid
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   
   (defun LONG-LIST-DUMP-FORM (instance)
     ""
@@ -2080,7 +2080,7 @@ the saved object on reload.")
 ;;; MCL 2.0.1 --- see introspective-mop.txt for details! kvk
 
 #+mcl
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   
   (defun CLASS-SLOTNAMES (class-object)
     "Calls the clos internal function to compute class slot names."
@@ -2230,7 +2230,7 @@ the saved object on reload.")
 ;;; A CLOS eval-when for Allegro PC:
 
 #+clos
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   
   #-aclpc
   (defun %CLASS-NAME (x)
@@ -2261,7 +2261,7 @@ the saved object on reload.")
 
 #+pcl
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   
   (defvar *the-pcl-standard-class-name* 'pcl::standard-class)
 
@@ -2421,7 +2421,7 @@ the saved object on reload.")
             (list (list :metaclass meta))))))
 
   #+cmu
-  (eval-when (load eval compile)
+  (eval-when (:compile-toplevel :load-toplevel :execute)
 
     (defun INSTANCE-P (x)
       "Predicate for CMU Common Lisp: detects instances."
@@ -2642,7 +2642,7 @@ the saved object on reload.")
   (class-slots class-object))
 
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   
   (defun GET-SLOT-COMPONENT (key slot-object)
     ""
@@ -3218,7 +3218,7 @@ the saved object on reload.")
 ;;; Now, the Symbolics....
 
 #+lispm
-(eval-when  (load eval compile)
+(eval-when  (:compile-toplevel :load-toplevel :execute)
 
   (defun HASH-TABLE-SIZE (x)
     (scl:send x :size))
@@ -3271,14 +3271,14 @@ the saved object on reload.")
 ;;; KOT wrapped eval-when around this -- in Allegro-V4 at least, allowed the
 ;;; succeeding (setf (symbol-function 'structurep)) to compile (???).
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   (defun STRUCTURE-P (X)
     "Predicate: returns T if x is a structure instance!"
     (funcall *vendor-defstruct-predicate-function* x)))
 
 #-aclpc
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   (setf (symbol-function 'structurep) #'structure-p)
   ) ;; end of eval-when....
 
@@ -3302,7 +3302,7 @@ the saved object on reload.")
 
 ;;; KOT wrapped eval-when around this, in Allegro-V4 allows better compilation
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   ;;kr010615: this fn is called quite a bit further below in this file.
   ;; generally, this all seems a bit cumbersome, as it is not immediately apparent
   ;; where those generated functions came from when debugging.
@@ -3630,7 +3630,7 @@ the saved object on reload.")
 ;;; Vendor independent, PCL/CLOS independent CLOS functions.
 
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
 
   (defun %GET-SLOT-INITFORM (S)
     "Method to create the initform pair, if there is an initform value!"
@@ -3849,7 +3849,7 @@ the saved object on reload.")
 ;;; Functions and Generic Functions.
 
 #+mcl
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
   (defun GET-SLOT-NAME (s)
     (ccl::slot-definition-name s))
@@ -3876,7 +3876,7 @@ the saved object on reload.")
   ) ;; end of MCL function & generic function eval-when!
 
 #+allegro-v4.0
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
   (defun HASH-TABLE-TEST (htab)
     #'eql)
@@ -3931,7 +3931,7 @@ the saved object on reload.")
 #|;;;kr010602: why the hell would this outdated crap fire ??? seems to mess up
 ;;; the hash-table stuff, so it is better to comment it out totally !
 #+cmu
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (when (not (fboundp 'cl::hash-table-test))
     (defun HASH-TABLE-TEST (htab)
       ""
@@ -3947,7 +3947,7 @@ the saved object on reload.")
 |#
 
 #+akcl
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (when (not (fboundp 'hash-table-test))
     (defun HASH-TABLE-TEST (htab)
       ""
@@ -4036,7 +4036,7 @@ the saved object on reload.")
 
 #+clos 
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
 
   (defun CLASSP (x)
     "Predicate, determines whether the object x is a class object."
@@ -4061,7 +4061,7 @@ the saved object on reload.")
   #+allegro-v4.0
   ;; KOT this eval-when is redundant -- maybe just progn?  That's obscure
   ;; questions of what should be at top-level and what shouldn't ...
-  (eval-when (load eval compile)
+  (eval-when (:compile-toplevel :load-toplevel :execute)
 
     (defmethod CLOS::ALLOCATE-INSTANCE ((self clos:structure-class) 
                                         &rest initargs)
@@ -4084,7 +4084,7 @@ the saved object on reload.")
 
   #-(or akcl mcl pcl) 
   (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-             #-(or :SBCL :CMU18) (load eval compile)
+             #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
 
     (defun GET-CLASS-DEFAULT-INITARGS (class)
       "Gets the default-initargs out of the class object."
@@ -4116,7 +4116,7 @@ the saved object on reload.")
   ;; *** Allegro non-MCL eval-when (e.g. on Suns.) ***
 
   #+excl
-  (eval-when (load eval compile)
+  (eval-when (:compile-toplevel :load-toplevel :execute)
 
     (defun GET-SLOT-READERS (slot-object)
       (clos::slotd-readers slot-object))
@@ -4180,7 +4180,7 @@ the saved object on reload.")
   ;; *** Lisp Machine Genera 8.x CLOS eval-when. ***
 
   #+lispm
-  (eval-when (load eval compile)
+  (eval-when (:compile-toplevel :load-toplevel :execute)
 
     (defun ALL-SLOTS (instance)
       "Gets all the slots from the instances class, whether inherited or not."
@@ -4263,7 +4263,7 @@ the saved object on reload.")
   ;; Lucid CLOS eval when...
 
   #+lucid
-  (eval-when (load eval compile)
+  (eval-when (:compile-toplevel :load-toplevel :execute)
 
     (defun GET-SUPERCLASS-NAMES (class)
       "Expects the object returned by FIND-CLASS."
@@ -4344,7 +4344,7 @@ the saved object on reload.")
            "~%(EVAL-WHEN (:COMPILE-TOPLEVEL :LOAD-TOPLEVEL :EXECUTE)
                (DATABASE:MAKESYMS '~A ~A ~A ~s))~%"
            #-(or :SBCL :CMU18)
-           "~%(EVAL-WHEN (LOAD EVAL COMPILE)
+           "~%(EVAL-WHEN (:COMPILE-TOPLEVEL :LOAD-TOPLEVEL :EXECUTE)
                (DATABASE:MAKESYMS '~A ~A ~A ~s))~%"
            symbol min max pkg-name)))
 
@@ -4474,7 +4474,7 @@ the saved object on reload.")
   (and (listp x)(null (listp (cdr x)))))
 
 #-kcl
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
   (defun ALL-INSTANCE-LIST-P (x)
     "Predicate for a list containing only instances!"
@@ -5002,7 +5002,7 @@ DATABASE >
 ;;; CLOS/PCL independent class accessor methods.
 
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
 
   (defun DO-SPECIALIZER (spec)
     "Map objects to class names."
@@ -5045,7 +5045,7 @@ DATABASE >
 
 #+clos 
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
 
   ;; *** Dont-care vendor CLOS definitions. ***
 
@@ -5078,7 +5078,7 @@ DATABASE >
 ;;;kr010120: added SBCL support
 #-(or lispm :mcl akcl pcl sbcl)
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
 
   (defun GET-SLOT-TYPE (S)
     "Method to get the type from a standard slot:
@@ -5151,7 +5151,7 @@ DATABASE >
 ;;; Everything except AKCL.
 
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
 
   (defun GET-CLASS-SUPERCLASSES (class)
     "Returns a list of the NAMES (symbol list) of the direct superclasses of 
@@ -5322,7 +5322,7 @@ DATABASE >
 ;;; CLOS/PCL independent class accessor methods.
 
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
 
   (defun FIND-GENERIC-FUNCTION (name)
     "A function given the name of a supposed generic function,
@@ -5533,7 +5533,7 @@ returns slotname (as keyword)/slot value pairs as a property-list."
 
 #-lucid
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
 
   (defun GET-DEFSTRUCT-SLOT-LOCATION (i name)
     ""
@@ -5809,7 +5809,7 @@ returns slotname (as keyword)/slot value pairs as a property-list."
     result-sequence))
 
 #+lucid
-(eval-when (load eval compile)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (unless (fboundp 'map-into) ;;; you have the lucid patch, use their definition.
 (defun MAP-INTO (result-sequence function &rest sequences)
   "Part of CLtL2: only symbolics and allegro and MCL have it...."
@@ -5875,7 +5875,7 @@ returns slotname (as keyword)/slot value pairs as a property-list."
 ;;;kr010615: question:  why would this not be called higher up, a lot closer to the definition ?
 
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
   (make-defstruct-access-functions)
   )
 
@@ -5980,7 +5980,7 @@ returns slotname (as keyword)/slot value pairs as a property-list."
 
 #-(or akcl)
 (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-	   #-(or :SBCL :CMU18) (load eval compile)
+	   #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
            
   ;; set the following to an existing directory ! :
   (defvar *nasty-path*
@@ -6037,7 +6037,7 @@ returns slotname (as keyword)/slot value pairs as a property-list."
   
   #+(or pcl clos :SBCL)
   (eval-when #+(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
-             #-(or :SBCL :CMU18) (load eval compile)
+             #-(or :SBCL :CMU18) (:compile-toplevel :load-toplevel :execute)
              
      ;; *** NASTY TEST SUITE: A collection of self-referencing consolas that
      ;; put this code to the test!
