@@ -11,13 +11,27 @@
         (collect symbol)
         (unintern symbol from-package)))
 
+(defgeneric username (object))
+(defclass abstract-username ()
+  ((user :reader username
+         :initarg :username)))
 
+(defgeneric nickname (object))
+(defclass abstract-nickname ()
+  ((nickname :reader nickname
+             :initarg :nickname)))
+
+
+(defclass abstract-identifier (abstract-nickname abstract-username abstract-host)
+  ())
+
+(defclass abstract-maximum-length ()
+  ())
 
 (defgeneric maximum-length (object))
 (defgeneric (setf maximum-length) (length object))
 (defgeneric valid-length-p (object &optional sequence))
-(defclass abstract-maximum-length ()
-  ())
+
 (defclass maximum-length (abstract-maximum-length)
   ((maximum-length :type maximum-message-length 
                    :reader maximum-length
@@ -33,7 +47,6 @@
                            sequence)
   (length<= sequence (maximum-length length)))
 
-(defgeneric nickname (object))
 (defgeneric (setf nickname) (nick object)
   (:documentation
    "Set NICK on OBJECT.
@@ -47,7 +60,7 @@ NICK has several constraints.
 
 (defgeneric normalize-nickname (object))
 
-(defclass nickname (maximum-length)
+(defclass nickname (abstract-nickname maximum-length)
   ((nickname :type nickname-string
              :reader nickname
              :initarg :nick
@@ -78,17 +91,6 @@ NICK has several constraints.
 (defclass message ()
   ())
 
-(defclass abstract-username ()
-  ((user :reader username
-         :initarg :username)))
-
-(defclass abstract-nickname ()
-  ((nickname :reader nickname
-             :initarg :nickname)))
-
-(defclass abstract-identifier (abstract-nickname abstract-username)
-  ())
-
 
 (defclass username (abstract-username maximum-length)
   ((user :type username-string
@@ -104,7 +106,8 @@ NICK has several constraints.
   ((user :type username
          :initarg :user
          :initarg :username
-         :initform (error "Username must be provided."))))
+         :initform (error "Username must be provided."))
+   (nickname :type nickname)))
 
 (defun make-username (username &rest initargs &key &allow-other-keys)
   "Make username instance unless USERNAME is of type abstract-username."
