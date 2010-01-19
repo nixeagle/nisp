@@ -1,10 +1,12 @@
 ;;; -*- Base: 10; Mode: LISP; Package: (DATABASE :USE LISP); Syntax: Common-Lisp -*-
 
-;;; SAVE-OBJECT, Version 10.2
-;;; Effective Date: June 2001
-;;; Copyright (C) Kerry V. Koitzsch, 1992,1993,1994,1995.  kerry@crl.com
-;;; New work and beautification by Kevin Thompson, NASA Ames Research Center.  kthompso@ptolemy.arc.nasa.gov
-;;; Additional fixes, and porting to modern CMUCL and SBCL by kr (Markus Krummenacker kr@n-a-n-o.com)
+;;; SAVE-OBJECT, Version 10.2 Effective Date: June 2001 Copyright (C)
+;;; Kerry V. Koitzsch, 1992,1993,1994,1995.  kerry@crl.com New work and
+;;; beautification by Kevin Thompson, NASA Ames Research Center.
+;;; kthompso@ptolemy.arc.nasa.gov Additional fixes, and porting to
+;;; modern CMUCL and SBCL by kr (Markus Krummenacker kr@n-a-n-o.com)
+;;; More fixes by Nixeagle (C) 2010. Fixes released under same license
+;;; as original source.
 
 ;;; the version info is stored in db:*save-object-system-date*
 
