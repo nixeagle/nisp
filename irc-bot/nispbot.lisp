@@ -45,8 +45,7 @@
 (defclass maximum-length (abstract-maximum-length)
   ((maximum-length :type maximum-message-length)))
 
-(defmethod valid-length-p ((length maximum-length) &optional 
-                           sequence)
+(defmethod valid-length-p ((length abstract-maximum-length) &optional sequence)
   (length<= sequence (maximum-length length)))
 
 (defgeneric (setf nickname) (nick object)
