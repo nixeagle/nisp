@@ -80,11 +80,11 @@ NICK has several constraints.
 
 (defclass abstract-username ()
   ((user :reader username
-          :initarg :username)))
+         :initarg :username)))
 
 (defclass abstract-nickname ()
   ((nickname :reader nickname
-              :initarg :nickname)))
+             :initarg :nickname)))
 
 (defclass abstract-identifier (abstract-nickname abstract-username)
   ())
@@ -97,14 +97,15 @@ NICK has several constraints.
          :initform (error "Username must be provided.")))
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
+(defclass host ()
+  ())
+
 (defun make-username (username &rest initargs &key &allow-other-keys)
   "Make username instance unless USERNAME is of type abstract-username."
   (if (typep username 'abstract-username)
       username
       (apply #'make-instance 'username :username username initargs)))
 
-(defclass host ()
-  ())
 
 (in-package :nisp-system)
 (defpackage #:nispbot
