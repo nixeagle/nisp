@@ -112,7 +112,8 @@ NICK has several constraints.
          :initarg :user
          :initarg :username
          :initform (error "Username must be provided."))
-   (nickname :type nickname)))
+   (nickname :type nickname)
+   (host :type host)))
 
 (defun make-username (username &rest initargs &key &allow-other-keys)
   "Make username instance unless USERNAME is of type abstract-username."
