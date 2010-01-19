@@ -13,7 +13,7 @@
 
 (defgeneric username (object))
 (defclass abstract-username ()
-  ((user :type string
+  ((user :type (or string abstract-username)
          :accessor username 
          :initarg :username
          :initarg :user
@@ -32,7 +32,7 @@ NICK has several constraints.
     slot on OBJECT."))
 
 (defclass abstract-nickname ()
-  ((nickname :type string
+  ((nickname :type (or string abstract-nickname) 
              :accessor nickname
              :initarg :nick
              :initarg :nickname
