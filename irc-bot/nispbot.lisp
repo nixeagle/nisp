@@ -43,7 +43,7 @@ NICK has several constraints.
 (defgeneric host (object))
 (defclass abstract-host ()
   ((host :initarg :host
-         :reader host)))
+         :accessor host)))
 
 (defclass abstract-identifier (abstract-nickname abstract-username abstract-host)
   ())
