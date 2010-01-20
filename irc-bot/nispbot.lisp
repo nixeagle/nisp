@@ -1,6 +1,6 @@
 (in-package :cl-user)
 (defpackage #:nisp.irc
-  (:use :common-lisp :iterate :metabang-bind :nisp.irc-types))
+  (:use :common-lisp :iterate :metabang-bind :nisp.irc-types :nisp.util-types))
 (in-package :nisp.irc)
 
 (defgeneric username (object))
