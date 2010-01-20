@@ -40,6 +40,14 @@ This implies that SYMBOL actually refers to a structure."
   (declare (type structure-designator structure-designator))
   (sb-vm::dd-slots (object->defstruct-description structure-designator)))
 
+(defun structure-slot-by-name (structure-designator slot-name)
+  "Return description of SLOT-NAME in STRUCTURE-DESIGNATOR."
+  (declare (type structure-designator structure-designator)
+           (type symbol slot-name))
+  (iter (for slot :in (structure-slots structure-designator))
+        (finding (the sb-kernel:defstruct-slot-description slot)
+                 :such-that (dd-name-equal-p slot slot-name))))
+
 ;;;; Testing structure operations
 (defstruct 4-slot-structure a b c d)
 
