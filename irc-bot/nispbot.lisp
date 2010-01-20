@@ -56,7 +56,8 @@ NICK has several constraints.
                    :documentation "Maximum length a sequence may be.")))
 
 (defclass maximum-message-length (maximum-length)
-  ((maximum-length :type maximum-message-length)))
+  ((maximum-length :type (integer 1 512)))
+  (:default-initargs :maximum-length 512))
 
 (defclass nickname (abstract-nickname maximum-message-length)
   ((nickname :type nickname-string))
