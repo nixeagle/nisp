@@ -20,6 +20,7 @@
   "Find structure description for SYMBOL.
 
 This implies that SYMBOL actually refers to a structure."
+  (declare (type class-symbol symbol))
   (sb-pcl::find-defstruct-description symbol))
 (defmethod object->defstruct-description ((structure-instance structure-object))
   "Find structure description for STRUCTURE-INSTANCE."
@@ -43,7 +44,7 @@ This implies that SYMBOL actually refers to a structure."
 (defun structure-slot-by-name (structure-designator slot-name)
   "Return description of SLOT-NAME in STRUCTURE-DESIGNATOR."
   (declare (type structure-designator structure-designator)
-           (type symbol slot-name))
+           (type class-symbol slot-name))
   (iter (for slot :in (structure-slots structure-designator))
         (finding (the sb-kernel:defstruct-slot-description slot)
                  :such-that (dd-name-equal-p slot slot-name))))
