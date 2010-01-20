@@ -1,5 +1,5 @@
 (defpackage #:nisp.irc-types
-  (:use :common-lisp :iterate))
+  (:use :common-lisp :iterate :nisp.util-types))
 
 (in-package :nisp.irc-types)
 
@@ -9,26 +9,9 @@
                  (format nil "~S:~%~A" ',type 
                          (documentation ',type 'type)))))
 
-;; Idea for (documentation symbol 'type) taken from slime.lisp
-(defun type-specifier-p (symbol)
-  "True if SYMBOL is a type."
-  (or (documentation symbol 'type)
-      #+:sbcl
-      (multiple-value-bind (arglist exists)
-          (sb-introspect:deftype-lambda-list symbol)
-        (values exists arglist))))
-
-(deftype type-specifier ()
-  "Type specifier that can be used with TYPEP"
-  '(satisfies type-specifier-p))
-
-(deftype positive-fixnum ()
-  "A fixnum"
-  `(integer 1 ,most-positive-fixnum))
 
 (deftype ipv4-octet ()
   `(integer 0 255))
-
 
 
 (defun length<= (sequence upto-count)
