@@ -22,6 +22,7 @@ NICK has several constraints.
   - Type of the second character on must be NICKNAME-CHARACTER.
   - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
     slot on OBJECT."))
+(defgeneric normalize-nickname (object))
 
 (defclass abstract-nickname ()
   ((nickname :type (or string abstract-nickname) 
@@ -57,14 +58,12 @@ NICK has several constraints.
 (defclass maximum-message-length (maximum-length)
   ((maximum-length :type maximum-message-length)))
 
-(defmethod valid-length-p ((length maximum-length) &optional sequence)
-  (length<= sequence (maximum-length length)))
-
-(defgeneric normalize-nickname (object))
-
 (defclass nickname (abstract-nickname maximum-message-length)
   ((nickname :type nickname-string))
   (:default-initargs :maximum-length 9)) ;Based on rfc2812
+
+(defmethod valid-length-p ((length maximum-length) &optional sequence)
+  (length<= sequence (maximum-length length)))
 
 (defmethod valid-length-p ((nickname nickname) &optional sequence)
   (call-next-method nickname (or sequence (nickname nickname))))
@@ -81,15 +80,6 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 (defmethod (setf nickname) ((nickname string) (object nickname))
   (assert (valid-length-p object nickname))
   (setf (slot-value object 'nickname) nickname))
-
-(defclass channel ()
-  ())
-
-(defclass mode ()
-  ())
-
-(defclass message ()
-  ())
 
 (defclass username (abstract-username maximum-message-length)
   ((user :type username-string))
@@ -148,6 +138,15 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
   (setf (getf initargs :host)
         (make-host (getf initargs :host)))
   (apply #'call-next-method instance initargs))
+
+(defclass channel ()
+  ())
+
+(defclass mode ()
+  ())
+
+(defclass message ()
+  ())
 
 (in-package :nisp-system)
 (defpackage #:nispbot
