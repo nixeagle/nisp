@@ -29,13 +29,11 @@ This implies that SYMBOL actually refers to a structure."
   "Find structure description for CLASS"
   (object->defstruct-description (class-name class)))
 
-#+sbcl
 (defun dd-name-equal-p (slot name-symbol)
   "Return t if the name of SLOT is eql to NAME-SYMBOL."
   (eql (sb-kernel:dsd-name slot) name-symbol))
 
 ;;; make work with arbitrary designator?
-#+sbcl
 (defun structure-slots (structure-designator)
   "List all slots of STRUCTURE-DESIGNATOR."
   (declare (type structure-designator structure-designator))
