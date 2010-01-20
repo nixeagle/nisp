@@ -4,13 +4,6 @@
   (:nicknames :alpha :a))
 (in-package :nisp.alpha)
 
-(defun export-some-internals (package-name)
-  (iter (for (symbol state) :in-packages package-name :having-access (:internal))
-        (when (or (type-specifier-p symbol)
-                  (fboundp symbol))
-          (export symbol package-name)
-          (collect symbol))))
-
 (defgeneric object->defstruct-description (object)
   (:documentation "Convert OBJECT to defstruct-description."))
 (defmethod object->defstruct-description ((object sb-kernel:defstruct-description))
