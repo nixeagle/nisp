@@ -1,21 +1,8 @@
 (in-package :cl-user)
 (defpackage #:nisp.alpha
-  (:use :common-lisp :iterate)
+  (:use :common-lisp :iterate :nisp.util-types)
   (:nicknames :alpha :a))
 (in-package :nisp.alpha)
-
-;; Idea for (documentation symbol 'type) taken from slime.lisp
-(defun type-specifier-p (symbol)
-  "True if SYMBOL is a type."
-  (or (documentation symbol 'type)
-      #+:sbcl
-      (multiple-value-bind (arglist exists)
-          (sb-introspect:deftype-lambda-list symbol)
-        (values exists arglist))))
-
-(deftype type-specifier ()
-  "Type specifier that can be used with TYPEP"
-  '(satisfies type-specifier-p))
 
 (defun export-some-internals (package-name)
   (iter (for (symbol state) :in-packages package-name :having-access (:internal))
@@ -23,9 +10,6 @@
                   (fboundp symbol))
           (export symbol package-name)
           (collect symbol))))
-
-(deftype structure-designator ()
-  '(or symbol structure-class structure-object))
 
 (defgeneric object->defstruct-description (object)
   (:documentation "Convert OBJECT to defstruct-description."))
