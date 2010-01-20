@@ -11,11 +11,12 @@
 ;;;
 ;;; Copying/distribution/modification are all allowed by original author.
 ;;; See: http://www-cgi.cs.cmu.edu/afs/cs/project/ai-repository/ai/lang/lisp/code/ext/alerts/0.html
-
-(in-package "ALERTS")
-(provide "ALERTS")
-
-(export '(set-alert-level set-alert-stream alert query-user))
+(in-package :cl-user)
+(defpackage #:nisp.alerts
+  (:use :common-lisp)
+  (:nicknames :alerts)
+  (:export :set-alert-level :set-alert-stream :alert :query-user))
+(in-package :nisp.alerts)
 
 ;;; ********************************
 ;;; Alert Functions ****************
