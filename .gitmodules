@@ -22,3 +22,6 @@
 [submodule "hu.dwim.defclass-star"]
 	path = hu.dwim.defclass-star
 	url = ../hu.dwim.defclass-star
+[submodule "nisp.util"]
+	path = nisp.util
+	url = ../nisp.util

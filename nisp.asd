@@ -41,6 +41,7 @@
                :cl-ppcre
                :nistilities
                :metabang-bind
+               :nisp.util
                :nisp.ldap
                :nisp.8b-ldap
                :cl-irc
