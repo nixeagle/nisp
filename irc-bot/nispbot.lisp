@@ -47,22 +47,22 @@ NICK has several constraints.
 (defgeneric (setf maximum-length) (length object))
 (defgeneric valid-length-p (object &optional sequence))
 
-(defclass abstract-maximum-length ()
+(defclass maximum-length ()
   ((maximum-length :type positive-fixnum
                    :accessor maximum-length
                    :initarg :maximum-length
                    :initform (error "Maximum length must be specified.")
                    :documentation "Maximum length a sequence may be.")))
 
-(defclass maximum-length (abstract-maximum-length)
+(defclass maximum-message-length (maximum-length)
   ((maximum-length :type maximum-message-length)))
 
-(defmethod valid-length-p ((length abstract-maximum-length) &optional sequence)
+(defmethod valid-length-p ((length maximum-length) &optional sequence)
   (length<= sequence (maximum-length length)))
 
 (defgeneric normalize-nickname (object))
 
-(defclass nickname (abstract-nickname maximum-length)
+(defclass nickname (abstract-nickname maximum-message-length)
   ((nickname :type nickname-string))
   (:default-initargs :maximum-length 9)) ;Based on rfc2812
 
@@ -91,12 +91,11 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 (defclass message ()
   ())
 
-
-(defclass username (abstract-username maximum-length)
+(defclass username (abstract-username maximum-message-length)
   ((user :type username-string))
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
-(defclass host (abstract-host)
+(defclass host (abstract-host maximum-message-length)
   ())
 
 (defclass host-address (host)
