@@ -11,12 +11,15 @@
 ;;;
 ;;; Copying/distribution/modification are all allowed by original author.
 ;;; See: http://www-cgi.cs.cmu.edu/afs/cs/project/ai-repository/ai/lang/lisp/code/ext/alerts/0.html
+;;;
+;;; Modifications made to make this compile on sbcl by James S.
+;;; Copyright (C) 2010, released under the same terms as original author.
+
 (in-package :cl-user)
-(defpackage #:nisp.alerts
+(defpackage #:alerts
   (:use :common-lisp)
-  (:nicknames :alerts)
   (:export :set-alert-level :set-alert-stream :alert :query-user))
-(in-package :nisp.alerts)
+(in-package :alerts)
 
 ;;; ********************************
 ;;; Alert Functions ****************
