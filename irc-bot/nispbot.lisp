@@ -198,7 +198,7 @@ a very friendly bot."
 This is a single character, usually a symbol that the bot responds
 to. This class will signal an error if a comchar is not of the type
 valid-comchar.")
-  (:default-initargs :comchar #\,))
+  (:default-initargs :comchar nispbot-config::*comchar*))
 
 (defmethod (setf comchar) ((char string) (object comchar))
   (declare (type (base-string 1) char))
