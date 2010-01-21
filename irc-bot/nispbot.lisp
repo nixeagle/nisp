@@ -54,7 +54,11 @@ NICK has several constraints.
   ((user :type abstract-username)
    (nickname :type abstract-nickname)
    (host :type abstract-host)))
-
+(defmethod convert->string ((object abstract-identifier))
+  (format nil "~A!~A@~A"
+          (nickname (nickname object))
+          (username (username object))
+          (host (host object))))
 
 (defgeneric maximum-length (object))
 (defgeneric (setf maximum-length) (length object))
