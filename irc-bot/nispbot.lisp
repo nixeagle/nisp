@@ -89,7 +89,7 @@ NICK has several constraints.
   "Lowercase all ASCII letters in OBJECT.
 
 This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
-  (normalize-nickname (slot-value object 'nickname)))
+  (normalize-nickname (nickname object)))
 
 (defmethod normalize-nickname ((nickname string))
   (string-downcase nickname))
