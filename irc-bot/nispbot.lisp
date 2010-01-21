@@ -2,7 +2,19 @@
 (defpackage #:nisp.irc
   (:use :common-lisp :iterate :metabang-bind :nisp.irc-types :nisp.util-types))
 (in-package :nisp.irc)
+;;; General generics
+(defgeneric convert->string (object)
+  ;; Methods specializing on this generic may cease to exist at any moment.
+  ;; This exists for prototyping only atm.
+  ;;
+  ;; An interesting thought is to have this or some other method become
+  ;; a setf'able place such that (setf (convert->string OBJECT) "some
+  ;; string") would correctly store the contents of "some string" in
+  ;; OBJECT.
+  (:documentation "Convert OBJECT to a string representation.
+This is completely unrelated to the lisp reader."))
 
+;;;
 (defgeneric username (object))
 (defclass abstract-username ()
   ((user :type (or string abstract-username)
