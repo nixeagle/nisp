@@ -371,3 +371,13 @@ valid-comchar.")
   (sleep 3)
   (irc:join nispbot::*freenode* "#botters")
   (nispbot::reset-command-hook nispbot::*freenode*))
+
+(defvar *sonic*)
+(defun start-sonic-instance ()
+  (setq nispbot::*sonic*
+        (irc:connect :connection-type 'nispbot::irc-bot
+                     :nickname "nisp"
+                     :server "trogdor.57o9.net"))
+  (irc:start-background-message-handler *sonic*)
+  (sleep 3)
+  (nispbot::reset-command-hook *sonic*))
