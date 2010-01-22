@@ -14,7 +14,10 @@
   (:documentation "Convert OBJECT to a string representation.
 This is completely unrelated to the lisp reader."))
 
-;;;
+;;; Mixins
+(defclass username-mixin () ())
+(defclass host-mixin () ())
+(defclass nickname-mixin () ())
 (defgeneric username (object))
 (defclass abstract-username ()
   ((user :type (or string abstract-username)
