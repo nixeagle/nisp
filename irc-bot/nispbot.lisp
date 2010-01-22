@@ -149,7 +149,7 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
       host
       (apply #'make-instance 'rfc-host :host host initargs)))
 
-(defmethod initialize-instance ((instance identifier)
+#+ () (defmethod initialize-instance ((instance identifier)
                                 &rest initargs &key &allow-other-keys)
   (setf (getf initargs :username) 
         (make-username (getf initargs :username)))
