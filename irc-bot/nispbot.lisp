@@ -16,7 +16,7 @@ This is completely unrelated to the lisp reader."))
 
 ;;; Mixins
 (defclass maximum-length-mixin () ())
-(defclass limited-length-string-mixin (maximum-length-mixin)
+(defclass limited-length-string-mixin (maximum-length-mixin) ()
     (:documentation "Represents objects where it makes sense to call valid-length-p.
 This is the set of all objects that decompose to a string."))
 (defclass username-mixin (limited-length-string-mixin) ())
