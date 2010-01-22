@@ -60,7 +60,10 @@ This is completely unrelated to the lisp reader."))
              :initform (error "Nickname must be provided.")
              :documentation "IRC user nickname")))
 
-;;; Should be a hostname of some sort, what I'm not positive.
+(defclass irc-string-mixin (maximum-length-mixin) ()
+  (:documentation "Represents objects where it makes sense to call valid-length-p.
+This is the set of all simple irc objects that decompose to a string."))
+
 (defclass host (host-mixin)
   ((host :initarg :host
          :accessor host)))
