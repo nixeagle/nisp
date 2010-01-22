@@ -19,6 +19,11 @@ This is completely unrelated to the lisp reader."))
 (defclass host-mixin () ())
 (defclass nickname-mixin () ())
 (defgeneric username (object))
+(defgeneric nickname (object))
+(defgeneric normalize-nickname (object))
+(defgeneric host (object))
+
+
 (defclass abstract-username ()
   ((user :type (or string abstract-username)
          :accessor username 
@@ -26,7 +31,6 @@ This is completely unrelated to the lisp reader."))
          :initarg :user
          :initform (error "Username must be provided."))))
 
-(defgeneric nickname (object))
 (defgeneric (setf nickname) (nick object)
   (:documentation
    "Set NICK on OBJECT.
@@ -37,8 +41,6 @@ NICK has several constraints.
   - Type of the second character on must be NICKNAME-CHARACTER.
   - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
     slot on OBJECT."))
-(defgeneric normalize-nickname (object))
-
 (defclass abstract-nickname ()
   ((nickname :type (or string abstract-nickname) 
              :accessor nickname
@@ -48,7 +50,6 @@ NICK has several constraints.
              :documentation "IRC user nickname")))
 
 ;;; Should be a hostname of some sort, what I'm not positive.
-(defgeneric host (object))
 (defclass abstract-host ()
   ((host :initarg :host
          :accessor host)))
