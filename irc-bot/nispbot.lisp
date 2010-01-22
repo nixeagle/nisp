@@ -49,6 +49,16 @@ This is the set of all objects that decompose to a string."))
   (:method (object &optional sequence)
     (declare (ignore sequence))
     (error "Method on mixin class invalid.")))
+(defgeneric (setf nickname) (nick object)
+  (:documentation
+   "Set NICK on OBJECT.
+
+NICK has several constraints. 
+  - It must be a character string.
+  - It must start with NICKNAME-START-CHARACTER.
+  - Type of the second character on must be NICKNAME-CHARACTER.
+  - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
+    slot on OBJECT."))
 
 (defclass username (username-mixin)
   ((user :type string 
@@ -71,17 +81,6 @@ This is the set of all objects that decompose to a string."))
   ((user :type username)
    (nickname :type nickname)
    (host :type host)))
-
-(defgeneric (setf nickname) (nick object)
-  (:documentation
-   "Set NICK on OBJECT.
-
-NICK has several constraints. 
-  - It must be a character string.
-  - It must start with NICKNAME-START-CHARACTER.
-  - Type of the second character on must be NICKNAME-CHARACTER.
-  - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
-    slot on OBJECT."))
 
 (defmethod convert->string ((object identifier-mixin))
   (format nil "~A!~A@~A"
