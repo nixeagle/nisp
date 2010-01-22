@@ -29,30 +29,28 @@ This is completely unrelated to the lisp reader."))
 (defgeneric (setf maximum-length) (length object))
 (defgeneric valid-length-p (object &optional sequence))
 
-(defclass abstract-username ()
-  ((user :type (or string abstract-username)
+(defclass username (username-mixin)
+  ((user :type string 
          :accessor username 
-         :initarg :username
          :initarg :user
          :initform (error "Username must be provided."))))
 
-(defclass abstract-nickname ()
-  ((nickname :type (or string abstract-nickname) 
+(defclass nickname (nickname-mixin)
+  ((nickname :type string 
              :accessor nickname
              :initarg :nick
-             :initarg :nickname
              :initform (error "Nickname must be provided.")
              :documentation "IRC user nickname")))
 
 ;;; Should be a hostname of some sort, what I'm not positive.
-(defclass abstract-host ()
+(defclass host (host-mixin)
   ((host :initarg :host
          :accessor host)))
 
-(defclass abstract-identifier (abstract-nickname abstract-username abstract-host)
-  ((user :type abstract-username)
-   (nickname :type abstract-nickname)
-   (host :type abstract-host)))
+(defclass identifier (identifier-mixin)
+  ((user :type username)
+   (nickname :type nickname)
+   (host :type host)))
 
 (defgeneric (setf nickname) (nick object)
   (:documentation
@@ -65,7 +63,7 @@ NICK has several constraints.
   - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
     slot on OBJECT."))
 
-(defmethod convert->string ((object abstract-identifier))
+(defmethod convert->string ((object identifier-mixin))
   (format nil "~A!~A@~A"
           (nickname (nickname object))
           (username (username object))
@@ -82,7 +80,7 @@ NICK has several constraints.
   ((maximum-length :type (integer 1 512)))
   (:default-initargs :maximum-length 512))
 
-(defclass nickname (abstract-nickname maximum-message-length)
+(defclass rfc-nickname (nickname maximum-message-length)
   ((nickname :type nickname-string))
   (:default-initargs :maximum-length 9)) ;Based on rfc2812
 
@@ -92,7 +90,7 @@ NICK has several constraints.
 (defmethod valid-length-p ((nickname nickname) &optional sequence)
   (call-next-method nickname (or sequence (nickname nickname))))
 
-(defmethod normalize-nickname ((object abstract-nickname))
+(defmethod normalize-nickname ((object nickname-mixin))
   "Lowercase all ASCII letters in OBJECT.
 
 This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
@@ -105,11 +103,12 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
   (assert (valid-length-p object nickname))
   (setf (slot-value object 'nickname) nickname))
 
-(defclass username (abstract-username maximum-message-length)
+(defclass rfc-username (username maximum-message-length)
   ((user :type username-string))
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
-(defclass host (abstract-host maximum-message-length) ())
+(defclass host (host-mixin) ())
+(defclass rfc-host (host maximum-message-length) ())
 
 (defclass host-address (host) ())
 
@@ -126,7 +125,7 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
   ((host :documentation "Host with very small charset: [a-zA-Z0-9\\\-\\\.]."))
   (:documentation "More restricted form of hostname, specified in rfc1123."))
 
-(defclass identifier (abstract-identifier)
+(defclass rfc-identifier (identifier)
   ((user :type username)
    (nickname :type nickname)
    (host :type host))
@@ -136,19 +135,19 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
   "Make username instance unless USERNAME is of type abstract-username."
   (if (typep username 'abstract-username)
       username
-      (apply #'make-instance 'username :username username initargs)))
+      (apply #'make-instance 'rfc-username :username username initargs)))
 
 (defun make-nickname (nickname &rest initargs &key &allow-other-keys)
   "Make nickname instance unless NICKNAME is of type abstract-nickname."
   (if (typep nickname 'abstract-nickname)
       nickname
-      (apply #'make-instance 'nickname :nickname nickname initargs)))
+      (apply #'make-instance 'rfc-nickname :nickname nickname initargs)))
 
 (defun make-host (host &rest initargs &key &allow-other-keys)
   "Make host instance unless HOST is of type abstract-host."
   (if (typep host 'abstract-host)
       host
-      (apply #'make-instance 'host :host host initargs)))
+      (apply #'make-instance 'rfc-host :host host initargs)))
 
 (defmethod initialize-instance ((instance identifier)
                                 &rest initargs &key &allow-other-keys)
