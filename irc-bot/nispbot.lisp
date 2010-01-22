@@ -31,16 +31,6 @@ This is completely unrelated to the lisp reader."))
          :initarg :user
          :initform (error "Username must be provided."))))
 
-(defgeneric (setf nickname) (nick object)
-  (:documentation
-   "Set NICK on OBJECT.
-
-NICK has several constraints. 
-  - It must be a character string.
-  - It must start with NICKNAME-START-CHARACTER.
-  - Type of the second character on must be NICKNAME-CHARACTER.
-  - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
-    slot on OBJECT."))
 (defclass abstract-nickname ()
   ((nickname :type (or string abstract-nickname) 
              :accessor nickname
@@ -58,6 +48,18 @@ NICK has several constraints.
   ((user :type abstract-username)
    (nickname :type abstract-nickname)
    (host :type abstract-host)))
+
+(defgeneric (setf nickname) (nick object)
+  (:documentation
+   "Set NICK on OBJECT.
+
+NICK has several constraints. 
+  - It must be a character string.
+  - It must start with NICKNAME-START-CHARACTER.
+  - Type of the second character on must be NICKNAME-CHARACTER.
+  - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
+    slot on OBJECT."))
+
 (defmethod convert->string ((object abstract-identifier))
   (format nil "~A!~A@~A"
           (nickname (nickname object))
