@@ -25,7 +25,9 @@ This is completely unrelated to the lisp reader."))
 (defgeneric nickname (object))
 (defgeneric normalize-nickname (object))
 (defgeneric host (object))
-
+(defgeneric maximum-length (object))
+(defgeneric (setf maximum-length) (length object))
+(defgeneric valid-length-p (object &optional sequence))
 
 (defclass abstract-username ()
   ((user :type (or string abstract-username)
@@ -68,10 +70,6 @@ NICK has several constraints.
           (nickname (nickname object))
           (username (username object))
           (host (host object))))
-
-(defgeneric maximum-length (object))
-(defgeneric (setf maximum-length) (length object))
-(defgeneric valid-length-p (object &optional sequence))
 
 (defclass maximum-length ()
   ((maximum-length :type positive-fixnum
