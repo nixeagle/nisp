@@ -136,19 +136,19 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 
 (defun make-username (username &rest initargs &key &allow-other-keys)
   "Make username instance unless USERNAME is of type abstract-username."
-  (if (typep username 'abstract-username)
+  (if (typep username 'rfc-username)
       username
       (apply #'make-instance 'rfc-username :username username initargs)))
 
 (defun make-nickname (nickname &rest initargs &key &allow-other-keys)
   "Make nickname instance unless NICKNAME is of type abstract-nickname."
-  (if (typep nickname 'abstract-nickname)
+  (if (typep nickname 'nickname)
       nickname
       (apply #'make-instance 'rfc-nickname :nickname nickname initargs)))
 
 (defun make-host (host &rest initargs &key &allow-other-keys)
   "Make host instance unless HOST is of type abstract-host."
-  (if (typep host 'abstract-host)
+  (if (typep host 'host)
       host
       (apply #'make-instance 'rfc-host :host host initargs)))
 
