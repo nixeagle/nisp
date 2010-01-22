@@ -15,11 +15,14 @@
 This is completely unrelated to the lisp reader."))
 
 ;;; Mixins
+(defclass maximum-length-mixin () ())
+(defclass limited-length-string-mixin (maximum-length-mixin)
+    (:documentation "Represents objects where it makes sense to call valid-length-p.
+This is the set of all objects that decompose to a string."))
 (defclass username-mixin () ())
 (defclass host-mixin () ())
 (defclass nickname-mixin () ())
 (defclass identifier-mixin (username-mixin host-mixin nickname-mixin) ())
-(defclass maximum-length-mixin () ())
 (defclass channel-mixin () ())
 (defclass mode-mixin () ())
 (defclass message-mixin () ())
@@ -59,10 +62,6 @@ This is completely unrelated to the lisp reader."))
              :initarg :nick
              :initform (error "Nickname must be provided.")
              :documentation "IRC user nickname")))
-
-(defclass irc-string-mixin (maximum-length-mixin) ()
-  (:documentation "Represents objects where it makes sense to call valid-length-p.
-This is the set of all simple irc objects that decompose to a string."))
 
 (defclass host (host-mixin)
   ((host :initarg :host
