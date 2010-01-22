@@ -108,18 +108,15 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
   ((user :type username-string))
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
-(defclass host (abstract-host maximum-message-length)
-  ())
+(defclass host (abstract-host maximum-message-length) ())
 
-(defclass host-address (host)
-  ())
+(defclass host-address (host) ())
 
 (defclass ipv4-host (host-address)
   ((host :type ipv4-address-string))
   (:documentation "Your normal host. 127.0.0.1 and so on."))
 
-(defclass ipv6-host (host-address)
-  ())
+(defclass ipv6-host (host-address) ())
 
 (defclass host-name (host)
   ((host :type string)))
@@ -162,14 +159,9 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
         (make-host (getf initargs :host)))
   (apply #'call-next-method instance initargs))
 
-(defclass channel ()
-  ())
-
-(defclass mode ()
-  ())
-
-(defclass message ()
-  ())
+(defclass channel () ())
+(defclass mode () ())
+(defclass message () ())
 
 (in-package :nisp-system)
 (defpackage #:nispbot
