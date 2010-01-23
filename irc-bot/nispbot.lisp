@@ -67,7 +67,7 @@ NICK has several constraints.
                    :documentation "Maximum length a sequence may be.")))
 
 (defclass maximum-message-length (maximum-length)
-  ((maximum-length :type (integer 1 512)))
+  ((maximum-length :type nisp.irc-types:maximum-message-length))
   (:default-initargs :maximum-length 512))
 
 (defclass username (username-mixin maximum-length)
