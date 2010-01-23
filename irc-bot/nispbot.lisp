@@ -105,15 +105,14 @@ NICK has several constraints.
           (username (username object))
           (host (host object))))
 
+(defmethod valid-length-p ((object limited-length-string-mixin)
+                           &optional sequence)
+  (declare (ignore sequence))
+  (length<= (convert->string object) (maximum-length object)))
+
 (defclass rfc-nickname (nickname maximum-message-length)
   ((nickname :type nickname-string))
   (:default-initargs :maximum-length 9)) ;Based on rfc2812
-
-(defmethod valid-length-p ((length maximum-length) &optional sequence)
-  (length<= sequence (maximum-length length)))
-
-(defmethod valid-length-p ((nickname nickname) &optional sequence)
-  (call-next-method nickname (or sequence (nickname nickname))))
 
 (defmethod normalize-nickname ((object nickname-mixin))
   "Lowercase all ASCII letters in OBJECT.
