@@ -60,20 +60,31 @@ NICK has several constraints.
   - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
     slot on OBJECT."))
 
-(defclass username (username-mixin)
+(defclass maximum-length ()
+  ((maximum-length :type positive-fixnum
+                   :accessor maximum-length
+                   :initarg :maximum-length
+                   :initform (error "Maximum length must be specified.")
+                   :documentation "Maximum length a sequence may be.")))
+
+(defclass maximum-message-length (maximum-length)
+  ((maximum-length :type (integer 1 512)))
+  (:default-initargs :maximum-length 512))
+
+(defclass username (username-mixin maximum-length)
   ((user :type string 
          :accessor username 
          :initarg :user
          :initform (error "Username must be provided."))))
 
-(defclass nickname (nickname-mixin)
+(defclass nickname (nickname-mixin maximum-length)
   ((nickname :type string 
              :accessor nickname
              :initarg :nick
              :initform (error "Nickname must be provided.")
              :documentation "IRC user nickname")))
 
-(defclass host (host-mixin)
+(defclass host (host-mixin maximum-length)
   ((host :initarg :host
          :accessor host)))
 
@@ -87,17 +98,6 @@ NICK has several constraints.
           (nickname (nickname object))
           (username (username object))
           (host (host object))))
-
-(defclass maximum-length ()
-  ((maximum-length :type positive-fixnum
-                   :accessor maximum-length
-                   :initarg :maximum-length
-                   :initform (error "Maximum length must be specified.")
-                   :documentation "Maximum length a sequence may be.")))
-
-(defclass maximum-message-length (maximum-length)
-  ((maximum-length :type (integer 1 512)))
-  (:default-initargs :maximum-length 512))
 
 (defclass rfc-nickname (nickname maximum-message-length)
   ((nickname :type nickname-string))
