@@ -92,6 +92,12 @@ NICK has several constraints.
   ((user :type username)
    (nickname :type nickname)
    (host :type host)))
+(defmethod convert->string ((object username))
+  (username object))
+(defmethod convert->string ((object nickname))
+  (nickname object))
+(defmethod convert->string ((object host))
+  (host object))
 
 (defmethod convert->string ((object identifier-mixin))
   (format nil "~A!~A@~A"
