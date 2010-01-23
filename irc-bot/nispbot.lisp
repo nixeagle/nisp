@@ -67,30 +67,35 @@ NICK has several constraints.
                    :documentation "Maximum length a sequence may be.")))
 
 (defclass maximum-message-length (maximum-length)
-  ((maximum-length :type nisp.irc-types:maximum-message-length))
+  ((maximum-length :type maximum-message-size))
   (:default-initargs :maximum-length 512))
 
-(defclass username (username-mixin maximum-length)
+(defclass abstract-username (username-mixin maximum-length)
   ((user :type string 
          :accessor username 
          :initarg :user
          :initform (error "Username must be provided."))))
 
-(defclass nickname (nickname-mixin maximum-length)
+(defclass abstract-nickname (nickname-mixin maximum-length)
   ((nickname :type string 
              :accessor nickname
              :initarg :nick
              :initform (error "Nickname must be provided.")
              :documentation "IRC user nickname")))
 
-(defclass host (host-mixin maximum-length)
+(defclass abstract-host (host-mixin maximum-length)
   ((host :initarg :host
          :accessor host)))
+
+(defclass nickname (abstract-nickname maximum-message-length) ())
+(defclass username (abstract-username maximum-message-length) ())
+(defclass host (abstract-host maximum-message-length) ())
 
 (defclass identifier (identifier-mixin)
   ((user :type username)
    (nickname :type nickname)
    (host :type host)))
+
 (defmethod convert->string ((object username-mixin))
   (username object))
 (defmethod convert->string ((object nickname-mixin))
@@ -128,7 +133,7 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
   ((user :type username-string))
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
-(defclass host (host-mixin) ())
+
 (defclass rfc-host (host maximum-message-length) ())
 
 (defclass host-address (host) ())
