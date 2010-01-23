@@ -16,16 +16,16 @@ This is completely unrelated to the lisp reader."))
 
 ;;; Mixins
 (defclass maximum-length-mixin () ())
-(defclass limited-length-string-mixin (maximum-length-mixin) ()
+(defclass limited-length-mixin (maximum-length-mixin) ()
     (:documentation "Represents objects where it makes sense to call valid-length-p.
 This is the set of all objects that decompose to a string."))
-(defclass username-mixin (limited-length-string-mixin) ())
-(defclass host-mixin (limited-length-string-mixin) ())
-(defclass nickname-mixin (limited-length-string-mixin) ())
+(defclass username-mixin (limited-length-mixin) ())
+(defclass host-mixin (limited-length-mixin) ())
+(defclass nickname-mixin (limited-length-mixin) ())
 (defclass identifier-mixin (username-mixin host-mixin nickname-mixin) ())
 (defclass channel-mixin () ())
 (defclass mode-mixin () ())
-(defclass message-mixin (limited-length-string-mixin) ())
+(defclass message-mixin (limited-length-mixin) ())
 
 (defgeneric username (object)
   (:method ((object username-mixin))
@@ -87,9 +87,12 @@ NICK has several constraints.
   ((host :initarg :host
          :accessor host)))
 
-(defclass nickname (abstract-nickname maximum-message-length) ())
-(defclass username (abstract-username maximum-message-length) ())
-(defclass host (abstract-host maximum-message-length) ())
+(defclass nickname (abstract-nickname maximum-message-length)
+  ((nickname :type nickname-string)))
+(defclass username (abstract-username maximum-message-length)
+  ((username :type username-string)))
+(defclass host (abstract-host maximum-message-length)
+  ((host :type string)))                ;should be more specific...
 
 (defclass identifier (identifier-mixin)
   ((user :type username)
@@ -109,7 +112,7 @@ NICK has several constraints.
           (username (username object))
           (host (host object))))
 
-(defmethod valid-length-p ((object limited-length-string-mixin))
+(defmethod valid-length-p ((object limited-length-mixin))
   (length<= (convert->string object) (maximum-length object)))
 
 (defclass rfc-nickname (nickname maximum-message-length)
@@ -187,7 +190,12 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 
 (defclass channel () ())
 (defclass mode () ())
-(defclass message () ())
+(defclass message (message-mixin limited-length-mixin) ())
+
+(defpackage #:nisp-user
+  (:use :cl :usocket :nisp.irc :nisp.irc-types :nisp.util-types))
+(in-package :nisp-user)
+
 
 (in-package :nisp-system)
 (defpackage #:nispbot
