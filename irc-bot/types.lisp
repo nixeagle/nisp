@@ -1,6 +1,6 @@
 (defpackage #:nisp.irc-types
   (:use :common-lisp :iterate :nisp.util-types)
-  (:export #:length<= maximum-message-length))
+  (:export #:length<= maximum-message-size))
 
 (in-package :nisp.irc-types)
 
@@ -104,9 +104,9 @@ In detail, this refers to the <user>@<hostmask> form."
 Note that this type is incompletely defined."
   `(or valid-integer-command))
 
-(deftype maximum-message-length ()
+(deftype maximum-message-size ()
   "Longest SIZE an IRC message may be."
-  '(integer 1 512))
+  '(integer 0 512))
 
 (macrolet ((define-type-predicate (type-name &optional docstring)
              "Define simple predicates that check TYPE-NAME.
