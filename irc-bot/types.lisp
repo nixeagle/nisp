@@ -1,5 +1,6 @@
 (defpackage #:nisp.irc-types
-  (:use :common-lisp :iterate :nisp.util-types))
+  (:use :common-lisp :iterate :nisp.util-types)
+  (:export #:length<= maximum-message-length))
 
 (in-package :nisp.irc-types)
 
