@@ -212,7 +212,7 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 Stop reading OBJECT if LIMIT is reached."))
 
 ;;; Guidance taken from cl-irc on this implentation. However they use
-;;; iterate and treat this as a function not a generic method/methods.
+;;; loop and treat this as a function not a generic method/methods.
 (defmethod read-sequence-until ((char-stream stream) (target character)
                                 &key limit non-blocking)
   "Read CHAR-STREAM upto TARGET."
