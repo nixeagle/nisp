@@ -30,6 +30,10 @@ If SEQUENCE is shorter then UPTO-COUNT return its length."
   (assert (length<= "aaaaa" 5))
   (assert (length<= "aaaa" 5)))
 
+(deftype valid-port ()
+  "Represents a valid socket port."
+  '(integer 1  65535))
+
 (deftype letter-char () 
   "Represents an uppercase or lowercase letter in ASCII."
   '(member #\a #\b #\c #\d #\e #\f #\g #\h #\i #\j #\k #\l #\m #\n
