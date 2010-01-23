@@ -191,6 +191,7 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 (defclass channel () ())
 (defclass mode () ())
 (defclass message (message-mixin limited-length-mixin) ())
+(defclass irc-message (message maximum-message-length) ())
 
 (defpackage #:nisp-user
   (:use :cl :usocket :nisp.irc :nisp.irc-types :nisp.util-types))
