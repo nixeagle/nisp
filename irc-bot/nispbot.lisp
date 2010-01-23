@@ -152,9 +152,9 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
   (:documentation "More restricted form of hostname, specified in rfc1123."))
 
 (defclass rfc-identifier (identifier)
-  ((user :type username)
-   (nickname :type nickname)
-   (host :type host))
+  ((user :type rfc-username)
+   (nickname :type rfc-nickname)
+   (host :type rfc-host))
   (:documentation "Represents nickname!user@host"))
 
 (defun make-username (username &rest initargs &key &allow-other-keys)
