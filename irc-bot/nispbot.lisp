@@ -193,6 +193,19 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 (defclass message (message-mixin limited-length-mixin) ())
 (defclass irc-message (message maximum-message-length) ())
 
+
+;;; protocol stuff
+
+(defclass raw-protocol-line-mixin ()
+  ()
+  ;; needs a way to measure length... for type info.
+  )
+
+(defclass raw-protocol-line (raw-protocol-line-mixin limited-length-mixin)
+  ((raw-protocol-line :accessor raw-protocol-line)))
+
+(defclass raw-irc-protocol-line (raw-protocol-line maximum-message-length) ())
+
 (defpackage #:nisp-user
   (:use :cl :usocket :nisp.irc :nisp.irc-types :nisp.util-types))
 (in-package :nisp-user)
