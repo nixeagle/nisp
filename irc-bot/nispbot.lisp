@@ -59,7 +59,7 @@ NICK has several constraints.
   - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
     slot on OBJECT."))
 
-(defclass maximum-length ()
+(defclass maximum-length (maximum-length-mixin)
   ((maximum-length :type positive-fixnum
                    :accessor maximum-length
                    :initarg :maximum-length
