@@ -45,9 +45,8 @@ This is the set of all objects that decompose to a string."))
 (defgeneric (setf maximum-length) (length object)
   (:method (length (object maximum-length-mixin))
     (error "Method on mixin class invalid.")))
-(defgeneric valid-length-p (object &optional sequence)
-  (:method (object &optional sequence)
-    (declare (ignore sequence))
+(defgeneric valid-length-p (object)
+  (:method (object)
     (error "Method on mixin class invalid.")))
 (defgeneric (setf nickname) (nick object)
   (:documentation
@@ -105,9 +104,7 @@ NICK has several constraints.
           (username (username object))
           (host (host object))))
 
-(defmethod valid-length-p ((object limited-length-string-mixin)
-                           &optional sequence)
-  (declare (ignore sequence))
+(defmethod valid-length-p ((object limited-length-string-mixin))
   (length<= (convert->string object) (maximum-length object)))
 
 (defclass rfc-nickname (nickname maximum-message-length)
@@ -124,7 +121,7 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
   (string-downcase nickname))
 
 (defmethod (setf nickname) ((nickname string) (object nickname))
-  (assert (valid-length-p object nickname))
+  (assert (valid-length-p object))
   (setf (slot-value object 'nickname) nickname))
 
 (defclass rfc-username (username maximum-message-length)
