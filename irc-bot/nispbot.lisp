@@ -134,7 +134,7 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
   (:default-initargs :maximum-length 30)) ;Not correct, works for now
 
 
-(defclass rfc-host (host maximum-message-length) ())
+(defclass rfc-host (host) ())
 
 (defclass host-address (host) ())
 
