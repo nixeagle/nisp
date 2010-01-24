@@ -71,7 +71,7 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 
 (defclass author (json-mixin)
   (name email))
-
+(defclass sender (json-mixin) (nick ident host))
 (defclass commit-author (author)
   ())
 
