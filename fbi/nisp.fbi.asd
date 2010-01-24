@@ -12,5 +12,7 @@
                 :usocket
                 :nisp.util
                 :cl-json)
+  :serial t
   :components
-  ((:file "fbi")))
+  ((:file "json-classes")
+   (:file "fbi")))
