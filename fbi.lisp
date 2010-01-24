@@ -14,6 +14,8 @@
            #:json->alist #:make-json-type-signature
            ))
 (in-package :nisp.fbi.json-classes)
+(defparameter *fbi-json-signatures* (make-hash-table :test #'equal)
+  "list -> type mapping")
 
 (defun make-json-type-signature (alist)
   "Return a list for use as a type signature.
@@ -79,8 +81,6 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 (defclass commit-data (json-mixin)
   (message commit project project-2 author url branch shorturl))
 
-(defparameter *fbi-json-signatures* (make-hash-table :test #'equal)
-  "list -> type mapping")
 (macrolet ((define-signature (key name)
              `(setf (gethash ',key *fbi-json-signatures*)
                     (if (listp ',name) ,name ',name))))
