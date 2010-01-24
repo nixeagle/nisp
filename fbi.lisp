@@ -142,8 +142,8 @@ A type signature is basically a list of all keys in a hash table from cl-json"
   (define-describe-object irc-private data))
 
 (macrolet ((define-signature (key name)
-  `(setf (gethash ',key *fbi-json-signatures*)
-         (if (listp ',name) ,name ',name))))
+             `(setf (gethash ',key *fbi-json-signatures*)
+                    (if (listp ',name) ,name ',name))))
   (clrhash *fbi-json-signatures*)
   (define-signature (name email) 'commit-author)
   (define-signature (message commit project project-2 author url branch shorturl)
