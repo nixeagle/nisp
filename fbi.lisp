@@ -92,6 +92,14 @@ A type signature is basically a list of all keys in a hash table from cl-json"
       (lambda (bindings) (intern (nstring-upcase (cdr (assoc 'action bindings)))
                                  :nisp.fbi.json-classes))))
 
+(defgeneric json->alist (object))
+(defmethod json->alist ((object json-mixin))
+  (decode-json-from-string (encode-json-to-string object)))
+(defmethod json->alist ((object string))
+  (decode-json-from-string object))
+(defmethod json->alist ((object stream))
+  (decode-json object))
+
 (defpackage #:nisp.fbi.sockets
   (:use :cl :usocket :json :iterate :nisp.util-protocol
         :nisp.fbi.json-classes)
