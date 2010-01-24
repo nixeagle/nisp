@@ -2,10 +2,14 @@
   (:use :cl :usocket :json :iterate :nisp.util-protocol
         :nisp.util-types)
   (:export :auth :subscribe :json-mixin :json-action-mixin
+           :commit-author :commit-data
+           :irc-data :irc-message :irc-private :publish
+           :sender :url
            ;; methods
            #:json->alist #:make-json-type-signature
            #:make-irc-private-message
            #:make-json-mixin-from-string
+           #:make-subscribe #:json-nisp-message
            ))
 
 (in-package :nisp.fbi.json-classes)
