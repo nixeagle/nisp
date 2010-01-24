@@ -138,7 +138,8 @@ A type signature is basically a list of all keys in a hash table from cl-json"
                 (terpri stream)
                 (describe (,slot s) stream))))
   (define-describe-object publish data)
-  (define-describe-object commit-data author))
+  (define-describe-object commit-data author)
+  (define-describe-object irc-private data))
 
 (macrolet ((define-signature (key name)
   `(setf (gethash ',key *fbi-json-signatures*)
