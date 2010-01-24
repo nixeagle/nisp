@@ -50,6 +50,7 @@
   (:documentation "Return non-nil if socket is ready to read from."))
 (defgeneric write-json (json-mixin json-socket &key force)
   (:documentation "Write json to JSON-SOCKET."))
+(defgeneric read-json (json-socket))
 
 (defmethod read-ready-p ((sock json-socket))
   (listen (socket-stream sock)))
