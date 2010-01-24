@@ -47,11 +47,14 @@ A type signature is basically a list of all keys in a hash table from cl-json"
                     (princ-to-string (make-json-type-signature bindings)))))
           nil))))
 
-(defclass json-mixin () ())
+(defclass json-mixin () ()
+  (:documentation "All classes related json should inherit this."))
 
 (defclass json-action-mixin (json-mixin)
-  ((action :initform "" 
-           :type string)))
+  ((action :initform (error "~&Action cannot be left empty! ~
+                             ~&FBI fails silently if this is not provided.")
+           :type string))
+  (:documentation "All classes representing FBI actions should inherit this."))
 
 (defclass auth (json-action-mixin)
   ((action :initform "auth")
