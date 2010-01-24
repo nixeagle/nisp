@@ -104,8 +104,10 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 
 (defmethod url ((url url))
   (if (slot-boundp url 'shorturl)
-      shorturl
-      url))
+      (short-url url)
+      (long-url url)))
+(defmethod url ((object publish))
+  (url (data object)))
 
 (defclass irc-data (json-mixin)
   (command args sender admin server channel default--project))
