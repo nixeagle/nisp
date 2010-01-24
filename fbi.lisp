@@ -30,7 +30,6 @@ A type signature is basically a list of all keys in a hash table from cl-json"
                         (nispbot::strip-newlines string #\Space))
       (princ string)))
 
-
 (defun find-json-type (bindings)
   (let ((type-class (gethash (make-json-type-signature bindings)
                              *fbi-json-signatures* nil)))
@@ -78,8 +77,7 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 (defclass author (json-mixin)
   (name email))
 (defclass sender (json-mixin) (nick ident host))
-(defclass commit-author (author)
-  ())
+(defclass commit-author (author) ())
 (defclass irc-data (json-mixin)
   (command args sender admin server channel default--project))
 (defclass commit-data (json-mixin)
@@ -112,7 +110,6 @@ A type signature is basically a list of all keys in a hash table from cl-json"
                 (describe (,slot s) stream))))
   (define-describe-object publish data)
   (define-describe-object commit-data author))
-
 
 (macrolet ((define-signature (key name)
   `(setf (gethash ',key *fbi-json-signatures*)
@@ -199,4 +196,4 @@ A type signature is basically a list of all keys in a hash table from cl-json"
           (call-next-method bindings nil 
                             superclasses)
           (make-object bindings type-class superclasses)))))
-
+;;; End fbi.lisp
