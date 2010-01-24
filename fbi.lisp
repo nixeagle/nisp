@@ -38,9 +38,12 @@ A type signature is basically a list of all keys in a hash table from cl-json"
             type-class)
         (progn
           (json-nisp-message
-           (concatenate 'string
-                        "FBI type signature error: "
-                        (princ-to-string bindings)))
+           (format nil
+                   "FBI type signature error: ~A ~
+                    Quickfix: (defclass <classnamehere> (json-mixin) ~A)"
+                   (make-json-type-signature bindings)
+                   (string-downcase
+                    (princ-to-string (make-json-type-signature bindings)))))
           nil))))
 
 (defclass json-mixin () ())
