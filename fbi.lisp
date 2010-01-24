@@ -93,15 +93,19 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 
 (defclass url ()
   ((url :type string
-             :initarg :long-url
-             :accessor long-url)
+        :initarg :long-url
+        :accessor long-url)
    (shorturl :type string
-              :initarg :short-url
-              :accessor short-url))
-  (:default-initargs :long-url "" :short-url "")
+             :initarg :short-url
+             :accessor short-url))
   (:documentation "Represents a url in FBI data. The server always gets ~
   a tiny url if possible, but if not we will be prepared to always get ~
   _a_ url."))
+
+(defmethod url ((url url))
+  (if (slot-boundp url 'shorturl)
+      shorturl
+      url))
 
 (defclass irc-data (json-mixin)
   (command args sender admin server channel default--project))
