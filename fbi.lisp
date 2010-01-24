@@ -80,10 +80,11 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 (defclass sender (json-mixin) (nick ident host))
 (defclass commit-author (author)
   ())
-
+(defclass irc-data (json-mixin)
+  (command args sender admin server channel default--project))
 (defclass commit-data (json-mixin)
-  (message commit project project-2 author url branch shorturl))
-
+  (message commit project project-2
+           (author :accessor author) url branch shorturl))
 (macrolet ((define-signature (key name)
              `(setf (gethash ',key *fbi-json-signatures*)
                     (if (listp ',name) ,name ',name))))
