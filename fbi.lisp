@@ -11,6 +11,11 @@
   (:export :auth :subscribe :json-mixin :json-action-mixin))
 (in-package :nisp.fbi.json-classes)
 
+(defun make-json-type-signature (alist)
+  "Return a list for use as a type signature.
+
+A type signature is basically a list of all keys in a hash table from cl-json"
+  (mapcar #'car alist))
 (defclass json-mixin () ())
 
 (defclass json-action-mixin (json-mixin)
