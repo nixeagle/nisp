@@ -7,8 +7,12 @@
 
 ;(delete-package :nisp.fbi.json-classes)
 (defpackage #:nisp.fbi.json-classes
-  (:use :cl :usocket :json :iterate :nisp.util-protocol)
-  (:export :auth :subscribe :json-mixin :json-action-mixin))
+  (:use :cl :usocket :json :iterate :nisp.util-protocol
+        :nisp.util-types)
+  (:export :auth :subscribe :json-mixin :json-action-mixin
+           ;; methods
+           #:json->alist #:make-json-type-signature
+           ))
 (in-package :nisp.fbi.json-classes)
 
 (defun make-json-type-signature (alist)
