@@ -74,3 +74,8 @@
     (json:with-decoder-simple-clos-semantics
       (json:decode-json-from-string
        string))))
+
+(defmethod read-json ((sock json-socket))
+  "Read from JSON-SOCKET returning a `JSON-MIXIN'."
+  (and (read-ready-p sock)
+       (make-json-mixin-from-string (read-line (socket-stream sock)))))
