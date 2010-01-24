@@ -79,3 +79,8 @@
   "Read from JSON-SOCKET returning a `JSON-MIXIN'."
   (and (read-ready-p sock)
        (make-json-mixin-from-string (read-line (socket-stream sock)))))
+
+(defmethod make-object :around (bindings (symbol symbol) &optional superclasses)
+  (if (or (null symbol) (find-class symbol nil))
+      (call-next-method)
+      (make-object bindings nil superclasses)))
