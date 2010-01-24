@@ -16,6 +16,14 @@
 
 A type signature is basically a list of all keys in a hash table from cl-json"
   (mapcar #'car alist))
+
+(defun json-nisp-message (string)
+  "Send STRING stripping newlines to nispbot if that symbol exists."
+  (if (boundp 'nispbot::*nispbot*)
+      (nispbot::privmsg nispbot::*nispbot* "#bots"
+                        (nispbot::strip-newlines string #\Space))
+      (princ string)))
+
 (defclass json-mixin () ())
 
 (defclass json-action-mixin (json-mixin)
