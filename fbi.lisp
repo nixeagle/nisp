@@ -65,4 +65,12 @@
   (prog1
       (encode-json json-object (socket-stream sock))
     (terpri (socket-stream sock))
-    (and force (force-output (socket-stream sock)))))
+    (and force (force-output (socket-stream sock)))))    (and force (force-output (socket-stream sock)))))
+
+(defun make-json-mixin-from-string (string)
+  (declare (type string string))
+  (let ((json:*prototype-name* 'action)
+        (json:*json-symbols-package* :nisp.fbi.json-classes))
+    (json:with-decoder-simple-clos-semantics
+      (json:decode-json-from-string
+       string))))
