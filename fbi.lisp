@@ -5,14 +5,6 @@
 
 (in-package :nisp.fbi)
 
-(defun make-json-mixin-from-string (string)
-  (declare (type string string))
-  (let ((json:*prototype-name* 'action)
-        (json:*json-symbols-package* :nisp.fbi.json-classes))
-    (json:with-decoder-simple-clos-semantics
-      (json:decode-json-from-string
-       string))))
-
 ;(delete-package :nisp.fbi.json-classes)
 (defpackage #:nisp.fbi.json-classes
   (:use :cl :usocket :json :iterate :nisp.util-protocol)
@@ -35,7 +27,8 @@
 
 (defclass subscribe (json-action-mixin)
   ((action :initform "subscribe")
-   (channels :accessor channels))
+   (channels :accessor channels
+             :initarg :channels))
   (:documentation "Subscribe to FBI channels."))
 
 (defpackage #:nisp.fbi.sockets
@@ -65,7 +58,7 @@
   (prog1
       (encode-json json-object (socket-stream sock))
     (terpri (socket-stream sock))
-    (and force (force-output (socket-stream sock)))))    (and force (force-output (socket-stream sock)))))
+    (and force (force-output (socket-stream sock)))))
 
 (defun make-json-mixin-from-string (string)
   (declare (type string string))
