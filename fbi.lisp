@@ -84,11 +84,30 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 
 (defclass sender (json-mixin) (nick ident host))
 
+(defgeneric long-url (object))
+(defgeneric short-url (object))
+(defgeneric url (object)
+  ;; We do this by first looking for short-url, if its unbound or does
+  ;; not exist go looking for long-url.
+  (:documentation "Get the shortest url possible."))
+
+(defclass url ()
+  ((url :type string
+             :initarg :long-url
+             :accessor long-url)
+   (shorturl :type string
+              :initarg :short-url
+              :accessor short-url))
+  (:default-initargs :long-url "" :short-url "")
+  (:documentation "Represents a url in FBI data. The server always gets ~
+  a tiny url if possible, but if not we will be prepared to always get ~
+  _a_ url."))
+
 (defclass irc-data (json-mixin)
   (command args sender admin server channel default--project))
-(defclass commit-data (json-mixin)
+(defclass commit-data (url json-mixin)
   (message commit project project-2
-           (author :accessor author) url branch shorturl))
+           (author :accessor author) branch))
 (defclass irc-message (json-mixin)
   ((id :initarg :id)
    (server :initarg :server)
