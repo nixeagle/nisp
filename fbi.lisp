@@ -95,6 +95,15 @@ A type signature is basically a list of all keys in a hash table from cl-json"
    (action :initform "private")
    (data :initarg :data
          :type irc-message)))
+(defun make-irc-private-message (to irc-server irc-channel irc-message)
+  (declare (type string to irc-channel irc-message)
+           (type positive-fixnum irc-server))
+  (make-instance 'irc-private :to to
+                 :data (make-instance 'irc-message
+                                      :message irc-message
+                                      :channel irc-channel
+                                      :server irc-server
+                                      :id nil)))
 (macrolet ((define-signature (key name)
              `(setf (gethash ',key *fbi-json-signatures*)
                     (if (listp ',name) ,name ',name))))
