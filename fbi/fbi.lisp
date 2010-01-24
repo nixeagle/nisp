@@ -12,6 +12,7 @@
   (:export :auth :subscribe :json-mixin :json-action-mixin
            ;; methods
            #:json->alist #:make-json-type-signature
+           #:make-irc-private-message
            ))
 (in-package :nisp.fbi.json-classes)
 (defparameter *fbi-json-signatures* (make-hash-table :test #'equal)
@@ -124,6 +125,7 @@ A type signature is basically a list of all keys in a hash table from cl-json"
    (action :initform "private")
    (data :initarg :data
          :type irc-message)))
+
 (defun make-irc-private-message (to irc-server irc-channel irc-message)
   (declare (type string to irc-channel irc-message)
            (type positive-fixnum irc-server))
