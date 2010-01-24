@@ -104,6 +104,16 @@ A type signature is basically a list of all keys in a hash table from cl-json"
                                       :channel irc-channel
                                       :server irc-server
                                       :id nil)))
+
+(macrolet ((define-describe-object (object slot)
+             `(defmethod describe-object ((s ,object) stream)
+                (call-next-method)
+                (terpri stream)
+                (describe (,slot s) stream))))
+  (define-describe-object publish data)
+  (define-describe-object commit-data author))
+
+
 (macrolet ((define-signature (key name)
              `(setf (gethash ',key *fbi-json-signatures*)
                     (if (listp ',name) ,name ',name))))
