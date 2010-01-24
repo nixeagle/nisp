@@ -103,7 +103,8 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 
 (defun make-json-mixin-from-string (string)
   (declare (type string string))
-  (let ((json:*prototype-name* 'action)
+  (print string)
+  (let ((json:*prototype-name* 'hash-type)
         (json:*json-symbols-package* :nisp.fbi.json-classes))
     (json:with-decoder-simple-clos-semantics
       (json:decode-json-from-string
