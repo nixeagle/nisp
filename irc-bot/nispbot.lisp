@@ -206,6 +206,10 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 
 (defclass raw-irc-protocol-line (raw-protocol-line maximum-message-length) ())
 
+(defpackage #:nisp.util-protocol
+  (:use :cl :iterate :nisp.util-types)
+  (:export :read-sequence-until))
+(in-package :nisp.util-protocol)
 (defgeneric read-sequence-until (object target &key limit non-blocking)
   (:documentation "Read OBJECT up to TARGET.
 
