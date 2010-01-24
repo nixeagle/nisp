@@ -11,6 +11,11 @@
 (defpackage #:nisp.fbi.sockets
   (:use :cl :usocket :json :iterate :nisp.util-protocol
         :nisp.fbi.json-classes)
+  (:nicknames :fbi-sockets)
+  (:export #:read-ready-p
+           #:write-json
+           #:read-json
+           #:json-socket-connect)
   (:shadow :socket-connect))
 
 (in-package :nisp.fbi.sockets)
