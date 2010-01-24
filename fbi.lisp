@@ -59,6 +59,18 @@ A type signature is basically a list of all keys in a hash table from cl-json"
              :initarg :channels))
   (:documentation "Subscribe to FBI channels."))
 
+(defclass publish (json-action-mixin)
+  (from action channel data))
+
+(defclass author (json-mixin)
+  (name email))
+
+(defclass commit-author (author)
+  ())
+
+(defclass commit-data (json-mixin)
+  (message commit project project-2 author url branch shorturl))
+
 (defparameter *fbi-json-signatures* (make-hash-table :test #'equal)
   "list -> type mapping")
 (macrolet ((define-signature (key name)
