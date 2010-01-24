@@ -42,11 +42,11 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 (defclass json-mixin () ())
 
 (defclass json-action-mixin (json-mixin)
-  ((action :initform (error "Action must be provided or FBI fails silently.")
+  ((action :initform "" 
            :type string)))
 
 (defclass auth (json-action-mixin)
-  ((action :initform "auth")
+  (action
    (user :accessor user
          :initarg :user)
    (secret :accessor secret
@@ -54,7 +54,7 @@ A type signature is basically a list of all keys in a hash table from cl-json"
   (:documentation "Auth with FBI."))
 
 (defclass subscribe (json-action-mixin)
-  ((action :initform "subscribe")
+  (action
    (channels :accessor channels
              :initarg :channels))
   (:documentation "Subscribe to FBI channels."))
