@@ -64,16 +64,9 @@
 
 (defmethod irc-command-hook :around (cmd json socket)
   (irc-reply (call-next-method) json socket))
-(defmethod irc-command-hook ((cmd (eql :hi)) json socket)
-  "Test method to respond to \"hi\"."
-  "Nice to meet you!")
-(defmethod irc-command-hook ((cmd (eql :bye)) json socket)
-  "Test method to respond to \"bye\"."
-  "nice to know you....")
+
 (defmethod irc-command-hook ((cmd (eql :hello)) json socket)
   "Say hello in many languages... just as nisp does ,(hello)."
   (nisp.hello:hello))
-(defmethod irc-command-hook ((cmd (eql :whooo!)) json socket)
-  "w00t! to you too!")
 
 ;;;; End of file
