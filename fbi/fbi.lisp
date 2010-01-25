@@ -15,7 +15,8 @@
   (:export #:read-ready-p
            #:write-json
            #:read-json
-           #:json-socket-connect)
+           #:json-socket-connect
+           :json-socket)
   (:shadow :socket-connect))
 
 (in-package :nisp.fbi.sockets)
