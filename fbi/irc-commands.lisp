@@ -48,6 +48,9 @@
 (defmethod fbi-message-hook ((from (eql :irc)) (json publish) (sock json-socket))
   (irc-command-hook (make-keyword (command json)) json sock))
 
+(defmethod fbi-message-hook ((from (eql :udp)) (json publish) (sock json-socket))
+  (nisp.fbi.json-classes:json-nisp-message (string-downcase (json->alist json))))
+
 (defun start-command-loop (socket)
   "Spawn a new thread listening for commands on SOCKET."
   (declare (type json-socket socket))
@@ -59,17 +62,18 @@
         (when sock
           (action-hook (read-json (car sock)) (car sock)))))
 
-
+(defmethod irc-command-hook :around (cmd json socket)
+  (irc-reply (call-next-method) json socket))
 (defmethod irc-command-hook ((cmd (eql :hi)) json socket)
   "Test method to respond to \"hi\"."
-  (irc-reply "Nice to meet you!" json socket))
+  "Nice to meet you!")
 (defmethod irc-command-hook ((cmd (eql :bye)) json socket)
   "Test method to respond to \"bye\"."
-  (irc-reply "nice to know you...." json socket))
+  "nice to know you....")
 (defmethod irc-command-hook ((cmd (eql :hello)) json socket)
   "Say hello in many languages... just as nisp does ,(hello)."
-  (irc-reply (nisp.hello:hello) json socket))
+  (nisp.hello:hello))
 (defmethod irc-command-hook ((cmd (eql :whooo!)) json socket)
-  (irc-reply "w00t! to you too!" json socket))
+  "w00t! to you too!")
 
 ;;;; End of file
