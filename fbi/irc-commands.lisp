@@ -18,6 +18,9 @@
   (declare (type string))
   (string-downcase command-string))
 
+(defun handle-irc-command (json socket)
+  (irc-command-hook (intern (string-upcase (command json)) :keyword) json socket))
+
 (defun listen-loop (socket)
   "Listen for input and send it through nisp."
   ;; Broken atm
@@ -27,3 +30,9 @@
                               (princ-to-string
                                (json->alist (read-json (car sock)))))))))
 
+
+(defmethod irc-command-hook ((cmd (eql :hi)) json socket)
+  (write-json (make-irc-private-message "irc" (server json)
+                            (channel json)
+                            "nice to meet you!")
+              socket :force t))
