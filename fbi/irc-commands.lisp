@@ -49,6 +49,11 @@
 (defmethod fbi-message-hook ((from (eql :irc)) (json publish) (sock json-socket))
   (irc-command-hook (make-keyword (command json)) json sock))
 
+(defun start-command-loop (socket)
+  "Spawn a new thread listening for commands on SOCKET."
+  (declare (type json-socket socket))
+  (make-thread (lambda () (listen-loop socket)) :name :nisp.fbi-command-loop))
+
 (defun listen-loop (socket)
   "Listen for input and send it through nisp."
   (iter (for sock = (wait-for-input socket :timeout 36000 :ready-only t))
