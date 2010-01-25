@@ -23,7 +23,6 @@
 
 (defun listen-loop (socket)
   "Listen for input and send it through nisp."
-  ;; Broken atm
   (iter (for sock = (wait-for-input socket :timeout 36000 :ready-only t))
         (when sock
           (json-nisp-message (nstring-downcase
@@ -36,3 +35,5 @@
                             (channel json)
                             "nice to meet you!")
               socket :force t))
+
+;;;; End of file
