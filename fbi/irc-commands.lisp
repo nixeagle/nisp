@@ -59,9 +59,8 @@
 
 
 (defmethod irc-command-hook ((cmd (eql :hi)) json socket)
-  (write-json (make-irc-private-message "irc" (server json)
-                            (channel json)
-                            "nice to meet you!")
-              socket :force t))
+  (irc-reply "Nice to meet you!" json socket))
+(defmethod irc-command-hook ((cmd (eql :bye)) json socket)
+  (irc-reply "nice to know you...." json socket))
 
 ;;;; End of file
