@@ -38,8 +38,9 @@
   (declare (ignore json sock))
   nil)
 
-(defun handle-irc-command (json socket)
-  (irc-command-hook (intern (string-upcase (command json)) :keyword) json socket))
+(defmethod action-hook ((json publish) (sock json-socket))
+  "Publish means lots of things, dispatch JSON for SOCK as needed."
+  (fbi-message-hook (make-keyword (from json)) json sock))
 
 (defun listen-loop (socket)
   "Listen for input and send it through nisp."
