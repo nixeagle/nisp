@@ -14,6 +14,18 @@
   (:method (command-string json socket)
     (declare (ignore command-string json socket))
     nil))
+(defgeneric action-hook (json-action-mixin socket)
+  (:documentation "All FBI recieved actions get sent here. ~
+
+                   Specializations here are based on the type of action recieved ~
+                   and "))
+(defgeneric fbi-message-hook (from json-mixin json-socket)
+  (:documentation 
+   "Messages that are FROM a specific component get directed here.")
+  (:method ((from symbol) (json json-mixin) (sock json-socket))
+    "If we don't know what FROM is, don't handle it, but don't error."
+    nil))
+
 (defun irc-reply (message json socket)
   "Send MESSAGE as a reply back over fbi."
   (declare (type string message)
@@ -24,13 +36,6 @@
                              message)
               socket :force t))
 
-(defun normalize-irc-command (command-string)
-  "Lowercase the COMMAND-STRING for method selection."
-  (declare (type string))
-  (string-downcase command-string))
-
-(defgeneric action-hook (json-action-mixin socket))
-
 (defmethod action-hook ((json json-action-mixin) (sock json-socket))
   "Ignore actions we don't know of and return nil."
   (declare (ignore json sock))
@@ -39,12 +44,6 @@
 (defmethod action-hook ((json publish) (sock json-socket))
   "Publish means lots of things, dispatch JSON for SOCK as needed."
   (fbi-message-hook (make-keyword (from json)) json sock))
-
-(defgeneric fbi-message-hook (from json-mixin json-socket)
-  (:documentation 
-   "If we don't know what FROM is, don't handle it, but don't error.")
-  (:method ((from symbol) (json json-mixin) (sock json-socket))
-    nil))
 
 (defmethod fbi-message-hook ((from (eql :irc)) (json publish) (sock json-socket))
   (irc-command-hook (make-keyword (command json)) json sock))
