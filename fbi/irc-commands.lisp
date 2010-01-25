@@ -55,9 +55,7 @@
   "Listen for input and send it through nisp."
   (iter (for sock = (wait-for-input socket :timeout 36000 :ready-only t))
         (when sock
-          (json-nisp-message (nstring-downcase
-                              (princ-to-string
-                               (json->alist (read-json (car sock)))))))))
+          (action-hook (read-json (car sock)) (car sock)))))
 
 
 (defmethod irc-command-hook ((cmd (eql :hi)) json socket)
