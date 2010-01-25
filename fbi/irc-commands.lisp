@@ -21,5 +21,3 @@
                               (princ-to-string
                                (json->alist (read-json (car sock)))))))))
 
-(sb-bsd-sockets:local-abstract-socket
- )
