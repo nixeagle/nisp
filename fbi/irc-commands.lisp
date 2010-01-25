@@ -16,6 +16,15 @@
   (:method (command-string json socket)
     (declare (ignore command-string json socket))
     nil))
+(defun irc-reply (message json socket)
+  "Send MESSAGE as a reply back over fbi."
+  (declare (type string message)
+           (type json-socket socket)
+           (type publish json))
+  (write-json
+   (make-irc-private-message (from json) (server json) (channel json)
+                             message)
+              socket :force t))
 
 (defun normalize-irc-command (command-string)
   "Lowercase the COMMAND-STRING for method selection."
