@@ -118,6 +118,9 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 (defmethod url ((object publish))
   (url (data object)))
 
+(defclass irc-data-mixin () ()
+  (:documentation "Anything with command info should superclass this."))
+
 (defclass irc-data (json-mixin)
   (command args sender admin server channel default--project))
 (defclass commit-data (url json-mixin)
