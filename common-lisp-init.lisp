@@ -121,5 +121,6 @@
 
 #+sbcl
 (in-package :nispbot)
+
 #+sbcl
 (start-nispbot-instance)
