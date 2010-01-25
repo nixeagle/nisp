@@ -120,16 +120,29 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 
 (defclass irc-data-mixin () ()
   (:documentation "Anything with command info should superclass this."))
-(defgeneric command (object))
-(defgeneric args (object))
-(defgeneric sender (object))
-(defgeneric admin (object))
-(defgeneric server (object))
-(defgeneric channel (object))
-
+(defgeneric command (object)
+  (:method ((object irc-data-mixin))
+    (command object)))
+(defgeneric args (object)
+  (:method ((object irc-data-mixin))
+    (args object)))
+(defgeneric sender (object)
+  (:method ((object irc-data-mixin))
+    (sender object)))
+(defgeneric admin (object)
+  (:method ((object irc-data-mixin))
+    (admin object)))
+(defgeneric server (object)
+  (:method ((object irc-data-mixin))
+    (server object)))
+(defgeneric channel (object)
+  (:method ((object irc-data-mixin))
+    (channel object)))
 
 (defclass irc-data (irc-data-mixin json-mixin)
   (command args sender admin server channel default--project))
+
+
 (defclass commit-data (url json-mixin)
   (message commit project project-2
            (author :accessor author) branch))
