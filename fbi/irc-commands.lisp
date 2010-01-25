@@ -42,6 +42,15 @@
   "Publish means lots of things, dispatch JSON for SOCK as needed."
   (fbi-message-hook (make-keyword (from json)) json sock))
 
+(defgeneric fbi-message-hook (from json-mixin json-socket)
+  (:documentation 
+   "If we don't know what FROM is, don't handle it, but don't error.")
+  (:method ((from symbol) (json json-mixin) (sock json-socket))
+    nil))
+
+(defmethod fbi-message-hook ((from (eql :irc)) (json publish) (sock json-socket))
+  (irc-command-hook (make-keyword (command json)) json sock))
+
 (defun listen-loop (socket)
   "Listen for input and send it through nisp."
   (iter (for sock = (wait-for-input socket :timeout 36000 :ready-only t))
