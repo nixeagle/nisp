@@ -7,6 +7,7 @@
            :sender :url
            ;; methods
            #:json->alist #:make-json-type-signature
+           #:json->string
            #:make-irc-private-message
            #:make-json-mixin-from-string
            #:make-subscribe #:json-nisp-message
@@ -176,6 +177,9 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 (defmethod json->alist ((object stream))
   (decode-json object))
 
+(defgeneric json->string (object))
+(defmethod json->string ((object json-mixin))
+  (encode-json-to-string object))
 
 (defmethod make-object :around (bindings (symbol symbol) &optional superclasses)
   (if (or (null symbol) (find-class symbol nil))
