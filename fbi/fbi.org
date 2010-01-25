@@ -1,0 +1,46 @@
+#+TITLE: FBI
+
+* Protocol
+*** Actions
+    All action style commands require a parameter named "action":<command>
+    : "action":"<action name>"
+
+    The remaining parameters are specific to each action command. When
+    specified they will appear in the following forms.
+    - parameter :: <type>
+      + details
+
+    This form translates to:
+    : "<parameter>":"<1>"
+
+    - parameter :: [<type>+]
+      + details
+
+    Translates to the following json array:
+    : "<parameter>":["<1>",...,"<n>"]
+
+    If a parameter is a nested hash, the Type line will include a
+    reference to that hash's description. When possible a complete
+    working example will be provided, however at this time the authors
+    cannot guarantee accuracy of these examples. [fn:1]
+
+***** auth
+      Short form of Authentication. Register with the central FBI server.
+
+      - user :: <string>
+        + Your component name. This is any valid string including
+          spaces.
+      - secret :: <string>
+        + Your component's password. This is currently sent in the clear
+          to the server, however please protect yours as some time in
+          the future the passwords won't be sent in the clear.
+******* Examples
+        : {"action":"auth","user":"foobar","secret":"baz"}
+
+
+
+* Footnotes
+
+[fn:1] At some point I'll generate automatic valid json forms from the
+lisp implentation of the api which is following a strictly OOP style
+approach.

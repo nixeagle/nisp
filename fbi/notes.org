@@ -1,3 +1,5 @@
+
+
 Every packet is JSON, ending in \n so ...
  : (read-sequence-until (make-string-stream PACKET) #\Newline)
 
@@ -18,3 +20,12 @@ when component pushes all subscribers get the packet and a sender
   : {"action":"subscribe","channels":["commits"]}
 
 packets with "url" entry will get sent to is.gd and stuck in "shorturl"
+
+
+
+* IRC danopia
+<danopia> no PM back means it doesn't handle it
+<danopia> but it's also rather faily in taht instead of being stateful
+<danopia> the IRC bot's first publish just says the network and channel  [04:09]
+<danopia> and the component tells it where to send hte message
+<danopia> instead of jsut saying "ok reply with this" to the irc component
