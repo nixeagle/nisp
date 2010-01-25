@@ -141,7 +141,7 @@ Type documentation:
   (define-type-predicate ipv4-octet)
   (define-type-predicate hex-digit-char)
   (define-type-predicate channel-start-char)
-  (define-type-predicate maximum-message-length)
+  (define-type-predicate maximum-message-size)
   (define-type-predicate dec-digit-char)
   (define-type-predicate newline-char)
   (define-type-predicate letter-char)

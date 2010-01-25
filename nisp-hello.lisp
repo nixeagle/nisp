@@ -4,13 +4,14 @@
 ;;; Word list taken from file HELLO in GNU Emacs 23.1.91.1
 (in-package :nisp-system)
 (defpackage #:nisp.hello
-  (:use :cl)
+  (:use :cl :iterate)
   (:export #:hello))
 
 (in-package :nisp.hello)
 
+'("مكيلع مالّسلا" "নমস্কার" "નમસ્તે")
 (defvar +hello-words+ 
-  '("ሠላም" "مكيلع مالّسلا" "নমস্কার" "⠓⠑⠇⠇⠕" "မင္‍ဂလာပာ" "printf (\"Hello, world!\n\");"
+  '("ሠላም" "⠓⠑⠇⠇⠕" "မင္‍ဂလာပာ" "printf (\"Hello, world!\n\");"
     "Dobrý den" "Hej" "Goddag" "Halløj" "Hallo" "Dag" "Hello" 
     "Saluton (Eĥoŝanĝo ĉiuĵaŭde)" "Tere päevast" "Tere õhtust"
     "Hei" "Hyvää päivää" "Bonjour" "Salut" "გამარჯობა" 

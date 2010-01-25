@@ -1,8 +1,11 @@
 (in-package :cl-user)
 (defpackage #:nisp.irc
-  (:use :common-lisp :iterate :metabang-bind :nisp.irc-types :nisp.util-types))
+  (:use :common-lisp :nisp.clos.maximum-length
+        :iterate :metabang-bind :nisp.irc-types :nisp.util-types
+        ))
 (in-package :nisp.irc)
 ;;; General generics
+
 (defgeneric convert->string (object)
   ;; Methods specializing on this generic may cease to exist at any moment.
   ;; This exists for prototyping only atm.
@@ -15,10 +18,7 @@
 This is completely unrelated to the lisp reader."))
 
 ;;; Mixins
-(defclass maximum-length-mixin () ())
-(defclass limited-length-mixin (maximum-length-mixin) ()
-    (:documentation "Represents objects where it makes sense to call valid-length-p.
-This is the set of all objects that decompose to a string."))
+
 (defclass username-mixin (limited-length-mixin) ())
 (defclass host-mixin (limited-length-mixin) ())
 (defclass nickname-mixin (limited-length-mixin) ())
@@ -39,15 +39,6 @@ This is the set of all objects that decompose to a string."))
 (defgeneric host (object)
   (:method ((object host-mixin))
     (error "Method on mixin class invalid.")))
-(defgeneric maximum-length (object)
-  (:method ((object maximum-length-mixin))
-    (error "Method on mixin class invalid.")))
-(defgeneric (setf maximum-length) (length object)
-  (:method (length (object maximum-length-mixin))
-    (error "Method on mixin class invalid.")))
-(defgeneric valid-length-p (object)
-  (:method (object)
-    (error "Method on mixin class invalid.")))
 (defgeneric (setf nickname) (nick object)
   (:documentation
    "Set NICK on OBJECT.
@@ -59,12 +50,7 @@ NICK has several constraints.
   - Its length must pass VALID-LENGTH-P.  This uses the MAXIMUM-LENGTH
     slot on OBJECT."))
 
-(defclass maximum-length (maximum-length-mixin)
-  ((maximum-length :type positive-fixnum
-                   :accessor maximum-length
-                   :initarg :maximum-length
-                   :initform (error "Maximum length must be specified.")
-                   :documentation "Maximum length a sequence may be.")))
+
 
 (defclass maximum-message-length (maximum-length)
   ((maximum-length :type maximum-message-size))

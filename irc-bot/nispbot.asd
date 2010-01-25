@@ -28,6 +28,7 @@
   :components
   ((:file "config-dist")
    (:file "config")
+   (:file "maximum-length")
    (:file "types")
    (:file "nispbot")
    (:file "nispbot-tests")))
