@@ -37,7 +37,12 @@
 ******* Examples
         : {"action":"auth","user":"foobar","secret":"baz"}
 
+***** subscribe
+      Subscribe your component to [[channel][channels]].
 
+      - channels :: [<string>+]
+        + These are a json array of places to listen to.
+        + Sending just an empty array seems to do nothing at this time. 
 
 * Footnotes
 
