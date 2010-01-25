@@ -11,6 +11,14 @@
            #:make-irc-private-message
            #:make-json-mixin-from-string
            #:make-subscribe #:json-nisp-message
+
+           ;; irc
+           #:command
+           #:args
+           #:sender
+           #:admin
+           #:server
+           #:channel
            ))
 
 (in-package :nisp.fbi.json-classes)
@@ -65,6 +73,9 @@ A type signature is basically a list of all keys in a hash table from cl-json"
            :type string))
   (:documentation "All classes representing FBI actions should inherit this."))
 
+(defclass irc-data-mixin () ()
+  (:documentation "Anything with command info should superclass this."))
+
 (defclass auth (json-action-mixin)
   ((action :initform "auth")
    (user :accessor user
@@ -82,7 +93,7 @@ A type signature is basically a list of all keys in a hash table from cl-json"
   "Represents a subscription request to CHANNELS."
   (make-instance 'subscribe :channels channels))
 
-(defclass publish (json-action-mixin)
+(defclass publish (json-action-mixin irc-data-mixin)
   (from (action :initform "publish") channel
         (data :accessor data)))
 
@@ -118,8 +129,7 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 (defmethod url ((object publish))
   (url (data object)))
 
-(defclass irc-data-mixin () ()
-  (:documentation "Anything with command info should superclass this."))
+
 (defgeneric command (object)
   (:method ((object irc-data-mixin))
     (command object)))
@@ -140,8 +150,22 @@ A type signature is basically a list of all keys in a hash table from cl-json"
     (channel object)))
 
 (defclass irc-data (irc-data-mixin json-mixin)
-  (command args sender admin server channel default--project))
+  ((command :accessor command)
+   (args :accessor args)
+   (sender :accessor sender)
+   (admin :accessor admin)
+   (server :accessor server)
+   (channel :accessor channel)
+   (default--project :accessor default-project)))
 
+(macrolet ((publish-irc-data (name)
+             `(defmethod ,name ((object publish))
+               (,name (data object)))))
+    (publish-irc-data command)
+    (publish-irc-data args)
+    (publish-irc-data admin)
+    (publish-irc-data server)
+    (publish-irc-data channel))
 
 (defclass commit-data (url json-mixin)
   (message commit project project-2

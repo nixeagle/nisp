@@ -7,6 +7,12 @@
 
 (in-package :nisp.fbi.irc-commands)
 
+(defgeneric irc-command-hook (command-string json socket)
+  (:documentation "Act on COMMAND-STRING with JSON data to SOCKET.")
+  (:method (command-string json socket)
+    (declare (ignore command-string json socket))
+    nil))
+
 (defun normalize-irc-command (command-string)
   "Lowercase the COMMAND-STRING for method selection."
   (declare (type string))
