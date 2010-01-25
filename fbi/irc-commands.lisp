@@ -70,5 +70,7 @@
 (defmethod irc-command-hook ((cmd (eql :hello)) json socket)
   "Say hello in many languages... just as nisp does ,(hello)."
   (irc-reply (nisp.hello:hello) json socket))
+(defmethod irc-command-hook ((cmd (eql :whooo!)) json socket)
+  (irc-reply "w00t! to you too!" json socket))
 
 ;;;; End of file
