@@ -12,6 +12,9 @@
            #:make-json-mixin-from-string
            #:make-subscribe #:json-nisp-message
 
+           ;; publish
+           #:action
+           #:from
            ;; irc
            #:command
            #:args
@@ -66,11 +69,14 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 
 (defclass json-mixin () ()
   (:documentation "All classes related json should inherit this."))
-
+(defgeneric action (object))
+(defgeneric from (object)
+  (:documentation "From is always related to who on FBI sent a message."))
 (defclass json-action-mixin (json-mixin)
   ((action :initform (error "~&Action cannot be left empty! ~
                              ~&FBI fails silently if this is not provided.")
-           :type string))
+           :type string
+           :accessor action))
   (:documentation "All classes representing FBI actions should inherit this."))
 
 (defclass irc-data-mixin () ()
@@ -94,7 +100,7 @@ A type signature is basically a list of all keys in a hash table from cl-json"
   (make-instance 'subscribe :channels channels))
 
 (defclass publish (json-action-mixin irc-data-mixin)
-  (from (action :initform "publish") channel
+  ((from :accessor from) (action :initform "publish") channel
         (data :accessor data)))
 
 (defclass author (json-mixin)
