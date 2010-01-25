@@ -9,12 +9,12 @@
 
 (in-package :nisp.hello)
 
-'("مكيلع مالّسلا" "নমস্কার" "નમસ્તે")
+#+breaks-cb's-weechat-with-screen '("مكيلع مالّسلا" "নমস্কার" "નમસ્તે")
 (defvar +hello-words+ 
   '("ሠላም" "⠓⠑⠇⠇⠕" "မင္‍ဂလာပာ" "printf (\"Hello, world!\n\");"
     "Dobrý den" "Hej" "Goddag" "Halløj" "Hallo" "Dag" "Hello" 
     "Saluton (Eĥoŝanĝo ĉiuĵaŭde)" "Tere päevast" "Tere õhtust"
-    "Hei" "Hyvää päivää" "Bonjour" "Salut" "გამარჯობა" 
+    "Hei" "Hyvää päivää" "Bonjour" "Salut" "გამარჯობა" "coi"
     "Guten Tag" "Grüß Gott" "Γειά σας" "નમસ્તે" "שלום" "Szép jó napot!"
     "नमस्ते" "नमस्कार ।" "Ciao" "Buon giorno" "System.out.println(\"Sugeng siang!\");"
     "ನಮಸ್ಕಾರ" "ជំរាបសួរ" "ສະບາຍດີ" "ຂໍໃຫ້ໂຊກດີ" "നമസ്കാരം" "Bonġu" "Saħħa"
