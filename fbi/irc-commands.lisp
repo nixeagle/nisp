@@ -1,15 +1,13 @@
 (defpackage #:nisp.fbi.irc-commands
   (:use :cl :usocket :iterate :json :nisp.util-protocol
+        :nisp.fbi.util
         :nisp.util-types
         :bordeaux-threads
         :nisp.fbi.json-classes
         :nisp.fbi.sockets))
 
 (in-package :nisp.fbi.irc-commands)
-(defun make-keyword (string)
-  "Convert STRING to a keyword (uppercased)."
-  (declare (type string string))
-  (intern (string-upcase string) :keyword))
+
 
 (defgeneric irc-command-hook (command-string json socket)
   (:documentation "Act on COMMAND-STRING with JSON data to SOCKET.")

@@ -15,6 +15,7 @@
                 :cl-json)
   :serial t
   :components
-  ((:file "json-classes")
+  ((:file "util")
+   (:file "json-classes")
    (:file "fbi")
    (:file "irc-commands")))
