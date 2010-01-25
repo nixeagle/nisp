@@ -63,7 +63,8 @@
           (action-hook (read-json (car sock)) (car sock)))))
 
 (defmethod irc-command-hook :around (cmd json socket)
-  (irc-reply (call-next-method) json socket))
+  (let ((reply (call-next-method)))
+    (and reply (irc-reply reply json socket))))
 
 (defmethod irc-command-hook ((cmd (eql :hello)) json socket)
   "Say hello in many languages... just as nisp does ,(hello)."
