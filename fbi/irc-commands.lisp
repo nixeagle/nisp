@@ -48,9 +48,6 @@
 (defmethod fbi-message-hook ((from (eql :irc)) (json publish) (sock json-socket))
   (irc-command-hook (make-keyword (command json)) json sock))
 
-(defmethod fbi-message-hook ((from (eql :udp)) (json publish) (sock json-socket))
-  (nisp.fbi.json-classes:json-nisp-message (string-downcase (json->alist json))))
-
 (defun start-command-loop (socket)
   "Spawn a new thread listening for commands on SOCKET."
   (declare (type json-socket socket))
