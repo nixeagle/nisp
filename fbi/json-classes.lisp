@@ -159,7 +159,7 @@ A type signature is basically a list of all keys in a hash table from cl-json"
   (define-signature (name email) 'commit-author)
   (define-signature (message commit project project-2 author url branch shorturl)
       'commit-data)
-  (define-signature (user action secret) 'auth)
+  (define-signature (user action) 'auth)
   (define-signature (nick ident host) 'sender)
   (define-signature (command args sender admin server channel default--project)
       'irc-data)
