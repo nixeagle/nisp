@@ -1,0 +1,11 @@
+#+TITLE: nisp.irc
+
+* License
+  Some of the code in this repository will originate from cl-irc which
+  can be retrieved from http://common-lisp.net/project/cl-irc/ and has
+  been released under a BSD license. A copy of this license is at
+  [[file:CL-IRC-LICENSE]]. 
+
+  My modifications and extensions are released under the GNU GPLv3. A
+  copy of this license is at [[file:COPYING]]
+
