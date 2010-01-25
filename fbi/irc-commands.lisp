@@ -18,6 +18,13 @@
   (declare (type string))
   (string-downcase command-string))
 
+(defgeneric action-hook (json-action-mixin socket))
+
+(defmethod action-hook ((json json-action-mixin) (sock json-socket))
+  "Ignore actions we don't know of and return nil."
+  (declare (ignore json sock))
+  nil)
+
 (defun handle-irc-command (json socket)
   (irc-command-hook (intern (string-upcase (command json)) :keyword) json socket))
 
