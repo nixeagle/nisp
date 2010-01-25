@@ -11,8 +11,10 @@
   :depends-on (:iterate
                 :usocket
                 :nisp.util
+                :bordeaux-threads
                 :cl-json)
   :serial t
   :components
   ((:file "json-classes")
-   (:file "fbi")))
+   (:file "fbi")
+   (:file "irc-commands")))
