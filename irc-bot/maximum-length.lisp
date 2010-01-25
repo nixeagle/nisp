@@ -6,6 +6,7 @@
            #:valid-lenth-p))
 (in-package :nisp.clos.maximum-length)
 
+
 (defclass maximum-length-mixin () ()
   (:documentation "Object expected to respond to and setf a maximum-length.
 
@@ -17,10 +18,12 @@ This is the set of all objects that decompose to a string."))
 
 (defgeneric maximum-length (object)
   (:method ((object maximum-length-mixin))
-    "Subclassing MAXIMUM-LENGTH-MIXIN requires this method to be defined.
-
-Additionally you _must_ return a number."
-    (error "Method on mixin class invalid.")))
+    "Subclassing MAXIMUM-LENGTH-MIXIN requires this method to be defined."
+    (error "Method on mixin class invalid."))
+  (:method :around (object)
+           "The return result _must_ be a number."
+           (let ((result (call-next-method)))
+             (the number result))))
 
 (defgeneric (setf maximum-length) (length object)
   (:method (length (object maximum-length-mixin))
@@ -36,3 +39,4 @@ Additionally you _must_ return a number."
                    :initarg :maximum-length
                    :initform (error "Maximum length must be specified.")
                    :documentation "Maximum length a sequence may be.")))
+
