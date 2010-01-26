@@ -76,7 +76,10 @@
   (and (fboundp 'md5:md5sum-sequence)
        (pretty-format-md5
         (funcall #'md5:md5sum-sequence
-                 (arglist->string (args json))))))
+                 (if (< 0 (array-dimension (args json) 0))
+                     (arglist->string
+                      (args json)) 
+                     "")))))
 
 (defmethod irc-command-hook ((cmd (eql :hello)) json socket)
   "Say hello in many languages... just as nisp does ,(hello)."
