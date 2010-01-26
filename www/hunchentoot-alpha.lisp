@@ -1,7 +1,7 @@
 (in-package :cl-user)
 (defpackage #:nisp.hunchentoot.alpha-site
   (:use :cl :hunchentoot))
-(in-package #:nisp.hunchentoot.alpha-site)
+(in-package :nisp.hunchentoot.alpha-site)
 
 (defparameter *alpha-port* 1337
   "Default port for alpha-site.")
