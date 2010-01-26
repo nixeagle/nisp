@@ -6,7 +6,14 @@
 (defparameter *alpha-port* 1337
   "Default port for alpha-site.")
 
-(defvar *alpha-acceptor* (make-instance 'acceptor :port *alpha-port*)
+(defclass alpha-site-acceptor (acceptor)
+  ()
+  (:default-initargs :port *alpha-port*)
+  (:documentation "Alpha site has its own acceptor so that testing hooks
+can specialize on the acceptor class and not mess with the normal
+hunchentoot acceptor."))
+
+(defvar *alpha-acceptor* (make-instance 'alpha-site-acceptor)
   ;; Note there is an oddity that I cannot stop one of these and then
   ;; start it and expect it to work as I would normally intend. Calling
   ;; REINITIALIZE-INSTANCE on the instance did not do anything useful
@@ -40,11 +47,11 @@
   ;; option has been removed to simplify starting and stopping just one
   ;; acceptor.
   (when (hunchentoot::acceptor-shutdown-p *alpha-acceptor*)
-    (setq *alpha-acceptor* (make-instance 'acceptor :port *alpha-port*)))
+    (setq *alpha-acceptor* (make-instance 'alpha-site-acceptor)))
   (start *alpha-acceptor*))
 
 ;;; Modifications/around methods on hunchentoot generics.
-(defmethod handle-request :before (acceptor request)
+(defmethod handle-request :before ((acceptor alpha-site-acceptor) request)
   "Set *ALPHA-LAST-REQUEST* to REQUEST."
   (setq *alpha-last-request* request)
   #+ () (setq *alpha-acceptor* *acceptor*))
