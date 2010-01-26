@@ -21,10 +21,15 @@
   "Contents of the last hunchentoot request.")
 
 ;;; Destructive toplevel settings to hunchentoot
-(setq *message-log-pathname* "/home/james/n/www/message.log")
-(setq *access-log-pathname* "/home/james/n/www/access.log")
-(setq *lisp-errors-log-level* :info)    ;Default is :error
-(setq *lisp-warnings-log-level* :info)  ;Default is :warning
+(setq *message-log-pathname* "/home/james/n/www/message.log"
+      *access-log-pathname* "/home/james/n/www/access.log"
+      *lisp-errors-log-level* :info     ;Default is :error
+      *lisp-warnings-log-level* :info   ;Default is :warning
+
+      ;;On a real site this obviously should be set to nil,
+      ;;hunchentoot's default for the normal security reasons.
+      *show-lisp-errors-p* t)
+
 
 (defun start-alpha-acceptor! ()
   "  Startup ACCEPTOR.
