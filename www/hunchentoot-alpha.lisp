@@ -56,4 +56,14 @@ hunchentoot acceptor."))
   (setq *alpha-last-request* request)
   #+ () (setq *alpha-acceptor* *acceptor*))
 
+
+;;; dispatching things ------------------------------
+(defun default-handler ()
+  "Called if nothing else matches."
+  (log-message :info "Default dispatch called on alpha-site, script: ~A"
+               (script-name*))
+  "Nothing here!")
+
+(setq *default-handler* 'default-handler)
+
 ;;; End hunchentoot-alpha.lisp (for magit/git)
