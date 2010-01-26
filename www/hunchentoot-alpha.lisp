@@ -19,6 +19,13 @@
 
 (defvar *alpha-last-request* nil
   "Contents of the last hunchentoot request.")
+
+;;; Destructive toplevel settings to hunchentoot
+(setq *message-log-pathname* "/home/james/n/www/message.log")
+(setq *access-log-pathname* "/home/james/n/www/access.log")
+(setq *lisp-errors-log-level* :info)    ;Default is :error
+(setq *lisp-warnings-log-level* :info)  ;Default is :warning
+
 (defun start-alpha-acceptor! ()
   "  Startup ACCEPTOR.
 
