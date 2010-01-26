@@ -63,6 +63,21 @@
   (let ((reply (call-next-method)))
     (and reply (irc-reply reply json socket))))
 
+(defun pretty-format-md5 (md5-result-digest)
+  (format nil "~(~{~2,'0X~}~)"
+          (map 'list #'identity md5-result-digest)))
+
+(defun arglist->string (arglist)
+  (reduce (lambda (old new)
+            (concatenate 'string old " " new))
+          arglist))
+
+(defmethod irc-command-hook ((cmd (eql :md5)) json socket)
+  (and (fboundp 'md5:md5sum-sequence)
+       (pretty-format-md5
+        (funcall #'md5:md5sum-sequence
+                 (arglist->string (args json))))))
+
 (defmethod irc-command-hook ((cmd (eql :hello)) json socket)
   "Say hello in many languages... just as nisp does ,(hello)."
   (nisp.hello:hello))
