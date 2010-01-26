@@ -17,6 +17,8 @@
   ;; and then call (start *alpha-acceptor*).
   "Default acceptor.")
 
+(defvar *alpha-last-request* nil
+  "Contents of the last hunchentoot request.")
 (defun start-alpha-acceptor! ()
   "  Startup ACCEPTOR.
 
@@ -28,5 +30,11 @@
   (when (hunchentoot::acceptor-shutdown-p *alpha-acceptor*)
     (setq *alpha-acceptor* (make-instance 'acceptor :port *alpha-port*)))
   (start *alpha-acceptor*))
+
+;;; Modifications/around methods on hunchentoot generics.
+(defmethod handle-request :before (acceptor request)
+  "Set *ALPHA-LAST-REQUEST* to REQUEST."
+  (setq *alpha-last-request* request)
+  #+ () (setq *alpha-acceptor* *acceptor*))
 
 ;;; End hunchentoot-alpha.lisp (for magit/git)
