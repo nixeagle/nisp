@@ -192,10 +192,10 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 
 (defclass raw-irc-protocol-line (raw-protocol-line maximum-message-length) ())
 
-(defpackage #:nisp-user
+(defpackage #:nisp-irc-user
   (:use :cl :usocket :nisp.irc :nisp.irc-types :nisp.util-types
         :iterate))
-(in-package :nisp-user)
+(in-package :nisp-irc-user)
 
 
 (in-package :nisp-system)
