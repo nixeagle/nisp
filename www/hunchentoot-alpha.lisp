@@ -67,3 +67,4 @@ hunchentoot acceptor."))
 (setq *default-handler* 'default-handler)
 
 ;;; End hunchentoot-alpha.lisp (for magit/git)
+
