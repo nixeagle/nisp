@@ -124,3 +124,9 @@
 
 #+sbcl
 (start-nispbot-instance)
+
+(in-package :cl-user)
+
+(asdf:operate 'asdf:load-op :nisp.user)
+
+(in-package :nisp.user)
