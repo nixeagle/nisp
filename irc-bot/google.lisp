@@ -21,3 +21,23 @@ Note that the translation text is stored in a child node of NODE."
   (declare (type stp:node node))
   (and (elementp node)
        (equal (stp:attribute-value node "id") "suggestion")))
+
+(defun get-html-translate (text from to)
+  "Get html page with the translation of TEXT FROM language TO language."
+  (declare (type string from to))
+  (drakma:http-request "http://translate.google.com/"
+                       :parameters `(("eotf" . "1")
+                                     ("hl" . "en")
+                                     ("ie" . "UTF-8")
+                                     ("js" . "y")
+                                     ("layout" . "1")
+                                     ("prev" . "_t")
+                                     ("sl" . ,from)
+                                     ("text" . ,text)
+                                     ("tl" . ,to))
+                       :external-format-out :UTF-8
+                       :keep-alive t
+                       :close nil))
+
+
+;;; end file, please leave trailing newline.
