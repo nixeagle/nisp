@@ -44,4 +44,9 @@ Note that the translation text is stored in a child node of NODE."
   (declare (type string xml-string))
   (chtml:parse xml-string (cxml-stp:make-builder)))
 
+(defun simple-translate (text from to)
+  "Translate TEXT FROM a language TO another language."
+  (declare (type string text from to))
+  (xml->sexp (get-html-translate-page text from to)))
+
 ;;; end file, please leave trailing newline.
