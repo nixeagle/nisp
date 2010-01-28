@@ -68,4 +68,14 @@ NODE should be of a short_text html/css class."
       (error "Translation from ~A to ~A using text \"~A\" has no valid result."
              from to text)))
 
+(defun google-translate (text &rest langs)
+  "Translate TEXT apllying the result in succession for each language in LANGS."
+  (let ((fresh-langs langs))
+    (iter (with first = (pop fresh-langs))
+          (with result = text)
+          (for lang in fresh-langs)
+          (setq result (simple-translate result first lang)
+                first lang)
+          (finally (return result)))))
+
 ;;; end file, please leave trailing newline.
