@@ -9,12 +9,21 @@
   :maintainer "James S <i@nixeagle.org>"
   :license "GPLv3 or later"
   :depends-on (:iterate
+                :cxml-stp
                 :hunchentoot
+                :cl-irc
                 :cl-who
                 :closure-html
                 :drakma 
                 :usocket
-                :nisp.util)
+                :closure-html
+                :cl-html-parse
+                :djula
+                :mcclim
+                :clouseau
+                :nisp.util
+                :nispbot
+                :nisp.fbi)
   :serial t
   :components
   ((:file "user")))
