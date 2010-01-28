@@ -78,4 +78,32 @@ NODE should be of a short_text html/css class."
                 first lang)
           (finally (return result)))))
 
+
+;;;;; Search
+
+
+;;; Taken from http://common-lisp.net/project/closure/closure-html/examples.html
+;;; and modified to do what I need.
+;;;
+;;; stopping where I need to finish the m-v-b and somehow return the
+;;; google query along with the string of the google results.
+;      result (puri:uri-query uri)
+(defun google-search (term)
+  "Google TERM and return the top 10 links."
+  ;; This is kinda old (from nisp.irc.google-oneline-list) and needs
+  ;; rewriting using the utilities developed in this file.
+  (multiple-value-bind (result response alist uri)
+      (drakma:http-request "http://www.google.com/search"
+                           :parameters (list (cons "q" term)))
+      (declare (ignore response alist))
+      (let ((document (chtml:parse result (cxml-stp:make-builder)))
+            (out ""))
+        (stp:do-recursively (a document)
+          (when (and (typep a 'stp:element)
+                     (equal (stp:local-name a) "a")
+                     (equal (stp:attribute-value a "class") "l"))
+            (setq out (format nil "~A ~A" out (stp:attribute-value a "href")))))
+        (format nil "Search: ~A ::: ~A" uri out))))
+
+
 ;;; end file, please leave trailing newline.
