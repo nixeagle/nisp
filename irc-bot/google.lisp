@@ -59,6 +59,13 @@ NODE should be of a short_text html/css class."
 (defun simple-translate (text from to)
   "Translate TEXT FROM a language TO another language."
   (declare (type string text from to))
-  (xml->sexp (get-html-translate-page text from to)))
+  (or (stp:do-recursively (a (xml->sexp (get-html-translate-page text from to)))
+        (cond
+          ((translate-short-text-p a)
+           (return (get-normal-translate-data-node a)))
+          ((translate-suggestion-p a)
+           (return (get-suggestion-translate-data-node a)))))
+      (error "Translation from ~A to ~A using text \"~A\" has no valid result."
+             from to text)))
 
 ;;; end file, please leave trailing newline.
