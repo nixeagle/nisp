@@ -25,19 +25,23 @@ Note that the translation text is stored in a child node of NODE."
 (defun get-html-translate-page (text from to)
   "Get html page with the translation of TEXT FROM language TO language."
   (declare (type string text from to))
-  (drakma:http-request "http://translate.google.com/"
-                       :parameters `(("eotf" . "1")
-                                     ("hl" . "en")
-                                     ("ie" . "UTF-8")
-                                     ("js" . "y")
-                                     ("layout" . "1")
-                                     ("prev" . "_t")
-                                     ("sl" . ,from)
-                                     ("text" . ,text)
-                                     ("tl" . ,to))
                        :external-format-out :UTF-8
-                       :keep-alive t
-                       :close nil))
+  (multiple-value-bind (result code alist uri)
+      (drakma:http-request "http://translate.google.com/"
+                           :parameters `(("eotf" . "1")
+                                         ("hl" . "en")
+                                         ("ie" . "UTF-8")
+                                         ("js" . "y")
+                                         ("layout" . "1")
+                                         ("prev" . "_t")
+                                         ("sl" . ,from)
+                                         ("text" . ,text)
+                                         ("tl" . ,to))
+                           :keep-alive t
+                           :close nil)
+    (declare (ignore code alist))
+    (print uri)
+    result))
 
 (defun xml->sexp (xml-string)
   "Convert XML-STRING to the lisp representation."
