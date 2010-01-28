@@ -53,6 +53,11 @@ NODE should be of a short_text html/css class."
     (unless data (error "No data node found, likely a language conversion failed to work. Make sure things like es -> jp actually produce a meaningful translation."))
     (stp:data data)))
 
+(defun get-suggestion-translate-data-node (node)
+  "The translation in NODE's data field is returned."
+  (declare (type (and stp:node (satisfies translate-suggestion-p)) node))
+  (stp:data (car (stp:list-children node))))
+
 (defun simple-translate (text from to)
   "Translate TEXT FROM a language TO another language."
   (declare (type string text from to))
