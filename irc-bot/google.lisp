@@ -39,5 +39,9 @@ Note that the translation text is stored in a child node of NODE."
                        :keep-alive t
                        :close nil))
 
+(defun xml->sexp (xml-string)
+  "Convert XML-STRING to the lisp representation."
+  (declare (type string xml-string))
+  (chtml:parse xml-string (cxml-stp:make-builder)))
 
 ;;; end file, please leave trailing newline.
