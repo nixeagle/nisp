@@ -1,0 +1,29 @@
+#+TITLE: nisp.google
+
+Various lisp functions allowing google searches and
+translations. Currently the source is at [[file:../irc-bot/google.lisp][google.lisp]]. [fn:1]
+
+* Search
+  The function =GOOGLE-SEARCH= queries google for the passed in
+  string. The result is a string with a list of links.
+
+  : (google-search "common lisp")
+  Yields a string with 10 links seperated by spaces.
+
+*** TODO Return a list of links
+    Use a real list, not a returned string as we do now.
+
+* Translate
+  The only exported function is =GOOGLE-TRANSLATE=. This takes some text
+  to translate and arguments afterwards represent the language to
+  translate to.
+
+  : (google-translate "hi" "en" "es")
+  : => "hola"
+
+  : (google-translate "hi" "en" "es" "it")
+  : => "salve"
+
+* Footnotes
+
+[fn:1] As of [2010-01-28 Thu]
