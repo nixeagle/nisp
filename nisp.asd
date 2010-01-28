@@ -11,6 +11,7 @@
   :license "GPLv2 or later"
   :depends-on (:lift
                :hu.dwim.walker
+               :md5
                :metabang-bind
                :iterate
                :nistilities)
