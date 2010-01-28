@@ -22,7 +22,7 @@ Note that the translation text is stored in a child node of NODE."
   (and (elementp node)
        (equal (stp:attribute-value node "id") "suggestion")))
 
-(defun get-html-translate (text from to)
+(defun get-html-translate-page (text from to)
   "Get html page with the translation of TEXT FROM language TO language."
   (declare (type string from to))
   (drakma:http-request "http://translate.google.com/"
