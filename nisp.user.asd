@@ -22,6 +22,7 @@
                 :mcclim
                 :clouseau
                 :nisp.util
+                :nisp.github
                 :nispbot
                 :nisp.fbi)
   :serial t

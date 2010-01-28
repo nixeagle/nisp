@@ -1,0 +1,1 @@
+../irc-bot/nisp.google.asd
