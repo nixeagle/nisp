@@ -82,7 +82,14 @@
       (with-output-to-string (*standard-output*)
         (dolist (o values)
           (pprint o))))))
-
+(defun describe-values (object)
+  (mapcar
+   (lambda (x)
+     (with-output-to-string (*standard-output*)
+       (describe x)))
+   (if (and (listp object) (listp (car object)))
+       (car object)
+       object)))
 (defun nix-pprint-eval (string &optional extra)
   (declare (ignore extra))
   (swank::with-buffer-syntax ()
@@ -109,11 +116,7 @@
             (get-output-stream-string err)
             (get-output-stream-string trace)
             (nix-pprint values)
-            (mapcar (lambda (x)
-                      
-                      (with-output-to-string (*standard-output*)
-                        (describe x)))
-                    values)))))
+            (describe-values values)))))
 
 (in-package :cl-user)
 #+sbcl
