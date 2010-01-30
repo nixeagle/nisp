@@ -234,11 +234,12 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 (defmethod json->string ((object json-mixin))
   (encode-json-to-string object))
 
+#+ ()
 (defmethod make-object :around (bindings (symbol symbol) &optional superclasses)
   (if (or (null symbol) (find-class symbol nil))
       (call-next-method)
       (make-object bindings nil superclasses)))
-
+#+ ()
 (defmethod make-object :around (bindings (symbol (eql nil)) &optional superclasses)
   (let ((type-class (nisp.fbi.json-classes::find-json-type bindings)))
     (let ((class (find-class type-class nil))
