@@ -10,7 +10,7 @@
         :drakma                         ;http-request
         
         ;; Nisp related types
-        :nisp.irc :nisp.irc-types :nisp.util-types
+        :nisp.irc-types :nisp.util-types
         
         ;; General nisp related short packages
         :nisp.clos.maximum-length       ; Concept of restricted length.
@@ -21,8 +21,3 @@
 (in-package :nisp.user)
 ;;; In custom userland, this userland has modifications from a standard
 ;;; userland.
-
-(defmacro clock (count &body body)
-  "Time BODY for COUNT iterations."
-  `(cl:time (iterate (for ,(gensym) :from 0 :to ,count)
-                     ,@body)))
