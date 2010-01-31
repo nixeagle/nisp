@@ -22,3 +22,7 @@
 ;;; In custom userland, this userland has modifications from a standard
 ;;; userland.
 
+(defmacro clock (count &body body)
+  "Time BODY for COUNT iterations."
+  `(cl:time (iterate (for ,(gensym) :from 0 :to ,count)
+                     ,@body)))
