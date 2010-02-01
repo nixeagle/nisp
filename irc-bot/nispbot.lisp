@@ -29,7 +29,16 @@ of normal conversation and an IRC bot that interferes with that is not
 a very friendly bot."
   '(member #\! #\# #\% #\) #\+ #\, #\-
     #\@ #\\ #\] #\_ #\` #\{ #\| #\} #\~))
+(defgeneric channel (object))
+(defgeneric message-text (object))
 
+(defmethod channel ((msg irc-message))
+  "Return the channel or person the message was from."
+  (car (arguments msg)))
+
+(defmethod message-text ((msg irc-message))
+  "Return the string containing the irc-message."
+  (first (last (arguments msg))))
 
 (defgeneric comchar (object))
 (defgeneric (setf comchar) (character object))
