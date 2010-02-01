@@ -5,9 +5,9 @@
   (:use :common-lisp :lift
         :nisp
         :nisp.irc-types
-        :nisp.irc
         :cl-irc :cl-ppcre
         :nispbot-config
+        :split-sequence
         :iterate
         :nisp.ldap
         :nisp.8b-ldap
@@ -15,7 +15,6 @@
         :nisp-safe
         :nistilities)
   (:shadowing-import-from :iterate :while)
-  (:shadowing-import-from :nisp.irc :nickname)
   (:shadowing-import-from :cl-irc :pass))
 
 (in-package :nispbot)
@@ -112,11 +111,6 @@ valid-comchar.")
                                                      (host message)))))
                    (cl::eval read-result))
       res)))
-(let ((*package* (find-package :nisp.irc)))
-  (defparameter nispbot::*nisp.irc-list*
-    '(nisp.irc::channel-string nisp.irc::channel-string-p
-      nisp.irc::nickname-string nisp.irc::nickname-string-p)))
-
 (defun nisp-safe::populate-ldap-stuff (safe-package)
   (let ((prior-hello-results '(nil nil nil nil nil nil)))
     (defun safe-closure::hello ()
@@ -133,7 +127,8 @@ valid-comchar.")
     (one-line-ldif (get-single-entry string :attrs attrs)))
   (defun safe-closure::ircUser (string)
     (safe-closure:ldap-entry (concatenate 'string "uid=" string)))
-  (cl:use-package '(:nisp.irc-types) (nisp-safe::safe-package safe-package)))
+  (cl:use-package '(:nisp.google)
+                  (nisp-safe::safe-package safe-package)))
 
 (defun command-hook (message)
   (declare (notinline command-hook))
@@ -157,9 +152,9 @@ valid-comchar.")
                          (first (arguments message))
                          (strip-newlines
                           (format nil "~A"
-                                  (with-package :nisp.irc
+                                  (with-package :nisp.user
                                     (eval (read-from-string admin-request)))))))
-              (trivial-timeout:with-timeout (1)
+              (trivial-timeout:with-timeout (4)
               ;; Untrusted users, eval their stuff in sandboxes
                 (privmsg (connection message)
                          (first (arguments message))
