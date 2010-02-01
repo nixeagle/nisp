@@ -218,9 +218,6 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 
 (in-package :nispbot)
 
-;;; cl-ppcre registers. Do we need this? --nixeagle
-(setq *allow-named-registers* t)
-
 (defvar *nispbot*)
 
 (deftype valid-comchar ()
