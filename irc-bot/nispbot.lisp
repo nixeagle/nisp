@@ -207,7 +207,7 @@ valid-comchar.")
   "Quickie to get something up on freenode"
   (setq nispbot::*freenode*
         (irc:connect :connection-type 'nispbot::irc-bot
-                     :nickname nispbot-config::*nickname*
+                     :nickname "nisp"
                      :server "irc.freenode.net"
                      :password nispbot-config::*freenode-password*))
   (irc:start-background-message-handler nispbot::*freenode*)
