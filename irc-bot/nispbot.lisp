@@ -86,7 +86,7 @@ valid-comchar.")
 (defgeneric reset-command-hook (instance))
 (defmethod reset-command-hook ((bot irc-bot))
   (irc:remove-hooks bot 'irc:irc-privmsg-message)
-  (irc:add-hook bot 'irc:irc-privmsg-message #'command-hook))
+  )
 
 (defgeneric parse-eval-request (instance message))
 (defmethod parse-eval-request ((bot irc-bot) (msg irc-privmsg-message))
