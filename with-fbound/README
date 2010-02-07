@@ -1,0 +1,55 @@
+This package includes the WITH-FBOUND "big fat macro" that builds on top of Eos.
+
+This macro is largely a hack and requires some extensive modifications
+to Eos' check.lisp code. Because of this I cannot promise that this
+package will not break when Eos upstream moves. Until Eos starts
+releasing versioned releases in the system definition files I cannot
+specify what versions this library is compatable with. The version of
+Eos at http://github.com/Nixeagle/Eos is what this package is developed
+against.
+
+This package is released seperately as several
+of my projects will be using this macro and the source needs to be out
+there. It is already known the macro will _NOT_ be going into the source
+of Eos as it plans to be a small test library similar to RT.
+
+In essence:
+
+  - reason strings are transformed to docstrings which are seperate from
+    the reason strings on an error. These strings explain why the test
+    was written.
+
+  - The macro itself layers ontop of the IS macro to encapsulate a group
+    of tests against one function. The docstring for the macro explains
+    what it does. Additionally there are 19 unit tests against the macro
+    to verify reasonably correct behavior.
+
+  - The is macro has several new cases: "comparable" for evaluating the
+    actual result before evaluating the expected result. This is helpful
+    for testing those unprintable objects. Also added is typep which
+    just prints a better failure reason that makes sense in the context
+    of checking a type.
+
+  - The is macro treats find-predicate specially. Find-predicate is a
+    generic function that returns a predicate to use given two
+    arguments. It uses this to look up the correct predicate to compare
+    against by passing the evaluated results of both the expected and
+    actual results. Given something like (is (find-predicate 1 1)) it
+    will look up and correctly use the = predicate for comparing two
+    numbers. The test-result object correctly shows the effective test
+    as (= 1 1) as well as uses = in the reason string on failure.
+
+  - Test results are made inspectable where it makes sense for them to
+    be so. The test object has an actual and an expected result value.
+
+CREDITS
+
+This package depends on both iterate and Eos itself. All the source code
+in check.lisp is modified from Eos which can be obtained at
+http://github.com/adlai/Eos and was forked from 5am by Adlai Chandrasekhar.
+
+The original license from http://www.cliki.net/FiveAM (5am) is in COPYING.
+
+The license from Eos is in LICENCE
+
+The licence for these modifications are in LICENCE.Nixeagle
