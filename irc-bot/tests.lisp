@@ -1,5 +1,7 @@
 (in-package :nisp.i)
 
+(def-suite nisp.i)
+
 (defgeneric samep (arg1 arg2)
   (:documentation "Compare ARG1 to ARG2 based on their types."))
 (defmethod samep (arg1 arg2)
@@ -45,7 +47,7 @@
     "Addition should always run to completion"
     (1 2 3) :finishes))
 
-(def-suite nisp.i.irc-packages)
+(def-suite nisp.i.irc-packages :in nisp.i)
 (in-suite nisp.i.irc-packages)
 
 (test (normalize-network-name :suite nisp.i.irc-packages)
@@ -86,7 +88,8 @@
 ;;; Command routing
 ;;; 
 (def-suite command-routing
-    :description "Routing string messages.")
+    :description "Routing string messages."
+    :in nisp.i)
 
 (test (split-command-string :suite command-routing)
   (with-fbound (split-command-string)
