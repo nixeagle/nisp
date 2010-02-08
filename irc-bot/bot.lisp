@@ -1,5 +1,19 @@
 (in-package :nisp.i)
 
+(defun split-command-string (command-string)
+  "Split COMMAND-STRING into appropriate parts."
+  (declare (type string command-string))
+  (split-sequence #\Space command-string :remove-empty-subseqs t))
+
+(test (split-command-string :suite command-routing)
+  (with-fbound (split-command-string)
+    "Expect the string with no spaces in a list."
+    ("Hi") '("Hi")
+    "Expect a list with the 4 words as elements."
+    ("Hi how are you") '("Hi" "how" "are" "you") 
+    (" Hi how are you") '("Hi" "how" "are" "you")
+    ("Hi how are you ") '("Hi" "how" "are" "you")))
+
 ;;; not bot related directly...
 (defun add-superclass (instance new-superclass)
   "Add NEW-SUPERCLASS to INSTANCE's superclass list."
