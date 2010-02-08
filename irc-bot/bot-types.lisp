@@ -20,7 +20,7 @@ Saying :comchar \"!\" or similar will work thanks to the shared-initialize."))
 This is a single character, usually a symbol that the bot responds
 to. This class will signal an error if a comchar is not of the type
 valid-comchar.")
-  (:default-initargs :comchar nispbot-config::*comchar*))
+  (:default-initargs :comchar "\,"))
 
 (defmethod (setf comchar) ((char string) (object comchar))
   "Set CHAR, a string of length 1 as the comchar."
