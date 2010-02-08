@@ -96,6 +96,7 @@ This macro has some funny destructuring.
                                      ,docs)))))
                        ((and (consp expected-result)
                              (eq 'not (first expected-result))
+                             (not (eq 'quote (first expected-result)))
                              (consp (second expected-result))
                              (fboundp (first (second expected-result)))
                              (setq expected-result 
@@ -113,6 +114,7 @@ This macro has some funny destructuring.
                                             ,@arg-lists)))
                              ,docs))
                        ((and (listp expected-result)
+                             (not (eq 'quote (first expected-result)))
                              (fboundp (first expected-result)))
                         `(is (eos::comparable
                               (eos::find-predicate ,expected-result
