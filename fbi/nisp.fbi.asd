@@ -12,6 +12,7 @@
                 :usocket
                 :nisp.util
                 :bordeaux-threads
+                :nisp.util.json
                 :cl-json)
   :serial t
   :components

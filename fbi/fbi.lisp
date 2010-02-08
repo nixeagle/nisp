@@ -21,7 +21,6 @@
 
 (in-package :nisp.fbi.sockets)
 
-(defclass json-socket (usocket:stream-usocket) ())
 (defgeneric read-ready-p (socket)
   (:documentation "Return non-nil if socket is ready to read from."))
 (defgeneric write-json (json-mixin json-socket &key force)
@@ -30,10 +29,6 @@
 
 (defmethod read-ready-p ((sock json-socket))
   (listen (socket-stream sock)))
-
-(defun json-socket-connect (host port)
-  (change-class (usocket:socket-connect host port)
-                'json-socket))
 
 (defmethod write-json ((json-object json-mixin) (sock json-socket)
                        &key force)

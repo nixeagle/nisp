@@ -67,8 +67,7 @@ A type signature is basically a list of all keys in a hash table from cl-json"
                     (princ-to-string (make-json-type-signature bindings)))))
           nil))))
 
-(defclass json-mixin () ()
-  (:documentation "All classes related json should inherit this."))
+
 (defgeneric action (object))
 (defgeneric from (object)
   (:documentation "From is always related to who on FBI sent a message."))
