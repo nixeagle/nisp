@@ -6,7 +6,7 @@
 (defun normalize-network-name (network-name)
   "Replace all periods in NETWORK-NAME with dashes."
   (declare (type string network-name))
-  (substitute #\- #\. network-name))
+  (string-upcase (substitute #\- #\. network-name)))
 
 (defun %ensure-network-package (package &key (prefix *irc-package-prefix*))
   "Add PREFIX to PACKAGE."

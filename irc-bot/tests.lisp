@@ -53,10 +53,10 @@
 (test (normalize-network-name :suite nisp.i.irc-packages)
   (with-fbound (normalize-network-name) 
     "Dots should convert to dashes."
-    ("irc.foo.net") "irc-foo-net"
+    ("irc.foo.net") "IRC-FOO-NET"
     
     "Do not do anything if no dots exist."
-    ("nodots") "nodots"))
+    ("nodots") "NODOTS"))
 
 (test (ensure-network-package :suite nisp.i.irc-packages) 
   (let ((expected-package :nisp.i.packages.irc-eighthbit-net)
