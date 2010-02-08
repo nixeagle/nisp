@@ -8,7 +8,7 @@
   (declare (type string network-name))
   (substitute #\- #\. network-name))
 
-(defun %ensure-network-package (package &key prefix)
+(defun %ensure-network-package (package &key (prefix *irc-package-prefix*))
   "Add PREFIX to PACKAGE."
    (declare (type (or null string symbol) prefix)
             (type string package))
@@ -24,9 +24,10 @@
   (:documentation "Make sure PACKAGE exists."))
 (defmethod ensure-network-package ((package string) &key prefix)
   "Concat PREFIX to PACKAGE if it exists."
-  (%ensure-network-package package :prefix prefix))
+  (%ensure-network-package package :prefix (or prefix *irc-package-prefix*)))
 (defmethod ensure-network-package ((package symbol) &key prefix)
-  (%ensure-network-package (symbol-name package) :prefix prefix))
+  (%ensure-network-package (symbol-name package)
+                           :prefix (or prefix *irc-package-prefix*)))
 
 
 #+ () (format-symbol "irc.eighthbit.net" "it")

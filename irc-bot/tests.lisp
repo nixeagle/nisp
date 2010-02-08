@@ -66,7 +66,8 @@
            "Pass a string with a keyword argument."
            ("IRC.EIGHTHBIT.NET" :prefix :nisp.i.packages.)
            :satisfies packagep
-         
+           "No need to pass the prefix, should default."
+           ("IRC.EIGHTHBIT.NET") :satisfies packagep
            "Pass two keyword args"
            (:irc.eighthbit.net :prefix :nisp.i.packages.)
            (find-package expected-package)
@@ -77,7 +78,7 @@
 
            "A keyword arg for :prefix is not required."
            (fully-normallized)
-           (find-package fully-normallized)))
+           :satisfies packagep))
       (and (find-package expected-package)
            (delete-package expected-package))
       (and (find-package fully-normallized)
