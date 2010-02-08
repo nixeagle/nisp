@@ -1,7 +1,7 @@
 (defpackage #:nisp.util.json
   (:use :cl :json :usocket
         :eos :with-fbound)
-  (:export :json-socket :json-mixin))
+  (:export :json-socket :json-mixin :json-socket-connect))
 (in-package :nisp.util.json)
 
 (defclass json-mixin () ()
