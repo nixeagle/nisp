@@ -65,11 +65,14 @@
 
 (defvar *irc-bot-instances* nil
   "Global list of bot instances.")
+(defclass target () ())
 
-(defclass bot-user (irc:user) ()
+(defclass bot-user (irc:user target) ()
   (:documentation "This does not bother with normalization.
 
 All things made by `make-anon-bot-user-class' superclass this."))
+
+(defclass bot-channel (irc:channel target) ())
 
 (defclass connection (irc:connection) ())
 (defclass bot-connection (connection comchar) ())
@@ -215,7 +218,7 @@ methods that support this."))
   (add-irc-user-superclass irc
                            (irc:find-user irc nickname)
                            superclass))
-(defclass target (irc:user irc:channel) ())
+
 (defgeneric handle-command (connection sender to cmd))
 
 (defmethod handle-command ((irc connection) sender (to string) cmd)
@@ -226,13 +229,13 @@ methods that support this."))
   (handle-command irc
                   (ensure-user-host (irc:find-user irc (irc:source sender))
                                     (irc:host sender))
-                  to cmd))
+                  (change-class to 'bot-channel) cmd))
 
 (defmethod handle-command ((irc connection) sender (to irc:user) cmd)
   (handle-command irc
                   (ensure-user-host (irc:find-user irc (irc:source sender))
                                     (irc:host sender))
-                  to cmd))
+                  (change-class to 'bot-user) cmd))
 
 (defmethod remove-comchar ((comchar comchar) (message string))
   "Remove leading COMCHAR from MESSAGE."
@@ -277,18 +280,14 @@ methods that support this."))
 (define-command-node github (connection irc:user (to t) string params))
 (define-command-node github-show (connection irc:user (to t)
                                              string params))
-(define-command github-show-followers (connection irc:user (to irc:channel) 
+(define-command github-show-followers (connection irc:user target 
                                                   string github-user)
-  (irc:privmsg connection to 
+  (irc:privmsg connection target 
                (join-sequence (clithub:show-followers github-user))))
-(define-command github-show-following (connection irc:user irc:channel
+(define-command github-show-following (connection irc:user target 
                                                   string github-user)
-  (irc:privmsg connection irc:channel
+  (irc:privmsg connection target 
                (join-sequence (clithub:show-following github-user))))
-(define-command github-show-following (connection irc:user (to irc:user) 
-                                                  string github-user)
-  "Handling a private message is possible."
-  (irc:privmsg connection to github-user))
 
 
 ;;; Types
