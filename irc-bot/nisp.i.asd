@@ -9,13 +9,17 @@
   :version "0.0.0"
   :license "GPLv3 or later"
   :description "irc bot"
-  :depends-on (:split-sequence
+  :depends-on (:eos
+               :with-fbound
+               :split-sequence
                :alexandria
                :cl-irc
                :iterate
                :closer-mop)
   :serial t
   :components
-  ((:file "package")
+  ((:file "util.packages")
+   (:file "package")
+   (:file "irc-packages")
    (:file "bot-types")
-   (:file "bot")))
+   (:file "bot"))) 

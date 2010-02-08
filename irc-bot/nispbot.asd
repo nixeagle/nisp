@@ -11,7 +11,9 @@
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv3 or later"
   :description "irc bot"
-  :depends-on (:nisp
+  :depends-on (:split-sequence
+               :nisp
+               :nisp.google
                :cl-irc
                :iterate
                :metabang-bind

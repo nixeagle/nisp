@@ -21,14 +21,7 @@
 
 (defvar *nispbot*)
 
-(deftype valid-comchar ()
-  "Usable characters for irc comchars.
 
-Most anything else in the ASCII set can't be used as they occur as part
-of normal conversation and an IRC bot that interferes with that is not
-a very friendly bot."
-  '(member #\! #\# #\% #\) #\+ #\, #\-
-    #\@ #\\ #\] #\_ #\` #\{ #\| #\} #\~))
 (defgeneric channel (object))
 (defgeneric message-text (object))
 
@@ -97,7 +90,15 @@ valid-comchar.")
   (when msg
     (error "Failed to parse message ~A" msg))
   nil)
- 
+
+(defmethod show-channel-users (connection channel)
+  (alexandria:hash-table-keys
+   (users (gethash channel (channels connection)))))
+
+(defmethod spam-message-p (connection channel msg)
+  (length (nintersection (show-channel-users connection channel)
+                         (split-sequence #\Space msg) :test #'equal)))
+
 (defgeneric is-eval-request (instance message))
 (defmethod is-eval-request ((bot irc-bot) (msg irc-privmsg-message))
   (is-eval-request bot (second (arguments msg))))
