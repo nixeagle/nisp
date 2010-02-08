@@ -22,4 +22,5 @@
    (:file "package")
    (:file "irc-packages")
    (:file "bot-types")
+   (:file "symbols")
    (:file "bot"))) 
