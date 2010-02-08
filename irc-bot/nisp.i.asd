@@ -23,4 +23,5 @@
    (:file "irc-packages")
    (:file "bot-types")
    (:file "symbols")
-   (:file "bot"))) 
+   (:file "bot")
+   (:file "i.fbi"))) 
