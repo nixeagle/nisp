@@ -1,6 +1,7 @@
 (defpackage #:with-fbound
   (:use :cl :eos :iterate)
-  (:nicknames :with-fbound))
+  (:nicknames :with-fbound)
+  (:export :with-fbound))
 
 (in-package :with-fbound)
 
