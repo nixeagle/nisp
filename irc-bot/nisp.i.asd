@@ -11,6 +11,7 @@
   :description "irc bot"
   :depends-on (:eos
                :with-fbound
+               :nisp.util.usocket
                :split-sequence
                :alexandria
                :cl-irc
