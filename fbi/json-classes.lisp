@@ -35,8 +35,8 @@ A type signature is basically a list of all keys in a hash table from cl-json"
   (mapcar #'car alist))
 
 (defun make-json-mixin-from-string (string)
+  ;; Not positive if this needs to stay or not...
   (declare (type string string))
-  (print string)
   (let ((json:*prototype-name* 'hash-type)
         (json:*json-symbols-package* :nisp.fbi.json-classes))
     (json:with-decoder-simple-clos-semantics
@@ -45,10 +45,11 @@ A type signature is basically a list of all keys in a hash table from cl-json"
 
 (defun json-nisp-message (string)
   "Send STRING stripping newlines to nispbot if that symbol exists."
-  (if (boundp 'nispbot::*nispbot*)
+ #+ () (if (boundp 'nispbot::*nispbot*)
       (nispbot::privmsg nispbot::*nispbot* "#bots"
                         (nispbot::strip-newlines string #\Space))
-      (princ string)))
+      )
+ (princ string))
 
 (defun find-json-type (bindings)
   (let ((type-class (gethash (make-json-type-signature bindings)
