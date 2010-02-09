@@ -1,5 +1,7 @@
 (in-package :nisp.i)
 
+(defclass connection (irc:connection) ())
+
 (defmacro %define-command (name (irc sender to msg remaining) &body body)
   (multiple-value-bind (count params)
       (%format-command-method-symbol name)
@@ -74,7 +76,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
 
 (defclass bot-channel (irc:channel target) ())
 
-(defclass connection (irc:connection) ())
+
 (defclass bot-connection (connection comchar) ())
 (defclass connect-with-background-handler-mixin () ()
   (:documentation "Superclass this to connect directly to background on
