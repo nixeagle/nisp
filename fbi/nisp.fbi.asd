@@ -9,6 +9,7 @@
   :maintainer "James S <i@nixeagle.org>"
   :license "GPLv3 or later"
   :depends-on (:iterate
+                :alexandria
                 :with-fbound
                 :usocket
                 :nisp.util
@@ -22,4 +23,4 @@
    (:file "json-classes")
    (:file "fbi")
    (:file "irc-commands")
-   (:file "tests"))))
+   (:file "tests")))
