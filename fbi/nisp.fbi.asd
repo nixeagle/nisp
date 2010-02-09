@@ -21,4 +21,5 @@
   ((:file "util")
    (:file "json-classes")
    (:file "fbi")
-   (:file "irc-commands")))
+   (:file "irc-commands")
+   (:file "tests"))))
