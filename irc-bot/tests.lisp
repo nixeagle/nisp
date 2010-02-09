@@ -1,6 +1,7 @@
 (in-package :nisp.i)
 
-(def-suite nisp.i)
+(define-new-suite :nisp-eos-root)
+(def-suite nisp.i :in :nisp-eos-root)
 
 (defgeneric samep (arg1 arg2)
   (:documentation "Compare ARG1 to ARG2 based on their types."))
@@ -8,7 +9,7 @@
   (values (funcall (eos::find-predicate arg1 arg2) arg1 arg2)
           (eos::find-predicate arg1 arg2)))
 
-(test (ensure-string :suite nil)
+(test (ensure-string :suite :nisp-eos-root)
   (unwind-protect 
        (with-fbound (ensure-string)
          ("a") "a"
