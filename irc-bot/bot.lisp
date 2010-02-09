@@ -271,21 +271,25 @@ methods that support this."))
 
 (define-command-node test (8b-i-bot-connection irc:user irc:channel string
                                                params))
+
+(defmethod generate-short-test-summary ((suite symbol))
+  "Run SUITE's tests and print a short report."
+  (iterate (for test in (run suite))
+           (counting (typep test 'eos::test-passed) :into passed)
+           (counting (not (typep test 'eos::test-passed)) :into failed)
+           (finally (return
+                      (format nil "Total tests: ~A Passed: ~A Failed: ~A"
+                              (+ passed failed) passed failed)))))
+(defmethod generate-short-test-summary ((suite string))
+  "Split, upcase, and convert SUITE to a symbol then pass it on."
+  (generate-short-test-summary
+   (ensure-symbol (string-upcase (car (split-command-string suite))))))
+
 (define-command test-run (8b-i-bot-connection irc:user irc:channel string
                                                params)
   (irc:privmsg 8b-i-bot-connection irc:channel
-               (iterate (for x in (run
-                                   (ensure-symbol
-                                    (string-upcase
-                                     (car (split-command-string params))))))
-                        (counting (typep x 'eos::test-passed) :into passed)
-                        (counting (not (typep x 'eos::test-passed)) :into failed)
-                        (finally
-                         (return
-                           (format nil
-                                   "Total tests: ~A Passed: ~A Failed: ~A"
-                                   (+ passed failed)
-                                   passed failed))))))
+               (generate-short-test-summary (if (string= params "all")
+                                                :nisp-eos-root params))))
 
 (define-command-node github (connection irc:user (to t) string params))
 (define-command-node github-show (connection irc:user (to t)
