@@ -35,7 +35,8 @@
 #+sbcl
 (declaim (sb-ext:unmuffle-conditions sb-ext:compiler-note))
 #+:sbcl
-(declaim (optimize (debug 3) (safety 3) (speed 0) (space 0)))
+(declaim (optimize (debug 3) (safety 3) (speed 0) (space 0)
+                   (compilation-speed 0)))
 
 ;;; If I have 5am and sbcl running I want to ignore redefinition warnings
 ;;; due to a bug with how it handles redefining tests.
