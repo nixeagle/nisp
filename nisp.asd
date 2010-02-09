@@ -43,6 +43,7 @@
                :nistilities
                :metabang-bind
                :nisp.util
+               :with-fbound
                :nisp.ldap
                :nisp.8b-ldap
                :cl-irc
