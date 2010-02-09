@@ -1,7 +1,7 @@
 (defpackage #:nisp.fbi.json-classes
   (:use :cl :usocket :json :iterate :nisp.util-protocol
-        :nisp.util-types)
-  (:export :auth :subscribe :json-mixin :json-action-mixin
+        :nisp.util-types :nisp.util.json :eos :with-fbound)
+  (:export :auth :subscribe :json-action-mixin
            :commit-author :commit-data
            :irc-data :irc-message :irc-private :publish
            :sender :url
