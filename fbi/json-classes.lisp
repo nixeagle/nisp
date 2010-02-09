@@ -86,9 +86,6 @@ A type signature is basically a list of all keys in a hash table from cl-json"
    (channels :accessor channels
              :initarg :channels))
   (:documentation "Subscribe to FBI channels."))
-(defun make-subscribe (&rest channels)
-  "Represents a subscription request to CHANNELS."
-  (make-instance 'subscribe :channels channels))
 
 (defclass publish (json-action-mixin irc-data-mixin)
   ((from :accessor from) (action :initform "publish") channel
