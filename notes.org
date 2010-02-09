@@ -68,3 +68,6 @@ Some quick notes
     - [X] FBSD8
       - It and all its dependencies compiled without one error in sbcl
         1.0.31
+
+*** xpath
+    darcs get http://common-lisp.net/project/plexippus-xpath/darcs/plexippus-xpath/
