@@ -12,31 +12,10 @@
   (:use :cl :usocket :json :iterate :nisp.util-protocol
         :nisp.fbi.json-classes :nisp.util.json :nisp.util.usocket)
   (:nicknames :fbi-sockets)
-  (:export #:write-json
-           #:read-json)
   (:shadow :socket-connect))
 
 (in-package :nisp.fbi.sockets)
 
-(defgeneric write-json (json-mixin json-socket &key force)
-  (:documentation "Write json to JSON-SOCKET."))
-(defgeneric read-json (json-socket))
-
-(defmethod write-json :around (json-mixin json-socket &key force)
-  "Default FORCE to true."
-  (call-next-method json-mixin json-socket :key (not force)))
-(defmethod write-json ((json-object json-mixin) (sock json-socket)
-                       &key force)
-  "Write and optionally FORCE JSON-OBJECT to JSON-SOCKET."
-  (prog1
-      (encode-json json-object (socket-stream sock))
-    (terpri (socket-stream sock))
-    (and force (force-output (socket-stream sock)))))
-
-(defmethod read-json ((sock json-socket))
-  "Read from JSON-SOCKET returning a `JSON-MIXIN'."
-  (and (read-ready-p sock)
-       (make-json-mixin-from-string (read-line (socket-stream sock)))))
 
 
 ;;; Not sure what these are, messages, commands, part of json-classes...

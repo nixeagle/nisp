@@ -9,7 +9,7 @@
            #:json->alist #:make-json-type-signature
            #:json->string
            #:make-irc-private-message
-           #:make-json-mixin-from-string
+           
            #:make-subscribe #:json-nisp-message
 
            ;; publish
@@ -34,14 +34,7 @@
 A type signature is basically a list of all keys in a hash table from cl-json"
   (mapcar #'car alist))
 
-(defun make-json-mixin-from-string (string)
-  ;; Not positive if this needs to stay or not...
-  (declare (type string string))
-  (let ((json:*prototype-name* 'hash-type)
-        (json:*json-symbols-package* :nisp.fbi.json-classes))
-    (json:with-decoder-simple-clos-semantics
-      (json:decode-json-from-string
-       string))))
+
 
 (defun find-json-type (bindings)
   (let ((type-class (gethash (make-json-type-signature bindings)
