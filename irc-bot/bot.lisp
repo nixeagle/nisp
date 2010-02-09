@@ -64,6 +64,13 @@
   "Change class of USER-INSTANCE to anon class."
   (change-class user-instance (make-anon-bot-user-class user-instance)))
 
+(defmethod change-bot-user-class ((connection connection) (user irc:user))
+  (change-class user (c2cl:ensure-class 
+                      (format-symbol (ensure-network-package
+                                      (irc:server-name connection))
+                                     "~A" (irc:hostname user))
+                      :direct-superclasses (list (find-class 'bot-user)))))
+
 
 (defvar *irc-bot-instances* nil
   "Global list of bot instances.")
@@ -237,7 +244,8 @@ methods that support this."))
   (handle-command irc
                   (ensure-user-host (irc:find-user irc (irc:source sender))
                                     (irc:host sender))
-                  (change-class to 'bot-user) cmd))
+                  (if (typep to 'bot-user) to (change-class to 'bot-user))
+                  cmd))
 
 (defmethod remove-comchar ((comchar comchar) (message string))
   "Remove leading COMCHAR from MESSAGE."
