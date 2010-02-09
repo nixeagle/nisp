@@ -9,6 +9,7 @@
   :maintainer "James S <i@nixeagle.org>"
   :license "GPLv3 or later"
   :depends-on (:iterate
+                :with-fbound
                 :usocket
                 :nisp.util
                 :bordeaux-threads
