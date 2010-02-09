@@ -1,9 +1,14 @@
 (defpackage #:with-fbound
   (:use :cl :eos :iterate)
   (:nicknames :with-fbound)
-  (:export :with-fbound))
+  (:export :with-fbound :ensure-suite))
 
 (in-package :with-fbound)
+
+(defun ensure-suite (name &key description in)
+  "Create a new test suite object if it does not already exist."
+  (or (get-test name)
+      (make-suite name :description description :in in)))
 
 (defmacro with-fbound ((fbound-call &key predicate) &body args)
   "Compare FBOUND-CALL using PREDICATE using series of ARGS.
