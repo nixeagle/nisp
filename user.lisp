@@ -6,17 +6,9 @@
   (:use :cl :iterate
         ;; implentation independent sockets
         :usocket
-
-        :drakma                         ;http-request
+        :drakma)                         ;http-request
         
-        ;; Nisp related types
-        :nisp.irc-types :nisp.util-types
-        
-        ;; General nisp related short packages
-        :nisp.clos.maximum-length       ; Concept of restricted length.
-        )
-  (:nicknames :nu)
-  (:import-from :nispbot *nispbot*))
+  (:nicknames :nu))
 
 (in-package :nisp.user)
 ;;; In custom userland, this userland has modifications from a standard
