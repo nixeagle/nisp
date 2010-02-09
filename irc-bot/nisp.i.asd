@@ -25,4 +25,5 @@
    (:file "bot-types")
    (:file "symbols")
    (:file "bot")
-   (:file "i.fbi"))) 
+   (:file "i.fbi")
+   (:file "tests")))
