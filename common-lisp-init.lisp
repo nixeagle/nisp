@@ -71,13 +71,14 @@
 (defun nix-pprint (values)
   (swank::with-buffer-syntax ()
     
-    (let ((*PRINT-CIRCLE* t) 
+    (let ((*PRINT-CIRCLE* nil) 
           (*PRINT-PRETTY*  t) 
           (*PRINT-ESCAPE*  t)
           (*PRINT-ARRAY* t)
           (*PRINT-LINES* nil)
           (*PRINT-LEVEL* nil) 
           (*PRINT-LENGTH* nil)
+          (*PRINT-RIGHT-MARGIN* 72)
           (*print-readably* nil))
       (with-output-to-string (*standard-output*)
         (dolist (o values)
@@ -97,6 +98,7 @@
            (*PRINT-PRETTY*  t) 
            (*PRINT-ESCAPE*  t)
            (*PRINT-ARRAY* t)
+           (eos:*run-test-when-defined* t)
            (*PRINT-LINES* nil)
            (*PRINT-LEVEL* nil) 
            (*PRINT-LENGTH* nil)
@@ -109,8 +111,8 @@
            (*trace-output* trace)
            (*error-output* err)
            (form (read-from-string string))
-           (values (multiple-value-list
-                    (eval form))))
+           (values (multiple-value-list 
+                    (eval form)))) 
       (list string
             (get-output-stream-string stand)
             (get-output-stream-string err)
