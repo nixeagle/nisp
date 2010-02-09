@@ -1,9 +1,13 @@
 (defpackage #:with-fbound
   (:use :cl :eos :iterate)
   (:nicknames :with-fbound)
-  (:export :with-fbound :ensure-suite))
+  (:export :with-fbound :ensure-suite :define-new-suite))
 
 (in-package :with-fbound)
+
+(defmacro define-new-suite (name &key description in)
+  "Define NAME as a new suite if not yet defined."
+  `(ensure-suite ,name :description ,description :in ,in))
 
 (defun ensure-suite (name &key description in)
   "Create a new test suite object if it does not already exist."
