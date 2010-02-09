@@ -22,6 +22,9 @@
   (:documentation "Write json to JSON-SOCKET."))
 (defgeneric read-json (json-socket))
 
+(defmethod write-json :around (json-mixin json-socket &key force)
+  "Default FORCE to true."
+  (call-next-method json-mixin json-socket :key (not force)))
 (defmethod write-json ((json-object json-mixin) (sock json-socket)
                        &key force)
   "Write and optionally FORCE JSON-OBJECT to JSON-SOCKET."
