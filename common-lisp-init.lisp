@@ -60,8 +60,8 @@
   (setf swank:*use-dedicated-output-stream* nil))
 
 
-#+sbcl
-(my-setup-server)
+;#+sbcl
+;(my-setup-server)
 
 (defpackage #:nix-emacs
   (:use :cl :swank))
@@ -119,16 +119,13 @@
             (describe-values values)))))
 
 (in-package :cl-user)
-#+sbcl
-(asdf:load-system :nispbot)
+;#+sbcl
+;(asdf:load-system :nispbot)
 
-#+sbcl
-(in-package :nispbot)
+;#+sbcl
+;(in-package :nispbot)
 
-#+sbcl
-(start-nispbot-instance)
-
-(in-package :cl-user)
+;(in-package :cl-user)
 
 (asdf:operate 'asdf:load-op :nisp.user)
 
