@@ -29,7 +29,7 @@
 
 (defgeneric write-json (json-mixin json-socket &key force)
   (:documentation "Write json to JSON-SOCKET."))
-(defgeneric read-json (json-socket &key symbols-package))
+(defgeneric read-json (json-socket &key package))
 
 (defmethod write-json :around (json-mixin json-socket &key force)
   "Default FORCE to true."
@@ -43,19 +43,22 @@
     (terpri (socket-stream sock))
     (and force (force-output (socket-stream sock)))))
 
-(defmethod read-json ((sock json-socket) &key symbols-package)
+(defmethod read-json ((sock json-socket) &key package)
   "Read from JSON-SOCKET returning a `JSON-MIXIN'."
   (and (read-ready-p sock)
        (make-json-mixin-from-string (read-line (socket-stream sock))
-                                    :package symbols-package)))
+                                    :package package)))
 
 (defun synchronous-json-request (json sock &key
-                            (read-function 'read-json)
-                            (write-function 'write-json))
-  "Send JSON to SOCK and wait for a reply."
+                                 (read-function 'read-json)
+                                 (write-function 'write-json)
+                                 json-symbols-package)
+  "Send JSON to SOCK and wait for a reply.
+
+Classes are read from JSON-SYMBOLS-PACKAGE by READ-FUNCTION."
   (funcall write-function json sock)
   (wait-for-input sock)
-  (funcall read-function sock))
+  (funcall read-function sock :package json-symbols-package))
 
 (def-suite root)
 (test (json-socket-connect :suite root)
