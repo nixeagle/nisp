@@ -2,6 +2,7 @@
   (:use :cl :usocket :iterate :json :nisp.util-protocol
         :nisp.fbi.util
         :nisp.util.json
+        :nisp.util.usocket
         :nisp.util-types
         :bordeaux-threads
         :nisp.fbi.json-classes

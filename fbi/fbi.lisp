@@ -10,23 +10,17 @@
 
 (defpackage #:nisp.fbi.sockets
   (:use :cl :usocket :json :iterate :nisp.util-protocol
-        :nisp.fbi.json-classes :nisp.util.json)
+        :nisp.fbi.json-classes :nisp.util.json :nisp.util.usocket)
   (:nicknames :fbi-sockets)
-  (:export #:read-ready-p
-           #:write-json
+  (:export #:write-json
            #:read-json)
   (:shadow :socket-connect))
 
 (in-package :nisp.fbi.sockets)
 
-(defgeneric read-ready-p (socket)
-  (:documentation "Return non-nil if socket is ready to read from."))
 (defgeneric write-json (json-mixin json-socket &key force)
   (:documentation "Write json to JSON-SOCKET."))
 (defgeneric read-json (json-socket))
-
-(defmethod read-ready-p ((sock json-socket))
-  (listen (socket-stream sock)))
 
 (defmethod write-json ((json-object json-mixin) (sock json-socket)
                        &key force)
