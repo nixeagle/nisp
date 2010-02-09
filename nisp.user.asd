@@ -9,6 +9,7 @@
   :maintainer "James S <i@nixeagle.org>"
   :license "GPLv3 or later"
   :depends-on (:iterate
+                :md5
                 :cxml-stp
                 :hunchentoot
                 :cl-irc
@@ -19,8 +20,6 @@
                 :closure-html
                 :cl-html-parse
                 :djula
-                :mcclim
-                :clouseau
                 :nisp.util
                 :clithub
                 :nisp.fbi)
