@@ -13,11 +13,11 @@
   (:documentation "Socket specifically for json operations."))
 
 
-(defun make-json-mixin-from-string (string)
+(defun make-json-mixin-from-string (string &key (package nil))
   ;; Not positive if this needs to stay or not...
   (declare (type string string))
   (let ((json:*prototype-name* 'hash-type)
-        (json:*json-symbols-package* :nisp.fbi.json-classes))
+        (json:*json-symbols-package* package))
     (json:with-decoder-simple-clos-semantics
       (json:decode-json-from-string
        string))))
@@ -29,7 +29,7 @@
 
 (defgeneric write-json (json-mixin json-socket &key force)
   (:documentation "Write json to JSON-SOCKET."))
-(defgeneric read-json (json-socket))
+(defgeneric read-json (json-socket &key symbols-package))
 
 (defmethod write-json :around (json-mixin json-socket &key force)
   "Default FORCE to true."
@@ -43,10 +43,11 @@
     (terpri (socket-stream sock))
     (and force (force-output (socket-stream sock)))))
 
-(defmethod read-json ((sock json-socket))
+(defmethod read-json ((sock json-socket) &key symbols-package)
   "Read from JSON-SOCKET returning a `JSON-MIXIN'."
   (and (read-ready-p sock)
-       (make-json-mixin-from-string (read-line (socket-stream sock)))))
+       (make-json-mixin-from-string (read-line (socket-stream sock))
+                                    :package symbols-package)))
 
 (defun synchronous-json-request (json sock &key
                             (read-function 'read-json)
