@@ -1,5 +1,5 @@
 (defpackage #:nisp.mop-simple
-  (:use :cl :eos :with-fbound :iterate)
+  (:use :cl :eos :with-fbound :iterate :alexandria)
   (:export
    ;; Generic function readers
    :generic-function-name :generic-function-method-class
@@ -13,5 +13,7 @@
    :class-default-initargs :class-finalized-p :class-prototype
    ))
 
+(defpackage #:nisp.mop-store
+  (:use :cl :eos :with-fbound :alexandria :iterate))
 (defpackage #:nisp.mop
   (:use :cl :nisp.mop-simple :eos :with-fbound))
