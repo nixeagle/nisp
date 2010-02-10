@@ -25,5 +25,22 @@
   (define-mop compute-slots)
   (define-mop finalize-inheritance))
 
+(macrolet ((define-mop (name)
+             `(progn
+                (defgeneric ,name (generic-function))
+                (defmethod ,name ((generic-function standard-generic-function))
+                  (,(alexandria:ensure-symbol name :closer-mop)
+                    generic-function))
+                (defmethod ,name ((generic-function symbol))
+                  (,name (symbol-function generic-function)))
+                (defmethod ,name ((generic-function string))
+                  (,name (find-symbol generic-function))))))
+  (define-mop generic-function-argument-precedence-order)
+  (define-mop generic-function-declarations)
+  (define-mop generic-function-lambda-list)
+  (define-mop generic-function-method-class)
+  (define-mop generic-function-method-combination)
+  (define-mop generic-function-name)
+  (define-mop generic-function-methods))
 
 ;;; End
