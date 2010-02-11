@@ -15,6 +15,7 @@
                :split-sequence
                :alexandria
                :cl-irc
+               :nisp.mop
                :iterate
                :closer-mop)
   :serial t
