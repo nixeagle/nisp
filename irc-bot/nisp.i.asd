@@ -21,6 +21,7 @@
   :components
   ((:file "util.packages")
    (:file "package")
+   (:file "mixin")
    (:file "irc-packages")
    (:file "bot-types")
    (:file "symbols")
