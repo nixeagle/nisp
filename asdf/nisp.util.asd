@@ -1,1 +1,1 @@
-../nisp.util/nisp.util.asd
+../util/nisp.util.asd

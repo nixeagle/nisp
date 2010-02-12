@@ -1,0 +1,9 @@
+#+TITLE: Changelog
+
+* Split from nisp into nisp.nistilities
+  :PROPERTIES:
+  :VERSION: 0.0.12
+  :CREATED:  <2010-01-03 Sun 07:29>
+  :END:
+
+
