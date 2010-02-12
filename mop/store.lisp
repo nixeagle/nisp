@@ -42,7 +42,6 @@ This form is valid for use in `defclass'."
          ,@(when (documentation slot t)
                  `(:documentation ,(documentation slot t))))))
 
-(class-direct-slots->list (find-class 'cl-irc::connection))
 (macrolet ((define-mop (name function &optional generic-docstring)
                `(progn
                   (defgeneric ,name (class)
