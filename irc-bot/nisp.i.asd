@@ -9,13 +9,13 @@
   :version "0.0.0"
   :license "GPLv3 or later"
   :description "irc bot"
-  :depends-on (:eos
+  :depends-on (:nisp.mop
+               :eos
                :with-fbound
                :nisp.util.usocket
                :split-sequence
                :alexandria
                :cl-irc
-               :nisp.mop
                :iterate
                :closer-mop)
   :serial t

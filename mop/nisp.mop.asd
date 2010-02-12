@@ -3,6 +3,7 @@
                :alexandria
                :iterate
                :with-fbound)
+  :serial t
   :components ((:file "package")
                (:file "simple")
                (:file "mop")
