@@ -31,7 +31,12 @@
                        original-args
                        new-args
                        (compute-applicable-methods generic-function original-args)
-                       (compute-applicable-methods generic-function new-args))))))
+                       (compute-applicable-methods generic-function new-args)))))
+  (:documentation "Triggers when the set of applicable methods differ.
+
+See the common lisp specification about applicable methods and how
+`call-next-method' must not change the set of applicable methods for a
+generic function."))
 
 
 
