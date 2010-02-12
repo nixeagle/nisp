@@ -106,6 +106,16 @@ methods that support this."))
                      :comchar ",")
   (:documentation "Bot connection for slack's network."))
 
+(defclass sonic-nisp-bot-connection (bot-connection
+                                     connect-with-background-handler-mixin)
+  ()
+  (:default-initargs :username "lisp" :nickname "nisp"
+                     :realname "Nixeagle's lisp experiments bot."
+                     :server-port 6667
+                     :server-name "irc.57o9.net"
+                     :comchar ",")
+  (:documentation "sonicrules1234's irc network."))
+
 (defmethod shared-initialize :after ((bot bot-connection) slot-names
                                      &key nickname username realname)
   (when (and nickname username realname)
@@ -189,6 +199,11 @@ methods that support this."))
   (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
   (sleep 1)
   (irc:join irc "#bots"))
+
+(defmethod connect :after ((irc sonic-nisp-bot-connection) &key)
+  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
+  (irc:join irc "#services")
+  (irc:join irc "#sonicircd"))
 
 (defmethod target ((message irc:irc-privmsg-message))
   "String with message target."
