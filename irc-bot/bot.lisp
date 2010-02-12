@@ -96,6 +96,15 @@ methods that support this."))
                      :realname "bot" :server-port 6667
                      :server-name "irc.eighthbit.net"
                      :comchar ","))
+(defclass slack-nisp-bot-connection (bot-connection
+                                     connect-with-background-handler-mixin)
+  ()
+  (:default-initargs :username "lisp" :nickname "nisp"
+                     :realname "Nixeagle's lisp experiments bot."
+                     :server-port 6667
+                     :server-name "irc.slackingperfektly.net"
+                     :comchar ",")
+  (:documentation "Bot connection for slack's network."))
 
 (defmethod shared-initialize :after ((bot bot-connection) slot-names
                                      &key nickname username realname)
