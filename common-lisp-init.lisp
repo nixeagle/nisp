@@ -49,7 +49,7 @@
   (setq sb-ext:*derive-function-types* t))
 
 (require :swank)
-
+(require :eos)
 
 (setq       
  swank:*inspector-verbose* t
