@@ -16,4 +16,5 @@
 (defpackage #:nisp.mop-store
   (:use :cl :eos :with-fbound :alexandria :iterate))
 (defpackage #:nisp.mop
-  (:use :cl :nisp.mop-simple :eos :with-fbound))
+  (:use :cl :nisp.mop-simple :eos :with-fbound)
+  (:export :compare-generic-applicable-methods))

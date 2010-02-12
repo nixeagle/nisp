@@ -5,4 +5,6 @@
                :with-fbound)
   :components ((:file "package")
                (:file "simple")
+               (:file "mop")
+               (:file "store")
                (:file "tests")))
