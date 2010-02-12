@@ -185,6 +185,11 @@ methods that support this."))
   (irc:join irc "#bots")
   (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg))
 
+(defmethod connect :after ((irc slack-nisp-bot-connection) &key)
+  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
+  (sleep 1)
+  (irc:join irc "#bots"))
+
 (defmethod target ((message irc:irc-privmsg-message))
   "String with message target."
   (car (irc:arguments message)))
