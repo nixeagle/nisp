@@ -47,7 +47,21 @@
   (is (typep "!" 'valid-comchar-string)
       "Valid comchar."))
 
+(test (remove-comchar
+       :suite root :depends-on valid-comchar-string/type)
+  (with-fbound (remove-comchar)
+    ("!" "!hi") "hi"
+    "Number 1 is not a valid type"
+    ("1" "1hi") :signals type-error
+    "Should not be an applicable method for integer 1."
+    (1 "1hi") :signals simple-error
+    "If `comchar' is not first char in the message."
+    ("!" "hi") nil
+    ("!" "hi!") nil
+    ("!!" "!!hi") :signals type-error))
+
 ;;;}}}
+
 #+ ()
 (test demo
   (with-fbound (+)

@@ -257,6 +257,27 @@ methods that support this."))
                            (irc:find-user irc nickname)
                            superclass))
 
+(defgeneric remove-comchar (comchar message)
+  (:documentation
+   "Remove COMCHAR from MESSAGE. ~
+
+    Methods should return `nil' if COMCHAR is not the first `character'~
+    in MESSAGE."))
+
+(defmethod remove-comchar ((comchar character) (message string))
+  (declare (type valid-comchar comchar))
+  (check-type comchar valid-comchar)    ;Actually care its the right type.
+  (when (char= comchar (aref message 0))
+    (subseq message 1)))
+
+(defmethod remove-comchar ((comchar string) (message string))
+  (declare (type valid-comchar-string comchar))
+  (remove-comchar (character comchar) message))
+
+(defmethod remove-comchar ((comchar comchar) (message string))
+  "Remove leading COMCHAR from MESSAGE."
+  (remove-comchar (comchar comchar) message))
+
 (defgeneric handle-command (connection sender to cmd))
 
 (defmethod handle-command ((irc connection) sender (to string) cmd)
@@ -275,11 +296,6 @@ methods that support this."))
                                     (irc:host sender))
                   (if (typep to 'bot-user) to (change-class to 'bot-user))
                   cmd))
-
-(defmethod remove-comchar ((comchar comchar) (message string))
-  "Remove leading COMCHAR from MESSAGE."
-  (when (find (comchar comchar) message :end 1)
-    (subseq message 1)))
 
 (defmethod handle-command ((irc bot-connection) (sender irc:user)
                            to cmd)
