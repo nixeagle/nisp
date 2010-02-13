@@ -11,7 +11,7 @@
           (eos::find-predicate arg1 arg2)))
 
 (test (ensure-string :suite :nisp-eos-root)
-  (unwind-protect 
+  (unwind-protect
        (with-fbound (ensure-string)
          ("a") "a"
          (:a) "A"
@@ -58,51 +58,24 @@
     "If `comchar' is not first char in the message."
     ("!" "hi") nil
     ("!" "hi!") nil
-    ("!!" "!!hi") :signals type-error))
+    ("!!" "!!hi") :signals type-error
+    ((make-instance 'comchar :comchar #\@) "@command") "command"))
 
 ;;;}}}
 
-#+ ()
-(test demo
-  (with-fbound (+)
-    "3 numbers add to 6"
-    (1 2 3) 6
-    "1 by itself is 1"
-    (1) 1
-    "Adding 1 2 and 3 should not give me 5."
-    (1 2 3) (not 5)
-    "Result is always of type integer integer."
-    (1 2 3) :should-be integer
-    (1 2 3) :expects integer
-    "Result can also be tested in terms of `not' being of a type."
-    (1 2 3) :should-be (not string)
-    "Result is checked with the _function_ `integerp'.
-     This predicate/function should take one argument."
-    (1 2 3) :satisfies integerp
-    (1 2 3) :should-satisfy integerp
-    "Result can also be tested in terms of `not' matching the predicate."
-    (1 2 3) :satisfies (not stringp)
-    "No arguments should be 0"
-    () 0
-    ("a string")
-    :signals error
-    ("another one")
-    :should-signal error
-    "Addition should always run to completion"
-    (1 2 3) :finishes))
-
+;;;{{{ irc packages
 (def-suite nisp.i.irc-packages :in nisp.i)
 (in-suite nisp.i.irc-packages)
 
 (test (normalize-network-name :suite nisp.i.irc-packages)
-  (with-fbound (normalize-network-name) 
+  (with-fbound (normalize-network-name)
     "Dots should convert to dashes."
     ("irc.foo.net") "IRC-FOO-NET"
-    
+
     "Do not do anything if no dots exist."
     ("nodots") "NODOTS"))
 
-(test (ensure-network-package :suite nisp.i.irc-packages) 
+(test (ensure-network-package :suite nisp.i.irc-packages)
   (let ((expected-package :nisp.i.packages.irc-eighthbit-net)
         (fully-normallized :nisp-i-packages-irc-eighthbit-net))
     (unwind-protect
@@ -127,11 +100,10 @@
            (delete-package expected-package))
       (and (find-package fully-normallized)
            (delete-package fully-normallized))))
+;;;}}}
 
 
-;;; 
-;;; Command routing
-;;; 
+;;;{{{ Command routing
 (def-suite command-routing
     :description "Routing string messages."
     :in nisp.i)
@@ -141,7 +113,7 @@
     "Expect the string with no spaces in a list."
     ("Hi") '("Hi")
     "Expect a list with the 4 words as elements."
-    ("Hi how are you") '("Hi" "how" "are" "you") 
+    ("Hi how are you") '("Hi" "how" "are" "you")
     (" Hi how are you") '("Hi" "how" "are" "you")
     ("Hi how are you ") '("Hi" "how" "are" "you")
     "Splitting the empty string."
@@ -189,3 +161,46 @@
     ("test arg1 arg2" (list "test" "arg1")) "arg2"
     "No error when sequences are the same size"
     ("test" "test") ""))
+;;;}}}
+
+;;;{{{ Testing the "test-generic-function"
+(def-suite test-generic-function-suite :in nisp.i)
+(test (test-gf :suite test-generic-function-suite)
+  (with-fbound (test-gf)
+    ("a" "a" "a") "aaa"
+    ("a" 1 1) 2
+    (1 1 1) :satisfies listp
+    (t t t) :should-be test-method))
+
+;;;}}}
+
+;;;{{{ Silly demo that needs moved somewhere else
+#+ ()
+(test demo
+  (with-fbound (+)
+    "3 numbers add to 6"
+    (1 2 3) 6
+    "1 by itself is 1"
+    (1) 1
+    "Adding 1 2 and 3 should not give me 5."
+    (1 2 3) (not 5)
+    "Result is always of type integer integer."
+    (1 2 3) :should-be integer
+    (1 2 3) :expects integer
+    "Result can also be tested in terms of `not' being of a type."
+    (1 2 3) :should-be (not string)
+    "Result is checked with the _function_ `integerp'.
+     This predicate/function should take one argument."
+    (1 2 3) :satisfies integerp
+    (1 2 3) :should-satisfy integerp
+    "Result can also be tested in terms of `not' matching the predicate."
+    (1 2 3) :satisfies (not stringp)
+    "No arguments should be 0"
+    () 0
+    ("a string")
+    :signals error
+    ("another one")
+    :should-signal error
+    "Addition should always run to completion"
+    (1 2 3) :finishes))
+;;;}}}
