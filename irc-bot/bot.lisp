@@ -1,7 +1,13 @@
 (in-package :nisp.i)
 
+;;; Random helpers:
+(defun remove-newlines (string)
+  "Remove newlines from STRING."
+  (remove #\Newline string))
+
 (defclass connection (irc:connection) ())
 
+;;;{{{ define-command:
 (defmacro %define-command (name (irc sender to msg remaining) &body body)
   (multiple-value-bind (count params)
       (%format-command-method-symbol name)
@@ -39,7 +45,10 @@
           ,remaining
           (string-upcase (car (split-command-string ,remaining))))))))
 
-;;; not bot related directly...
+;;;}}}
+
+;;; not bot related directly
+;;;{{{ superclasses:
 (defun add-superclass (instance new-superclass)
   "Add NEW-SUPERCLASS to INSTANCE's superclass list."
   (reinitialize-instance (class-of instance) :direct-superclasses
@@ -65,12 +74,12 @@
   (change-class user-instance (make-anon-bot-user-class user-instance)))
 
 (defmethod change-bot-user-class ((connection connection) (user irc:user))
-  (change-class user (c2cl:ensure-class 
+  (change-class user (c2cl:ensure-class
                       (format-symbol (ensure-network-package
                                       (irc:server-name connection))
                                      "~A" (irc:hostname user))
                       :direct-superclasses (list (find-class 'bot-user)))))
-
+;;;}}}
 
 (defvar *irc-bot-instances* nil
   "Global list of bot instances.")
@@ -95,7 +104,9 @@ methods that support this."))
   (:default-initargs :username "lisp" :nickname "i"
                      :realname "bot" :server-port 6667
                      :server-name "irc.eighthbit.net"
-                     :comchar ","))
+                     :comchar ",")
+  (:documentation "blah"))
+
 (defclass slack-nisp-bot-connection (bot-connection
                                      connect-with-background-handler-mixin)
   ()
@@ -121,7 +132,7 @@ methods that support this."))
   (when (and nickname username realname)
     (setf (slot-value bot 'irc:user)
           (make-instance 'bot-user
-                         :nickname nickname 
+                         :nickname nickname
                          :username username
                          :realname realname))))
 ;;;}}}
@@ -158,6 +169,7 @@ methods that support this."))
           (irc:user connection)))))
 
 ;;; Method written with heavy cribbing from cl-irc in command.lisp.
+;;;{{{ connect methods:
 (defgeneric connect (connection &key &allow-other-keys))
 (defmethod connect :before ((bot bot-connection) &key ssl)
   (setf (slot-value bot 'irc::socket)
@@ -205,6 +217,7 @@ methods that support this."))
   (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
   (irc:join irc "#services")
   (irc:join irc "#sonicircd"))
+;;;}}}
 
 (defmethod target ((message irc:irc-privmsg-message))
   "String with message target."
@@ -315,7 +328,7 @@ methods that support this."))
 
 (defmethod handle-command ((irc bot-connection) (sender irc:user)
                            to cmd)
-  (handler-case 
+  (handler-case
       (when (and (> (length cmd) 0)
                  (find (comchar irc) cmd :end 1))
         (route-command irc sender to (remove-comchar irc cmd)
