@@ -237,25 +237,40 @@ methods that support this."))
     (setf (irc:hostname user) host))
   user)
 
+;;;{{{ IRC user superclasses
 (defgeneric add-irc-user-superclass (connection user superclass)
   (:documentation "Add SUPERCLASS to USER on CONNECTION."))
+(defgeneric delete-irc-user-superclass (connection user superclass)
+  (:documentation "Remove SUPERCLASS from USER on CONNECTION."))
+
 
 (defmethod add-irc-user-superclass ((irc connection) (user bot-user)
                                     (superclass symbol))
   (declare (ignore irc))
   (add-superclass user superclass))
+
 (defmethod add-irc-user-superclass ((irc connection) (user irc:user)
                                     (superclass symbol))
   "Change USER's class and recall."
   (add-irc-user-superclass irc
                            (change-user-class-to-bot-user user)
                            superclass))
+
 (defmethod add-irc-user-superclass ((irc connection) (nickname string)
                                     (superclass symbol))
-  "Find NICKNAME in CONNECTION and recall."
+  "Find NICKNAME in CONNECTION and pass on."
   (add-irc-user-superclass irc
                            (irc:find-user irc nickname)
                            superclass))
+(defmethod delete-irc-user-superclass ((irc connection) (user bot-user)
+                                       (superclass symbol))
+  (declare (ignore irc))
+  (delete-superclass-of user superclass))
+(defmethod delete-irc-user-superclass ((irc connection) (nickname string)
+                                       (superclass symbol))
+  "Find NICKNAME in CONNECTION and pass on."
+  (delete-irc-user-superclass irc (irc:find-user irc nickname) superclass))
+;;;}}}
 
 (defgeneric remove-comchar (comchar message)
   (:documentation
