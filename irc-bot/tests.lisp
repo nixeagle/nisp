@@ -2,6 +2,7 @@
 
 (define-new-suite :nisp-eos-root)
 (def-suite nisp.i :in :nisp-eos-root)
+(def-suite root :in :nisp-eos-root)
 
 (defgeneric samep (arg1 arg2)
   (:documentation "Compare ARG1 to ARG2 based on their types."))
@@ -19,6 +20,34 @@
     (unintern :a :keyword)
     (unintern 'a)
     (unintern '|a|)))
+
+
+;;;{{{ Comchar
+
+(test (valid-comchar-string-p :suite root)
+  (with-fbound (valid-comchar-string-p)
+    "Non string is not a `comchar'."
+    (1) nil
+    "String of 0 length is not a `comchar'."
+    ("") nil
+    "String with a letter is not a `comchar'."
+    ("a") nil
+    "String with multiple letters is not a `comchar'."
+    ("aa") nil
+    "The string \"!\" is a `comchar'."
+    ("!") t
+    "Multiple ! is not a `comchar'."
+    ("!!") nil))
+
+(test (valid-comchar-string/type
+       :suite root :depends-on valid-comchar-string-p)
+  "Tests against the actual type."
+  (is (not (typep 1 'valid-comchar-string))
+      "Non strings are not valid.")
+  (is (typep "!" 'valid-comchar-string)
+      "Valid comchar."))
+
+;;;}}}
 #+ ()
 (test demo
   (with-fbound (+)

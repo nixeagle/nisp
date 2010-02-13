@@ -9,6 +9,13 @@ a very friendly bot."
   '(member #\! #\# #\% #\) #\+ #\, #\-
     #\@ #\\ #\] #\_ #\` #\{ #\| #\} #\~))
 
+(defun valid-comchar-string-p (string)
+  (and (typep string '(and (string 1)))
+       (typep (character string) 'valid-comchar)))
+
+(deftype valid-comchar-string ()
+  '(satisfies valid-comchar-string-p))
+
 (defclass comchar ()
   ((comchar :type valid-comchar
             :accessor comchar
