@@ -83,7 +83,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
 
 (defclass bot-channel (irc:channel target) ())
 
-
+;;;{{{ connection classes
 (defclass bot-connection (connection comchar) ())
 (defclass connect-with-background-handler-mixin () ()
   (:documentation "Superclass this to connect directly to background on
@@ -124,6 +124,7 @@ methods that support this."))
                          :nickname nickname 
                          :username username
                          :realname realname))))
+;;;}}}
 
 (defclass bot-admin () ())
 
