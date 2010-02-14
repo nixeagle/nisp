@@ -1,10 +1,18 @@
 (in-package :nisp.i)
 
-;;; Random helpers:
+;;;{{{ Random helpers:
 (defun remove-newlines (string)
   "Remove newlines from STRING."
+  (declare (type string string))
   (remove #\Newline string))
 
+(defun join-sequence (sequence &optional (seperator " "))
+  (format nil (concatenate 'string "~{~A~^" seperator "~}") sequence))
+
+(test (join-sequence :suite nil)
+  (with-fbound (join-sequence)
+    ('("a" "b")) "a b"))
+;;;}}}
 (defclass connection (irc:connection) ())
 
 ;;;{{{ define-command:
@@ -336,12 +344,6 @@ methods that support this."))
                                       (remove-comchar irc cmd))))
     (error (condition) (irc:privmsg irc to condition))))
 
-(defun join-sequence (sequence &optional (seperator " "))
-  (format nil (concatenate 'string "~{~A~^" seperator "~}") sequence))
-
-(test (join-sequence :suite nil)
-  (with-fbound (join-sequence)
-    ('("a" "b")) "a b"))
 
 (define-command-node test (8b-i-bot-connection irc:user irc:channel string
                                                params))
