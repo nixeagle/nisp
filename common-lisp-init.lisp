@@ -51,7 +51,7 @@
 (require :swank)
 (require :eos)
 
-(setq       
+(setq
  swank:*inspector-verbose* t
  swank:*globally-redirect-io* t)
 
@@ -71,13 +71,13 @@
 
 (defun nix-pprint (values)
   (swank::with-buffer-syntax ()
-    
-    (let ((*PRINT-CIRCLE* nil) 
-          (*PRINT-PRETTY*  t) 
+
+    (let ((*PRINT-CIRCLE* nil)
+          (*PRINT-PRETTY*  t)
           (*PRINT-ESCAPE*  t)
           (*PRINT-ARRAY* t)
           (*PRINT-LINES* nil)
-          (*PRINT-LEVEL* nil) 
+          (*PRINT-LEVEL* nil)
           (*PRINT-LENGTH* nil)
           (*PRINT-RIGHT-MARGIN* 72)
           (*print-readably* nil))
@@ -95,15 +95,15 @@
 (defun nix-pprint-eval (string &optional extra)
   (declare (ignore extra))
   (swank::with-buffer-syntax ()
-    (let* ((*PRINT-CIRCLE* nil) 
-           (*PRINT-PRETTY*  t) 
+    (let* ((*PRINT-CIRCLE* nil)
+           (*PRINT-PRETTY*  t)
            (*PRINT-ESCAPE*  t)
            (*PRINT-ARRAY* t)
            (eos:*run-test-when-defined* t)
            (*PRINT-LINES* nil)
-           (*PRINT-LEVEL* nil) 
+           (*PRINT-LEVEL* nil)
            (*PRINT-LENGTH* nil)
-           (*print-right-margin* (1- (expt 2 26)))
+           (*print-right-margin* 78)
            (*print-readably* nil)
            (stand (make-string-output-stream))
            (trace (make-string-output-stream))
@@ -112,8 +112,8 @@
            (*trace-output* trace)
            (*error-output* err)
            (form (read-from-string string))
-           (values (multiple-value-list 
-                    (eval form)))) 
+           (values (multiple-value-list
+                    (eval form))))
       (list string
             (get-output-stream-string stand)
             (get-output-stream-string err)
