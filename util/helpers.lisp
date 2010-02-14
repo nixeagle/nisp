@@ -20,6 +20,16 @@
         (collect symbol)
         (unintern symbol in-package)))
 
+(defmacro compare-clock (iteration-count &rest forms)
+  (alexandria:with-gensyms (whole-result)
+    (format t "Doing ~A iterations.~%" (expt 2 iteration-count))
+    `(iter (for ,whole-result
+                in (list ,@(iter
+                            (for form in forms)
+                            (collect
+                                `(clock ,form ,(expt 2 iteration-count))))))
+           (collect ,whole-result))))
+
 (defmacro clock (form &optional (iterations 100000) (_count_ 0))
   "Execute FORM ITERATIONS times.
 
@@ -36,17 +46,17 @@ The result is an alist of the form:
     `(iter (with ,start = (get-internal-real-time))
             (for _count_ :from 0 :to ,iterations)
             ,form
-            (finally (let* ((,total (the (or (integer 0 0) positive-fixnum) 
+            (finally (let* ((,total (the (or (integer 0 0) positive-fixnum)
                                       (- (get-internal-real-time) ,start)))
-                            (,avg (/ ,total 
+                            (,avg (/ ,total
                                      (* ,iterations
                                         internal-time-units-per-second))))
-                       (return 
-                         (list 
-                          (cons :time (list 
+                       (return
+                         (list
+                          (cons :time (list
                                        (/ ,total internal-time-units-per-second)
-                                       (format nil "~f" 
-                                               (/ ,total 
+                                       (format nil "~f"
+                                               (/ ,total
                                                   internal-time-units-per-second))))
                           (cons :avg (list ,avg (format nil "~f" ,avg)))
                           (cons :result ,form))))))))
