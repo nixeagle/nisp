@@ -3,11 +3,10 @@
 (in-package :cl-user)
 
 (defpackage #:nisp.user
-  (:use :cl :iterate
+  (:use :cl
         ;; implentation independent sockets
         :usocket
         :drakma)                         ;http-request
-        
   (:nicknames :nu))
 
 (in-package :nisp.user)

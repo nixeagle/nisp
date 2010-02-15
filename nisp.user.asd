@@ -15,12 +15,16 @@
                 :cl-irc
                 :cl-who
                 :closure-html
-                :drakma 
+                :drakma
                 :usocket
                 :closure-html
                 :cl-html-parse
                 :djula
                 :nisp.util
+                :eos
+                :with-fbound
+                :alexandria
+                :split-sequence
                 :clithub
                 :nisp.fbi)
   :serial t
