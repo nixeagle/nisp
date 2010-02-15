@@ -447,8 +447,7 @@ methods that support this."))
                    (car (nisp.mop-simple:class-slots
                          (find-symbol (string-upcase params))))))))
 
-(define-command alpha-nikurl (connection irc:user target
-                                           string params)
+(define-command alpha-nikurl (connection irc:user target string params)
   "Shorturl something."
   (irc:privmsg connection target
                (car (cl-ppcre:all-matches-as-strings
