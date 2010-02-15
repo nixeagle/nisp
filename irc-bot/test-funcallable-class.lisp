@@ -100,8 +100,8 @@
 
 (defmethod sb-pcl::specializer-type ((specializer command-specializer))
   ;; Fixes arglist printing:
-  ;; instead of NIL we get (COMMAND <something>).
-  `(command ,@(command-specializer-object specializer)))
+  ;; instead of NIL we get (EQL <something>).
+  `(eql ,@(command-specializer-object specializer)))
 
 (defmethod closer-mop:add-direct-method ((specializer command-specializer)
                                          method)
