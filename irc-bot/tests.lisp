@@ -305,7 +305,7 @@
 
 (defgeneric fake-test-command (arg1 arg2 arg3 arg4 arg5)
   (:generic-function-class command-generic-function))
-(defmethod fake-test-command ((a integer)
+(defmethod fake-test-command ((a (command hi))
                               (b integer) (c string)
                               (d (eql 4)) (f (eql 3)))
 
@@ -339,6 +339,15 @@
         `(list ,test-specializer (sb-mop:intern-eql-specializer 3))
         ('integer '(command testing it))
         `(list (find-class 'integer) ,test-specializer)))))
+
+(test (method-specializers :suite root)
+  (is (eq (intern-command-specializer '(hi))
+          (car (method-specializers
+                (car (generic-function-methods #'fake-test-command)))))
+      "`fake-test-command' is already defined by this point. What needs
+      to happen here is the eql specializer that was interned when the
+      command was defined should match with a newly looked up
+      command-specializer."))
 
 #+ () (test (fake-test-command)
   (is (eq nil)))
