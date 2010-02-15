@@ -202,7 +202,19 @@ that has a ton of references by defined commands."
 
 (defmethod compute-applicable-methods ((generic-function command-generic-function)
                                        args)
+  ;; Command functions always have as the first argument a command-specializer.
+  (let ((command-specializer (find-command-specializer (car args))))
+    (when command-specializer
+      (irc:privmsg
+       *bot* "#bots"
+       (remove-newlines
+        (format nil "Debugging compute-applicable-methods: ~A"
+                (iter (for method :in (generic-function-methods generic-function))
+                      (when (eq command-specializer
+                                (car (method-specializers method)))
+                        (collect method))))))))
   (call-next-method))
+
 (defmethod compute-discriminating-function
     ((generic-function command-generic-function))
   (let ((it (call-next-method)))
