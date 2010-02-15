@@ -302,7 +302,7 @@
 ;;;}}}
 
 ;;;{{{ Testing operations with fake command functions
-
+;;;{{{ fake-test-command generic/methods
 (defgeneric fake-test-command (arg1 arg2 arg3 arg4 arg5)
   (:generic-function-class command-generic-function))
 (defmethod fake-test-command ((a (command hi))
@@ -310,8 +310,38 @@
                               (d (eql 4)) (f (eql 3)))
 
   (list a b c d f))
+(defmethod fake-test-command ((a (command hi))
+                              (b integer) (c integer)
+                              (d (eql 4)) (f (eql 3)))
+  (list a b c d f))
+(defmethod fake-test-command ((a (eql 1))
+                              (b (eql 2)) (f (eql 3))
+                              (d (eql 4)) (c (eql 5)))
 
+  (list a b c d f))
 
+(defmethod fake-test-command ((a integer)
+                              (b (eql 2)) (f (eql 3))
+                              (d (eql 4)) (c (eql 5)))
+
+  (list a b c d f))
+(defmethod fake-test-command ((a integer)
+                              (b integer) (f integer)
+                              (d integer) (c integer))
+
+  (list a b c d f))
+(defmethod fake-test-command ((a integer)
+                              (b (eql 2)) (f (eql 3))
+                              (d (eql 4)) (c integer))
+
+  (list a b c d f))
+
+(defmethod fake-test-command ((a (eql 1))
+                              (b integer) (f (eql 3))
+                              (d (eql 4)) (c integer))
+
+  (list a b c d f))
+;;;}}}
 
 (test (make-method-specializers-form
        :suite root)
