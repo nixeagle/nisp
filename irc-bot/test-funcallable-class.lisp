@@ -150,11 +150,12 @@
 
   (defmethod find-command-specializer ((symbol symbol)
                                        &optional (hash obarray))
-    (%get-command-specializer hash symbol))
+    (%get-command-specializer hash (ensure-command-symbol symbol)))
   (defmethod find-command-specializer ((symbols cons)
                                        &optional
                                        (obarray obarray))
-    (reduce #'%get-command-specializer symbols :initial-value obarray))
+    (reduce #'%get-command-specializer (ensure-command-symbol symbols)
+            :initial-value obarray))
   (defmethod %add-command-specializer ((hash hash-table)
                                        (symbol symbol)
                                        (symbols list))
