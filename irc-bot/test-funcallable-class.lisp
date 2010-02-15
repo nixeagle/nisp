@@ -201,10 +201,28 @@ that has a ton of references by defined commands."
 (defmethod compute-applicable-methods ((generic-function command-generic-function)
                                        args)
   (call-next-method))
+(defmethod compute-discriminating-function
+    ((generic-function command-generic-function))
+  (let ((it (call-next-method)))
+    (describe it)
+    it))
 
-(defmethod closer-mop:compute-effective-method
+(defmethod compute-applicable-methods-using-classes
+    ((generic-function command-generic-function) args)
+  "No cache for `command-generic-function' for now."
+  (values args nil))
+
+
+
+(defmethod compute-effective-method
     ((generic-function command-generic-function)
      method-combination applicable-methods)
+  #+ () (lambda (a b c d e) (list a b c d e))
+  (call-next-method))
+
+(defmethod make-method-lambda
+    ((generic-function command-generic-function) method expression environment)
+  (declare (ignore environment))
   (call-next-method))
 
 (defmethod make-load-form ((self command-specializer) &optional env)
