@@ -93,7 +93,8 @@
 (defclass command-specializer (closer-mop:specializer)
   ((direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
                  :reader command-specializer-direct-nodes)
-   (object :reader command-specializer-object :initarg :command)
+   (object :reader command-specializer-object
+           :reader class-name :initarg :command)
    (direct-methods :initform nil
                    :reader closer-mop:specializer-direct-methods)))
 
