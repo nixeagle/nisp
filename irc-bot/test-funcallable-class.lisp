@@ -3,7 +3,7 @@
 ;;;{{{ Test generic function <new funcallable type>
 (defclass test-generic-function (standard-generic-function)
   ()
-  (:metaclass closer-mop:funcallable-standard-class)
+  (:metaclass funcallable-standard-class)
   (:default-initargs :method-class (find-class 'test-method)))
 
 (defclass test-method (standard-method) ())
@@ -14,7 +14,7 @@
   (cddddr lambda-expression))
 
 ;;; Now I have to override compute applicatable methods
-(defmethod closer-mop:compute-applicable-methods-using-classes
+(defmethod compute-applicable-methods-using-classes
     ((generic-function test-generic-function) classes)
   "For now just print information.~%"
   (call-next-method))
@@ -24,7 +24,7 @@
   "For now just print information."
   (call-next-method))
 
-(defmethod closer-mop:compute-effective-method
+(defmethod compute-effective-method
     ((generic-function test-generic-function)
      method-combination
      applicable-methods)
@@ -32,7 +32,7 @@
   `(call-method ,(car applicable-methods) ,(cdr applicable-methods)
                 ,(car applicable-methods)))
 
-(defmethod closer-mop:make-method-lambda
+(defmethod make-method-lambda
     ((generic-function test-generic-function) method expression environment)
   (declare (ignore environment))
   `(lambda (args next-methods this-method)
@@ -44,14 +44,14 @@
                       (when (= 3 (nisp.util.declarations:get-safety-setting))
                         (assert (nisp.mop:compare-generic-applicable-methods
                                  (or new-args args) args
-                                 (closer-mop:method-generic-function this-method))
+                                 (method-generic-function this-method))
                                 nil 'nisp.mop::applicable-methods-mismatch-error
                                 :old-args args
                                 :new-args new-args
                                 :generic-function
-                                (closer-mop:method-generic-function this-method)))
+                                (method-generic-function this-method)))
                       (format t "cnm: ~S ::NA: ~S" args new-args)
-                      (funcall (closer-mop:method-function (car next-methods))
+                      (funcall (method-function (car next-methods))
                                (or new-args args)
                                (cdr next-methods)
                                (car next-methods)))
@@ -84,30 +84,30 @@
 ;;;{{{ command funcallable class
 (defclass command-generic-function (standard-generic-function)
   ()
-  (:metaclass closer-mop:funcallable-standard-class)
+  (:metaclass funcallable-standard-class)
   (:default-initargs :method-class (find-class 'command-method))
   (:documentation "Used for handling messages."))
 
 (defclass command-method (standard-method) ())
 
-(defclass command-specializer (closer-mop:specializer)
+(defclass command-specializer (specializer)
   ((direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
                  :reader command-specializer-direct-nodes)
    (object :reader command-specializer-object
            :reader class-name :initarg :command)
    (direct-methods :initform nil
-                   :reader closer-mop:specializer-direct-methods)))
+                   :reader specializer-direct-methods)))
 
 (defmethod sb-pcl::specializer-type ((specializer command-specializer))
   ;; Fixes arglist printing:
   ;; instead of NIL we get (EQL <something>).
   `(eql ,@(command-specializer-object specializer)))
 
-(defmethod closer-mop:add-direct-method ((specializer command-specializer)
+(defmethod add-direct-method ((specializer command-specializer)
                                          method)
   (pushnew method (slot-value specializer 'direct-methods)))
 
-(defmethod closer-mop:remove-direct-method ((specializer command-specializer)
+(defmethod remove-direct-method ((specializer command-specializer)
                                             method)
   (deletef (slot-value specializer 'direct-methods) method))
 
@@ -208,7 +208,7 @@ that has a ton of references by defined commands."
 (defmethod compute-applicable-methods ((generic-function command-generic-function)
                                        args)
   ;; Command functions always have as the first argument a command-specializer.
-  (call-next-method generic-function args)))
+  (call-next-method generic-function args))
 
 (defmethod compute-discriminating-function
     ((generic-function command-generic-function))
