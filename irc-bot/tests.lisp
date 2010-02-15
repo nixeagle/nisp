@@ -335,6 +335,15 @@
                               (d integer) (f integer))
   (list a b c d f))
 
+(defgeneric short-fake-test-command (a b)
+  (:generic-function-class command-generic-function))
+(defmethod short-fake-test-command ((a (command hi))
+                                    (b (eql 3)))
+  (list a b))
+(defmethod short-fake-test-command ((a (command hi))
+                                    (b integer))
+  `(,a ,(integer b)))
+
 (defmethod fake-test-command ((a (eql 1))
                               (b (eql 2)) (f (eql 3))
                               (d (eql 4)) (c (eql 5)))
