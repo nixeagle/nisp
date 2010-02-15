@@ -379,6 +379,15 @@
       command was defined should match with a newly looked up
       command-specializer."))
 
+(test (compute-applicable-methods/all-eql-specializers
+       :suite root)
+  (is (typep (car (compute-applicable-methods #'fake-test-command '(1 2 3 4 5)))
+             'command-method)
+      "`fake-test-command' has a method specializing on
+      (eql 1) ... (eql 5), this test should trigger a lookup that returns
+      that particular method. For now though we can only confirm that what
+      we are looking at is really a `command-method'."))
+
 #+ () (test (fake-test-command)
   (is (eq nil)))
 
