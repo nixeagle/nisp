@@ -16,9 +16,59 @@
 (defmacro with-run-state (requested-vars &body body)
   `(locally (declare (special ,@requested-vars)) ,@body))
 
+(defmethod (setf status) :after ((status (eql :unknown)) (test test-case))
+  (setf (slot-value test 'sofar) ()))
+
+(defclass test-case (testable-object)
+  ((test-lambda :initarg :test-lambda :accessor test-lambda
+		:documentation "The function to run.")
+   (sofar :initform () :reader test-case-sofar
+          :documentation "Tests run so far.")
+   (runtime-package :initarg :runtime-package :accessor runtime-package
+                    :documentation "By default it stores *package* from the time this test was defined (macroexpanded)."))
+  (:documentation "A test case is a single, named, collection of
+checks.
+
+A test case is the smallest organizational element which can be
+run individually. Every test case has a name, which is a symbol,
+a description and a test lambda. The test lambda is a regular
+funcall'able function which should use the various checking
+macros to collect results.
+
+Every test case is part of a suite, when a suite is not
+explicitly specified (either via the :SUITE parameter to the TEST
+macro or the global variable *SUITE*) the test is inserted into
+the global suite named NIL.
+
+Sometimes we want to run a certain test only if another test has
+passed. FiveAM allows us to specify the ways in which one test is
+dependent on another.
+
+- AND Run this test only if all the named tests passed.
+
+- OR Run this test if at least one of the named tests passed.
+
+- NOT Run this test only if another test has failed.
+
+FiveAM considers a test to have passed if all the checks executed
+were successful, otherwise we consider the test a failure.
+
+When a test is not run due to it's dependencies having failed a
+test-skipped result is added to the results."))
+
+(defmethod (setf test-case-sofar) (test-form (test test-case))
+  "Push a new TEST-FORM onto TEST."
+  (unless (member test-form (slot-value test 'sofar) :test #'equal)
+    (setf (slot-value test 'sofar)
+          (append (slot-value test 'sofar) (list test-form)))))
+(defmethod (setf test-case-sofar) (test-form (test test-result))
+  (setf (test-case-sofar test) test-form))
+(defmethod test-case-sofar ((test test-result))
+  (test-case-sofar (test-case test)))
+
 (defclass test-result ()
-  ((reason :accessor reason :initarg :reason :initform "no reason given")
-   (docstring :accessor docstring :initarg :docstring :initform "None given.")
+  ((reason :accessor reason :initarg :reason :initform "reason")
+   (docstring :accessor docstring :initarg :docstring :initform "docstring")
    (test-case :accessor test-case :initarg :test-case)
    (actual-value :accessor test-actual-value :initarg :actual-value
                  :initform 'no-result)
@@ -35,7 +85,7 @@
   (:method ((o test-passed)) t))
 
 (define-condition check-failure (error)
-  ((reason :accessor reason :initarg :reason :initform "no reason given")
+  ((reason :accessor reason :initarg :reason :initform "reason")
    (test-case :accessor test-case :initarg :test-case)
    (test-expr :accessor test-expr :initarg :test-expr))
   (:documentation "Signaled when a check fails.")
@@ -81,6 +131,9 @@ when appropiate."))
   (with-run-state (result-list current-test)
     (let ((result (apply #'make-instance result-type
                          (append make-instance-args (list :test-case current-test)))))
+      (setf (test-case-sofar current-test)
+            (getf make-instance-args :test-expr "no test-expression."))
+
       (format *test-dribble* (etypecase result
                                (test-passed             ".") (test-skipped "s")
                                (unexpected-test-failure "X") (test-failure "f")))
@@ -186,13 +239,13 @@ REASON-ARGS is provided, is generated based on the form of TEST:
                        `',?value v `,?type)))
           ((not (comparable (?predicate ?expected ?actual)))
            (reverse-process-entry ?predicate ?expected ?actual t)
-           (setf modified-test `(list ,p ',?actual ',?expected) 
+           (setf modified-test `(list ,p ',?actual ',?expected)
                  default-reason-args
                  (list "~S evaluated to ~S, which is not ~S to ~S. (it should not be)"
                        `',?actual e p a)))
           ((not (?predicate ?expected ?actual))
            (process-entry ?predicate ?expected ?actual t)
-           (setf modified-test `(list ,p ',?expected ',?actual) 
+           (setf modified-test `(list ,p ',?expected ',?actual)
                  default-reason-args
                  (list "~S evaluated to ~S, which is ~S to ~S (it should not be)"
                        `',?actual a p e)))
@@ -212,7 +265,7 @@ REASON-ARGS is provided, is generated based on the form of TEST:
                  default-reason-args
                  (list "~S evaluated to ~S, which is not a ~S"
                        `',?value v `,?type)))
-          ((comparable (?predicate ?expected ?actual)) 
+          ((comparable (?predicate ?expected ?actual))
            (reverse-process-entry ?predicate ?expected ?actual)
            (setf default-reason-args
                  (list "~S evaluated to ~S, which is not ~S to ~S."
@@ -220,7 +273,7 @@ REASON-ARGS is provided, is generated based on the form of TEST:
                  modified-test `(list ,p ',?actual ',?expected)))
           ((?predicate ?expected ?actual)
            (process-entry ?predicate ?expected ?actual)
-           (setf modified-test `(list ,p ',?expected ',?actual) 
+           (setf modified-test `(list ,p ',?expected ',?actual)
                  default-reason-args
                  (list "~S evaluated to ~S, which is not ~S to ~S."
                        `',?actual a p e)))
@@ -242,9 +295,10 @@ REASON-ARGS is provided, is generated based on the form of TEST:
              (add-result 'test-passed :test-expr (or ,modified-test ',test)
                            :actual-value ,a
                            :expected-value ,e
-                           :docstring ,(format nil (or (car reason-args) "none given")))
-             (process-failure :reason (format nil ,@(or default-reason-args))
-                                :docstring ,(format nil (or (car reason-args) "non given"))
+                           :docstring ,(format nil (or (car reason-args) "")))
+             (process-failure :reason (format nil ,@default-reason-args)
+                              :docstring (format nil "~A" ,@(or reason-args
+                                                          (list "")))
                                 :actual-value ,a
                                 :expected-value ,e
                                 :test-expr (or ,modified-test ',test)))))))
@@ -293,8 +347,8 @@ not evaluated."
                                          (return-from ,block-name t))))
            (block nil ,@body))
          (process-failure
-          :reason (format nil "Failed to signal a ~S" ',condition) 
-          :docstring (format nil "~A" ,(or reason-args "None given."))
+          :reason (format nil "Failed to signal a ~S" ',condition)
+          :docstring `(format nil "~A" ,@(or reason-args "docstring"))
           :expected-value ',condition
           :test-expr ',condition)
          (return-from ,block-name nil)))))
@@ -321,3 +375,130 @@ fails."
   "Simply generate a FAIL."
   `(process-failure :test-expr ',message-args
                     ,@(when message-args `(:reason (format nil ,@message-args)))))
+
+(defparameter *verbose-failures* t
+  "T if we should print the expression failing, NIL otherwise.")
+
+(defgeneric explain (explainer results &optional stream recursive-depth)
+  (:method ((exp detailed-text-explainer) results
+            &optional (stream *test-dribble*) (recursive-depth 0))
+    (multiple-value-bind (num-checks passed num-passed passed%
+                                     skipped num-skipped skipped%
+                                     failed num-failed failed%
+                                     unknown num-unknown unknown%)
+        (partition-results results)
+      (declare (ignore passed))
+      (flet ((output (&rest format-args)
+               (format stream "~&~vT" recursive-depth)
+               (apply #'format stream format-args)))
+        (when (zerop num-checks)
+          (output "Didn't run anything...huh?")
+          (return-from explain nil))
+        (output "Did ~D check~P.~%" num-checks num-checks)
+        (output "   Pass: ~D (~2D%)~%" num-passed passed%)
+        (output "   Skip: ~D (~2D%)~%" num-skipped skipped%)
+        (output "   Fail: ~D (~2D%)~%" num-failed failed%)
+        (when unknown (output "   UNKNOWN RESULTS: ~D (~2D)~%" num-unknown unknown%))
+        (terpri stream)
+        (when failed
+          (output "Failure Details:~%")
+          (dolist (f (reverse failed))
+            (output "--------------------------------~%")
+            (output "~A ~@{[~A]~}: ~%"
+                    (name (test-case f))
+                    (description (test-case f)))
+            (output "  ~@{[~A]~}~%~%" (docstring f))
+            (output "     ~A~%~%" (reason f))
+            (output "-- -- Expected -- --~%")
+            (output "~A" (with-output-to-string (stream)
+                           (describe (test-expected-value f) stream)))
+            (output "~%~%-- --  Actual  -- --~%")
+            (output "~A" (with-output-to-string (stream)
+                           (describe (test-actual-value f) stream)))
+            (output "~%~%")
+            (when (and *verbose-failures* (test-expr f))
+              (output "EXPR:  ~S~%" (test-expr f)))
+            (output "--------------------------------~%"))
+          (terpri stream))
+        (when skipped
+          (output "Skip Details:~%")
+          (dolist (f skipped)
+            (output "~A ~@{[~A]~}: ~%"
+                    (name (test-case f))
+                    (description (test-case f)))
+            (output "    ~A.~%" (reason f)))
+          (terpri stream)))))
+  (:method ((exp simple-text-explainer) results
+            &optional (stream *test-dribble*) (recursive-depth 0))
+    (multiple-value-bind (num-checks passed num-passed passed%
+                                     skipped num-skipped skipped%
+                                     failed num-failed failed%
+                                     unknown num-unknown unknown%)
+        (partition-results results)
+      (declare (ignore passed passed% skipped skipped% failed failed% unknown unknown%))
+      (format stream "~&~vTRan ~D checks, ~D passed" recursive-depth num-checks num-passed)
+      (when (plusp num-skipped)
+        (format stream ", ~D skipped " num-skipped))
+      (format stream " and ~D failed.~%" num-failed)
+      (when (plusp num-unknown)
+        (format stream "~vT~D UNKNOWN RESULTS.~%" recursive-depth num-unknown)))))
+
+(defun partition-results (results-list)
+  (let ((num-checks (length results-list)))
+    (collect (passed skipped failed unknown)
+      (dolist (result results-list)
+        (typecase result
+          (test-passed  (passed result))
+          (test-skipped (skipped result))
+          (test-failure (failed result))
+          (otherwise    (unknown result))))
+      (if (zerop num-checks)
+          (values 0 nil 0 0 nil 0 0 nil 0 0 nil 0 0)
+          (values
+           num-checks
+           (passed)  (length (passed))  (floor (* 100 (/ (length (passed))  num-checks)))
+           (skipped) (length (skipped)) (floor (* 100 (/ (length (skipped)) num-checks)))
+           (failed)  (length (failed))  (floor (* 100 (/ (length (failed))  num-checks)))
+           (unknown) (length (unknown)) (floor (* 100 (/ (length (failed))  num-checks))))))))
+
+
+(defgeneric run-test-lambda (test)
+  (:method ((test test-case))
+    (with-run-state (result-list)
+      (bind-run-state ((current-test test))
+        (labels ((abort-test (e)
+                   (add-result 'unexpected-test-failure
+                               :test-expr nil
+                               :test-case test
+                               :reason (format nil "Unexpected Error: ~S~%~A." e e)
+                               :condition e))
+                 (run-it ()
+                   (let ((result-list '()))
+                     (declare (special result-list))
+                     (handler-bind ((check-failure (lambda (e)
+                                                     (declare (ignore e))
+                                                     (unless *debug-on-failure*
+                                                       (invoke-restart
+                                                        (find-restart 'ignore-failure)))))
+                                    (error (lambda (e)
+                                             (unless (or *debug-on-error*
+                                                         (typep e 'check-failure))
+                                               (abort-test e)
+                                               (return-from run-it result-list)))))
+                       (restart-case
+                           (let ((*readtable* (copy-readtable))
+                                 (*package* (runtime-package test)))
+                             (funcall (test-lambda test)))
+                         (retest ()
+                           :report (lambda (stream)
+                                     (format stream "~@<Rerun the test ~S~@:>" test))
+                           (return-from run-it (run-it)))
+                         (ignore ()
+                           :report (lambda (stream)
+                                     (format stream "~@<Signal an exceptional test failure and abort the test ~S.~@:>" test))
+                           (abort-test (make-instance 'test-failure :test-case test
+                                                      :reason "Failure restart."))))
+                       result-list))))
+          (let ((results (run-it)))
+            (setf (status test) (results-status results)
+                  result-list (nconc result-list results))))))))

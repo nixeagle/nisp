@@ -7,7 +7,8 @@
 
 (defmacro define-new-suite (name &key description in)
   "Define NAME as a new suite if not yet defined."
-  `(ensure-suite ,name :description ,description :in ,in))
+  (eval-when (:compile-toplevel :load-toplevel :execute)
+    `(ensure-suite ,name :description ,description :in ,in)))
 
 (defun ensure-suite (name &key description in)
   "Create a new test suite object if it does not already exist."
@@ -18,7 +19,7 @@
   "Compare FBOUND-CALL using PREDICATE using series of ARGS.
 
 This macro has some funny destructuring.
-  - If the first of ARGS is a string, its taken as the reason/docstring. 
+  - If the first of ARGS is a string, its taken as the reason/docstring.
     This defaults to \"No reason given.\". However when a docstring is given
     this docstring will apply for all argument/return value pairs until another
     docstring is given.
@@ -108,7 +109,7 @@ This macro has some funny destructuring.
                              (not (eq 'quote (first expected-result)))
                              (consp (second expected-result))
                              (fboundp (first (second expected-result)))
-                             (setq expected-result 
+                             (setq expected-result
                                    (second expected-result)))
                         `(is (not (eos::comparable
                                    (eos::find-predicate ,expected-result
