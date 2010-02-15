@@ -209,8 +209,8 @@ that has a ton of references by defined commands."
 
 (defmethod make-load-form ((self command-specializer) &optional env)
   (declare (ignore env))
-#+ ()  (intern-command-specializer )
-  )
+  (intern-command-specializer (command-specializer-object self))
+#+ ()  (intern-command-specializer ))
 
 ;;;}}}
 ;;;END
