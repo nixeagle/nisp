@@ -418,6 +418,10 @@
       that particular method. For now though we can only confirm that what
       we are looking at is really a `command-method'."))
 
+(test (fake-test-command :suite root)
+  (with-fbound (fake-test-command)
+    ('nisp.i.command-argument-symbols::hi 1 2 4 3)
+    :finishes))
 #+ () (test (fake-test-command)
   (is (eq nil)))
 
@@ -455,3 +459,5 @@
     "Addition should always run to completion"
     (1 2 3) :finishes))
 ;;;}}}
+
+;;; END
