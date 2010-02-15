@@ -13,6 +13,7 @@
   (with-fbound (join-sequence)
     ('("a" "b")) "a b"))
 ;;;}}}
+
 (defclass connection (irc:connection) ())
 
 ;;;{{{ define-command:
@@ -135,6 +136,16 @@ methods that support this."))
                      :comchar ",")
   (:documentation "sonicrules1234's irc network."))
 
+(defclass flare-nisp-bot-connection (bot-connection
+                                     connect-with-background-handler-mixin)
+  ()
+  (:default-initargs :username "lisp" :nickname "nisp"
+                     :realname "Nixeagle's lisp experiments bot."
+                     :server-port 9990
+                     :server-name "127.0.0.1"
+                     :comchar ",")
+  (:documentation "Bot connection for flare183's server."))
+
 (defmethod shared-initialize :after ((bot bot-connection) slot-names
                                      &key nickname username realname)
   (when (and nickname username realname)
@@ -225,6 +236,11 @@ methods that support this."))
   (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
   (irc:join irc "#services")
   (irc:join irc "#sonicircd"))
+
+(defmethod connect :after ((irc flare-nisp-bot-connection) &key)
+  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
+  (irc:join irc "#help"))
+
 ;;;}}}
 
 (defmethod target ((message irc:irc-privmsg-message))
@@ -344,16 +360,12 @@ methods that support this."))
                                       (remove-comchar irc cmd))))
     (error (condition) (irc:privmsg irc to condition))))
 
-
-(define-command-node test (8b-i-bot-connection irc:user irc:channel string
-                                               params))
-
 (defmethod generate-short-test-summary ((suite symbol))
   "Run SUITE's tests and print a short report."
   (iterate (for test in (run suite))
            (counting (typep test 'eos::test-passed) :into passed)
            (counting (not (typep test 'eos::test-passed)) :into failed)
-           (finally (return
+           (finally (print failed) (return
                       (format nil "Total tests: ~A Passed: ~A Failed: ~A"
                               (+ passed failed) passed failed)))))
 (defmethod generate-short-test-summary ((suite string))
@@ -361,23 +373,107 @@ methods that support this."))
   (generate-short-test-summary
    (ensure-symbol (string-upcase (car (split-command-string suite))))))
 
-(define-command test-run (8b-i-bot-connection irc:user irc:channel string
-                                               params)
-  (irc:privmsg 8b-i-bot-connection irc:channel
-               (generate-short-test-summary (if (string= params "all")
-                                                :nisp-eos-root params))))
 
+
+(defmethod eql-specializer->string ((object closer-mop:eql-specializer))
+  (string-downcase (symbol-name (closer-mop:eql-specializer-object object))))
+
+(defun test-lookup (specializer
+                    &optional (package :nisp.i.command-argument-symbols))
+  (mapcar (lambda (x)
+            (mapcar #'eql-specializer->string
+                    (remove-if-not (lambda (object)
+                                     (typep object 'closer-mop:eql-specializer))
+                                   x)))
+          (mapcar #'closer-mop:method-specializers
+                  (closer-mop:specializer-direct-methods
+                   (closer-mop:intern-eql-specializer
+                    (find-symbol (string-upcase specializer) package))))))
+
+
+;;;{{{ Define commands
+
+;;;{{{ Github commands
 (define-command-node github (connection irc:user (to t) string params))
 (define-command-node github-show (connection irc:user (to t)
                                              string params))
-(define-command github-show-followers (connection irc:user target 
+(define-command github-show-followers (connection irc:user target
                                                   string github-user)
-  (irc:privmsg connection target 
+  (irc:privmsg connection target
                (join-sequence (clithub:show-followers github-user))))
-(define-command github-show-following (connection irc:user target 
+(define-command github-show-following (connection irc:user target
                                                   string github-user)
-  (irc:privmsg connection target 
+  "Private message TARGET with list of people GITHUB-USER follows."
+  (irc:privmsg connection target
                (join-sequence (clithub:show-following github-user))))
+;;;}}}
 
+;;;{{{ Nisp introspection commands
+(define-command-node nisp (connection irc:user target string params))
+(define-command-node nisp-introspect (connection irc:user target string params))
+(define-command-node nisp-introspect-irc (connection irc:user target
+                                                     string params))
+(define-command nisp-introspect-irc-user (connection irc:user target
+                                                       string nickname)
+  (irc:privmsg connection target
+               (nisp.mop::class-slot-name-value-alist
+                (irc:find-user connection nickname))))
+;;;}}}
 
-;;; Types
+;;;{{{ Unit test runner
+(define-command-node test (8b-i-bot-connection irc:user irc:channel string
+                                               params))
+
+(define-command test-run (8b-i-bot-connection irc:user irc:channel string
+                                              params)
+  (irc:privmsg 8b-i-bot-connection irc:channel
+               (generate-short-test-summary (if (string= params "all")
+                                                :nisp-eos-root
+                                                params))))
+;;;}}}
+
+;;;{{{ Alpha commands <highly experimental>
+(define-command-node alpha (connection irc:user target string params))
+
+(define-command alpha-apropos (connection irc:user target string params)
+  "Look up applicatable methods."
+  (irc:privmsg connection target (test-lookup params)))
+
+(define-command alpha-tnt (connection irc:user target string params)
+    "Testing command for blowing stuff up, hence \"tnt\"."
+    (irc:privmsg connection target
+                 (prin1-to-string
+                  (nisp.mop-store::generate-slot-specifier
+                   (car (nisp.mop-simple:class-slots
+                         (find-symbol (string-upcase params))))))))
+
+(define-command alpha-nikurl (connection irc:user target
+                                           string params)
+  "Shorturl something."
+  (irc:privmsg connection target
+               (car (cl-ppcre:all-matches-as-strings
+                     "http\\S+"
+                     (drakma:http-request
+                      (concatenate 'string
+                                   "http://nik.im/api_create.php?url="
+                                   (remove #\Space params)))))))
+;;;}}} Alpha commands
+;;;}}} Define commands
+
+;;;{{{ Initialize bots hacks <irc only right now>
+(defvar *sonic*)
+(defvar *slack*)
+(defvar *bot*)
+(defvar *flare*)
+(defun %initialize-bots ()
+  "Start up all the bots."
+  (macrolet ((define-bot (name class)
+               `(defparameter ,name (make-instance ',class))))
+    (define-bot *sonic* sonic-nisp-bot-connection)
+    (define-bot *slack* slack-nisp-bot-connection)
+    (define-bot *bot* 8b-i-bot-connection)
+    (define-bot *flare* flare-nisp-bot-connection)))
+
+(defparameter %bot-list% '(*sonic* *slack* *bot* *flare*)
+  "Hackish list of bots.")
+;;;}}}

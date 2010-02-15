@@ -15,6 +15,8 @@
                :with-fbound
                :nisp.util.usocket
                :split-sequence
+               :drakma
+               :cl-ppcre
                :alexandria
                :cl-irc
                :iterate
@@ -23,6 +25,8 @@
   :components
   ((:file "util.packages")
    (:file "package")
+   (:file "test-funcallable-class")
+   (:file "test-funcallable-class-methods")
    (:file "mixin")
    (:file "irc-packages")
    (:file "bot-types")
