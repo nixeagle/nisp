@@ -1,0 +1,59 @@
+#+TITLE: tree-funcallable-class.org
+#+LINK: mop http://www.alu.org/mop/dictionary.html#%s
+#+LINK: cl-net-project http://common-lisp.net/project/%s
+#+LINK: asdf http://www.cliki.net/%s
+#+LINK: cliki http://www.cliki.net/%s
+
+This is my forth rewrite of nisp's command parsing system. In short the
+routing system takes care of translating "github show foo" into terms
+that lisp's [[ansi:generic-function][generic-function]] can handle and deal with. Commands are
+structured like a tree, with each level having sub-nodes until a leaf is
+reached. This leaf is what executes the behavior of the command.
+
+* Prior attempts
+  1) First attempt was a crude first pass that did not take advantage of
+     the [[http://www.alu.org/mop/contents.html][Metaobject protocol]]. What I did was define
+     =+command-routing-functions+= which contained an array of 16
+     methods, each one taking one more command argument then the
+     last. If the command was not a leaf, we simply went back and
+     checked =+command-routing-functions+= again for another generic
+     function with one more argument, repeating this cycle until we hit
+     a leaf or until we failed to find a node or a leaf.[fn:1]
+  2) My second attempt made use of the [[http://www.alu.org/mop/contents.html][Metaobject protocol]], but did not
+     get very far or got close to being an acceptable replacement for
+     =+command-routing-functions+=. What it did do was teach me about
+     how the [[http://www.alu.org/mop/contents.html][Metaobject protocol]] really worked for selecting applicable
+     methods. The functions and classes defined attempted to follow the
+     examples given for [[mop:make-method-lambda]], focusing on figuring out
+     how [[mop:call-next-method]] and [[mop:call-method]] interacted to pass an
+     additional parameter to be used. With the extra parameter I defined
+     =this-method=, which provided a pointer to the method class from
+     inside of the function while it was called. A working example of
+     this one is in a test case at [[file:tests.lisp::Testing%20the%20test%20generic%20function][test-gf test case]].
+  3) The last attempt is at [[file:test-funcallable-class.lisp::defclass%20command%20generic%20function%20standard%20generic%20function][command-generic-function]]. This class and
+     related specializer: [[file:test-funcallable-class.lisp::defclass%20command%20specializer%20specializer][command-specializer]] got to the point that a
+     top level[fn:2] command could be recognized and called. However this did
+     not handle all corner cases, and does not handle any levels below
+     the top level.
+
+* Current attempt
+  The source will be at [[file:tree-funcallable-class.lisp]] and the tests
+  will be at [[file:tree-funcallable-class-tests.lisp]].
+
+  The dependencies will be the following:
+  - [[cl-net-project:closer/closer-mop.html][closer/closer-mop.html]], [[http://common-lisp.net/project/closer/repos/closer-mop/][darcs repository]],
+    [[cl-net-darcs-web:closer-mop][darcs web repository view]], [[asdf:closer-mop]]
+  - [[cl-net-project:iterate][iterate]], [[cl-net-project:iterate/doc/index.html][manual]], [[cl-net-darcs-web:iterate][darcs web repository view]],
+    [[asdf:iterate]]
+  - [[cl-net-project:alexandria][alexandria]], [[cl-net-project:alexandria/draft/alexandria.pdf][manual]],  [[cl-net-project:alexandria/darcs/alexandria/][darcs repository]], [[asdf:alexandria]]
+
+
+
+* Footnotes
+
+[fn:1] Failure to find a node or a leaf means there was no method
+defined for that particular command.
+
+[fn:2] Top level commands are things like =!github=, =!test=. These do
+not have commands under them. Some examples of that are: =!github show=,
+=!test run=, =!test run all= and so on.
