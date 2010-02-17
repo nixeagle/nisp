@@ -1,0 +1,35 @@
+#+LINK: wp http://en.wikipedia.org/wiki/
+
+* File protocol
+  - Clients send T-message to a server
+  - Server replies with R-message to the client.
+
+*** Messages
+    Each contains a sequence of bytes in [[wp:little-endian][little-endian order]]. [fn:1] There
+    are 2, 4, and 8 unsigned integers following this format. Anything of
+    variable width starts with a two byte field that indicates how long it
+    is.
+
+    Text strings are not null terminated. The NUL character is illegal in
+    all text strings in 9P.
+
+
+***** Message Format
+      Starts with a 4 byte field that says the length in bytes of the
+      whole message including the 4 bytes of the size field.
+
+      Next byte is the message type which is enumerated in =fcall.h=
+
+      Next 2 bytes are an identifying tag.
+
+      Whats left are parameters of different sizes.
+* Dictionary
+*** <<<T-message>>>
+*** <<<R-message>>>
+
+* References
+  - http://man.cat-v.org/plan_9/5/intro
+
+* Footnotes
+
+[fn:1] Means least significant byte is first.
