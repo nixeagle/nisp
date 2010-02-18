@@ -37,7 +37,7 @@
 (defmethod ensure-tree-symbol ((symbols cons))
   "SYMBOLS get interned into `+tree-symbols-package+'."
   (mapcar (lambda (symbol)
-            (ensure-symbol symbol +tree-symbols-package+))
+            (format-symbol +tree-symbols-package+ "~A" symbol))
           symbols))
 (defmethod ensure-tree-symbol ((symbols string))
   "Split by spaces, then intern SYMBOLS as normal."
