@@ -10,19 +10,11 @@
   ())
 
 (defclass tree-specializer (eql-specializer)
-  ((object :reader tree-specializer-object
-           :reader class-name
-           :initarg :object)
-   (direct-methods :initform nil
-                   :reader specializer-direct-methods)
+  ((parent :reader tree-specializer-parent
+           :documentation "Pointer to the parent specializer of this one.")
    (direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
                  :reader tree-specializer-direct-nodes)))
 
-(defmethod add-direct-method ((specializer tree-specializer) method)
-  (pushnew method (slot-value specializer 'direct-methods)))
-
-(defmethod remove-direct-method ((specializer tree-specializer) method)
-  (deletef (slot-value specializer 'direct-methods) method))
 ;;;}}}
 
 ;;;{{{ Ensure tree symbol
