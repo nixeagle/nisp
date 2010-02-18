@@ -25,15 +25,25 @@
   (deletef (slot-value specializer 'direct-methods) method))
 ;;;}}}
 
+;;;{{{ Ensure tree symbol
 (defparameter +tree-symbols-package+ :nisp.i.command-argument-symbols
   "Package that all tree symbols should get interned into.")
 
 (defgeneric ensure-tree-symbol (symbol)
   (:documentation "Make sure SYMBOL exists in `+tree-symbols-package+'."))
 (defmethod ensure-tree-symbol ((symbol symbol))
-  (ensure-symbol symbol +tree-symbols-package+))
+  "Make SYMBOL a list and recall."
+  (ensure-tree-symbol (list symbol)))
 (defmethod ensure-tree-symbol ((symbols cons))
-  (mapcar #'ensure-tree-symbol symbols))
+  "SYMBOLS get interned into `+tree-symbols-package+'."
+  (mapcar (lambda (symbol)
+            (ensure-symbol symbol +tree-symbols-package+))
+          symbols))
+(defmethod ensure-tree-symbol ((symbols string))
+  "Split by spaces, then intern SYMBOLS as normal."
+  (ensure-tree-symbol
+   (split-sequence #\Space (string-upcase symbols) :remove-empty-subseqs t)))
+;;;}}}
 
 
 
