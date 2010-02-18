@@ -25,9 +25,13 @@
   (deletef (slot-value specializer 'direct-methods) method))
 ;;;}}}
 
-(defgeneric ensure-tree-symbol (symbol))
+(defparameter +tree-symbols-package+ :nisp.i.command-argument-symbols
+  "Package that all tree symbols should get interned into.")
+
+(defgeneric ensure-tree-symbol (symbol)
+  (:documentation "Make sure SYMBOL exists in `+tree-symbols-package+'."))
 (defmethod ensure-tree-symbol ((symbol symbol))
-  (ensure-symbol symbol :nisp.i.command-argument-symbols))
+  (ensure-symbol symbol +tree-symbols-package+))
 (defmethod ensure-tree-symbol ((symbols cons))
   (mapcar #'ensure-tree-symbol symbols))
 
