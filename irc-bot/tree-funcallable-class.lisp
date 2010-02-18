@@ -45,6 +45,10 @@
    (split-sequence #\Space (string-upcase symbols) :remove-empty-subseqs t)))
 ;;;}}}
 
+(defgeneric preprocess-arglist (generic-function args)
+  (:documentation "Modify ARGS to make them suiable for computing applicable methods."))
+(defmethod preprocess-arglist ((generic-function tree-generic-function) args)
+  (cons (ensure-tree-symbol (car args)) (cdr args)))
 
 
 (defmethod compute-applicable-methods-using-classes
@@ -52,10 +56,14 @@
   "No cache permitted right now."
   (values classes nil))
 
+(defmethod compute-applicable-methods :around
+    ((generic-function tree-generic-function) args)
+  (call-next-method generic-function (preprocess-arglist generic-function args)))
+
 (defmethod compute-applicable-methods
     ((generic-function tree-generic-function) args)
-
   ;; Nothing special yet
+  (d/i "Computing applicable methods, args: ~S" args)
   (call-next-method))
 
 (defmethod compute-effective-method

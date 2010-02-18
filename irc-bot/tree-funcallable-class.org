@@ -64,6 +64,12 @@ reached. This leaf is what executes the behavior of the command.
       computationally difficult and turn out to be a monster with too
       many heads to track.
 
+******* preprocess-arglist
+        Takes a [[ansi:generic-function][generic-function]] and the arglist as would be passed to
+        [[*compute-applicable-methods]] and modifies the arglist into
+        something that the standard applicable method computation can
+        handle.
+
 ***** compute-effective-method
       Pick out which method is the one we want to start with.
 
