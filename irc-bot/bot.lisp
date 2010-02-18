@@ -471,8 +471,12 @@ methods that support this."))
     (define-bot *sonic* sonic-nisp-bot-connection)
     (define-bot *slack* slack-nisp-bot-connection)
     (define-bot *bot* 8b-i-bot-connection)
-    (define-bot *flare* flare-nisp-bot-connection)))
+    (define-bot *flare* flare-nisp-bot-connection))
+  (setq *format-and-send-to-irc-function* (curry #'irc:privmsg *bot* "#bots")))
 
 (defparameter %bot-list% '(*sonic* *slack* *bot* *flare*)
   "Hackish list of bots.")
+
+
+
 ;;;}}}

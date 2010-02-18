@@ -20,7 +20,6 @@
                              #:method
                              #:method-combination
                              #:slot-definition
-                             #:specializer
                              #:standard-accessor-method
                              #:standard-class
                              #:standard-generic-function
@@ -234,3 +233,12 @@
                              #:warn-on-defmethod-without-generic-function
                              ))
 (in-package :nisp.i)
+
+;;; DEBUG KLUDGE for now
+
+(defvar *format-and-send-to-irc-function* nil
+  "Temporary hack for sending some debug info to an irc channel as a sideband.")
+
+(defun d/i (formatspec &rest args)
+  (funcall *format-and-send-to-irc-function*
+         (substitute #\Space #\Newline (apply #'format nil formatspec args))))
