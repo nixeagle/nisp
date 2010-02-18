@@ -47,7 +47,63 @@ reached. This leaf is what executes the behavior of the command.
     [[asdf:iterate]]
   - [[cl-net-project:alexandria][alexandria]], [[cl-net-project:alexandria/draft/alexandria.pdf][manual]],  [[cl-net-project:alexandria/darcs/alexandria/][darcs repository]], [[asdf:alexandria]]
 
+* MOP
+  Our concept is making a generic function act like a network where each
+  method can invoke [[ansi:call-next-method][call-next-method]] to traverse further down the tree as
+  well as traverse laterally as in normal combinations.
 
+*** Generic function call
+***** compute-applicable-methods-using-classes
+      For now we do not attempt to use this to do any sort of
+      caching. Its one less thing to have a bug in at this time.
+
+***** compute-applicable-methods
+      Primary workhorse. Find all methods that have our tree-specializer
+      in the first argument. Maybe at some point we can allow multiple
+      trees to be specialized on at one time, but that might get
+      computationally difficult and turn out to be a monster with too
+      many heads to track.
+
+***** compute-effective-method
+      Pick out which method is the one we want to start with.
+
+*** Method definition
+***** ensure-generic-function
+***** ensure-generic-function-using-class
+***** make-instance
+      Especially note the keyword =:generic-function-class=
+***** instance initialization
+******* initialize-instance
+******* reinitialize-instance
+******* compute-discriminating-function
+***** Build method function
+******* make-method-lambda
+***** Obtain method metaobject
+******* make-instance
+******* generic-function-method-class
+******* initialize-instance
+***** Add method to generic function
+******* add-method
+******* compute-discriminating-function
+******* add-direct-method
+* Dictionary
+*** <<<tree-generic-function>>>
+    Our special [[ansi:generic-function][generic-function]] class that has as its single superclass
+    the class [[ansi:standard-generic-function][standard-generic-function]], and is itself a
+    [[ansi:funcallable-standard-class][funcallable-standard-class]].
+
+    Each [[ansi:generic-function][generic-function]] created using this class will contain an
+    additional slot called top-level-tree that is the root for
+    tree-specializer nodes.
+
+*** <<<tree-specializer>>>
+    This is a single node in a network with the root in
+    tree-generic-function. This specializer contains a hash table that
+    points to more tree-specializer nodes.
+
+*** <<<tree-method>>>
+    Right now not too much special about this one other then it is the
+    default method-class for tree-generic-function objects.
 
 * Footnotes
 
