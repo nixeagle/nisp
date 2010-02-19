@@ -13,13 +13,11 @@
 
 (test (ensure-tree-symbol :suite tree-funcallable)
   (with-fbound (ensure-tree-symbol)
-    ('it) (list (find-symbol "IT" +tree-symbols-package+))
-    ('(it it2)) (list (find-symbol "IT" +tree-symbols-package+)
-                      (find-symbol "IT2" +tree-symbols-package+))
-    ("IT") (list (find-symbol "IT" +tree-symbols-package+))
-    ("it") (list (find-symbol "IT" +tree-symbols-package+))
-    ("it it2") (list (find-symbol "IT" +tree-symbols-package+)
-                     (find-symbol "IT2" +tree-symbols-package+))))
+    ('it) (find-symbol "IT" +tree-symbols-package+)
+    ('(it it2)) :signals error
+    ("IT") (find-symbol "IT" +tree-symbols-package+)
+    ("it") (find-symbol "IT" +tree-symbols-package+)
+    ("it it2") :signals error))
 
 
 (test (preprocess-arglist
