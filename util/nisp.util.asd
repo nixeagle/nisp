@@ -15,6 +15,7 @@
   :components
   ((:file "declarations")
    (:file "mapping")
+   (:file "palindrome")
    (:file "types")
    (:file "util-protocol")
    (:file "helpers")
