@@ -25,3 +25,6 @@
 [submodule "nisp.util"]
 	path = nisp.util
 	url = ../nisp.util
+[submodule "slime"]
+	path = slime
+	url = git://github.com/nablaone/slime.git
