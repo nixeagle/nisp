@@ -16,7 +16,10 @@
     ('it) (find-symbol "IT" +tree-symbols-package+)
     ('(it it2)) :signals error
     ("IT") (find-symbol "IT" +tree-symbols-package+)
+    "Lowercase input should result in an uppercase symbol."
     ("it") (find-symbol "IT" +tree-symbols-package+)
+    "Strings with spaces in them should error as it makes no sense to make
+a single tree symbol out of what boils down to one symbol"
     ("it it2") :signals error))
 
 
