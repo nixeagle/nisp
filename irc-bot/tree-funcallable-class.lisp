@@ -24,17 +24,19 @@
 
 (defgeneric ensure-tree-symbol (symbol)
   (:documentation "Make sure SYMBOL exists in `+tree-symbols-package+'."))
+(defmethod ensure-tree-symbol (arg)
+  "Make a symbol out of ARG by `format-symbol'."
+  (format-symbol +tree-symbols-package+ "~A" arg))
 (defmethod ensure-tree-symbol ((symbol symbol))
   "Make SYMBOL a list and recall."
-  (ensure-tree-symbol (list symbol)))
+  (call-next-method))
 (defmethod ensure-tree-symbol ((symbols cons))
   "SYMBOLS get interned into `+tree-symbols-package+'."
-  (mapcar (lambda (symbol)
-            (format-symbol +tree-symbols-package+ "~A" symbol))
-          symbols))
+  (error "KO"))
 (defmethod ensure-tree-symbol ((symbols string))
   "Split by spaces, then intern SYMBOLS as normal."
-  (ensure-tree-symbol
+  (error "KO")
+#+ ()  (ensure-tree-symbol
    (split-sequence #\Space (string-upcase symbols) :remove-empty-subseqs t)))
 ;;;}}}
 
