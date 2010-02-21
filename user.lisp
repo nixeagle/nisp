@@ -12,3 +12,14 @@
 (in-package :nisp.user)
 ;;; In custom userland, this userland has modifications from a standard
 ;;; userland.
+
+(defmacro n.disasemble (form)
+  (let ((s (gensym)))
+    `(let ((,s (with-output-to-string (*standard-output*)
+                 (disassemble ',(car form)))))
+       (print ,s)
+       (values
+        ,form
+        (count #\Newline ,s)))))
+
+;;; END
