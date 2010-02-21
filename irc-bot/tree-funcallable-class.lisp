@@ -2,7 +2,8 @@
 
 ;;;{{{ Tree classes
 (defclass tree-generic-function (standard-generic-function)
-  ((top-level-tree :initform (make-hash-table :test 'eq :weakness :value)))
+  ((root-nodes :initform (make-hash-table :test 'eq :weakness :value)
+                   :reader tree-generic-function-root-nodes))
   (:metaclass funcallable-standard-class)
   (:default-initargs :method-class (find-class 'tree-method)))
 
