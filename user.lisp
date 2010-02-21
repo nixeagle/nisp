@@ -7,7 +7,7 @@
         ;; implentation independent sockets
         :usocket
         :drakma)                         ;http-request
-  (:nicknames :nu))
+  (:nicknames :nu :~))
 
 (in-package :nisp.user)
 ;;; In custom userland, this userland has modifications from a standard
