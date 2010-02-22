@@ -394,21 +394,24 @@ methods that support this."))
 ;;;{{{ Define commands
 
 ;;;{{{ Github commands
+
 (define-command-node github (connection irc:user (to t) string params))
 (define-command-node github-show (connection irc:user (to t)
                                              string params))
 (define-command github-show-followers (connection irc:user target
                                                   string github-user)
   (irc:privmsg connection target
-               (join-sequence (clithub:show-followers github-user))))
+               (join-sequence (cl-github:show-followers github-user))))
 (define-command github-show-following (connection irc:user target
                                                   string github-user)
   "Private message TARGET with list of people GITHUB-USER follows."
   (irc:privmsg connection target
-               (join-sequence (clithub:show-following github-user))))
+               (join-sequence (cl-github:show-following github-user))))
+
 ;;;}}}
 
 ;;;{{{ Nisp introspection commands
+
 (define-command-node nisp (connection irc:user target string params))
 (define-command-node nisp-introspect (connection irc:user target string params))
 (define-command-node nisp-introspect-irc (connection irc:user target

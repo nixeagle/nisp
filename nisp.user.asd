@@ -25,7 +25,7 @@
                 :with-fbound
                 :alexandria
                 :split-sequence
-                :clithub
+                :cl-github
                 :nisp.fbi)
   :serial t
   :components
