@@ -34,3 +34,6 @@
 [submodule "Eos"]
 	path = Eos
 	url = ../Eos
+[submodule "cl-github"]
+	path = cl-github
+	url = ../cl-github
