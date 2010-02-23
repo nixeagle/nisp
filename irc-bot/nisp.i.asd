@@ -12,6 +12,7 @@
   :depends-on (:nisp.mop
                :nisp.util
                :eos
+               :bordeaux-threads
                :cl-github
                :with-fbound
                :nisp.util.usocket
