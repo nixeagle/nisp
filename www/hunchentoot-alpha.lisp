@@ -27,20 +27,8 @@ hunchentoot acceptor."))
 (defvar *nisp-last-request* nil
   "Contents of the last hunchentoot request.")
 
-
-(defun start-nisp-acceptor! ()
-  "  Startup ACCEPTOR.
-
-  When ACCEPTOR has already been shutdown, a brand new instance is
-  made and that new instance is used instead."
-  ;; ACCEPTOR used to be an optional argument. For the time being this
-  ;; option has been removed to simplify starting and stopping just one
-  ;; acceptor.
-  (when (hunchentoot::acceptor-shutdown-p *nisp-acceptor*)
-    (setq *nisp-acceptor* (make-instance 'nisp-site-acceptor)))
-  (start *nisp-acceptor*))
-
 ;;; Modifications/around methods on hunchentoot generics.
+#+ ()
 (defmethod handle-request :before ((acceptor nisp-site-acceptor) request)
   "Set *ALPHA-LAST-REQUEST* to REQUEST."
   (setq *nisp-last-request* request)
