@@ -12,6 +12,7 @@
   :depends-on (:nisp.mop
                :nisp.util
                :eos
+               :cl-github
                :with-fbound
                :nisp.util.usocket
                :split-sequence
@@ -25,6 +26,7 @@
   :components
   ((:file "util.packages")
    (:file "package")
+   (:file "tree-funcallable-class")
    (:file "test-funcallable-class")
    (:file "test-funcallable-class-methods")
    (:file "mixin")
@@ -33,4 +35,5 @@
    (:file "symbols")
    (:file "bot")
    (:file "i.fbi")
-   (:file "tests")))
+   (:file "tests")
+   (:file "tree-funcallable-class-tests")))
