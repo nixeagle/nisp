@@ -116,6 +116,15 @@ methods that support this."))
                      :comchar ",")
   (:documentation "blah"))
 
+(defclass 8b-nisp-bot-connection (bot-connection
+                               connect-with-background-handler-mixin)
+  ()
+  (:default-initargs :username "lisp" :nickname "nisp"
+                     :realname "bot" :server-port 6667
+                     :server-name "irc.eighthbit.net"
+                     :comchar "|")
+  (:documentation "blah"))
+
 (defclass slack-nisp-bot-connection (bot-connection
                                      connect-with-background-handler-mixin)
   ()
@@ -188,6 +197,7 @@ methods that support this."))
           (irc:user connection)))))
 
 ;;; Method written with heavy cribbing from cl-irc in command.lisp.
+
 ;;;{{{ connect methods:
 (defgeneric connect (connection &key &allow-other-keys))
 (defmethod connect :before ((bot bot-connection) &key ssl)
@@ -225,6 +235,13 @@ methods that support this."))
   "Connect I bot to #offtopic and #bots on eighthbit.net"
   (irc:join irc "#offtopic")
   (irc:join irc "#bots")
+  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg))
+
+(defmethod connect :after ((irc 8b-nisp-bot-connection) &key)
+  "Connect I bot to #offtopic and #bots on eighthbit.net"
+  (irc:join irc "#offtopic")
+  (irc:join irc "#bots")
+  (irc:join irc "#nixeagle")
   (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg))
 
 (defmethod connect :after ((irc slack-nisp-bot-connection) &key)
@@ -421,6 +438,7 @@ methods that support this."))
   (irc:privmsg connection target
                (nisp.mop::class-slot-name-value-alist
                 (irc:find-user connection nickname))))
+
 ;;;}}}
 
 ;;;{{{ Unit test runner
@@ -466,6 +484,7 @@ methods that support this."))
 (defvar *sonic*)
 (defvar *slack*)
 (defvar *bot*)
+(defvar *devel-bot* nil "bot hosted on my laptop as opposed to the vps.")
 (defvar *flare*)
 (defun %initialize-bots ()
   "Start up all the bots."
@@ -474,10 +493,11 @@ methods that support this."))
     (define-bot *sonic* sonic-nisp-bot-connection)
     (define-bot *slack* slack-nisp-bot-connection)
     (define-bot *bot* 8b-i-bot-connection)
+    (define-bot *devel-bot* 8b-nisp-bot-connection)
     (define-bot *flare* flare-nisp-bot-connection))
   (setq *format-and-send-to-irc-function* (curry #'irc:privmsg *bot* "#bots")))
 
-(defparameter %bot-list% '(*sonic* *slack* *bot* *flare*)
+(defparameter %bot-list% '(*sonic* *slack* *bot* *flare* *devel-bot*)
   "Hackish list of bots.")
 
 
