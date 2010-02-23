@@ -31,3 +31,6 @@
 [submodule "hunchentoot"]
 	path = hunchentoot
 	url = git://github.com/archimag/hunchentoot.git
+[submodule "Eos"]
+	path = Eos
+	url = ../Eos
