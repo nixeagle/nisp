@@ -27,16 +27,6 @@ hunchentoot acceptor."))
 (defvar *nisp-last-request* nil
   "Contents of the last hunchentoot request.")
 
-;;; Destructive toplevel settings to hunchentoot
-(setq *message-log-pathname* "/tmp/sbcl/message.log"
-      *access-log-pathname* "/tmp/sbcl/access.log"
-      *lisp-errors-log-level* :info     ;Default is :error
-      *lisp-warnings-log-level* :info   ;Default is :warning
-
-      ;;On a real site this obviously should be set to nil,
-      ;;hunchentoot's default for the normal security reasons.
-      *show-lisp-errors-p* t)
-
 
 (defun start-nisp-acceptor! ()
   "  Startup ACCEPTOR.
