@@ -19,7 +19,7 @@
 ;;;}}}
 
 ;;;{{{ Ensure tree symbol
-(defparameter +tree-symbols-package+ :nisp.i.command-argument-symbols
+(defparameter +tree-symbols-package+ :keyword
   "Package that all tree symbols should get interned into.")
 
 (defun tree-symbol-string-p (string)
