@@ -22,6 +22,14 @@
 (defparameter +tree-symbols-package+ :nisp.i.command-argument-symbols
   "Package that all tree symbols should get interned into.")
 
+(defun tree-symbol-string-p (string)
+  "True if STRING can represent a valid tree-symbol.
+
+A valid tree-symbol is defined as anything that does not contain a space."
+  (declare (type string string))
+  (not (find #\Space string)))
+(deftype tree-symbol-string ()
+  '(and string (satisfies tree-symbol-string-p)))
 (defgeneric ensure-tree-symbol (symbol)
   (:documentation "Make sure SYMBOL exists in `+tree-symbols-package+'."))
 (defmethod ensure-tree-symbol (arg)
