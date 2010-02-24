@@ -256,6 +256,7 @@ methods that support this."))
   "Connect I bot to #offtopic and #bots on eighthbit.net"
   (irc:join irc "#offtopic")
   (irc:join irc "#bots")
+  (irc:join irc "#nixeagle")
   (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg))
 
 (defmethod connect :after ((irc 8b-nisp-bot-connection) &key)
