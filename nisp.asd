@@ -56,7 +56,7 @@
    (:file "package")
    (:file "nisp-asdf")
    (:file "nisp-hello")
-   (:file "mop")))
+   (:file "mop2")))
 
 ;; (defsystem :nispbot
 ;;   :author "James S <dev@nixeagle.org>"
