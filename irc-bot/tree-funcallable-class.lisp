@@ -41,9 +41,10 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defmethod ensure-tree-symbol ((symbols cons))
   "SYMBOLS get interned into `+tree-symbols-package+'."
   (error "KO"))
-(defmethod ensure-tree-symbol ((symbols string))
+(defmethod ensure-tree-symbol ((symbol-as-string string))
   "Split by spaces, then intern SYMBOLS as normal."
-  (error "KO")
+  (check-type symbol-as-string tree-symbol-string)
+  (call-next-method (string-upcase symbol-as-string))
 #+ ()  (ensure-tree-symbol
    (split-sequence #\Space (string-upcase symbols) :remove-empty-subseqs t)))
 ;;;}}}
