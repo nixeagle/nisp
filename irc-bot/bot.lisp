@@ -243,9 +243,14 @@ methods that support this."))
   (describe irc)
   (irc:read-message-loop irc))
 
+(defparameter @thread@ nil)
 (defmethod connect :after ((irc connect-with-background-handler-mixin) &key)
   "Start IRC's command loop in a different thread."
-  (irc:start-background-message-handler irc))
+  (setq @thread@
+        (bordeaux-threads:make-thread
+         (lambda ()
+           (nisp-start-read-loop irc))
+         :name (compute-connection-id irc))))
 
 (defmethod connect :after ((irc 8b-i-bot-connection) &key)
   "Connect I bot to #offtopic and #bots on eighthbit.net"
