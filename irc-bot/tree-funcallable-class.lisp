@@ -54,6 +54,19 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defmethod preprocess-arglist ((generic-function tree-generic-function) args)
   (cons (ensure-tree-symbol (car args)) (cdr args)))
 
+(defgeneric intern-tree-specializer (generic-function path-list)
+  (:documentation "Intern a specializer for PATH-LIST for GENERIC-FUNCTION."))
+
+(defmethod intern-tree-specializer :around
+    ((generic-function tree-generic-function) (path-list cons))
+  "Make sure PATH-LIST contains symbols interned appropriately."
+  (call-next-method generic-function
+                    (preprocess-arglist generic-function path-list)))
+
+(defmethod intern-tree-specializer ((generic-function tree-generic-function)
+                                    (path-list cons))
+  )
+
 
 (defmethod compute-applicable-methods-using-classes
     ((generic-function tree-generic-function) classes)
