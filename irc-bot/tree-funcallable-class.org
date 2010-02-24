@@ -64,11 +64,19 @@ reached. This leaf is what executes the behavior of the command.
       computationally difficult and turn out to be a monster with too
       many heads to track.
 
+      A valid first argument is a single [[ansi:symbol][symbol]], a [[ansi:string][string]] or a list of
+      symbols.
+
 ******* preprocess-arglist
         Takes a [[ansi:generic-function][generic-function]] and the arglist as would be passed to
         [[*compute-applicable-methods]] and modifies the arglist into
         something that the standard applicable method computation can
         handle.
+
+        After this method gets called, arglist processing may assume that
+        the correct symbols and packages are in place. Calling
+        [[ensure-tree-symbol]] after this point is a waste of computation
+        time.
 
 ***** compute-effective-method
       Pick out which method is the one we want to start with.
@@ -92,8 +100,23 @@ reached. This leaf is what executes the behavior of the command.
 ******* add-method
 ******* compute-discriminating-function
 ******* add-direct-method
+
+*** Specializers
+***** make-instance
+******* TODO [#C] ensure-tree-symbol on tree-specializer init
+
+***** intern-tree-specializer
+      Takes two arguments; generic-function and path-list.
+
+      The generic-function must be a [[tree-generic-function]] or a subclass
+      of it.
+
+      path-list is the direct path from the top of the tree down to
+      whatever leaf or node is being referred to. At no point is it
+      acceptable to skip levels.
+
 * Dictionary
-*** <<<tree-generic-function>>>
+*** tree-generic-function
     Our special [[ansi:generic-function][generic-function]] class that has as its single superclass
     the class [[ansi:standard-generic-function][standard-generic-function]], and is itself a
     [[ansi:funcallable-standard-class][funcallable-standard-class]].
@@ -102,12 +125,12 @@ reached. This leaf is what executes the behavior of the command.
     additional slot called top-level-tree that is the root for
     tree-specializer nodes.
 
-*** <<<tree-specializer>>>
+*** tree-specializer
     This is a single node in a network with the root in
     tree-generic-function. This specializer contains a hash table that
     points to more tree-specializer nodes.
 
-*** <<<tree-method>>>
+*** tree-method
     Right now not too much special about this one other then it is the
     default method-class for tree-generic-function objects.
 
