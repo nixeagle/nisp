@@ -8,8 +8,19 @@
 
 
 (define-new-suite :nisp-eos-root)
-
+(define-new-suite 'root :in :nisp-eos-root)
 (def-suite tree-funcallable :in root)
+
+(test (tree-symbol-string-p :suite tree-funcallable)
+  "Predicate returns false if a string has a space in it.
+
+We assume input is a string."
+  (is (eq t (tree-symbol-string-p "hi")))
+  (is (eq nil (tree-symbol-string-p "hi there")))
+  (is (eq t (tree-symbol-string-p " hi "))
+      "Leading or trailing spaces are ok if there is only one \"word\"
+      given as we should be able to parse out that and convert it to a
+      symbol."))
 
 (test (ensure-tree-symbol :suite tree-funcallable)
   (with-fbound (ensure-tree-symbol)
@@ -22,16 +33,23 @@
 a single tree symbol out of what boils down to one symbol"
     ("it it2") :signals error))
 
+(test (ensure-tree-symbols :suite tree-funcallable
+                           :depends-on ensure-tree-symbol)
+  (with-fbound (ensure-tree-symbols)
+    ('(hi how)) '(:HI :HOW)
+    ("hi how") '(:HI :HOW)
+    ('hi) '(:HI)))
 
 (test (preprocess-arglist
        :suite tree-funcallable
        :depends-on ensure-tree-symbol)
   "Expect only first argument to ever be modified in the return value."
-  (let ((expect '((NISP.I.COMMAND-ARGUMENT-SYMBOLS::ALPHA
-                   NISP.I.COMMAND-ARGUMENT-SYMBOLS::NIKURL)
+  (let ((expect '((:ALPHA :NIKURL)
                   1 2 3 4 "args")))
     (with-fbound (preprocess-arglist)
       (#'test-tree-generic-function '("Alpha nikurl" 1 2 3 4 "args"))
       expect
       (#'test-tree-generic-function '((alpha nikurl) 1 2 3 4 "args"))
       expect)))
+
+(test (intern-tree-specializer :suite tree-funcallable))
