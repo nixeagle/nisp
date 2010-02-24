@@ -3,7 +3,7 @@
 (defpackage #:nisp.mop
   (:use :cl)
   (:shadowing-import-from :closer-mop :defmethod)
-  (:import-from :closer-mop #:class-slots))
+  (:import-from :closer-mop :class-slots))
 
 (in-package :nisp.mop)
 
