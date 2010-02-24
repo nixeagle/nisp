@@ -38,21 +38,18 @@
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv2 or later"
   :description "Nixeagle's random lisp experiments"
-  :depends-on (:functional-tests
-               :cl-ppcre
-               :nistilities
-               :metabang-bind
+  :depends-on (:cl-ppcre
                :nisp.util
                :with-fbound
-               :nisp.ldap
-               :nisp.8b-ldap
                :cl-irc
                :split-sequence
                :iterate
                :closer-mop
                :alexandria
                :trivial-timeout
-               :trivial-shell)
+               :trivial-shell
+               :nisp.i
+               :nisp.www)
   :serial t
   :components
   ((:file "main-test-suite")
@@ -68,7 +65,7 @@
 ;;   :description "irc bot"
 ;;   :depends-on (:lift
 ;;                :cl-ppcre
-               
+
 ;;                :trivial-timeout
 ;;                :nisp)
 
