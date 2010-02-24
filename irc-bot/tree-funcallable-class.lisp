@@ -44,13 +44,24 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defmethod ensure-tree-symbol ((symbol-as-string string))
   "Split by spaces, then intern SYMBOLS as normal."
   (check-type symbol-as-string tree-symbol-string)
-  (call-next-method (string-upcase symbol-as-string))
-#+ ()  (ensure-tree-symbol
-   (split-sequence #\Space (string-upcase symbols) :remove-empty-subseqs t)))
+  (call-next-method (string-upcase symbol-as-string)))
+
+(defgeneric ensure-tree-symbols (symbols)
+  (:documentation "Return a list of symbols instead of just one."))
+
+(defmethod ensure-tree-symbols (args)
+  (declare (type list args))
+  (mapcar #'ensure-tree-symbol args))
+(defmethod ensure-tree-symbols ((symbols-as-string string))
+  (ensure-tree-symbols (split-sequence #\Space
+                                       (string-upcase symbols-as-string)
+                                       :remove-empty-subseqs t)))
+
 ;;;}}}
 
 (defgeneric preprocess-arglist (generic-function args)
-  (:documentation "Modify ARGS to make them suiable for computing applicable methods."))
+  (:documentation
+   "Modify ARGS to make them suiable for computing applicable methods."))
 (defmethod preprocess-arglist ((generic-function tree-generic-function) args)
   (cons (ensure-tree-symbol (car args)) (cdr args)))
 
