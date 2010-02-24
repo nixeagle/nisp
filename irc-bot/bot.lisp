@@ -502,6 +502,10 @@ methods that support this."))
 ;;;}}} Alpha commands
 ;;;}}} Define commands
 
+(defgeneric connectedp (connection-object)
+  (:documentation "Is CONNECTION-OBJECT currently connected?"))
+
+
 ;;;{{{ Initialize bots hacks <irc only right now>
 (defvar *sonic*)
 (defvar *slack*)
