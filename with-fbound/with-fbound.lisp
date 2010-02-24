@@ -7,8 +7,8 @@
 
 (defmacro define-new-suite (name &key description in)
   "Define NAME as a new suite if not yet defined."
-  (eval-when (:compile-toplevel :load-toplevel :execute)
-    `(ensure-suite ,name :description ,description :in ,in)))
+  `(eval-when (:compile-toplevel :load-toplevel :execute)
+     (ensure-suite ,name :description ,description :in ,in)))
 
 (defun ensure-suite (name &key description in)
   "Create a new test suite object if it does not already exist."
