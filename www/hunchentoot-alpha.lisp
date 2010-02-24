@@ -42,6 +42,13 @@ hunchentoot acceptor."))
                (script-name*))
   "Nothing here!")
 
-(setq *default-handler* 'default-handler)
+(defvar *old-default-handler* *default-handler*
+  "Value of default-handler before we mess with it.")
+
+(defun set-default-handler! (&optional reset)
+  (if reset
+      (setq *default-handler* *old-default-handler*)
+      (setq *default-handler* 'default-handler)))
+
 
 ;;; End hunchentoot-alpha.lisp (for magit/git)
