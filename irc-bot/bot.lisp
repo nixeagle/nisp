@@ -238,6 +238,11 @@ methods that support this."))
 (defmethod compute-connection-id ((irc connection))
   "Uniquely identify IRC connections by `nickname'@`server-name'."
   (concatenate 'string (irc:nickname irc) "@" (irc:server-name irc)))
+
+(defun nisp-start-read-loop (irc)
+  (describe irc)
+  (irc:read-message-loop irc))
+
 (defmethod connect :after ((irc connect-with-background-handler-mixin) &key)
   "Start IRC's command loop in a different thread."
   (irc:start-background-message-handler irc))
