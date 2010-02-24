@@ -4,4 +4,4 @@
   ((:file "global-package")
    (:module "global"
             :components
-            ((:file "system-id")))))
+            ((:file "system-keyword")))))
