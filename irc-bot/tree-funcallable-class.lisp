@@ -18,7 +18,6 @@
 
 ;;;}}}
 
-;;;{{{ Ensure tree symbol
 (defparameter +tree-symbols-package+ :keyword
   "Package that all tree symbols should get interned into.")
 
@@ -30,6 +29,9 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (not (find #\Space string)))
 (deftype tree-symbol-string ()
   '(and string (satisfies tree-symbol-string-p)))
+
+
+;;;{{{ Ensure tree symbol
 (defgeneric ensure-tree-symbol (symbol)
   (:documentation "Make sure SYMBOL exists in `+tree-symbols-package+'."))
 (defmethod ensure-tree-symbol (arg)
@@ -52,6 +54,8 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defmethod ensure-tree-symbols (args)
   (declare (type list args))
   (mapcar #'ensure-tree-symbol args))
+(defmethod ensure-tree-symbols ((args symbol))
+  (ensure-tree-symbols (ensure-list args)))
 (defmethod ensure-tree-symbols ((symbols-as-string string))
   (ensure-tree-symbols (split-sequence #\Space
                                        (string-upcase symbols-as-string)
@@ -63,7 +67,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (:documentation
    "Modify ARGS to make them suiable for computing applicable methods."))
 (defmethod preprocess-arglist ((generic-function tree-generic-function) args)
-  (cons (ensure-tree-symbol (car args)) (cdr args)))
+  (cons (ensure-tree-symbols (car args)) (cdr args)))
 
 (defgeneric intern-tree-specializer (generic-function path-list)
   (:documentation "Intern a specializer for PATH-LIST for GENERIC-FUNCTION."))
