@@ -1,3 +1,4 @@
-(asdf:defsystem #:nisp.global
+(defpackage #:nisp.global
   (:use :cl)
-  (:nicknames :%global))
+  (:nicknames :%global)
+  (:export :system-keyword))
