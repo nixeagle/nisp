@@ -4,7 +4,7 @@
 #+LINK: asdf http://www.cliki.net/%s
 #+LINK: cliki http://www.cliki.net/%s
 
-This is my forth rewrite of nisp's command parsing system. In short the
+This is my fourth rewrite of nisp's command parsing system. In short the
 routing system takes care of translating "github show foo" into terms
 that lisp's [[ansi:generic-function][generic-function]] can handle and deal with. Commands are
 structured like a tree, with each level having sub-nodes until a leaf is
