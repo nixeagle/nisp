@@ -4,6 +4,11 @@
   (:nicknames :www))
 (in-package :nisp.www)
 
+(defun debug-to-irc (arg)
+  (case (nisp.global::system-keyword)
+    (:nisp-devel (irc:privmsg nisp.i::*devel-bot* "#nixeagle" arg))
+    (:nisp-production (irc:privmsg nisp.i::*bot* "#nixeagle" arg))))
+
 (defparameter *nisp-port* 80
   "Default port for alpha-site.")
 
