@@ -1,7 +1,5 @@
 (in-package :nisp-asdf)
 
-(deftestsuite root-suite (nisp::root-suite) ())
-
 (defgeneric list-system-components (systems)
   (:method (systems)
     (check-type systems (or string keyword cons)))
@@ -17,6 +15,7 @@
 (defmethod list-system-components ((system-name string))
   (asdf:module-components (asdf:find-system system-name)))
 
+#+ ()
 (deftestsuite list-system-components (root-suite)
   ()
   :test (pass-keyword-with-valid-package-name
@@ -31,7 +30,7 @@
   :test (pass-nil
          (ensure-condition 'asdf::missing-component
            (list-system-components nil)))
-  (:test 
+  (:test
     (pass-void-package-keyword
      (:documentation "testing")
      (ensure-condition 'asdf::missing-component
