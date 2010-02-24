@@ -13,14 +13,14 @@
     Text strings are not null terminated. The NUL character is illegal in
     all text strings in 9P.
 
-
 ***** Message Format
       Starts with a 4 byte field that says the length in bytes of the
       whole message including the 4 bytes of the size field.
 
       Next byte is the message type which is enumerated in =fcall.h=
 
-      Next 2 bytes are an identifying tag.
+      Next 2 bytes are an identifying tag. This is used by the client to
+      identify the message when the server replies.
 
       Whats left are parameters of different sizes.
 * Dictionary
