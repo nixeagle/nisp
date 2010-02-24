@@ -1,6 +1,7 @@
 (in-package :cl-user)
 (defpackage #:nisp.www
-  (:use :cl :hunchentoot))
+  (:use :cl :hunchentoot)
+  (:nicknames :www))
 (in-package :nisp.www)
 
 (defparameter *nisp-port* 80
