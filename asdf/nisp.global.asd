@@ -1,0 +1,1 @@
+../nisp.global.asd
