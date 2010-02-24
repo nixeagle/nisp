@@ -106,6 +106,14 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (defclass connect-with-background-handler-mixin () ()
   (:documentation "Superclass this to connect directly to background on
 methods that support this."))
+(defclass lo-i-bot-connection (bot-connection
+                               connect-with-background-handler-mixin)
+  ()
+  (:default-initargs :username "lisp" :nickname "i"
+                     :realname "bot" :server-port 9999
+                     :server-name "127.0.0.1"
+                     :comchar ",")
+  (:documentation "Specifically for testing disconnect behavior."))
 
 (defclass 8b-i-bot-connection (bot-connection
                                connect-with-background-handler-mixin)
@@ -486,6 +494,7 @@ methods that support this."))
 (defvar *bot*)
 (defvar *devel-bot* nil "bot hosted on my laptop as opposed to the vps.")
 (defvar *flare*)
+(defvar @lo@)
 (defun %initialize-bots ()
   "Start up all the bots."
   (macrolet ((define-bot (name class)
@@ -497,7 +506,7 @@ methods that support this."))
     (define-bot *flare* flare-nisp-bot-connection))
   (setq *format-and-send-to-irc-function* (curry #'irc:privmsg *bot* "#bots")))
 
-(defparameter %bot-list% '(*sonic* *slack* *bot* *flare* *devel-bot*)
+(defparameter %bot-list% '(*sonic* *slack* *bot* *flare* *devel-bot* @lo@)
   "Hackish list of bots.")
 
 
