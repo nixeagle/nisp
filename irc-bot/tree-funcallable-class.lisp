@@ -1,20 +1,25 @@
 (in-package :nisp.i)
 
 ;;;{{{ Tree classes
-(defclass tree-generic-function (standard-generic-function)
-  ((root-nodes :initform (make-hash-table :test 'eq :weakness :value)
-                   :reader tree-generic-function-root-nodes))
+(defclass tree-generic-direct-nodes ()
+  ((direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
+                 :reader tree-generic-direct-nodes)))
+
+(defclass tree-generic-function (standard-generic-function
+                                 tree-generic-direct-nodes)
+  ()
   (:metaclass funcallable-standard-class)
   (:default-initargs :method-class (find-class 'tree-method)))
+
 
 (defclass tree-method (standard-method)
   ())
 
-(defclass tree-specializer (eql-specializer)
+(defclass tree-specializer (eql-specializer
+                            tree-generic-direct-nodes)
   ((parent :reader tree-specializer-parent
-           :documentation "Pointer to the parent specializer of this one.")
-   (direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
-                 :reader tree-specializer-direct-nodes)))
+           :documentation "Pointer to the parent specializer of this one.")))
+
 
 ;;;}}}
 
