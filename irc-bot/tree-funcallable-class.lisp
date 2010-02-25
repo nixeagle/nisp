@@ -72,10 +72,10 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (:documentation "Intern a specializer for PATH-LIST for GENERIC-FUNCTION."))
 
 (defmethod intern-tree-specializer :around
-    ((generic-function tree-generic-function) (path-list cons))
+    ((generic-function tree-generic-function) (symbols cons))
   "Make sure PATH-LIST contains symbols interned appropriately."
   (call-next-method generic-function
-                    (preprocess-arglist generic-function path-list)))
+                    (ensure-tree-symbols symbols)))
 
 (defmethod intern-tree-specializer ((generic-function tree-generic-function)
                                     (path-list cons))
