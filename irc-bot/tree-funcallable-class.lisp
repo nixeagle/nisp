@@ -94,7 +94,6 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defmethod compute-applicable-methods
     ((generic-function tree-generic-function) args)
   ;; Nothing special yet
-  (d/i "Computing applicable methods, args: ~S" args)
   (call-next-method))
 
 (defmethod compute-effective-method
