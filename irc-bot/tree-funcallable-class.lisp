@@ -51,8 +51,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defgeneric ensure-tree-symbols (symbols)
   (:documentation "Return a list of symbols instead of just one."))
 
-(defmethod ensure-tree-symbols (args)
-  (declare (type list args))
+(defmethod ensure-tree-symbols ((args list))
   (mapcar #'ensure-tree-symbol args))
 (defmethod ensure-tree-symbols ((args symbol))
   (ensure-tree-symbols (ensure-list args)))
