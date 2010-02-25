@@ -81,6 +81,12 @@ A valid tree-symbol is defined as anything that does not contain a space."
                                     (path-list cons))
   )
 
+;;; Now we need to make a specializer class. Most of this is from sbcl's
+;;; boot.lisp `real-make-method-specializers-form'.
+(defmethod sb-pcl:make-method-specializers-form
+    ((generic-function tree-generic-function)
+     method specializer-names environment)
+  (call-next-method generic-function method specializer-names environment))
 
 (defmethod compute-applicable-methods-using-classes
     ((generic-function tree-generic-function) classes)
