@@ -82,6 +82,44 @@ reached. This leaf is what executes the behavior of the command.
       Pick out which method is the one we want to start with.
 
 *** Method definition
+***** sb-pcl:make-method-specializers-form :non_portable:sbcl:
+      This needs to return something that tells sbcl how to get a copy of
+      our specializer.
+
+      Unmodified we can [[ansi:trace]] this [[ansi:generic-function]] and watch
+      what happens when we invoke [[ansi:defmethod]].
+
+******* Example (no tree-specializer)
+        First we need to [[ansi:trace]] =sb-pcl:make-method-specializers-form=
+        to see what happens
+
+        #+BEGIN_SRC lisp
+          (trace sb-pcl:make-method-specializers-form)
+        #+END_SRC
+
+        Then we define a random fake method, so we use [[en:foo][foo]] as our method
+        name. [fn:3]
+
+        #+BEGIN_SRC lisp
+          (defmethod foo ((arg1 (eql 1)) (arg2 integer))
+            (+ arg1 arg2))
+        #+END_SRC
+
+        Call out to =make-method-specializers-form=:
+        : (SB-PCL:MAKE-METHOD-SPECIALIZERS-FORM
+        :   #<STANDARD-GENERIC-FUNCTION FOO (1)>
+        :   #<STANDARD-METHOD #<STANDARD-METHOD {1000883061}> {1000883061}>
+        :   ((EQL 1) INTEGER) #<NULL-LEXENV>)
+
+        This is what we get back:
+        : SB-PCL:MAKE-METHOD-SPECIALIZERS-FORM returned
+        :   (LIST (SB-MOP:INTERN-EQL-SPECIALIZER 1) (FIND-CLASS 'INTEGER))
+
+        This returned list is what tells the lisp implentation [fn:4] how
+        to look up the specializers for [[mop:compute-applicable-methods][compute-applicable-methods]]. So in
+        effect to add our own custom specializer, we just need to inform
+        the implentation how to look it up.
+
 ***** ensure-generic-function
 ***** ensure-generic-function-using-class
 ***** make-instance
@@ -142,3 +180,10 @@ defined for that particular command.
 [fn:2] Top level commands are things like =!github=, =!test=. These do
 not have commands under them. Some examples of that are: =!github show=,
 =!test run=, =!test run all= and so on.
+
+[fn:3] [[ansi:defgeneric][defgeneric]] is omitted for brevity only, in real code I try to use
+them so I can take advantage of documentation strings.
+
+[fn:4] Specifically sbcl, I'm hoping other lisp implentations are similar
+enough that this kind of specialization can be ported to those
+implentations as well with little hassle.
