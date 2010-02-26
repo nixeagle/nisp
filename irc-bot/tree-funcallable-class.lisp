@@ -106,11 +106,16 @@ is translated into a list of symbols."
 
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
 ;;; boot.lisp `real-make-method-specializers-form'.
-
 (defmethod sb-pcl:make-method-specializers-form
     ((generic-function tree-generic-function)
      method specializer-names environment)
-  (call-next-method generic-function method specializer-names environment))
+  ;; We always assume a specializer exists in the first element of
+  ;; SPECIALIZER-NAMES. We certainly can do better, but this works.
+  (cons 'list
+        (cons (maybe-make-tree-specializer-form generic-function (car specializer-names))
+              (cdr (call-next-method generic-function method
+                                     (cdr specializer-names)
+                                     environment)))))
 
 (defmethod compute-applicable-methods-using-classes
     ((generic-function tree-generic-function) classes)
