@@ -77,13 +77,14 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (declare (type tree-generic-direct-nodes tree)
            (type list symbols)
            (optimize (speed 3) (safety 0) (debug 1)))
-  (if symbols
-      (%intern-tree-specializer
-       (or (gethash (car symbols) (tree-generic-direct-nodes tree))
-           (setf (gethash (car symbols) (tree-generic-direct-nodes tree))
-                 (make-instance 'tree-specializer :object (car symbols))))
-       (cdr symbols))
-      tree))
+  (the tree-specializer
+    (if symbols
+        (%intern-tree-specializer
+         (or (gethash (car symbols) (tree-generic-direct-nodes tree))
+             (setf (gethash (car symbols) (tree-generic-direct-nodes tree))
+                   (make-instance 'tree-specializer :object (car symbols))))
+         (cdr symbols))
+        tree)))
 
 (defun intern-tree-specializer (tree symbols)
   "Intern a unique specializer for TREE for SYMBOLS.
