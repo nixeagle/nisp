@@ -145,7 +145,8 @@ is translated into a list of symbols."
   (call-next-method))
 
 (defmethod make-load-form ((self tree-specializer) &optional env)
-  (declare (ignore env))  `(intern-command-specializer ',(command-specializer-object self)))
+  (declare (ignore env))  (values '(intern-tree-specializer #'test-tree-generic-function "hi")
+                                  nil))
 
 #+ ()
 (defun maybe-intern-command-specializer (input)
