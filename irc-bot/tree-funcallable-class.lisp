@@ -99,6 +99,11 @@ is translated into a list of symbols."
            (type (or string list keyword) symbols))
   (%intern-tree-specializer tree (ensure-tree-symbols symbols)))
 
+(defun maybe-make-tree-specializer-form (generic-function specializer-name)
+  ;; We don't actually check right now, instead just making the correct
+  ;; form.
+  (apply #'intern-tree-specializer generic-function (cdr specializer-name)))
+
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
 ;;; boot.lisp `real-make-method-specializers-form'.
 
