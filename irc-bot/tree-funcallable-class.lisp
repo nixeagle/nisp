@@ -50,8 +50,8 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (error "KO"))
 (defmethod ensure-tree-symbol ((symbol-as-string string))
   "Split by spaces, then intern SYMBOLS as normal."
-  (check-type symbol-as-string tree-symbol-string)
-  (call-next-method (string-upcase symbol-as-string)))
+  (declare (type tree-symbol-string symbol-as-string))
+  (make-keyword (string-upcase symbol-as-string)))
 
 (defgeneric ensure-tree-symbols (symbols)
   (:documentation "Return a list of symbols instead of just one."))
