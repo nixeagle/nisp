@@ -120,6 +120,26 @@ reached. This leaf is what executes the behavior of the command.
         effect to add our own custom specializer, we just need to inform
         the implentation how to look it up.
 
+******* General implementation details
+        On sbcl, in order to get method specializers to work without sbcl
+        complaining that the new specializer type is invalid, we must
+        remove all information about our new specializer from
+        =SPECIALIZER-NAMES= [fn:5] and pass this shorter list to
+        [[ansi:call-next-method][call-next-method]]. The result of [[ansi:call-next-method][call-next-method]] then gets
+        modified to have the new specializer inserted in the right places.
+
+        There are at least several valid approaches to this topic:
+          1) We can specify that for the whole class of generic functions
+             ,generic methods or both that the specializer must always be
+             in a particular position in the lambda list.
+          2) We could parse out where the specializers are, record their
+             locations in the lambda list using some sort of index along
+             with what values they had, and use this index to re-insert
+             the specializers after [[ansi:call-next-method][call-next-method]].
+          3) Completely forgo [[ansi:call-next-method][call-next-method]] and handle all the cases
+             ourselves. I personally find this method very unappealing as
+             we must replicate work that the implentation does for us.
+
 ***** ensure-generic-function
 ***** ensure-generic-function-using-class
 ***** make-instance
@@ -187,3 +207,10 @@ them so I can take advantage of documentation strings.
 [fn:4] Specifically sbcl, I'm hoping other lisp implentations are similar
 enough that this kind of specialization can be ported to those
 implentations as well with little hassle.
+
+[fn:5] For sbcl, this is the 3rd parameter to
+=sb-pcl:make-method-specializers-form=, for other lisps I don't know right
+now what parameter this is. This parameter contains just information on
+the specializers that we have to use to correctly intern and return a form
+that sbcl will use to create the specializers list that gets used in
+[[mop:compute-applicable-methods][compute-applicable-methods]].
