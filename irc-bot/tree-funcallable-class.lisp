@@ -117,6 +117,9 @@ is translated into a list of symbols."
   "No cache permitted right now."
   (values classes nil))
 
+;;; We don't need this around method right now, we don't even do anything
+;;; with the primary!
+#+ ()
 (defmethod compute-applicable-methods :around
     ((generic-function tree-generic-function) args)
   (call-next-method generic-function (preprocess-arglist generic-function args)))
