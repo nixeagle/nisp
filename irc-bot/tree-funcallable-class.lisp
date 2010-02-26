@@ -62,7 +62,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (ensure-tree-symbols (ensure-list args)))
 (defmethod ensure-tree-symbols ((symbols-as-string string))
   (ensure-tree-symbols (split-sequence #\Space
-                                       (string-upcase symbols-as-string)
+                                       symbols-as-string
                                        :remove-empty-subseqs t)))
 
 ;;;}}}
