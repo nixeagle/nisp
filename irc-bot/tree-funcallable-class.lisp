@@ -73,21 +73,23 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defmethod preprocess-arglist ((generic-function tree-generic-function) args)
   (cons (ensure-tree-symbols (car args)) (cdr args)))
 
-(defgeneric intern-tree-specializer (generic-function path-list)
-  (:documentation "Intern a specializer for PATH-LIST for GENERIC-FUNCTION."))
-
-(defmethod intern-tree-specializer :around
-    ((generic-function tree-generic-function) (symbols cons))
-  "Make sure PATH-LIST contains symbols interned appropriately."
-  (call-next-method generic-function
-                    (ensure-tree-symbols symbols)))
-
-(defmethod intern-tree-specializer ((generic-function tree-generic-function)
-                                    (path-list cons))
-  )
+(defun %intern-tree-specializer (tree symbols)
+  (declare (type tree-generic-direct-nodes tree)
+           (type list symbols)
+           (optimize (speed 3) (safety 0) (debug 1)))
+  (if symbols
+      (%intern-tree-specializer
+       (or (gethash (car symbols) (tree-generic-direct-nodes tree))
+           (setf (gethash (car symbols) (tree-generic-direct-nodes tree))
+                 (make-instance 'tree-specializer :object (car symbols))))
+       (cdr symbols))
+      tree))
+(defun intern-tree-specializer (tree symbols)
+  (%intern-tree-specializer tree (ensure-tree-symbols symbols)))
 
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
 ;;; boot.lisp `real-make-method-specializers-form'.
+
 (defmethod sb-pcl:make-method-specializers-form
     ((generic-function tree-generic-function)
      method specializer-names environment)
