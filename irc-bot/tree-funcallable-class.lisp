@@ -84,7 +84,18 @@ A valid tree-symbol is defined as anything that does not contain a space."
                  (make-instance 'tree-specializer :object (car symbols))))
        (cdr symbols))
       tree))
+
 (defun intern-tree-specializer (tree symbols)
+  "Intern a unique specializer for TREE for SYMBOLS.
+
+SYMBOLS represents a path starting at the root of TREE and going down one
+symbol at a time through repeated hash-tables until the last of SYMBOLS is
+reached.
+
+SYMBOLS may be a list of symbols, a string of space seperated words that
+is translated into a list of symbols."
+  (declare (type tree-generic-direct-nodes tree)
+           (type (or string list keyword) symbols))
   (%intern-tree-specializer tree (ensure-tree-symbols symbols)))
 
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
