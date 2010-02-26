@@ -1,25 +1,43 @@
 #+TITLE: nisp -- experimentation and learning
 
-As of v0.0.13 most if not all of the dependencies that are not asdf
-installable are direct submodules of nisp itself. When cloning a fresh
-copy please do the following:
+Dead simple setup, may conflict with existing installed libraries/override
+what is already installed on the system (may be a good thing... may not
+be, see [[*Dependencies]] for a discussion of this issue.
 
  : cd nisp/
- : git submodule update --init
+ : git submodule update --init --recursive
 
 This will pull in all the submodules.
 
-Then in your lisp configuration file add a line similar to 
+Then in your lisp configuration file add a line similar to
 
  : (pushnew "/path/to/nisp/asdf/" asdf:*central-registry* :test #'equal)
 
 Then start your lisp implentation, [fn:1] and type:
  : (asdf:load-system :nisp)
 
+* Dependencies
+
+Some dependencies of this system as of their current released versions (as
+by asdf-install, or common distro repositories [fn:2]) are out of date or
+have known existing bugs. These dependencies are imported from their
+native source repository format into a git repository by myself or others
+and are included as a [[http://www.kernel.org/pub/software/scm/git/docs/git-submodule.html][git submodule]] in this repository with the
+corresponding symlink included in [[file:asdf/][asdf/]].
+
+Additionally there are many libraries that are currently not asdf
+installable at all, that I imported from darcs. The writer of these
+libraries does not seem to be that interested in making them independent
+from one another. Using one of these libraries tends to require every
+other library that that particular author wrote. One of these days I might
+take the time to untangle the web of dependencies for the worthwhile
+libraries, especially what used to be known as =cl-walker=.
+
 * Problems
-  Please report either to the github tracker or to me directly on
-  irc://irc.eighthbit.net/programming.
+  Please report to the github tracker.
 
 * Footnotes
 
-[fn:1] Currently known to work only on sbcl 1.0.31 and 1.0.34
+[fn:1] Currently known to work only on sbcl 1.0.31, 1.0.34, 1.0.35
+
+[fn:2] I'm looking at you [[http://common-lisp.net/project/slime/][slime]].
