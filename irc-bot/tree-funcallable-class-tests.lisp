@@ -52,4 +52,13 @@ a single tree symbol out of what boils down to one symbol"
       (#'test-tree-generic-function '((alpha nikurl) 1 2 3 4 "args"))
       expect)))
 
-(test (intern-tree-specializer :suite tree-funcallable))
+(test (intern-tree-specializer :suite tree-funcallable
+                               :depends-on preprocess-arglist)
+  (is (typep (intern-tree-specializer #'test-tree-generic-function '("hi"))
+             'tree-specializer)
+      "All that matters is we get a tree specializer")
+  (is (eq (intern-tree-specializer #'test-tree-generic-function '("hi"))
+          (intern-tree-specializer #'test-tree-generic-function '("hi")))
+      "The result from interning should always be the same object"))
+
+;;; END
