@@ -161,8 +161,10 @@ is translated into a list of symbols."
   (call-next-method))
 
 (defmethod make-load-form ((self tree-specializer) &optional env)
-  (declare (ignore env))  (values '(intern-tree-specializer #'test-tree-generic-function "hi")
-                                  nil))
+  (declare (ignore env))
+  (values (intern-tree-specializer #'test-tree-generic-function
+                                   (eql-specializer-object self))
+          nil))
 
 #+ ()
 (defun maybe-intern-command-specializer (input)
