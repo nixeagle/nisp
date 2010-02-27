@@ -102,7 +102,14 @@ is translated into a list of symbols."
 (defun maybe-make-tree-specializer-form (generic-function specializer-name)
   ;; We don't actually check right now, instead just making the correct
   ;; form.
-  (apply #'intern-tree-specializer generic-function (cdr specializer-name)))
+  ;;
+  ;; This _must_ return a form that creates the specializer, never the
+  ;; specializer itself. This solves a bug related to SB-PCL::LOAD-DEFMETHOD.
+  ;;
+  ;; We may need to consider not including anything with sharpsign < in
+  ;; the printed form, so the generic function for our case might need to
+  ;; be #',(generic-function-name it)
+  `(intern-tree-specializer ,generic-function ,@(cdr specializer-name)))
 
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
 ;;; boot.lisp `real-make-method-specializers-form'.
