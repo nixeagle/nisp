@@ -14,7 +14,7 @@
 (defclass tree-method (standard-method)
   ())
 
-(defclass tree-specializer (tree-generic-direct-nodes)
+(defclass network-tree-node (tree-generic-direct-nodes)
   ((object :initarg :object
            :reader network-tree-node-object)))
 
@@ -74,18 +74,18 @@ A valid tree-symbol is defined as anything that does not contain a space."
   ;; Always return root node, never all the way down to the end of ARGS.
   (cons (gethash (caar args) (tree-generic-direct-nodes *network-tree-nodes*)) (cdr args)))
 
-(defun %intern-tree-specializer (tree symbols)
-  (declare (type tree-generic-direct-nodes tree)
+(defun %intern-tree-specializer (node symbols)
+  (declare (type tree-generic-direct-nodes node)
            (type list symbols)
            (optimize (speed 3) (safety 0) (debug 1)))
-  (the tree-specializer
+  (the network-tree-node
     (if symbols
         (%intern-tree-specializer
-         (or (gethash (car symbols) (tree-generic-direct-nodes tree))
-             (setf (gethash (car symbols) (tree-generic-direct-nodes tree))
-                   (make-instance 'tree-specializer :object (car symbols))))
+         (or (gethash (car symbols) (tree-generic-direct-nodes node))
+             (setf (gethash (car symbols) (tree-generic-direct-nodes node))
+                   (make-instance 'network-tree-node :object (car symbols))))
          (cdr symbols))
-        tree)))
+        node)))
 
 (defun intern-tree-specializer (symbols)
   "Intern a unique specializer for TREE for SYMBOLS.
@@ -168,7 +168,7 @@ is translated into a list of symbols."
          (declare (ignorable (function current-node) (function next-node)))
          (,result args next-methods remaining-args)))))
 
-(defmethod make-load-form ((self tree-specializer) &optional env)
+(defmethod make-load-form ((self network-tree-node) &optional env)
   (declare (ignore env))
   (values (intern-tree-specializer (network-tree-node-object self))
           nil))
