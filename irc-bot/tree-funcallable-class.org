@@ -89,6 +89,12 @@ reached. This leaf is what executes the behavior of the command.
       Unmodified we can [[ansi:trace]] this [[ansi:generic-function]] and watch
       what happens when we invoke [[ansi:defmethod]].
 
+      It is critically important that all parts of the returned form be
+      [[ansi:read][readable]]. This means no sharpsign < objects for where there is no
+      defined [[ansi:make-load-form][make-load-form]]. Failure to follow this constraint results in
+      some rather spurious and sometimes difficult to trace errors from
+      sbcl.
+
 ******* Example (no tree-specializer)
         First we need to [[ansi:trace]] =sb-pcl:make-method-specializers-form=
         to see what happens
