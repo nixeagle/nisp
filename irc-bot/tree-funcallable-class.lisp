@@ -71,7 +71,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (:documentation
    "Modify ARGS to make them suiable for computing applicable methods."))
 (defmethod preprocess-arglist ((generic-function tree-generic-function) args)
-  (cons (ensure-tree-symbols (car args)) (cdr args)))
+  (cons (car (ensure-tree-symbols (car args))) (cdr args)))
 
 (defun %intern-tree-specializer (tree symbols)
   (declare (type tree-generic-direct-nodes tree)
@@ -127,12 +127,13 @@ is translated into a list of symbols."
 #+ ()
 (defmethod compute-applicable-methods :around
     ((generic-function tree-generic-function) args)
-  (call-next-method generic-function (preprocess-arglist generic-function args)))
+  (call-next-method generic-function args))
 
 (defmethod compute-applicable-methods
     ((generic-function tree-generic-function) args)
   ;; Nothing special yet
-  (call-next-method))
+  (call-next-method generic-function (preprocess-arglist generic-function
+                                                         args)))
 
 (defmethod compute-effective-method
     ((generic-function tree-generic-function)
