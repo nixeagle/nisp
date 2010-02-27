@@ -178,6 +178,35 @@ reached. This leaf is what executes the behavior of the command.
       path-list is the direct path from the top of the tree down to
       whatever leaf or node is being referred to. At no point is it
       acceptable to skip levels.
+* Performance
+#+BEGIN_EXAMPLE
+  I> (defmethod test-1 ((foo (eql 1)) bar) (list foo bar))
+  STYLE-WARNING: Implicitly creating new generic function TEST-1.
+  #<STANDARD-METHOD TEST-1 ((EQL 1) T) {10061B1741}>
+  I> (h::clock (test-1 1 323) 100)
+  ((:TIME 19/1000 "0.019") (:AVG 19/100000 "0.00019") (:RESULT 1 323))
+  I> (h::clock (test-1 1 323) 1000)
+  ((:TIME 0 "0.0") (:AVG 0 "0.0") (:RESULT 1 323))
+  I> (h::clock (test-1 1 323) 1000)
+  ((:TIME 0 "0.0") (:AVG 0 "0.0") (:RESULT 1 323))
+  I> (h::clock (test-1 1 323) 10000)
+  ((:TIME 1/1000 "0.001") (:AVG 1/10000000 "0.0000001") (:RESULT 1 323))
+  I> (h::clock (test-1 1 323) 100000)
+  ((:TIME 3/500 "0.006") (:AVG 3/50000000 "0.00000006") (:RESULT 1 323))
+  I> (h::clock (test-1 1 323) 10000000)
+  ((:TIME 1151/1000 "1.151") (:AVG 1151/10000000000 "0.0000001151")
+   (:RESULT 1 323))
+#+END_EXAMPLE
+
+  Based on the above it is clear unmodified generic functions can do 10
+  million calls in 1.15 seconds. Right now we are lucky to get 330 calls
+  in 1 second with our modified setup which is based on the following
+  method definition:
+
+#+BEGIN_SRC lisp
+  (defmethod test-tree-generic-function ((tree (eql "hi2")) arg1)
+    (list tree arg1))
+#+END_SRC
 
 * Dictionary
 *** tree-generic-function
