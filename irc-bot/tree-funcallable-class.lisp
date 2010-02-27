@@ -14,8 +14,19 @@
 (defclass tree-method (standard-method)
   ())
 
-(defclass tree-specializer (eql-specializer
-                            tree-generic-direct-nodes) ())
+;;; Rename tree-specializer to network-tree
+;;;
+;;; Then use network-tree objects as eql specializers, and implement
+;;; (next-node) for make-method-lambda along with (next-node-p) and a way
+;;; to track which node we are at and which nodes we go to next.
+;;;
+;;; (current-node) will always return the network-tree object we are at now.
+;;;
+;;; We also need a better print-object for network-tree.
+
+(defclass tree-specializer (tree-generic-direct-nodes)
+  ((object :initarg :object
+           :reader network-tree-node-object)))
 
 
 ;;;}}}
@@ -148,18 +159,28 @@ is translated into a list of symbols."
 (defmethod compute-discriminating-function
     ((generic-function tree-generic-function))
   (let ((it (call-next-method)))
-    (describe it)
-    it))
+    (lambda (&rest args)
+      (apply it (ensure-tree-symbols (car args)) (cdr args)))
+
+#+ ()    it))
 
 
 (defmethod make-method-lambda
     ((generic-function tree-generic-function) method expression environment)
-  (declare (ignore environment))
-  (call-next-method))
+  (let ((result (call-next-method)))
+    `(lambda (args next-methods &rest remaining-args)
+#+ ()       (print args)
+       (labels ((current-node ()
+                (gethash (caar args) (tree-generic-direct-nodes *network-tree-nodes*)))
+              (next-node ()
+                (list (gethash (cadar args) (tree-generic-direct-nodes (current-node)))
+                      (cdr args))))
+         (declare (ignorable (function current-node) (function next-node)))
+         (,result args next-methods remaining-args)))))
 
 (defmethod make-load-form ((self tree-specializer) &optional env)
   (declare (ignore env))
-  (values (intern-tree-specializer (eql-specializer-object self))
+  (values (intern-tree-specializer (network-tree-node-object self))
           nil))
 
 #+ ()
