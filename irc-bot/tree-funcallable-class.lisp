@@ -5,8 +5,7 @@
   ((direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
                  :reader tree-generic-direct-nodes)))
 
-(defclass tree-generic-function (standard-generic-function
-                                 tree-generic-direct-nodes)
+(defclass tree-generic-function (standard-generic-function)
   ()
   (:metaclass funcallable-standard-class)
   (:default-initargs :method-class (find-class 'tree-method)))
@@ -16,9 +15,7 @@
   ())
 
 (defclass tree-specializer (eql-specializer
-                            tree-generic-direct-nodes)
-  ((parent :reader tree-specializer-parent
-           :documentation "Pointer to the parent specializer of this one.")))
+                            tree-generic-direct-nodes) ())
 
 
 ;;;}}}
@@ -67,12 +64,14 @@ A valid tree-symbol is defined as anything that does not contain a space."
 
 ;;;}}}
 
+(defvar *network-tree-nodes* (make-instance 'tree-generic-direct-nodes))
+
 (defgeneric preprocess-arglist (generic-function args)
   (:documentation
    "Modify ARGS to make them suiable for computing applicable methods."))
 (defmethod preprocess-arglist ((generic-function tree-generic-function) args)
   ;; Always return root node, never all the way down to the end of ARGS.
-  (cons (gethash (caar args) (tree-generic-direct-nodes generic-function)) (cdr args)))
+  (cons (gethash (caar args) (tree-generic-direct-nodes *network-tree-nodes*)) (cdr args)))
 
 (defun %intern-tree-specializer (tree symbols)
   (declare (type tree-generic-direct-nodes tree)
@@ -87,7 +86,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
          (cdr symbols))
         tree)))
 
-(defun intern-tree-specializer (tree symbols)
+(defun intern-tree-specializer (symbols)
   "Intern a unique specializer for TREE for SYMBOLS.
 
 SYMBOLS represents a path starting at the root of TREE and going down one
@@ -96,11 +95,10 @@ reached.
 
 SYMBOLS may be a list of symbols, a string of space seperated words that
 is translated into a list of symbols."
-  (declare (type tree-generic-direct-nodes tree)
-           (type (or string list keyword) symbols))
-  (%intern-tree-specializer tree (ensure-tree-symbols symbols)))
+  (declare (type (or string list keyword) symbols))
+  (%intern-tree-specializer *network-tree-nodes* (ensure-tree-symbols symbols)))
 
-(defun maybe-make-tree-specializer-form (generic-function specializer-name)
+(defun maybe-make-tree-specializer-form (specializer-name)
   ;; We don't actually check right now, instead just making the correct
   ;; form.
   ;;
@@ -109,8 +107,7 @@ is translated into a list of symbols."
   ;;
   ;; We must sharpsign quote the generic-function name, otherwise the fasl
   ;; cannot be loaded.
-  `(eql (intern-tree-specializer #',(generic-function-name generic-function)
-                                 ,@(cdr specializer-name))))
+  `(eql (intern-tree-specializer ,@(cdr specializer-name))))
 
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
 ;;; boot.lisp `real-make-method-specializers-form'.
@@ -120,8 +117,7 @@ is translated into a list of symbols."
   ;; We always assume a specializer exists in the first element of
   ;; SPECIALIZER-NAMES. We certainly can do better, but this works.
   (call-next-method generic-function method
-                    (cons (maybe-make-tree-specializer-form generic-function
-                                                            (car specializer-names))
+                    (cons (maybe-make-tree-specializer-form (car specializer-names))
                           (cdr specializer-names))
                     environment))
 
@@ -163,8 +159,7 @@ is translated into a list of symbols."
 
 (defmethod make-load-form ((self tree-specializer) &optional env)
   (declare (ignore env))
-  (values (intern-tree-specializer #'test-tree-generic-function
-                                   (eql-specializer-object self))
+  (values (intern-tree-specializer (eql-specializer-object self))
           nil))
 
 #+ ()
