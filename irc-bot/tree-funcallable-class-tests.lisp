@@ -3,8 +3,14 @@
 (defgeneric test-tree-generic-function (tree arg1)
   (:generic-function-class tree-generic-function))
 
+;;; Won't compile for a while because the first arg is not a network-tree.
+#+ ()
 (defmethod test-tree-generic-function (tree arg1)
   (format nil "Catchall tree method: ~A ::arg1: ~A~%" tree arg1))
+
+#+ ()
+(defmethod test-tree-generic-function ((tree (tree-eql "hi")) arg1)
+  (format nil "Catchall tree method2: ~A ::arg1: ~A~%" tree arg1))
 
 
 (define-new-suite :nisp-eos-root)
