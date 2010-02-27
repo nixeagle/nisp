@@ -208,6 +208,20 @@ reached. This leaf is what executes the behavior of the command.
     (list tree arg1))
 #+END_SRC
 
+* Tasks
+*** TODO Rename tree-specializer to network-tree
+    New name reflects new role
+*** TODO Implement NEXT-NODE
+    Needs to drop down to the next command.
+*** TODO Implement NEXT-NODE-P
+    Needs to tell us if we can drop to a next command without an error
+*** TODO Implement CURRENT-NODE
+    Tell us the =network-tree= we are at right now
+*** TODO Implement PRINT-OBJECT for NETWORK-TREE
+    Would be useful for reading debug output instead of seeing:
+    : (eql #<network-tree ...>)
+    with no useful information.
+
 * Dictionary
 *** tree-generic-function
     Our special [[ansi:generic-function][generic-function]] class that has as its single superclass

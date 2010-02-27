@@ -14,16 +14,6 @@
 (defclass tree-method (standard-method)
   ())
 
-;;; Rename tree-specializer to network-tree
-;;;
-;;; Then use network-tree objects as eql specializers, and implement
-;;; (next-node) for make-method-lambda along with (next-node-p) and a way
-;;; to track which node we are at and which nodes we go to next.
-;;;
-;;; (current-node) will always return the network-tree object we are at now.
-;;;
-;;; We also need a better print-object for network-tree.
-
 (defclass tree-specializer (tree-generic-direct-nodes)
   ((object :initarg :object
            :reader network-tree-node-object)))
