@@ -132,10 +132,11 @@ is translated into a list of symbols."
 
 ;;; We don't need this around method right now, we don't even do anything
 ;;; with the primary!
-#+ ()
+
 (defmethod compute-applicable-methods :around
     ((generic-function tree-generic-function) args)
-  (call-next-method generic-function args))
+  (call-next-method generic-function (cons (ensure-tree-symbols (car args))
+                                           (cdr args))))
 
 (defmethod compute-applicable-methods
     ((generic-function tree-generic-function) args)
