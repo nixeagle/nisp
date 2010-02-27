@@ -8,8 +8,7 @@
 (defmethod test-tree-generic-function (tree arg1)
   (format nil "Catchall tree method: ~A ::arg1: ~A~%" tree arg1))
 
-#+ ()
-(defmethod test-tree-generic-function ((tree (tree-eql "hi")) arg1)
+(defmethod test-tree-generic-function ((tree (network-tree "hi")) arg1)
   (format nil "Catchall tree method2: ~A ::arg1: ~A~%" tree arg1))
 
 
