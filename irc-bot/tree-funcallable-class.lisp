@@ -106,10 +106,10 @@ is translated into a list of symbols."
   ;; This _must_ return a form that creates the specializer, never the
   ;; specializer itself. This solves a bug related to SB-PCL::LOAD-DEFMETHOD.
   ;;
-  ;; We may need to consider not including anything with sharpsign < in
-  ;; the printed form, so the generic function for our case might need to
-  ;; be #',(generic-function-name it)
-  `(intern-tree-specializer ,generic-function ,@(cdr specializer-name)))
+  ;; We must sharpsign quote the generic-function name, otherwise the fasl
+  ;; cannot be loaded.
+  `(intern-tree-specializer #',(generic-function-name generic-function)
+                            ,@(cdr specializer-name)))
 
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
 ;;; boot.lisp `real-make-method-specializers-form'.
