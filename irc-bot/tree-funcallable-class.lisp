@@ -71,7 +71,8 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (:documentation
    "Modify ARGS to make them suiable for computing applicable methods."))
 (defmethod preprocess-arglist ((generic-function tree-generic-function) args)
-  (cons (car (ensure-tree-symbols (car args))) (cdr args)))
+  ;; Always return root node, never all the way down to the end of ARGS.
+  (cons (gethash (caar args) (tree-generic-direct-nodes generic-function)) (cdr args)))
 
 (defun %intern-tree-specializer (tree symbols)
   (declare (type tree-generic-direct-nodes tree)
