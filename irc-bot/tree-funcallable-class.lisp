@@ -87,7 +87,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
          (cdr symbols))
         node)))
 
-(defun intern-tree-specializer (symbols)
+(defun intern-network-tree-node(symbols)
   "Intern a unique specializer for TREE for SYMBOLS.
 
 SYMBOLS represents a path starting at the root of TREE and going down one
@@ -108,7 +108,7 @@ is translated into a list of symbols."
   ;;
   ;; We must sharpsign quote the generic-function name, otherwise the fasl
   ;; cannot be loaded.
-  `(eql (intern-tree-specializer ,@(cdr specializer-name))))
+  `(eql (intern-network-tree-node ,@(cdr specializer-name))))
 
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
 ;;; boot.lisp `real-make-method-specializers-form'.
@@ -170,7 +170,7 @@ is translated into a list of symbols."
 
 (defmethod make-load-form ((self network-tree-node) &optional env)
   (declare (ignore env))
-  (values (intern-tree-specializer (network-tree-node-object self))
+  (values (intern-network-tree-node (network-tree-node-object self))
           nil))
 
 #+ ()

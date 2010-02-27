@@ -215,8 +215,14 @@ reached. This leaf is what executes the behavior of the command.
     - State "DONE"       from "TODO"       [2010-02-27 Sat 18:48]
     :END:
     New name reflects new role
-*** TODO Rename intern-tree-specializer to something else
+*** DONE Rename intern-tree-specializer to something else
+    CLOSED: [2010-02-27 Sat 18:53]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2010-02-27 Sat 18:53]
+    :END:
     We are not really... interning are we?
+
+    Ok we are, but renaming this to INTERN-NETWORK-TREE-NODE
 *** TODO Implement NEXT-NODE
     Needs to drop down to the next command.
 *** TODO Implement NEXT-NODE-P
