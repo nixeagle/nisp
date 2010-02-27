@@ -134,11 +134,13 @@ is translated into a list of symbols."
   (call-next-method generic-function (cons (ensure-tree-symbols (car args))
                                            (cdr args))))
 
+;;; `compute-discriminating-function' does this for us now...
+#+ ()
 (defmethod compute-applicable-methods
     ((generic-function tree-generic-function) args)
-  (call-next-method generic-function (preprocess-arglist generic-function
-                                                         args)))
+  (call-next-method generic-function args))
 
+#+ ()
 (defmethod compute-effective-method
     ((generic-function tree-generic-function)
      method-combination applicable-methods)
@@ -149,9 +151,7 @@ is translated into a list of symbols."
     ((generic-function tree-generic-function))
   (let ((it (call-next-method)))
     (lambda (&rest args)
-      (apply it (ensure-tree-symbols (car args)) (cdr args)))
-
-#+ ()    it))
+      (apply it (intern-network-tree-node (car args)) (cdr args)))))
 
 
 (defmethod make-method-lambda
