@@ -223,16 +223,31 @@ reached. This leaf is what executes the behavior of the command.
     We are not really... interning are we?
 
     Ok we are, but renaming this to INTERN-NETWORK-TREE-NODE
-*** TODO Implement NEXT-NODE
+*** DONE Implement NEXT-NODE
+    CLOSED: [2010-02-28 Sun 16:44]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2010-02-28 Sun 16:44]
+    :END:
     Needs to drop down to the next command.
 *** TODO Implement NEXT-NODE-P
     Needs to tell us if we can drop to a next command without an error
 *** TODO Implement CURRENT-NODE
     Tell us the =network-tree= we are at right now
-*** TODO Implement PRINT-OBJECT for NETWORK-TREE
+
+    Might not end up doing this one as the current node gets passed in as
+    the first argument to the function.
+*** DONE Implement PRINT-OBJECT for NETWORK-TREE
+    CLOSED: [2010-02-28 Sun 16:44]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2010-02-28 Sun 16:44]
+    :END:
     Would be useful for reading debug output instead of seeing:
     : (eql #<network-tree ...>)
     with no useful information.
+*** TODO Figure out why CLOSER-MOP is so much slower
+    The implentations provided by closer-mop are correct as in giving the
+    right results given normal inputs for all method combinations, but
+    they are roughly 1,000 times slower then native sbcl.
 
 * Dictionary
 *** tree-generic-function
