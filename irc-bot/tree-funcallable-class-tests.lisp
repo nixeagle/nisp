@@ -62,25 +62,13 @@ a single tree symbol out of what boils down to one symbol"
     ("hi how") '(:HI :HOW)
     ('hi) '(:HI)))
 
-(test (preprocess-arglist
-       :suite tree-funcallable
-       :depends-on ensure-tree-symbol)
-  "Expect only first argument to ever be modified in the return value."
-  (let ((expect '((:ALPHA :NIKURL)
-                  1 2 3 4 "args")))
-    (with-fbound (preprocess-arglist)
-      (#'test-tree-generic-function '("Alpha nikurl" 1 2 3 4 "args"))
-      expect
-      (#'test-tree-generic-function '((alpha nikurl) 1 2 3 4 "args"))
-      expect)))
 
-(test (intern-tree-specializer :suite tree-funcallable
-                               :depends-on preprocess-arglist)
-  (is (typep (intern-tree-specializer #'test-tree-generic-function '("hi"))
-             'tree-specializer)
+(test (intern-network-tree-node :suite tree-funcallable)
+  (is (typep (intern-network-tree-node '("hi"))
+             'network-tree-node)
       "All that matters is we get a tree specializer")
-  (is (eq (intern-tree-specializer #'test-tree-generic-function '("hi"))
-          (intern-tree-specializer #'test-tree-generic-function '("hi")))
+  (is (eq (intern-network-tree-node '("hi"))
+          (intern-network-tree-node '("hi")))
       "The result from interning should always be the same object"))
 
 ;;; END
