@@ -8,8 +8,25 @@
 (defmethod test-tree-generic-function (tree arg1)
   (format nil "Catchall tree method: ~A ::arg1: ~A~%" tree arg1))
 
-(defmethod test-tree-generic-function ((tree (network-tree "hi")) arg1)
-  (format nil "Catchall tree method2: ~A ::arg1: ~A~%" tree arg1))
+(defmethod test-tree-generic-function ((tree (eql "hi")) arg1)
+
+  #+ () (list (current-node)))
+(progn
+  (defmethod test-tree-generic-function ((tree (eql "hi2")) arg1)
+    (next-node))
+  (defmethod test-tree-generic-function ((tree (eql "hi2 there")) arg1)
+    (next-node))
+  (defmethod test-tree-generic-function ((tree (eql "hi2 there hi")) arg1)
+    (list tree (remaining-parameters)))
+  (defmethod test-tree-generic-function ((tree (eql "hi2 there hi how")) arg1)
+    (next-node))
+  (defmethod test-tree-generic-function ((tree (eql "hi2 there hi how are")) arg1)
+    (next-node))
+  (defmethod test-tree-generic-function ((tree (eql "hi2 there hi how are you")) arg1)
+    (list tree arg1 (remaining-parameters)))
+
+  (defmethod test-tree-generic-function :before ((tree (eql "hi there hi")) arg1)
+    1))
 
 
 (define-new-suite :nisp-eos-root)
