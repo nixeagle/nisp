@@ -137,16 +137,19 @@ is translated into a list of symbols."
                           (cdr specializer-names))
                     environment))
 
-(defmethod compute-applicable-methods-using-classes
+;;; `compute-discriminating-function' does this for us now...
+#+ ()
+(defmethod compute-applicable-methods-using-classes :around
     ((generic-function tree-generic-function) classes)
   "No cache permitted right now."
-  (values classes nil))
+  (call-next-method generic-function (cons (caar classes)
+                                           (cdr classes))))
 
 ;;; `compute-discriminating-function' does this for us now...
 #+ ()
-(defmethod compute-applicable-methods :around
+(defmethod compute-applicable-methods
     ((generic-function tree-generic-function) args)
-  (call-next-method generic-function (cons (ensure-tree-symbols (car args))
+  (call-next-method generic-function (cons (caar args)
                                            (cdr args))))
 
 ;;; `compute-discriminating-function' does this for us now...
