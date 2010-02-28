@@ -54,18 +54,10 @@ reached. This leaf is what executes the behavior of the command.
 
 *** Generic function call
 ***** compute-applicable-methods-using-classes
-      For now we do not attempt to use this to do any sort of
-      caching. Its one less thing to have a bug in at this time.
+      Handled in [[*compute-discriminating-function]]
 
 ***** compute-applicable-methods
-      Primary workhorse. Find all methods that have our tree-specializer
-      in the first argument. Maybe at some point we can allow multiple
-      trees to be specialized on at one time, but that might get
-      computationally difficult and turn out to be a monster with too
-      many heads to track.
-
-      A valid first argument is a single [[ansi:symbol][symbol]], a [[ansi:string][string]] or a list of
-      symbols.
+      Handled in [[*compute-discriminating-function]]
 
 ******* preprocess-arglist
         Takes a [[ansi:generic-function][generic-function]] and the arglist as would be passed to
@@ -154,6 +146,10 @@ reached. This leaf is what executes the behavior of the command.
 ******* initialize-instance
 ******* reinitialize-instance
 ******* compute-discriminating-function
+        Takes the real arguments, and converts it to a tree specializer
+        along with adding the remaining arguments to a special variable we
+        pass along through next-node invocations. Sometimes it pays to use
+        dynamically bound variables!
 ***** Build method function
 ******* make-method-lambda
 ***** Obtain method metaobject
@@ -167,9 +163,7 @@ reached. This leaf is what executes the behavior of the command.
 
 *** Specializers
 ***** make-instance
-******* TODO [#C] ensure-tree-symbol on tree-specializer init
-
-***** intern-tree-specializer
+***** intern-network-tree-node
       Takes two arguments; generic-function and path-list.
 
       The generic-function must be a [[tree-generic-function]] or a subclass
