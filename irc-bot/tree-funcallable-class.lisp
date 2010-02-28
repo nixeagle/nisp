@@ -102,7 +102,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
          (cdr symbols))
         node)))
 
-(defun intern-network-tree-node(symbols)
+(defun intern-network-tree-node (symbols)
   "Intern a unique specializer for TREE for SYMBOLS.
 
 SYMBOLS represents a path starting at the root of TREE and going down one
