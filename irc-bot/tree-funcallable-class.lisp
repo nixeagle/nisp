@@ -1,5 +1,20 @@
 (in-package :nisp.i)
 
+(defun first-command-word (command-string &optional (seperater #\Space))
+  "Extract the first segment in COMMAND-STRING before SEPERATER.
+
+Second return value is what is left after removing the segment."
+  (declare (type string command-string)
+           (type character seperater)
+           (optimize (speed 3) (debug 2) (safety 2)))
+  (let ((space-index (position seperater command-string)))
+    (declare (type (or null non-negative-fixnum) space-index))
+    (if space-index
+        (values
+         (subseq command-string 0 space-index)
+         (subseq command-string (the non-negative-fixnum (1+ space-index))))
+        (values command-string ""))))
+
 ;;;{{{ Tree classes
 (defclass tree-generic-direct-nodes ()
   ((direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
