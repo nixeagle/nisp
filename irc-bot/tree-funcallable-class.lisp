@@ -20,7 +20,7 @@ Second return value is what is left after removing the segment."
   ((direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
                  :reader tree-generic-direct-nodes)))
 
-(defclass tree-generic-function (standard-generic-function)
+(defclass tree-generic-function (common-lisp:standard-generic-function)
   ()
   (:metaclass funcallable-standard-class)
   (:default-initargs :method-class (find-class 'tree-method)))
