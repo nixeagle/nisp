@@ -19,6 +19,13 @@ Second return value is what is left after removing the segment."
 (defclass tree-generic-direct-nodes ()
   ((direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
                  :reader tree-generic-direct-nodes)))
+(defmethod tree-generic-direct-node ((tree tree-generic-direct-nodes)
+                                     (arg string))
+  (gethash (ensure-tree-symbol arg) (tree-generic-direct-nodes tree)))
+(defmethod tree-generic-direct-node ((tree tree-generic-direct-nodes)
+                                     (arg symbol))
+  (declare (type keyword symbol))
+  (gethash arg (tree-generic-direct-nodes tree)))
 
 (defclass tree-generic-function (common-lisp:standard-generic-function)
   ()
