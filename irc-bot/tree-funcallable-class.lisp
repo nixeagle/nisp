@@ -89,13 +89,6 @@ A valid tree-symbol is defined as anything that does not contain a space."
 
 (defvar *network-tree-nodes* (make-instance 'tree-generic-direct-nodes))
 
-(defgeneric preprocess-arglist (generic-function args)
-  (:documentation
-   "Modify ARGS to make them suiable for computing applicable methods."))
-(defmethod preprocess-arglist ((generic-function tree-generic-function) args)
-  ;; Always return root node, never all the way down to the end of ARGS.
-  (cons (gethash (caar args) (tree-generic-direct-nodes *network-tree-nodes*)) (cdr args)))
-
 (defun %intern-tree-specializer (node symbols)
   (declare (type tree-generic-direct-nodes node)
            (type list symbols)
