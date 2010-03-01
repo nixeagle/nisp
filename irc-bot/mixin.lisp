@@ -23,8 +23,11 @@ methods specialized on this object is a complient interface."))
 (defclass abstract-to () ()
   (:documentation "Generic information about a recipient/target/channel"))
 
-(defclass abstract-message () ()
+(defclass abstract-message-content () ()
   (:documentation "Message contents/information"))
 
+;;; possibly include abstract-message as a composed class or somehow
+;;; holding all these parts in one interface, which is why we rename
+;;; abstract-message to abstract-message-content.
 
 ;;; END
