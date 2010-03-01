@@ -23,7 +23,7 @@ Second return value is what is left after removing the segment."
   (gethash (ensure-tree-symbol arg) (tree-generic-direct-nodes tree)))
 (defmethod tree-generic-direct-node ((tree tree-generic-direct-nodes)
                                      (arg symbol))
-  (declare (type keyword symbol))
+  (declare (type keyword arg))
   (gethash arg (tree-generic-direct-nodes tree)))
 
 ;;; This is SLOOOOOW, we want to use common-lisp:standard-generic-function
