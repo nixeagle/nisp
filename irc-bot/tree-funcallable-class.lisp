@@ -27,10 +27,14 @@ Second return value is what is left after removing the segment."
   (declare (type keyword symbol))
   (gethash arg (tree-generic-direct-nodes tree)))
 
-(defclass tree-generic-function (common-lisp:standard-generic-function)
+;;; This is SLOOOOOW, we want to use common-lisp:standard-generic-function
+;;; for something like a 10,000 times improvement in speed... which I
+;;; don't even know why we are this slow
+(defclass tree-generic-function (standard-generic-function)
   ()
   (:metaclass funcallable-standard-class)
   (:default-initargs :method-class (find-class 'tree-method)))
+
 
 
 (defclass tree-method (standard-method)
@@ -188,9 +192,9 @@ is translated into a list of symbols."
 
   (defmethod make-method-lambda
       ((generic-function tree-generic-function) method expression environment)
-    (declare  (optimize (speed 3) (space 0) (compilation-speed 0)))
+  #+ ()  (declare  (optimize (speed 3) (space 0) (compilation-speed 0)))
     (let ((result (call-next-method)))
-      `(lambda (args next-methods)
+      `(lambda (args next-methods &rest more)
          (labels ((remaining-parameters ()
                     (declare (special *network-tree-remaining*)
                              (optimize (speed 3) (debug 0) (safety 0)))
@@ -203,7 +207,7 @@ is translated into a list of symbols."
                              (cdr args)))))
            (declare (ignorable  (function next-node)
                                 (function remaining-parameters)))
-           (,result args next-methods))))))
+           (apply ,result args next-methods more))))))
 
 #+ ()
 (defmethod make-load-form ((self network-tree-node) &optional env)
