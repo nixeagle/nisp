@@ -27,12 +27,4 @@ methods specialized on this object is a complient interface."))
   (:documentation "Message contents/information"))
 
 
-
-;;; OBSOLETE - replaced by from-mixin and to-mixin
-(defclass sender-mixin (abstract-from) ())
-(defclass target-mixin (abstract-to) ())
-
-
-
-
 ;;; END
