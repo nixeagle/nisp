@@ -142,19 +142,17 @@ is translated into a list of symbols."
                     environment))
 
 ;;; `compute-discriminating-function' does this for us now...
-#+ ()
-(defmethod compute-applicable-methods-using-classes :around
+
+(defmethod compute-applicable-methods-using-classes
     ((generic-function tree-generic-function) classes)
   "No cache permitted right now."
-  (call-next-method generic-function (cons (caar classes)
-                                           (cdr classes))))
+  (call-next-method))
 
 ;;; `compute-discriminating-function' does this for us now...
-#+ ()
+
 (defmethod compute-applicable-methods
     ((generic-function tree-generic-function) args)
-  (call-next-method generic-function (cons (caar args)
-                                           (cdr args))))
+  (call-next-method))
 
 ;;; `compute-discriminating-function' does this for us now...
 #+ ()
@@ -162,7 +160,7 @@ is translated into a list of symbols."
     ((generic-function tree-generic-function) args)
   (call-next-method generic-function args))
 
-#+ ()
+
 (defmethod compute-effective-method
     ((generic-function tree-generic-function)
      method-combination applicable-methods)
