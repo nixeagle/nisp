@@ -1,7 +1,7 @@
 ;;; General mixins
 (in-package :nisp.i)
 
-(defclass identity-mixin () ()
+(defclass abstract-identity () ()
   (:documentation "Direct mapping to person's identity.
 
 This is different then any handle/nick/username/email. A person's
@@ -9,7 +9,7 @@ identity should be the same across whatever protocols we operate
 over."))
 
 
-(defclass connection-mixin () ()
+(defclass abstract-connection () ()
   (:documentation "Protocol agnostic interface specification.
 
 In principle any connection class derived from usocket that implements all
@@ -17,20 +17,20 @@ methods specialized on this object is a complient interface."))
 
 ;;; Next 3 not well specified atm, will be working on this
 ;;; soon. 01-03-2010
-(defclass from-mixin () ()
+(defclass abstract-from () ()
   (:documentation "Generic information about a sender."))
 
-(defclass to-mixin () ()
+(defclass abstract-to () ()
   (:documentation "Generic information about a recipient/target/channel"))
 
-(defclass message-mixin () ()
+(defclass abstract-message () ()
   (:documentation "Message contents/information"))
 
 
 
 ;;; OBSOLETE - replaced by from-mixin and to-mixin
-(defclass sender-mixin (from-mixin) ())
-(defclass target-mixin (to-mixin) ())
+(defclass sender-mixin (abstract-from) ())
+(defclass target-mixin (abstract-to) ())
 
 
 
