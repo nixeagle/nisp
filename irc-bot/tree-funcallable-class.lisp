@@ -5,8 +5,7 @@
 
 Second return value is what is left after removing the segment."
   (declare (type string command-string)
-           (type character seperater)
-           (optimize (speed 3) (debug 2) (safety 2)))
+           (type character seperater))
   (let ((space-index (position seperater command-string)))
     (declare (type (or null non-negative-fixnum) space-index))
     (if space-index
@@ -100,6 +99,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defun %intern-tree-specializer (node symbols)
   (declare (type tree-generic-direct-nodes node)
            (type list symbols)
+           ;; We need tail recursion
            (optimize (speed 3) (safety 0) (debug 1)))
   (the network-tree-node
     (if symbols
@@ -176,17 +176,13 @@ is translated into a list of symbols."
   (declare (special *network-tree-remaining*))
   (defmethod compute-discriminating-function
       ((generic-function tree-generic-function))
-    (declare  (optimize (speed 3) (space 0) (compilation-speed 0)
-                        (safety 0)))
     (let ((it (call-next-method)))
       (declare (type function it))
       (lambda (&rest args)
         (declare (dynamic-extent args))
         (multiple-value-bind (command *network-tree-remaining*)
             (first-command-word (car args))
-          (declare (special *network-tree-remaining*)
-                   (optimize (speed 3) (space 0) (compilation-speed 0)
-                             (safety 0)))
+          (declare (special *network-tree-remaining*))
           (setf (car args) (the network-tree-node
                              (tree-generic-direct-node *network-tree-nodes* command)))
           (apply it args)))))
@@ -194,15 +190,12 @@ is translated into a list of symbols."
 
   (defmethod make-method-lambda
       ((generic-function tree-generic-function) method expression environment)
-  #+ ()  (declare  (optimize (speed 3) (space 0) (compilation-speed 0)))
     (let ((result (call-next-method)))
       `(lambda (args next-methods &rest more)
          (labels ((remaining-parameters ()
-                    (declare (special *network-tree-remaining*)
-                             (optimize (speed 3) (debug 0) (safety 0)))
+                    (declare (special *network-tree-remaining*))
                     (the string *network-tree-remaining*))
                   (next-node ()
-                    (declare (optimize (speed 3) (debug 0) (safety 0)))
                     (let ((*network-tree-nodes* (car args)))
                       (apply #',(generic-function-name generic-function)
                              (remaining-parameters)
