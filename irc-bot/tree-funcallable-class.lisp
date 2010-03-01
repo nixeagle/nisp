@@ -44,6 +44,10 @@ Second return value is what is left after removing the segment."
   ((object :initarg :object
            :reader network-tree-node-object)))
 
+(defmethod print-object ((obj network-tree-node) stream)
+   (print-unreadable-object (obj stream :type t :identity t)
+     (princ (network-tree-node-object obj) stream)))
+
 
 ;;;}}}
 
