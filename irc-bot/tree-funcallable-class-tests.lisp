@@ -13,17 +13,30 @@
   #+ () (list (current-node)))
 (progn
   (defmethod test-tree-generic-function ((tree (eql "hi2")) arg1)
-    (list tree (next-node)))
+    (print "hi2")
+    (list tree (and (> arg1 0) (next-node))))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there")) arg1)
-    (list tree (next-node)))
+    (print "hi2 there")
+    (list tree (and (> arg1 1) "END")))
+  (defmethod test-tree-generic-function ((tree (eql "hi2 there")) (arg1 (eql 10)))
+    (print "hi2 there eql 10")
+    (list tree "ARG1 was = to 10" (call-next-method tree 9)))
+  (defmethod test-tree-generic-function :around ((tree (eql "hi2 there"))
+                                                 arg1)
+    (print "hi2 there around eql 10")
+    (list tree "around!" (call-next-method)))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there hi")) arg1)
-    (list tree (next-node)))
+    (print "hi2 there hi")
+    (list tree (and (> arg1 2) (next-node))))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there hi how")) arg1)
-    (list tree (next-node)))
+    (list tree (and (> arg1 3) (next-node))))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there hi how are")) arg1)
-    (list tree (next-node)))
+    (list tree (and (> arg1 4) (next-node))))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there hi how are you")) arg1)
+    (list tree (and (> arg1 5) (next-node))))
+  (defmethod test-tree-generic-function ((tree (eql "hi2 there hi how are you doing")) arg1)
     (list tree arg1 (remaining-parameters)))
+
 
   (defmethod test-tree-generic-function :before ((tree (eql "hi there hi")) arg1)
     1))
@@ -71,4 +84,8 @@ a single tree symbol out of what boils down to one symbol"
           (intern-network-tree-node '("hi")))
       "The result from interning should always be the same object"))
 
+(test (test-tree-generic-function/complex-method-combination
+       :suite tree-funcallable
+       :depends-on intern-network-tree-node)
+  (finishes (test-tree-generic-function "hi2 there" 10)))
 ;;; END
