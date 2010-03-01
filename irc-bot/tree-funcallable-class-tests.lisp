@@ -52,10 +52,10 @@
 We assume input is a string."
   (is (eq t (tree-symbol-string-p "hi")))
   (is (eq nil (tree-symbol-string-p "hi there")))
-  (is (eq t (tree-symbol-string-p " hi "))
-      "Leading or trailing spaces are ok if there is only one \"word\"
-      given as we should be able to parse out that and convert it to a
-      symbol."))
+  (is (null (tree-symbol-string-p " hi "))
+      "Leading or trailing spaces are _not_ ok if there is only one
+      \"word\" given as we should be able to parse out that and convert it
+      to a symbol."))
 
 (test (ensure-tree-symbol :suite tree-funcallable)
   (with-fbound (ensure-tree-symbol)
