@@ -23,15 +23,20 @@
     (terpri (socket-stream *bot-socket*))
     (force-output (socket-stream *bot-socket*))))
 
-;;; Sequence we have to do to connect to a server and say something to
-;;; someone, in this case we notice sonicrules1234
+;;; Minimal sequence to write a bot that joins and quits immediately
+;;; closing the socket while doing so.
+;;;
+;;; To run this and other code snippets, remove the #+ () line in front
+;;; and hit C-c C-c in emacs.
 #+ ()
 (progn
-  (connect! "trogdor.57o9.net")
+  (connect! "silicon.eighthbit.net")
   (send-irc-message "NICK" "lispbot")
   (send-irc-message "USER" "lisp" "0" "*" "hi from nixeagle!")
-  (send-irc-message "NOTICE" "sonicrules1234"
-                    "sonicrules1234 just in case the notice does not ping you!"))
+  (send-irc-message "JOIN" "#offtopic")
+  (send-irc-message "PRIVMSG" "#offtopic" "Hi from nixeagle's simple lisp bot!")
+  (send-irc-message "QUIT" "bye now!")
+  (socket-close *bot-socket*))
 
 ;;; listen to the socket, don't hang if there is nothing to hear, but if
 ;;; there is, print it to #sonicircd
