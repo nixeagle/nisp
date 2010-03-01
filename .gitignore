@@ -8,3 +8,5 @@
 /lift-tests
 /test-results
 /irc-bot/config.lisp
+/private.lisp
+/primes.dat
