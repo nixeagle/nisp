@@ -1,0 +1,6 @@
+#+TITLE: 'i' experiments
+
+* Tasks
+*** TODO Rewrite command routing system to new MOP hackery
+    Move [[file:bot.lisp]] command routing system to new MOP hackery to
+    emulate a network using generic functions.
