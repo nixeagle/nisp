@@ -44,7 +44,15 @@
       Superclasses medium and indicates what [[protocol]]/[[provider]] is the data
       going to go to.
 
-*** TODO to
+*** DONE to
+    CLOSED: [2010-03-02 Tue 02:44]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2010-03-02 Tue 02:44]
+    :END:
+    Person or thing that an [[action]] is targeted at. This may or may not
+    have an associated [[identity]]. The default thing an action is targeted
+    at is always the "nisp.i" system.
+
 *** TODO from
 
 *** TODO identity
