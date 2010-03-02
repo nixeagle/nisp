@@ -61,8 +61,15 @@
     Originator of the [[action]]. This is independent of the protocol. An
     originator may or may not have an associated [[identity]].
 
+*** DONE identity
+    CLOSED: [2010-03-02 Tue 02:44]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2010-03-02 Tue 02:44]
+    :END:
+    This is the object we want to associate permissions classes with so
+    the permission is applicable for the _person_ not just an account
+    somewhere.
 
-*** TODO identity
 *** TODO message-content
     A message itself and what operations are sane to do message contents.
 
