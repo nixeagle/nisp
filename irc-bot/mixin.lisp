@@ -23,6 +23,13 @@ methods specialized on this object is a complient interface."))
 (defclass abstract-to () ()
   (:documentation "Generic information about a recipient/target/channel"))
 
+(defclass abstract-service () ()
+  (:documentation "Particular domain/service.
+
+This is not restricted to just one domain, but covers classes of services
+from different providers depending on how classes that superclass this one
+are structured."))
+
 (defclass abstract-medium () ()
   (:documentation "Protocol/service information."))
 
