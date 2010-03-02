@@ -1,5 +1,18 @@
 #+TITLE: 'i' experiments
 
+
+* Definitions :definition:
+*** TODO medium
+***** TODO data-source
+***** TODO data-sink
+*** TODO to
+*** TODO from
+*** TODO connection
+*** TODO identity
+*** TODO message-content
+*** TODO action
+
+
 * Tasks
 *** TODO Rewrite command routing system to new MOP hackery
     Move [[file:bot.lisp]] command routing system to new MOP hackery to
