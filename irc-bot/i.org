@@ -2,6 +2,12 @@
 
 
 * Definitions :definition:
+*** TODO connection
+    Might not make any sense once we get into data-sources and
+    data-sinks. A connection might be an active instance of a sink or a
+    source (or possibly both?). This will not have the same meaning as I
+    originally conceived.
+
 *** TODO protocol
     Data encoding
 
@@ -40,7 +46,7 @@
 
 *** TODO to
 *** TODO from
-*** TODO connection
+
 *** TODO identity
 *** TODO message-content
 *** TODO action
