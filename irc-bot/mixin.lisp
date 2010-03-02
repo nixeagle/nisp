@@ -30,7 +30,7 @@ This covers the spectrum from json, http, jabber, irc, and whatever else
 you can think of. If you can encode data with it, this protocol interface
 specification can cover it. This assumes proper CLOS superclassing."))
 
-(defclass abstract-service () ()
+(defclass abstract-provider () ()
   (:documentation "Particular domain/service.
 
 This is not restricted to just one domain, but covers classes of services
