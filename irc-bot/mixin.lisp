@@ -23,6 +23,7 @@ methods specialized on this object is a complient interface."))
 (defclass abstract-to () ()
   (:documentation "Generic information about a recipient/target/channel"))
 
+;;;{{{ Protocol, provider, medium, source, sink
 (defclass abstract-protocol () ()
   (:documentation "Transfer encodings.
 
@@ -53,6 +54,7 @@ This is different from `abstract-to' in that here we care about where a
   message is routed to, as opposed to who or what is to eventually receive
   the message. The term 'sink' means what medium a message will be
   convoyed over to reach its destination as specified by `abstract-to'."))
+;;;}}}
 
 (defclass abstract-action () ()
   (:documentation "Generic information about intended actions.
