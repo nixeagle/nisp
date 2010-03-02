@@ -23,6 +23,13 @@ methods specialized on this object is a complient interface."))
 (defclass abstract-to () ()
   (:documentation "Generic information about a recipient/target/channel"))
 
+(defclass abstract-protocol () ()
+  (:documentation "Transfer encodings.
+
+This covers the spectrum from json, http, jabber, irc, and whatever else
+you can think of. If you can encode data with it, this protocol interface
+specification can cover it. This assumes proper CLOS superclassing."))
+
 (defclass abstract-service () ()
   (:documentation "Particular domain/service.
 
