@@ -44,9 +44,27 @@
 *** TODO identity
 *** TODO message-content
 *** TODO action
+    Actions are things people do within a protocol. We do not usually
+    think of doing an action to a service[fn:1]. This is right now easier
+    to define by example:
+
+    1) We can PRIVMSG people from irc -> irc
+    2) We can MSG people from jabber -> irc with the translation being
+       that of the jabber message command being translated to PRIVMSG.
+    3) You can MSG from irc -> twitter's protocol where the translation is
+       from IRC's PRIVMSG -> a "tweet".
 
 
 * Tasks
 *** TODO Rewrite command routing system to new MOP hackery
     Move [[file:bot.lisp]] command routing system to new MOP hackery to
     emulate a network using generic functions.
+
+
+* Footnotes
+
+[fn:1] Not that actions based on services cannot be defined, its possible
+for action types to combine with same [[protocol]] in both the source/sink
+ends but differentiate based on which services are in the
+combination. There really is nothing you cannot do with this type, but
+this type generally has the most meaning within the context of a protocol.
