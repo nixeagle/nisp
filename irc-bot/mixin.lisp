@@ -37,7 +37,7 @@ This is not restricted to just one domain, but covers classes of services
 from different providers depending on how classes that superclass this one
 are structured."))
 
-(defclass abstract-medium () ()
+(defclass abstract-medium (abstract-protocol abstract-provider) ()
   (:documentation "Protocol/service information."))
 
 (defclass abstract-data-source (abstract-medium) ()
