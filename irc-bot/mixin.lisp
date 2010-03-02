@@ -26,13 +26,13 @@ methods specialized on this object is a complient interface."))
 (defclass abstract-medium () ()
   (:documentation "Protocol/service information."))
 
-(defclass abstract-data-source () ()
+(defclass abstract-data-source (abstract-medium) ()
   (:documentation "Generic information on the _source_ of a message.
 
 This is different from `abstract-from' in that here we care about how we
 got the message, not who or what sent it."))
 
-(defclass abstract-data-sink () ()
+(defclass abstract-data-sink (abstract-medium) ()
   (:documentation "Generic information about destination protocol/service.
 
 This is different from `abstract-to' in that here we care about where a
