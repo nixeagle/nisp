@@ -504,7 +504,9 @@ methods that support this."))
 
 (defgeneric connectedp (connection-object)
   (:documentation "Is CONNECTION-OBJECT currently connected?"))
-
+(defmethod connectedp ((irc irc:connection))
+  (and (slot-boundp irc 'irc:output-stream)
+       (open-stream-p (irc:output-stream irc))))
 
 ;;;{{{ Initialize bots hacks <irc only right now>
 (defvar *sonic*)
