@@ -23,6 +23,9 @@ methods specialized on this object is a complient interface."))
 (defclass abstract-to () ()
   (:documentation "Generic information about a recipient/target/channel"))
 
+(defclass abstract-medium () ()
+  (:documentation "Protocol/service information."))
+
 (defclass abstract-data-source () ()
   (:documentation "Generic information on the _source_ of a message.
 
