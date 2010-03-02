@@ -37,6 +37,13 @@ This is different from `abstract-to' in that here we care about where a
   the message. The term 'sink' means what medium a message will be
   convoyed over to reach its destination as specified by `abstract-to'."))
 
+(defclass abstract-action () ()
+  (:documentation "Generic information about intended actions.
+
+This will vary widely depending on source/sink combinations, but we need
+this for generic function/default method definitions as well as interface
+specification."))
+
 (defclass abstract-message-content () ()
   (:documentation "Message contents/information"))
 
