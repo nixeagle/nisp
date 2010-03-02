@@ -158,8 +158,8 @@ methods that support this."))
   ()
   (:default-initargs :username "lisp" :nickname "nisp"
                      :realname "Nixeagle's lisp experiments bot."
-                     :server-port 9990
-                     :server-name "127.0.0.1"
+                     :server-port 6667
+                     :server-name "flare183.net"
                      :comchar ",")
   (:documentation "Bot connection for flare183's server."))
 
