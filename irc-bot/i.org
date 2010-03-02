@@ -2,9 +2,42 @@
 
 
 * Definitions :definition:
-*** TODO medium
-***** TODO data-source
-***** TODO data-sink
+*** TODO protocol
+    Data encoding
+
+*** DONE provider
+    CLOSED: [2010-03-02 Tue 01:23]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2010-03-02 Tue 01:23]
+    :END:
+    What organization, company, website, domain are we dealing with. There
+    is only one json [[protocol]], but multiple people/services/websites use
+    it.
+
+*** DONE medium
+    CLOSED: [2010-03-02 Tue 01:24]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2010-03-02 Tue 01:24]
+    :END:
+    Combination of both protocol and service. Order here matters! The
+    protocol in use always takes priority over the service in use!
+
+***** DONE data-source
+      CLOSED: [2010-03-02 Tue 01:23]
+      :LOGBOOK:
+      - State "DONE"       from "TODO"       [2010-03-02 Tue 01:23]
+      :END:
+      Superclasses medium and indicates what [[protocol]]/[[provider]] is the data
+      coming from.
+
+***** DONE data-sink
+      CLOSED: [2010-03-02 Tue 01:24]
+      :LOGBOOK:
+      - State "DONE"       from "TODO"       [2010-03-02 Tue 01:24]
+      :END:
+      Superclasses medium and indicates what [[protocol]]/[[provider]] is the data
+      going to go to.
+
 *** TODO to
 *** TODO from
 *** TODO connection
