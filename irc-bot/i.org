@@ -49,7 +49,16 @@
 
 *** TODO identity
 *** TODO message-content
-*** TODO action
+    A message itself and what operations are sane to do message contents.
+
+    1) text
+    2) binary
+    3) other?
+*** DONE action
+    CLOSED: [2010-03-02 Tue 01:38]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2010-03-02 Tue 01:38]
+    :END:
     Actions are things people do within a protocol. We do not usually
     think of doing an action to a service[fn:1]. This is right now easier
     to define by example:
