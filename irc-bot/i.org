@@ -43,23 +43,28 @@
       :END:
       Superclasses medium and indicates what [[protocol]]/[[provider]] is the data
       going to go to.
-
-*** DONE to
-    CLOSED: [2010-03-02 Tue 02:44]
+*** DONE party
+    CLOSED: [2010-03-02 Tue 03:31]
     :LOGBOOK:
-    - State "DONE"       from "TODO"       [2010-03-02 Tue 02:44]
+    - State "DONE"       from "TODO"       [2010-03-02 Tue 03:31]
     :END:
-    Person or thing that an [[action]] is targeted at. This may or may not
-    have an associated [[identity]]. The default thing an action is targeted
-    at is always the "nisp.i" system.
+    Person or thing involved in communication
+***** DONE to
+      CLOSED: [2010-03-02 Tue 02:44]
+      :LOGBOOK:
+      - State "DONE"       from "TODO"       [2010-03-02 Tue 02:44]
+      :END:
+      Person or thing that an [[action]] is targeted at. This may or may not
+      have an associated [[identity]]. The default thing an action is targeted
+      at is always the "nisp.i" system.
 
-*** DONE from
-    CLOSED: [2010-03-02 Tue 02:44]
-    :LOGBOOK:
-    - State "DONE"       from "TODO"       [2010-03-02 Tue 02:44]
-    :END:
-    Originator of the [[action]]. This is independent of the protocol. An
-    originator may or may not have an associated [[identity]].
+***** DONE from
+      CLOSED: [2010-03-02 Tue 02:44]
+      :LOGBOOK:
+      - State "DONE"       from "TODO"       [2010-03-02 Tue 02:44]
+      :END:
+      Originator of the [[action]]. This is independent of the protocol. An
+      originator may or may not have an associated [[identity]].
 
 *** DONE identity
     CLOSED: [2010-03-02 Tue 02:44]
@@ -69,6 +74,9 @@
     This is the object we want to associate permissions classes with so
     the permission is applicable for the _person_ not just an account
     somewhere.
+
+***** QUESTION Is this a party?
+      Ref: [[party]]
 
 *** TODO message-content
     A message itself and what operations are sane to do message contents.

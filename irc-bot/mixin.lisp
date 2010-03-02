@@ -15,12 +15,15 @@ over."))
 In principle any connection class derived from usocket that implements all
 methods specialized on this object is a complient interface."))
 
-;;; Next 5 not well specified atm, will be working on this
+;;; Not well specified atm, will be working on this
 ;;; soon. 01-03-2010
-(defclass abstract-from () ()
+(defclass abstract-party () ()
+  (:documentation "Participant in an exchange."))
+
+(defclass abstract-from (abstract-party) ()
   (:documentation "Generic information about a sender."))
 
-(defclass abstract-to () ()
+(defclass abstract-to (abstract-party) ()
   (:documentation "Generic information about a recipient/target/channel"))
 
 ;;;{{{ Protocol, provider, medium, source, sink
