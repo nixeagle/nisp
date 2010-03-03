@@ -531,6 +531,11 @@ methods that support this."))
 (defparameter %bot-list% '(*sonic* *slack* *bot* *flare* *devel-bot* @lo@)
   "Hackish list of bots.")
 
-
-
 ;;;}}}
+
+
+;;; past hacks now into attempting to create a generic routing protocol
+
+(defun unbind-symbols (&rest symbols)
+  (mapcar (conjoin #'symbolp #'boundp #'makunbound) symbols)
+  (mapcar (conjoin #'symbolp #'fboundp #'fmakunbound) symbols))
