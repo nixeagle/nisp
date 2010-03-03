@@ -94,7 +94,7 @@
   "Global list of bot instances.")
 (defclass target () ())
 
-(defclass bot-user (irc:user target) ()
+(defclass bot-user (irc:user target abstract-user) ()
   (:documentation "This does not bother with normalization.
 
 All things made by `make-anon-bot-user-class' superclass this."))
