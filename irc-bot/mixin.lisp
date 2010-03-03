@@ -27,6 +27,13 @@ This is something to address someone by."))
   (error "Must be implemented by child classes"))
 
 (defclass abstract-user (abstract-name) ())
+
+(defclass abstract-address () ())
+(defgeneric address (object)
+  (:documentation "Must return a place or location."))
+(defmethod address ((object abstract-address))
+  (error "Must be implemented by child classes"))
+
   (:documentation "Participant in an exchange."))
 
 (defclass abstract-from (abstract-party) ()
