@@ -454,7 +454,16 @@ methods that support this."))
                    (closer-mop:intern-eql-specializer
                     (find-symbol (string-upcase specializer) package))))))
 
-
+(defmethod initialize-instance :after ((instance irc-message-content)
+                                       &rest initargs &key bot-connection)
+  (declare (ignore initargs)
+           (type bot-connection bot-connection))
+  (setf (slot-value instance 'message)
+        (or (remove-comchar (comchar bot-connection)
+                            (slot-value instance 'full-message))
+            (slot-value instance 'full-message)))
+  (setf (slot-value instance 'remaining-message)
+        (slot-value instance 'message)))
 ;;;{{{ Define commands
 
 ;;;{{{ Github commands
