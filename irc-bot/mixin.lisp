@@ -90,7 +90,9 @@ specification."))
 
 (defclass abstract-message-content () ()
   (:documentation "Message contents/information"))
-
+(defgeneric full-message (object))
+(defgeneric message (object))
+(defgeneric remaining-message (object))
 ;;; possibly include abstract-message as a composed class or somehow
 ;;; holding all these parts in one interface, which is why we rename
 ;;; abstract-message to abstract-message-content.
