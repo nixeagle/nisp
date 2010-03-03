@@ -101,6 +101,10 @@ All things made by `make-anon-bot-user-class' superclass this."))
 
 (defclass bot-channel (irc:channel target abstract-address) ())
 
+(defclass irc-user (abstract-target)
+  ((user :initarg :user :type bot-user :reader name)
+   (address :initarg :address :type bot-channel :reader address)))
+
 ;;;{{{ connection classes
 (defclass bot-connection (connection comchar
                                      abstract-data-source
