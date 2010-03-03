@@ -379,7 +379,7 @@ methods that support this."))
   (declare (type valid-comchar-string comchar))
   (remove-comchar (character comchar) message))
 
-(defmethod remove-comchar ((comchar comchar) (message string))
+(defmethod remove-comchar ((comchar comchar) message)
   "Remove leading COMCHAR from MESSAGE."
   (remove-comchar (comchar comchar) message))
 
