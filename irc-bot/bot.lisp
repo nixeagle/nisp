@@ -99,7 +99,7 @@
 
 All things made by `make-anon-bot-user-class' superclass this."))
 
-(defclass bot-channel (irc:channel target) ())
+(defclass bot-channel (irc:channel target abstract-address) ())
 
 ;;;{{{ connection classes
 (defclass bot-connection (connection comchar
