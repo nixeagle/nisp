@@ -17,7 +17,8 @@ methods specialized on this object is a complient interface."))
 
 ;;; Not well specified atm, will be working on this
 ;;; soon. 01-03-2010
-(defclass abstract-party () ()
+
+;;;{{{ party, from, to
 (defclass abstract-name () ())
 (defgeneric name (object)
   (:documentation "Must return a 'person/thing name'.
@@ -34,6 +35,7 @@ This is something to address someone by."))
 (defmethod address ((object abstract-address))
   (error "Must be implemented by child classes"))
 
+(defclass abstract-party (abstract-user abstract-address) ()
   (:documentation "Participant in an exchange."))
 
 (defclass abstract-from (abstract-party) ()
@@ -41,6 +43,8 @@ This is something to address someone by."))
 
 (defclass abstract-to (abstract-party) ()
   (:documentation "Generic information about a recipient/target/channel"))
+
+;;;}}}
 
 ;;;{{{ Protocol, provider, medium, source, sink
 (defclass abstract-protocol () ()
