@@ -105,6 +105,13 @@ All things made by `make-anon-bot-user-class' superclass this."))
   ((user :initarg :user :type bot-user :reader name)
    (address :initarg :address :type bot-channel :reader address)))
 
+(defclass irc-message-content (abstract-message-content)
+  ((full-message :initarg :message :reader full-message :type string)
+   (message :reader message :type string)
+   (remaining-message :reader remaining-message :type string)))
+(defmethod commandp ((object irc-message-content))
+  (not (string= (full-message object) (message object))))
+
 ;;;{{{ connection classes
 (defclass bot-connection (connection comchar
                                      abstract-data-source
