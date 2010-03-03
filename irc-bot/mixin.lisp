@@ -44,6 +44,8 @@ This is something to address someone by."))
 (defclass abstract-to (abstract-party) ()
   (:documentation "Generic information about a recipient/target/channel"))
 
+(defclass abstract-target (abstract-from abstract-to) ())
+
 ;;;}}}
 
 ;;;{{{ Protocol, provider, medium, source, sink
