@@ -389,6 +389,12 @@ methods that support this."))
       channel-object
       (change-class channel-object 'bot-channel)))
 
+(defun ensure-irc-bot-user (user-object)
+  (declare (type irc:user))
+  (if (typep user-object 'bot-user)
+      user-object
+      (change-class user-object 'bot-user)))
+
 (defgeneric handle-command (connection sender to cmd))
 
 (defmethod handle-command ((irc connection) sender (to string) cmd)
@@ -405,7 +411,7 @@ methods that support this."))
   (handle-command irc
                   (ensure-user-host (irc:find-user irc (irc:source sender))
                                     (irc:host sender))
-                  (if (typep to 'bot-user) to (change-class to 'bot-user))
+                  (ensure-irc-bot-user to)
                   cmd))
 
 (defmethod handle-command ((irc bot-connection) (sender irc:user)
