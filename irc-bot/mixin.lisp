@@ -25,6 +25,8 @@ methods specialized on this object is a complient interface."))
 This is something to address someone by."))
 (defmethod name ((object abstract-name))
   (error "Must be implemented by child classes"))
+
+(defclass abstract-user (abstract-name) ())
   (:documentation "Participant in an exchange."))
 
 (defclass abstract-from (abstract-party) ()
