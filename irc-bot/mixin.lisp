@@ -18,6 +18,13 @@ methods specialized on this object is a complient interface."))
 ;;; Not well specified atm, will be working on this
 ;;; soon. 01-03-2010
 (defclass abstract-party () ()
+(defclass abstract-name () ())
+(defgeneric name (object)
+  (:documentation "Must return a 'person/thing name'.
+
+This is something to address someone by."))
+(defmethod name ((object abstract-name))
+  (error "Must be implemented by child classes"))
   (:documentation "Participant in an exchange."))
 
 (defclass abstract-from (abstract-party) ()
