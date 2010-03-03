@@ -1,7 +1,7 @@
 ;;; Tests for tree-funcallable-class
 (in-package :nisp.i)
 (defgeneric test-tree-generic-function (tree arg1)
-  (:generic-function-class tree-generic-function))
+  (:generic-function-class network-tree-generic-function))
 
 ;;; Won't compile for a while because the first arg is not a network-tree.
 #+ ()

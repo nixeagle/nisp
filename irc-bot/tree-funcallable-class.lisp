@@ -29,7 +29,7 @@ Second return value is what is left after removing the segment."
 ;;; This is SLOOOOOW, we want to use common-lisp:standard-generic-function
 ;;; for something like a 10,000 times improvement in speed... which I
 ;;; don't even know why we are this slow
-(defclass tree-generic-function (standard-generic-function)
+(defclass network-tree-generic-function (standard-generic-function)
   ()
   (:metaclass funcallable-standard-class)
   (:default-initargs :method-class (find-class 'tree-method)))
@@ -136,7 +136,7 @@ is translated into a list of symbols."
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
 ;;; boot.lisp `real-make-method-specializers-form'.
 (defmethod sb-pcl:make-method-specializers-form
-    ((generic-function tree-generic-function)
+    ((generic-function network-tree-generic-function)
      method specializer-names environment)
   ;; We always assume a specializer exists in the first element of
   ;; SPECIALIZER-NAMES. We certainly can do better, but this works.
@@ -148,25 +148,25 @@ is translated into a list of symbols."
 ;;; `compute-discriminating-function' does this for us now...
 
 (defmethod compute-applicable-methods-using-classes
-    ((generic-function tree-generic-function) classes)
+    ((generic-function network-tree-generic-function) classes)
   "No cache permitted right now."
   (call-next-method))
 
 ;;; `compute-discriminating-function' does this for us now...
 
 (defmethod compute-applicable-methods
-    ((generic-function tree-generic-function) args)
+    ((generic-function network-tree-generic-function) args)
   (call-next-method))
 
 ;;; `compute-discriminating-function' does this for us now...
 #+ ()
 (defmethod compute-applicable-methods
-    ((generic-function tree-generic-function) args)
+    ((generic-function network-tree-generic-function) args)
   (call-next-method generic-function args))
 
 
 (defmethod compute-effective-method
-    ((generic-function tree-generic-function)
+    ((generic-function network-tree-generic-function)
      method-combination applicable-methods)
   ;; Nothing special yet
   (call-next-method))
@@ -175,7 +175,7 @@ is translated into a list of symbols."
 (let ((*network-tree-remaining* nil))
   (declare (special *network-tree-remaining*))
   (defmethod compute-discriminating-function
-      ((generic-function tree-generic-function))
+      ((generic-function network-tree-generic-function))
     (let ((it (call-next-method)))
       (declare (type function it))
       (lambda (&rest args)
@@ -189,7 +189,7 @@ is translated into a list of symbols."
 
 
   (defmethod make-method-lambda
-      ((generic-function tree-generic-function) method expression environment)
+      ((generic-function network-tree-generic-function) method expression environment)
     (let ((result (call-next-method)))
       `(lambda (args next-methods &rest more)
          (labels ((remaining-parameters ()
