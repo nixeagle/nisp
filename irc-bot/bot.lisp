@@ -383,6 +383,12 @@ methods that support this."))
   "Remove leading COMCHAR from MESSAGE."
   (remove-comchar (comchar comchar) message))
 
+(defun ensure-irc-bot-channel (channel-object)
+  (declare (type irc:channel))
+  (if (typep channel-object 'bot-channel)
+      channel-object
+      (change-class channel-object 'bot-channel)))
+
 (defgeneric handle-command (connection sender to cmd))
 
 (defmethod handle-command ((irc connection) sender (to string) cmd)
@@ -393,7 +399,7 @@ methods that support this."))
   (handle-command irc
                   (ensure-user-host (irc:find-user irc (irc:source sender))
                                     (irc:host sender))
-                  (change-class to 'bot-channel) cmd))
+                  (ensure-irc-bot-channel to) cmd))
 
 (defmethod handle-command ((irc connection) sender (to irc:user) cmd)
   (handle-command irc
