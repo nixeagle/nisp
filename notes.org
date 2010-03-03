@@ -71,3 +71,35 @@ Some quick notes
 
 *** xpath
     darcs get http://common-lisp.net/project/plexippus-xpath/darcs/plexippus-xpath/
+
+* New dep list [2010-03-02 Tue]
+  - cl-json
+  - closer-mop
+  - iterate
+  - flexi-streams
+  - trivial-gray-streams
+  - usocket
+  - split-sequence
+  - alexandria
+  - cl-ppcre
+  - cl-unicode
+  - drakma
+  - cl-ssl
+  - cffi
+  - babel
+  - trivial-features
+  - rt
+  - stefil
+  - metabang-bind
+  - lift
+  - chunga
+  - cl-base64
+  - puri
+  - bordeaux-threads
+  - HUNCHENTOOT
+  - trivial-backtrace
+  - rfc2388
+  - md5
+  - cl-fad
+  - trivial-shell
+  - trivial-timeout
