@@ -575,3 +575,5 @@ methods that support this."))
 (defclass handle-nisp-command-method (tree-method)
   ())
 
+
+(defgeneric send (action to sink content))
