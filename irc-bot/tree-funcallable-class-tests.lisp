@@ -46,6 +46,13 @@
 (define-new-suite 'root :in :nisp-eos-root)
 (def-suite tree-funcallable :in root)
 
+(test (first-command-word :suite tree-funcallable)
+  (is (string= "Hi" (first-command-word "Hi how are you?")))
+  (is (string= "Hi h" (first-command-word "Hi how are you?" #\o))
+      "Should be splitting on #\o.")
+  (is (string= "" (first-command-word ""))
+      "Empty string when no more words left."))
+
 (test (tree-symbol-string-p :suite tree-funcallable)
   "Predicate returns false if a string has a space in it.
 
