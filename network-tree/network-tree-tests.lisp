@@ -90,13 +90,13 @@
   (is (string= "" (first-command-word ""))
       "Empty string when no more words left."))
 
-(test (tree-symbol-string-p :suite root)
+(test (network-node-string-p :suite root)
   "Predicate returns false if a string has a space in it.
 
 We assume input is a string."
-  (is (eq t (tree-symbol-string-p "hi")))
-  (is (eq nil (tree-symbol-string-p "hi there")))
-  (is (null (tree-symbol-string-p " hi "))
+  (is (eq t (network-node-string-p "hi")))
+  (is (eq nil (network-node-string-p "hi there")))
+  (is (null (network-node-string-p " hi "))
       "Leading or trailing spaces are _not_ ok if there is only one
       \"word\" given as we should be able to parse out that and convert it
       to a symbol."))

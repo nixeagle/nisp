@@ -14,6 +14,16 @@ Second return value is what is left after removing the segment."
          (subseq command-string (the non-negative-fixnum (1+ space-index))))
         (values command-string ""))))
 
+(defun network-node-string-p (string)
+  "True if STRING can represent a valid tree-symbol.
+
+A valid tree-symbol is defined as anything that does not contain a space."
+  (declare (type string string))
+  (not (find #\Space string)))
+
+(deftype network-node-string ()
+  '(and string (satisfies network-node-string-p)))
+
 ;;;{{{ Tree classes
 (defclass tree-generic-direct-nodes ()
   ((direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
@@ -64,15 +74,6 @@ Second return value is what is left after removing the segment."
 (defparameter +tree-symbols-package+ :keyword
   "Package that all tree symbols should get interned into.")
 
-(defun tree-symbol-string-p (string)
-  "True if STRING can represent a valid tree-symbol.
-
-A valid tree-symbol is defined as anything that does not contain a space."
-  (declare (type string string))
-  (not (find #\Space string)))
-(deftype tree-symbol-string ()
-  '(and string (satisfies tree-symbol-string-p)))
-
 
 ;;;{{{ Ensure tree symbol
 (defgeneric ensure-tree-symbol (symbol)
@@ -88,7 +89,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (error "KO"))
 (defmethod ensure-tree-symbol ((symbol-as-string string))
   "Split by spaces, then intern SYMBOLS as normal."
-  (declare (type tree-symbol-string symbol-as-string))
+  (declare (type network-node-string symbol-as-string))
   (make-keyword (string-upcase symbol-as-string)))
 
 (defgeneric ensure-tree-symbols (symbols)
