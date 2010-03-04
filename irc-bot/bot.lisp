@@ -571,3 +571,7 @@ methods that support this."))
 (defun unbind-symbols (&rest symbols)
   (mapcar (conjoin #'symbolp #'boundp #'makunbound) symbols)
   (mapcar (conjoin #'symbolp #'fboundp #'fmakunbound) symbols))
+
+(defclass handle-nisp-command-method (tree-method)
+  ())
+
