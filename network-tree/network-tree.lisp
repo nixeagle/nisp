@@ -151,6 +151,7 @@ is translated into a list of symbols."
 
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
 ;;; boot.lisp `real-make-method-specializers-form'.
+#+sbcl
 (defmethod sb-pcl:make-method-specializers-form
     ((generic-function network-tree-generic-function)
      method specializer-names environment)
@@ -160,7 +161,7 @@ is translated into a list of symbols."
                     (cons (maybe-make-tree-specializer-form (car specializer-names))
                           (cdr specializer-names))
                     environment))
-
+#+sbcl
 (defmethod sb-pcl:make-method-specializers-form
     ((generic-function slow-network-tree-generic-function)
      method specializer-names environment)
