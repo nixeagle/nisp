@@ -120,13 +120,28 @@ a single tree symbol out of what boils down to one symbol"
     ('hi) '(:HI)))
 
 
-(test (intern-network-tree-node :suite root)
+(test (intern-network-tree-node/typep :suite root)
+  "All that matters is we get a tree specializer"
   (is (typep (intern-network-tree-node '("hi"))
-             'network-tree-node)
-      "All that matters is we get a tree specializer")
-  (is (eq (intern-network-tree-node '("hi"))
-          (intern-network-tree-node '("hi")))
-      "The result from interning should always be the same object"))
+             'network-tree-node)))
+
+(test (intern-network-tree-node/same/one-level
+       :suite root
+       :depends-on intern-network-tree-node/typep)
+  "The result from interning should always be the same object"
+  (let ((expected (intern-network-tree-node '(:HI))))
+    (is (eq expected (intern-network-tree-node '(:HI))))
+    (is (eq expected (intern-network-tree-node '("hi"))))
+    (is (eq expected (intern-network-tree-node "hi")))
+    (is (eq expected (intern-network-tree-node :hi)))))
+
+(test (intern-network-tree-node/same/two-levels
+       :suite root
+       :depends-on intern-network-tree-node/same/one-level)
+  (let ((expected (intern-network-tree-node '(:TWO :LEVELS))))
+    (is (eq expected (intern-network-tree-node '(:TWO :LEVELS))))
+    (is (eq expected (intern-network-tree-node '("two" "levels"))))
+    (is (eq expected (intern-network-tree-node "two levels")))))
 
 (test (test-tree-generic-function/complex-method-combination
        :suite root
