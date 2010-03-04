@@ -1,5 +1,5 @@
 ;;; Tests for tree-funcallable-class
-(in-package :nisp.i)
+(in-package :nisp.network-tree)
 (defgeneric test-tree-generic-function (tree arg1)
   (:generic-function-class network-tree-generic-function))
 
@@ -13,20 +13,17 @@
   #+ () (list (current-node)))
 (progn
   (defmethod test-tree-generic-function ((tree (eql "hi2")) arg1)
-    (print "hi2")
     (list tree (and (> arg1 0) (next-node))))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there")) arg1)
-    (print "hi2 there")
-    (list tree (and (> arg1 1) "END")))
+    (list tree (and (> arg1 1) (next-node))))
+  (defmethod test-tree-generic-function ((tree (eql "hi2 there")) (arg1 integer))
+    (list tree "ARG1 was an integer" (call-next-method tree arg1)))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there")) (arg1 (eql 10)))
-    (print "hi2 there eql 10")
-    (list tree "ARG1 was = to 10" (call-next-method tree 9)))
+    (list tree "ARG1 was = to 10" (call-next-method tree arg1)))
   (defmethod test-tree-generic-function :around ((tree (eql "hi2 there"))
                                                  arg1)
-    (print "hi2 there around eql 10")
     (list tree "around!" (call-next-method)))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there hi")) arg1)
-    (print "hi2 there hi")
     (list tree (and (> arg1 2) (next-node))))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there hi how")) arg1)
     (list tree (and (> arg1 3) (next-node))))
@@ -39,21 +36,61 @@
 
 
   (defmethod test-tree-generic-function :before ((tree (eql "hi there hi")) arg1)
+    1)
+
+
+  (defgeneric slow-test-tree-generic-function (tree arg1)
+  (:generic-function-class slow-network-tree-generic-function))
+
+;;; Won't compile for a while because the first arg is not a network-tree.
+#+ ()
+(defmethod slow-test-tree-generic-function (tree arg1)
+  (format nil "Catchall tree method: ~A ::arg1: ~A~%" tree arg1))
+
+(defmethod slow-test-tree-generic-function ((tree (eql "hi")) arg1)
+
+  #+ () (list (current-node)))
+(progn
+  (defmethod slow-test-tree-generic-function ((tree (eql "hi2")) arg1)
+    (list tree (and (> arg1 0) (next-node))))
+  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there")) arg1)
+    (list tree (and (> arg1 1) (next-node))))
+  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there")) (arg1 integer))
+    (list tree "ARG1 was an integer" (call-next-method tree arg1)))
+  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there")) (arg1 (eql 10)))
+    (list tree "ARG1 was = to 10" (call-next-method tree arg1)))
+  (defmethod slow-test-tree-generic-function :around ((tree (eql "hi2 there"))
+                                                 arg1)
+    (list tree "around!" (call-next-method)))
+  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there hi")) arg1)
+    (list tree (and (> arg1 2) (next-node))))
+  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there hi how")) arg1)
+    (list tree (and (> arg1 3) (next-node))))
+  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there hi how are")) arg1)
+    (list tree (and (> arg1 4) (next-node))))
+  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there hi how are you")) arg1)
+    (list tree (and (> arg1 5) (next-node))))
+  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there hi how are you doing")) arg1)
+    (list tree arg1 (remaining-parameters)))
+
+
+  (defmethod slow-test-tree-generic-function :before ((tree (eql "hi there hi")) arg1)
     1))
+
+)
 
 
 (define-new-suite :nisp-eos-root)
-(define-new-suite 'root :in :nisp-eos-root)
-(def-suite tree-funcallable :in root)
+(def-suite 'root :in :nisp-eos-root)
 
-(test (first-command-word :suite tree-funcallable)
+(test (first-command-word :suite root)
   (is (string= "Hi" (first-command-word "Hi how are you?")))
   (is (string= "Hi h" (first-command-word "Hi how are you?" #\o))
       "Should be splitting on #\o.")
   (is (string= "" (first-command-word ""))
       "Empty string when no more words left."))
 
-(test (tree-symbol-string-p :suite tree-funcallable)
+(test (tree-symbol-string-p :suite root)
   "Predicate returns false if a string has a space in it.
 
 We assume input is a string."
@@ -64,7 +101,7 @@ We assume input is a string."
       \"word\" given as we should be able to parse out that and convert it
       to a symbol."))
 
-(test (ensure-tree-symbol :suite tree-funcallable)
+(test (ensure-tree-symbol :suite root)
   (with-fbound (ensure-tree-symbol)
     ('it) (find-symbol "IT" +tree-symbols-package+)
     ('(it it2)) :signals error
@@ -75,7 +112,7 @@ We assume input is a string."
 a single tree symbol out of what boils down to one symbol"
     ("it it2") :signals error))
 
-(test (ensure-tree-symbols :suite tree-funcallable
+(test (ensure-tree-symbols :suite root
                            :depends-on ensure-tree-symbol)
   (with-fbound (ensure-tree-symbols)
     ('(hi how)) '(:HI :HOW)
@@ -83,7 +120,7 @@ a single tree symbol out of what boils down to one symbol"
     ('hi) '(:HI)))
 
 
-(test (intern-network-tree-node :suite tree-funcallable)
+(test (intern-network-tree-node :suite root)
   (is (typep (intern-network-tree-node '("hi"))
              'network-tree-node)
       "All that matters is we get a tree specializer")
@@ -92,7 +129,7 @@ a single tree symbol out of what boils down to one symbol"
       "The result from interning should always be the same object"))
 
 (test (test-tree-generic-function/complex-method-combination
-       :suite tree-funcallable
+       :suite root
        :depends-on intern-network-tree-node)
   (finishes (test-tree-generic-function "hi2 there" 10)))
 ;;; END

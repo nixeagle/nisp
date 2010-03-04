@@ -1,4 +1,4 @@
-(in-package :nisp.i)
+(in-package :nisp.network-tree)
 
 (defun first-command-word (command-string &optional (seperater #\Space))
   "Extract the first segment in COMMAND-STRING before SEPERATER.
@@ -29,11 +29,22 @@ Second return value is what is left after removing the segment."
 ;;; This is SLOOOOOW, we want to use common-lisp:standard-generic-function
 ;;; for something like a 10,000 times improvement in speed... which I
 ;;; don't even know why we are this slow
-(defclass network-tree-generic-function (standard-generic-function)
+(defclass abstract-network-tree-generic-function () ()
+  (:metaclass closer-mop:funcallable-standard-class))
+
+(defclass slow-network-tree-generic-function
+    (standard-generic-function
+     abstract-network-tree-generic-function)
   ()
-  (:metaclass funcallable-standard-class)
+  (:metaclass closer-mop:funcallable-standard-class)
   (:default-initargs :method-class (find-class 'tree-method)))
 
+(defclass network-tree-generic-function
+    (cl:standard-generic-function
+     abstract-network-tree-generic-function)
+  ()
+  (:metaclass closer-mop:funcallable-standard-class)
+  (:default-initargs :method-class (find-class 'tree-method)))
 
 
 (defclass tree-method (standard-method)
@@ -94,6 +105,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
 
 ;;;}}}
 
+;;;{{{ Interning network-tree nodes
 (defvar *network-tree-nodes* (make-instance 'tree-generic-direct-nodes))
 
 (defun %intern-tree-specializer (node symbols)
@@ -132,6 +144,7 @@ is translated into a list of symbols."
   ;; We must sharpsign quote the generic-function name, otherwise the fasl
   ;; cannot be loaded.
   `(eql (intern-network-tree-node ,@(cdr specializer-name))))
+;;;}}}
 
 ;;; Now we need to make a specializer class. Most of this is from sbcl's
 ;;; boot.lisp `real-make-method-specializers-form'.
@@ -145,17 +158,27 @@ is translated into a list of symbols."
                           (cdr specializer-names))
                     environment))
 
+(defmethod sb-pcl:make-method-specializers-form
+    ((generic-function slow-network-tree-generic-function)
+     method specializer-names environment)
+  ;; We always assume a specializer exists in the first element of
+  ;; SPECIALIZER-NAMES. We certainly can do better, but this works.
+  (call-next-method generic-function method
+                    (cons (maybe-make-tree-specializer-form (car specializer-names))
+                          (cdr specializer-names))
+                    environment))
+
 ;;; `compute-discriminating-function' does this for us now...
 
 (defmethod compute-applicable-methods-using-classes
-    ((generic-function network-tree-generic-function) classes)
+    ((generic-function abstract-network-tree-generic-function) classes)
   "No cache permitted right now."
   (call-next-method))
 
 ;;; `compute-discriminating-function' does this for us now...
 
 (defmethod compute-applicable-methods
-    ((generic-function network-tree-generic-function) args)
+    ((generic-function abstract-network-tree-generic-function) args)
   (call-next-method))
 
 ;;; `compute-discriminating-function' does this for us now...
@@ -190,6 +213,38 @@ is translated into a list of symbols."
 
   (defmethod make-method-lambda
       ((generic-function network-tree-generic-function) method expression environment)
+    (let ((result (call-next-method)))
+      `(lambda (args next-methods)
+         (labels ((remaining-parameters ()
+                    (declare (special *network-tree-remaining*))
+                    (the string *network-tree-remaining*))
+                  (next-node ()
+                    (let ((*network-tree-nodes* (car args)))
+                      (apply #',(generic-function-name generic-function)
+                             (remaining-parameters)
+                             (cdr args)))))
+           (declare (ignorable  (function next-node)
+                                (function remaining-parameters)))
+           (,result args next-methods))))))
+
+(let ((*network-tree-remaining* nil))
+  (declare (special *network-tree-remaining*))
+  (defmethod compute-discriminating-function
+      ((generic-function slow-network-tree-generic-function))
+    (let ((it (call-next-method)))
+      (declare (type function it))
+      (lambda (&rest args)
+        (declare (dynamic-extent args))
+        (multiple-value-bind (command *network-tree-remaining*)
+            (first-command-word (car args))
+          (declare (special *network-tree-remaining*))
+          (setf (car args) (the network-tree-node
+                             (tree-generic-direct-node *network-tree-nodes* command)))
+          (apply it args)))))
+
+
+  (defmethod make-method-lambda
+      ((generic-function slow-network-tree-generic-function) method expression environment)
     (let ((result (call-next-method)))
       `(lambda (args next-methods &rest more)
          (labels ((remaining-parameters ()
