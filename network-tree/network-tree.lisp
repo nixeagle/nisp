@@ -110,14 +110,14 @@ A valid tree-symbol is defined as anything that does not contain a space."
 ;;;{{{ Interning network-tree nodes
 (defvar *network-tree-nodes* (make-instance 'tree-generic-direct-nodes))
 
-(defun %intern-tree-specializer (node symbols)
+(defun %intern-network-tree-node (node symbols)
   (declare (type tree-generic-direct-nodes node)
            (type list symbols)
            ;; We need tail recursion
            (optimize (speed 3) (safety 0) (debug 1)))
   (the network-tree-node
     (if symbols
-        (%intern-tree-specializer
+        (%intern-network-tree-node
          (or (gethash (car symbols) (tree-generic-direct-nodes node))
              (setf (gethash (car symbols) (tree-generic-direct-nodes node))
                    (make-instance 'network-tree-node :object (car symbols))))
@@ -134,7 +134,7 @@ reached.
 SYMBOLS may be a list of symbols, a string of space seperated words that
 is translated into a list of symbols."
   (declare (type (or string list keyword) symbols))
-  (%intern-tree-specializer *network-tree-nodes* (ensure-network-node-symbols symbols)))
+  (%intern-network-tree-node *network-tree-nodes* (ensure-network-node-symbols symbols)))
 
 (defun maybe-make-tree-specializer-form (specializer-name)
   ;; We don't actually check right now, instead just making the correct
