@@ -413,15 +413,15 @@ methods that support this."))
                                     (irc:host sender))
                   (ensure-irc-bot-user to)
                   cmd))
-
 (defmethod handle-command ((irc bot-connection) (sender irc:user)
                            to cmd)
   (handler-case
       (when (and (> (length cmd) 0)
                  (find (comchar irc) cmd :end 1))
-        (route-command irc sender to (remove-comchar irc cmd)
-                                     (split-command-string
-                                      (remove-comchar irc cmd))))
+        (route irc (make-instance 'irc-user :address to
+                                  :user (ensure-irc-bot-user sender))
+               (make-instance 'irc-message-content :message cmd
+                              :bot-connection irc) t t))
     (error (condition) (irc:privmsg irc to condition))))
 
 (defmethod generate-short-test-summary ((suite symbol))
