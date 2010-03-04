@@ -577,3 +577,7 @@ methods that support this."))
 
 
 (defgeneric send (action to sink content))
+(defgeneric privmsg (sink to content))
+(defmethod privmsg ((sink bot-connection) (to target)
+                    (content string))
+  (irc:privmsg sink to content))
