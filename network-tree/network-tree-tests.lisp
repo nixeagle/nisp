@@ -81,7 +81,7 @@
 
 
 (define-new-suite :nisp-eos-root)
-(def-suite 'root :in :nisp-eos-root)
+(def-suite root :in :nisp-eos-root)
 
 (test (first-command-word :suite root)
   (is (string= "Hi" (first-command-word "Hi how are you?")))
