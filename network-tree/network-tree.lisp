@@ -26,6 +26,9 @@ A valid tree-symbol is defined as anything that does not contain a space."
   '(and string (satisfies network-node-string-p)))
 
 ;;;{{{ ensure-network-node-symbol(s)
+(defparameter +network-tree-symbols-package+ :keyword
+  "Package that all tree symbols should get interned into.")
+
 (defgeneric ensure-network-node-symbol (symbol)
   (:documentation "Make sure SYMBOL exists in `+network-tree-symbols-package+'."))
 (defmethod ensure-network-node-symbol (arg)
@@ -102,9 +105,6 @@ A valid tree-symbol is defined as anything that does not contain a space."
 
 
 ;;;}}}
-
-(defparameter +network-tree-symbols-package+ :keyword
-  "Package that all tree symbols should get interned into.")
 
 
 ;;;{{{ Interning network-tree nodes
