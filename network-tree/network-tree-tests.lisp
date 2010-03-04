@@ -101,20 +101,20 @@ We assume input is a string."
       \"word\" given as we should be able to parse out that and convert it
       to a symbol."))
 
-(test (ensure-tree-symbol :suite root)
-  (with-fbound (ensure-tree-symbol)
-    ('it) (find-symbol "IT" +tree-symbols-package+)
+(test (ensure-network-node-symbol :suite root)
+  (with-fbound (ensure-network-node-symbol)
+    ('it) (find-symbol "IT" +network-tree-symbols-package+)
     ('(it it2)) :signals error
-    ("IT") (find-symbol "IT" +tree-symbols-package+)
+    ("IT") (find-symbol "IT" +network-tree-symbols-package+)
     "Lowercase input should result in an uppercase symbol."
-    ("it") (find-symbol "IT" +tree-symbols-package+)
+    ("it") (find-symbol "IT" +network-tree-symbols-package+)
     "Strings with spaces in them should error as it makes no sense to make
 a single tree symbol out of what boils down to one symbol"
     ("it it2") :signals error))
 
-(test (ensure-tree-symbols :suite root
-                           :depends-on ensure-tree-symbol)
-  (with-fbound (ensure-tree-symbols)
+(test (ensure-network-node-symbols :suite root
+                                   :depends-on ensure-network-node-symbol)
+  (with-fbound (ensure-network-node-symbols)
     ('(hi how)) '(:HI :HOW)
     ("hi how") '(:HI :HOW)
     ('hi) '(:HI)))

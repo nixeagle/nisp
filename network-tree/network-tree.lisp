@@ -24,13 +24,44 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (deftype network-node-string ()
   '(and string (satisfies network-node-string-p)))
 
+;;;{{{ ensure-network-node-symbol(s)
+(defgeneric ensure-network-node-symbol (symbol)
+  (:documentation "Make sure SYMBOL exists in `+network-tree-symbols-package+'."))
+(defmethod ensure-network-node-symbol (arg)
+  "Make a symbol out of ARG by `format-symbol'."
+  (format-symbol +network-tree-symbols-package+ "~A" arg))
+(defmethod ensure-network-node-symbol ((symbol symbol))
+  "Make SYMBOL a list and recall."
+  (call-next-method))
+(defmethod ensure-network-node-symbol ((symbols cons))
+  "SYMBOLS get interned into `+network-tree-symbols-package+'."
+  (error "KO"))
+(defmethod ensure-network-node-symbol ((symbol-as-string string))
+  "Split by spaces, then intern SYMBOLS as normal."
+  (declare (type network-node-string symbol-as-string))
+  (make-keyword (string-upcase symbol-as-string)))
+
+(defgeneric ensure-network-node-symbols (symbols)
+  (:documentation "Return a list of symbols instead of just one."))
+
+(defmethod ensure-network-node-symbols ((args list))
+  (mapcar #'ensure-network-node-symbol args))
+(defmethod ensure-network-node-symbols ((args symbol))
+  (ensure-network-node-symbols (ensure-list args)))
+(defmethod ensure-network-node-symbols ((symbols-as-string string))
+  (ensure-network-node-symbols (split-sequence #\Space
+                                       symbols-as-string
+                                       :remove-empty-subseqs t)))
+
+;;;}}}
+
 ;;;{{{ Tree classes
 (defclass tree-generic-direct-nodes ()
   ((direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
                  :reader tree-generic-direct-nodes)))
 (defmethod tree-generic-direct-node ((tree tree-generic-direct-nodes)
                                      (arg string))
-  (gethash (ensure-tree-symbol arg) (tree-generic-direct-nodes tree)))
+  (gethash (ensure-network-node-symbol arg) (tree-generic-direct-nodes tree)))
 (defmethod tree-generic-direct-node ((tree tree-generic-direct-nodes)
                                      (arg symbol))
   (declare (type keyword arg))
@@ -71,40 +102,9 @@ A valid tree-symbol is defined as anything that does not contain a space."
 
 ;;;}}}
 
-(defparameter +tree-symbols-package+ :keyword
+(defparameter +network-tree-symbols-package+ :keyword
   "Package that all tree symbols should get interned into.")
 
-
-;;;{{{ Ensure tree symbol
-(defgeneric ensure-tree-symbol (symbol)
-  (:documentation "Make sure SYMBOL exists in `+tree-symbols-package+'."))
-(defmethod ensure-tree-symbol (arg)
-  "Make a symbol out of ARG by `format-symbol'."
-  (format-symbol +tree-symbols-package+ "~A" arg))
-(defmethod ensure-tree-symbol ((symbol symbol))
-  "Make SYMBOL a list and recall."
-  (call-next-method))
-(defmethod ensure-tree-symbol ((symbols cons))
-  "SYMBOLS get interned into `+tree-symbols-package+'."
-  (error "KO"))
-(defmethod ensure-tree-symbol ((symbol-as-string string))
-  "Split by spaces, then intern SYMBOLS as normal."
-  (declare (type network-node-string symbol-as-string))
-  (make-keyword (string-upcase symbol-as-string)))
-
-(defgeneric ensure-tree-symbols (symbols)
-  (:documentation "Return a list of symbols instead of just one."))
-
-(defmethod ensure-tree-symbols ((args list))
-  (mapcar #'ensure-tree-symbol args))
-(defmethod ensure-tree-symbols ((args symbol))
-  (ensure-tree-symbols (ensure-list args)))
-(defmethod ensure-tree-symbols ((symbols-as-string string))
-  (ensure-tree-symbols (split-sequence #\Space
-                                       symbols-as-string
-                                       :remove-empty-subseqs t)))
-
-;;;}}}
 
 ;;;{{{ Interning network-tree nodes
 (defvar *network-tree-nodes* (make-instance 'tree-generic-direct-nodes))
@@ -133,7 +133,7 @@ reached.
 SYMBOLS may be a list of symbols, a string of space seperated words that
 is translated into a list of symbols."
   (declare (type (or string list keyword) symbols))
-  (%intern-tree-specializer *network-tree-nodes* (ensure-tree-symbols symbols)))
+  (%intern-tree-specializer *network-tree-nodes* (ensure-network-node-symbols symbols)))
 
 (defun maybe-make-tree-specializer-form (specializer-name)
   ;; We don't actually check right now, instead just making the correct
