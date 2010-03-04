@@ -593,3 +593,16 @@ methods that support this."))
                                 (action abstract-action)
                                 (content abstract-message-content))
   (privmsg source address (remaining-parameters)))
+(defgeneric route (source from content to sink))
+(defmethod route  ((source abstract-data-source)
+                   (from abstract-from)
+                   (content abstract-message-content)
+                   to sink)
+  (declare (ignore to sink))
+  (when (commandp content)
+    (handle-nisp-command (message content) source (name from)
+                         (address from) (make-instance 'abstract-identity)
+                         (make-instance 'abstract-action) content)))
+
+
+;;; END
