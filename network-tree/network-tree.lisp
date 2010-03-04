@@ -22,6 +22,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (not (find #\Space string)))
 
 (deftype network-node-string ()
+  "String with no spaces."
   '(and string (satisfies network-node-string-p)))
 
 ;;;{{{ ensure-network-node-symbol(s)
