@@ -51,7 +51,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (:documentation "Make sure SYMBOL exists in `+network-tree-symbols-package+'."))
 (defmethod ensure-network-node-symbol (arg)
   "Make a symbol out of ARG by `format-symbol'."
-  (format-symbol +network-tree-symbols-package+ "~A" arg))
+  (string-upcase (format "~A" arg)))
 (defmethod ensure-network-node-symbol ((symbol symbol))
   "Make SYMBOL a list and recall."
   (call-next-method))
@@ -59,7 +59,8 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defmethod ensure-network-node-symbol ((symbol-as-string string))
   "Split by spaces, then intern SYMBOLS as normal."
   (declare (type network-node-string symbol-as-string))
-  (intern (string-upcase symbol-as-string) +network-tree-symbols-package+))
+  (string-upcase symbol-as-string))
+
 
 (defgeneric ensure-network-node-symbols (symbols)
   (:documentation "Return a list of symbols instead of just one."))
@@ -69,9 +70,9 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defmethod ensure-network-node-symbols ((args symbol))
   (ensure-network-node-symbols (ensure-list args)))
 (defmethod ensure-network-node-symbols ((symbols-as-string string))
-  (ensure-network-node-symbols (split-sequence #\Space
-                                       symbols-as-string
-                                       :remove-empty-subseqs t)))
+  (split-sequence #\Space
+                  (string-upcase symbols-as-string)
+                  :remove-empty-subseqs t))
 
 ;;;}}}
 
@@ -142,7 +143,7 @@ reached.
 
 SYMBOLS may be a list of symbols, a string of space seperated words that
 is translated into a list of symbols."
-  (declare (type (or string list keyword) symbols))
+  (declare (type string symbols))
   (%intern-network-tree-node *network-tree-nodes* (ensure-network-node-symbols symbols)))
 
 ;;;}}}
