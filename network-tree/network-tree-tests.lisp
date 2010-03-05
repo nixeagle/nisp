@@ -1,28 +1,22 @@
 ;;; Tests for tree-funcallable-class
 (in-package :nisp.network-tree)
-(defgeneric test-tree-generic-function (tree arg1)
-  (:generic-function-class network-tree-generic-function))
 
-;;; Won't compile for a while because the first arg is not a network-tree.
-#+ ()
-(defmethod test-tree-generic-function (tree arg1)
-  (format nil "Catchall tree method: ~A ::arg1: ~A~%" tree arg1))
-
-(defmethod test-tree-generic-function ((tree (eql "hi")) arg1)
-
-  #+ () (list (current-node)))
 (progn
-  (defmethod test-tree-generic-function ((tree (eql "hi2")) arg1)
-    (list tree (and (> arg1 0) (next-node))))
-  (defmethod test-tree-generic-function ((tree (eql "hi2 there")) arg1)
-    (list tree (and (> arg1 1) (next-node))))
+  (fmakunbound 'test-tree-generic-function)
+  (defgeneric test-tree-generic-function (tree arg1)
+    (:generic-function-class network-tree-generic-function))
+  (defmethod test-tree-generic-function ((tree (eql "hi")) arg1)
+    (list tree arg1 (test)))
+  #+ ()  (defmethod test-tree-generic-function ((tree (eql "hi2 there")) arg1)
+           (list tree (and (> arg1 1) "END")))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there")) (arg1 integer))
-    (list tree "ARG1 was an integer" (call-next-method tree arg1)))
+    (list tree "ARG1 was an integer" (call-next-method)))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there")) (arg1 (eql 10)))
-    (list tree "ARG1 was = to 10" (call-next-method tree arg1)))
+    (list tree "ARG1 was = to 10" (call-next-method)))
   (defmethod test-tree-generic-function :around ((tree (eql "hi2 there"))
                                                  arg1)
     (list tree "around!" (call-next-method)))
+
   (defmethod test-tree-generic-function ((tree (eql "hi2 there hi")) arg1)
     (list tree (and (> arg1 2) (next-node))))
   (defmethod test-tree-generic-function ((tree (eql "hi2 there hi how")) arg1)
