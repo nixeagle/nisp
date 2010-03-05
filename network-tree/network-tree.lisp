@@ -37,9 +37,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defmethod ensure-network-node-symbol ((symbol symbol))
   "Make SYMBOL a list and recall."
   (call-next-method))
-(defmethod ensure-network-node-symbol ((symbols cons))
-  "SYMBOLS get interned into `+network-tree-symbols-package+'."
-  (error "KO"))
+
 (defmethod ensure-network-node-symbol ((symbol-as-string string))
   "Split by spaces, then intern SYMBOLS as normal."
   (declare (type network-node-string symbol-as-string))
