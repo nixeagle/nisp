@@ -189,6 +189,20 @@ is translated into a list of symbols."
 
   (defmethod make-method-lambda
       ((generic-function network-tree-generic-function) method expression environment)
+    (multiple-value-bind (body lambda-args declarations)
+        (^find-body expression)
+      (let ((expression
+             `(lambda ,lambda-args ,@declarations
+                      (flet ((test () 1))
+                        (declare (ignorable (function test)))
+                        ,@body))))
+        (let ((lamb (call-next-method generic-function method expression environment)))
+          #+ () (setq @lamb@ lamb)
+          #+ () lamb
+          lamb))
+      ) #+ () (call-next-method)
+
+    #+ ()
     (let ((result (call-next-method)))
       `(lambda (args next-methods)
          (labels ((remaining-parameters ()
