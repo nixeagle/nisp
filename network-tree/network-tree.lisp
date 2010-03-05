@@ -174,7 +174,8 @@ is translated into a list of symbols."
   (declare (special *network-tree-remaining*))
   (defmethod compute-discriminating-function
       ((generic-function network-tree-generic-function))
-    (let ((it (call-next-method)))
+    (call-next-method)
+    #+ () (let ((it (call-next-method)))
       (declare (type function it))
       (lambda (&rest args)
         (declare (dynamic-extent args))
