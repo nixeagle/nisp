@@ -170,33 +170,6 @@ is translated into a list of symbols."
                           (cdr specializer-names))
                     environment))
 
-;;; `compute-discriminating-function' does this for us now...
-
-(defmethod compute-applicable-methods-using-classes
-    ((generic-function abstract-network-tree-generic-function) classes)
-  "No cache permitted right now."
-  (call-next-method))
-
-;;; `compute-discriminating-function' does this for us now...
-
-(defmethod compute-applicable-methods
-    ((generic-function abstract-network-tree-generic-function) args)
-  (call-next-method))
-
-;;; `compute-discriminating-function' does this for us now...
-#+ ()
-(defmethod compute-applicable-methods
-    ((generic-function network-tree-generic-function) args)
-  (call-next-method generic-function args))
-
-
-(defmethod compute-effective-method
-    ((generic-function network-tree-generic-function)
-     method-combination applicable-methods)
-  ;; Nothing special yet
-  (call-next-method))
-
-
 (let ((*network-tree-remaining* nil))
   (declare (special *network-tree-remaining*))
   (defmethod compute-discriminating-function
