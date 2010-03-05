@@ -41,7 +41,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defmethod ensure-network-node-symbol ((symbol-as-string string))
   "Split by spaces, then intern SYMBOLS as normal."
   (declare (type network-node-string symbol-as-string))
-  (make-keyword (string-upcase symbol-as-string)))
+  (intern (string-upcase symbol-as-string) +network-tree-symbols-package+))
 
 (defgeneric ensure-network-node-symbols (symbols)
   (:documentation "Return a list of symbols instead of just one."))
