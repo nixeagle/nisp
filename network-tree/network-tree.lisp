@@ -18,8 +18,8 @@ Second return value is what is left after removing the segment."
   "True if STRING can represent a valid tree-symbol.
 
 A valid tree-symbol is defined as anything that does not contain a space."
-  (declare (type string string))
-  (not (find #\Space string)))
+  (when (stringp string)
+    (not (find #\Space string))))
 
 (deftype network-node-string ()
   "String with no spaces."
