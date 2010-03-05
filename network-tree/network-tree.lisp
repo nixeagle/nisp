@@ -128,7 +128,8 @@ A valid tree-symbol is defined as anything that does not contain a space."
         (%intern-network-tree-node
          (or (gethash (car symbols) (tree-generic-direct-nodes node))
              (setf (gethash (car symbols) (tree-generic-direct-nodes node))
-                   (make-instance 'network-tree-node :object (car symbols))))
+                   (make-instance 'network-tree-node :object (car symbols)
+                                  :parent node)))
          (cdr symbols))
         node)))
 
