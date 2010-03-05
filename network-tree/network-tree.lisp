@@ -1,5 +1,23 @@
 (in-package :nisp.network-tree)
 
+(defun ^find-body (lambda-form)
+  "Try to find the body of LAMBDA-FORM.
+
+Returns the body as the first value and the stuff before the body as the
+second value."
+  ;; Warning: this whole function is a hack and a kludge.
+  (let ((lambda-args (second lambda-form))
+        declare-forms)
+    (labels ((parse (body &optional docstringp)
+               (if (or (and (consp (car body))
+                            (eq 'declare (caar body)))
+                       (and (stringp (car body)) (cdr body)))
+                 (progn
+                   (push (car body) declare-forms)
+                   (parse (cdr body) (or docstringp (stringp (car body)))))
+                 body)))
+      (values (parse (cddr lambda-form)) lambda-args (reverse declare-forms)))))
+
 (defun first-command-word (command-string &optional (seperater #\Space))
   "Extract the first segment in COMMAND-STRING before SEPERATER.
 
