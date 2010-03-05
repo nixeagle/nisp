@@ -11,6 +11,7 @@
   :description "irc bot"
   :depends-on (:nisp.mop
                :nisp.util
+               :nisp.network-tree
                :eos
                :bordeaux-threads
                :cl-github
@@ -27,9 +28,6 @@
   :components
   ((:file "util.packages")
    (:file "package")
-   (:file "tree-funcallable-class")
-;   (:file "test-funcallable-class")
-;   (:file "test-funcallable-class-methods")
    (:file "mixin")
    (:file "irc-packages")
    (:file "bot-types")
