@@ -36,48 +36,7 @@
 
 
   (defmethod test-tree-generic-function :before ((tree (eql "hi there hi")) arg1)
-    1)
-
-
-  (defgeneric slow-test-tree-generic-function (tree arg1)
-  (:generic-function-class slow-network-tree-generic-function))
-
-;;; Won't compile for a while because the first arg is not a network-tree.
-#+ ()
-(defmethod slow-test-tree-generic-function (tree arg1)
-  (format nil "Catchall tree method: ~A ::arg1: ~A~%" tree arg1))
-
-(defmethod slow-test-tree-generic-function ((tree (eql "hi")) arg1)
-
-  #+ () (list (current-node)))
-(progn
-  (defmethod slow-test-tree-generic-function ((tree (eql "hi2")) arg1)
-    (list tree (and (> arg1 0) (next-node))))
-  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there")) arg1)
-    (list tree (and (> arg1 1) (next-node))))
-  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there")) (arg1 integer))
-    (list tree "ARG1 was an integer" (call-next-method tree arg1)))
-  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there")) (arg1 (eql 10)))
-    (list tree "ARG1 was = to 10" (call-next-method tree arg1)))
-  (defmethod slow-test-tree-generic-function :around ((tree (eql "hi2 there"))
-                                                 arg1)
-    (list tree "around!" (call-next-method)))
-  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there hi")) arg1)
-    (list tree (and (> arg1 2) (next-node))))
-  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there hi how")) arg1)
-    (list tree (and (> arg1 3) (next-node))))
-  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there hi how are")) arg1)
-    (list tree (and (> arg1 4) (next-node))))
-  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there hi how are you")) arg1)
-    (list tree (and (> arg1 5) (next-node))))
-  (defmethod slow-test-tree-generic-function ((tree (eql "hi2 there hi how are you doing")) arg1)
-    (list tree arg1 (remaining-parameters)))
-
-
-  (defmethod slow-test-tree-generic-function :before ((tree (eql "hi there hi")) arg1)
     1))
-
-)
 
 
 (define-new-suite :nisp-eos-root)
