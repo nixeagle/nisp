@@ -169,16 +169,6 @@ is translated into a list of symbols."
                     (cons (maybe-make-tree-specializer-form (car specializer-names))
                           (cdr specializer-names))
                     environment))
-#+sbcl
-(defmethod sb-pcl:make-method-specializers-form
-    ((generic-function slow-network-tree-generic-function)
-     method specializer-names environment)
-  ;; We always assume a specializer exists in the first element of
-  ;; SPECIALIZER-NAMES. We certainly can do better, but this works.
-  (call-next-method generic-function method
-                    (cons (maybe-make-tree-specializer-form (car specializer-names))
-                          (cdr specializer-names))
-                    environment))
 
 ;;; `compute-discriminating-function' does this for us now...
 
