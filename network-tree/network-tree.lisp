@@ -217,39 +217,6 @@ is translated into a list of symbols."
                                 (function remaining-parameters)))
            (,result args next-methods))))))
 
-(let ((*network-tree-remaining* nil))
-  (declare (special *network-tree-remaining*))
-  (defmethod compute-discriminating-function
-      ((generic-function slow-network-tree-generic-function))
-    (let ((it (call-next-method)))
-      (declare (type function it))
-      (lambda (&rest args)
-        (declare (dynamic-extent args))
-        (multiple-value-bind (command *network-tree-remaining*)
-            (first-command-word (car args))
-          (declare (special *network-tree-remaining*))
-          (setf (car args) (the network-tree-node
-                             (tree-generic-direct-node *network-tree-nodes* command)))
-          (apply it args)))))
-
-
-  (defmethod make-method-lambda
-      ((generic-function slow-network-tree-generic-function) method expression environment)
-    (let ((result (call-next-method)))
-      `(lambda (args next-methods &rest more)
-         (labels ((remaining-parameters ()
-                    (declare (special *network-tree-remaining*))
-                    (the string *network-tree-remaining*))
-                  (next-node ()
-                    (let ((*network-tree-nodes* (car args)))
-                      (apply #',(generic-function-name generic-function)
-                             (remaining-parameters)
-                             (cdr args)))))
-           (declare (ignorable  (function next-node)
-                                (function remaining-parameters)))
-           (apply ,result args next-methods more))))))
-
-#+ ()
 (defmethod make-load-form ((self network-tree-node) &optional env)
   (declare (ignore env))
   (values (intern-network-tree-node (network-tree-node-object self))
