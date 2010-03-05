@@ -76,44 +76,36 @@ A valid tree-symbol is defined as anything that does not contain a space."
 ;;;}}}
 
 ;;;{{{ Tree classes
-(defclass tree-generic-direct-nodes ()
-  ((direct-nodes :initform (make-hash-table :test 'eq :weakness :value)
+(defclass network-tree-parent ()
+  ((parent :initarg :parent
+           :reader network-tree-parent))
+  (:default-initargs :parent nil))
+
+(defclass tree-generic-direct-nodes (network-tree-parent)
+  ((direct-nodes :initform (make-hash-table :test 'equalp :weakness :value)
                  :reader tree-generic-direct-nodes)))
-(defmethod tree-generic-direct-node ((tree tree-generic-direct-nodes)
-                                     (arg string))
-  (gethash (ensure-network-node-symbol arg) (tree-generic-direct-nodes tree)))
-(defmethod tree-generic-direct-node ((tree tree-generic-direct-nodes)
-                                     (arg symbol))
-  (declare (type keyword arg))
+
+(defun tree-generic-direct-node (tree arg)
+  (declare (type string arg)
+           (type tree-generic-direct-nodes tree)
+           (optimize (speed 3) (safety 0) (debug 1)))
   (gethash arg (tree-generic-direct-nodes tree)))
 
-;;; This is SLOOOOOW, we want to use common-lisp:standard-generic-function
-;;; for something like a 10,000 times improvement in speed... which I
-;;; don't even know why we are this slow
-(defclass abstract-network-tree-generic-function () ()
-  (:metaclass closer-mop:funcallable-standard-class))
-
-(defclass slow-network-tree-generic-function
-    (standard-generic-function
-     abstract-network-tree-generic-function)
-  ()
-  (:metaclass closer-mop:funcallable-standard-class)
-  (:default-initargs :method-class (find-class 'tree-method)))
-
 (defclass network-tree-generic-function
-    (cl:standard-generic-function
-     abstract-network-tree-generic-function)
+    (cl:standard-generic-function tree-generic-direct-nodes)
   ()
   (:metaclass closer-mop:funcallable-standard-class)
   (:default-initargs :method-class (find-class 'tree-method)))
 
-
-(defclass tree-method (standard-method)
+(defclass network-tree-node (eql-specializer tree-generic-direct-nodes)
   ())
-
-(defclass network-tree-node (tree-generic-direct-nodes)
-  ((object :initarg :object
-           :reader network-tree-node-object)))
+(defmethod  network-tree-node-object ((obj network-tree-node))
+  (eql-specializer-object obj))
+(defclass network-tree-method (standard-method network-tree-parent)
+  ((methods :type list :reader network-tree-method-methods
+            :initform ())))
+(defclass tree-method (network-tree-method)
+  ())
 
 (defmethod print-object ((obj network-tree-node) stream)
    (print-unreadable-object (obj stream :type t :identity t)
