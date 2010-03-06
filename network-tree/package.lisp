@@ -1,7 +1,9 @@
 (defpackage #:nisp.network-tree
   (:use :cl :alexandria :split-sequence :closer-mop :eos :with-fbound)
   (:nicknames :network-tree)
-
+  (:export :network-tree-generic-function
+           :network-tree-method
+           #:parse-method-lambda-expression-body)
   ;; This whole shadowing import block is taken from
   ;; closer-mop-packages.lisp in order to correctly import the
   ;; closer-mop package.

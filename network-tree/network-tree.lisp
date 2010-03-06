@@ -1,11 +1,10 @@
 (in-package :nisp.network-tree)
 
-(defun ^find-body (lambda-form)
+(defun parse-method-lambda-expression-body (lambda-form)
   "Try to find the body of LAMBDA-FORM.
 
 Returns the body as the first value and the stuff before the body as the
 second value."
-  ;; Warning: this whole function is a hack and a kludge.
   (let ((lambda-args (second lambda-form))
         declare-forms)
     (labels ((parse (body &optional docstringp)
@@ -191,7 +190,7 @@ is translated into a list of symbols."
   (defmethod make-method-lambda
       ((generic-function network-tree-generic-function) method expression environment)
     (multiple-value-bind (body lambda-args declarations)
-        (^find-body expression)
+        (parse-method-lambda-expression-body expression)
       (let ((expression
              `(lambda ,lambda-args ,@declarations
                       (labels ((test () 1)
