@@ -16,46 +16,6 @@
 
 (defclass connection (irc:connection) ())
 
-;;;{{{ define-command:
-(defmacro %define-command (name (irc sender to msg remaining) &body body)
-  (multiple-value-bind (count params)
-      (%format-command-method-symbol name)
-    `(defmethod ,(%format-command-handler-symbol count)
-         (,(if (consp irc) irc `(,irc ,irc))
-          ,(if (consp sender) sender `(,sender ,sender))
-          ,(if (consp to) to `(,to ,to))
-          ,(if (consp msg) msg `(,msg ,msg))
-          ,@(iter (for x in (%generate-interned-argument-symbols count))
-                  (for y in params)
-                  (collect `(,x (eql ',y))))
-          &optional ,remaining)
-       ,@body)))
-
-(defmacro define-command (name (irc sender to msg remaining) &body body)
-  `(%define-command ,name (,irc ,sender ,to ,msg ,remaining)
-       (declare (ignore ,@(%generate-interned-argument-symbols
-                           (%format-command-method-symbol name))))
-       ,@body))
-
-(defmacro define-command-node (name (irc sender to msg remaining) &body body)
-  (let ((count (%format-command-method-symbol name)))
-    `(%define-command ,name (,irc ,sender ,to ,msg ,remaining)
-       ,@body
-       (,(%format-command-handler-symbol (1+ count))
-         ,(if (consp irc) (car irc) irc)
-         ,(if (consp sender) (car sender) sender)
-         ,(if (consp to) (car to) to)
-         ,(if (consp msg) (car msg) msg)
-         ,@(%generate-interned-argument-symbols count)
-         (ensure-symbol
-          (string-upcase (car (split-command-string ,remaining)))
-          *command-argument-symbols-package*)
-         (filter-to-remaining-arguments
-          ,remaining
-          (string-upcase (car (split-command-string ,remaining))))))))
-
-;;;}}}
-
 ;;; not bot related directly
 ;;;{{{ superclasses:
 (defun add-superclass (instance new-superclass)
@@ -464,77 +424,7 @@ methods that support this."))
             (slot-value instance 'full-message)))
   (setf (slot-value instance 'remaining-message)
         (slot-value instance 'message)))
-;;;{{{ Define commands
 
-;;;{{{ Github commands
-
-(define-command-node github (connection irc:user (to t) string params))
-(define-command-node github-show (connection irc:user (to t)
-                                             string params))
-(define-command github-show-followers (connection irc:user target
-                                                  string github-user)
-  (irc:privmsg connection target
-               (join-sequence (cl-github:show-followers github-user))))
-(define-command github-show-following (connection irc:user target
-                                                  string github-user)
-  "Private message TARGET with list of people GITHUB-USER follows."
-  (irc:privmsg connection target
-               (join-sequence (cl-github:show-following github-user))))
-
-;;;}}}
-
-;;;{{{ Nisp introspection commands
-
-(define-command-node nisp (connection irc:user target string params))
-(define-command-node nisp-introspect (connection irc:user target string params))
-(define-command-node nisp-introspect-irc (connection irc:user target
-                                                     string params))
-(define-command nisp-introspect-irc-user (connection irc:user target
-                                                       string nickname)
-  (irc:privmsg connection target
-               (nisp.mop::class-slot-name-value-alist
-                (irc:find-user connection nickname))))
-
-;;;}}}
-
-;;;{{{ Unit test runner
-(define-command-node test (8b-i-bot-connection irc:user irc:channel string
-                                               params))
-
-(define-command test-run (8b-i-bot-connection irc:user irc:channel string
-                                              params)
-  (irc:privmsg 8b-i-bot-connection irc:channel
-               (generate-short-test-summary (if (string= params "all")
-                                                :nisp-eos-root
-                                                params))))
-;;;}}}
-
-;;;{{{ Alpha commands <highly experimental>
-(define-command-node alpha (connection irc:user target string params))
-
-(define-command alpha-apropos (connection irc:user target string params)
-  "Look up applicatable methods."
-  (irc:privmsg connection target (test-lookup params)))
-
-(define-command alpha-tnt (connection irc:user target string params)
-    "Testing command for blowing stuff up, hence \"tnt\"."
-    (irc:privmsg connection target
-                 (prin1-to-string
-                  (nisp.mop-store::generate-slot-specifier
-                   (car (nisp.mop-simple:class-slots
-                         (find-symbol (string-upcase params))))))))
-
-(define-command alpha-nikurl (connection irc:user target string params)
-  "Shorturl something."
-  (irc:privmsg connection target
-               (car (cl-ppcre:all-matches-as-strings
-                     "http\\S+"
-                     (drakma:http-request
-                      (concatenate 'string
-                                   "http://nik.im/api_create.php?url="
-                                   (remove #\Space params)))))))
-;;;}}} Alpha commands
-;;;}}} Define commands
 
 (defgeneric connectedp (connection-object)
   (:documentation "Is CONNECTION-OBJECT currently connected?"))
