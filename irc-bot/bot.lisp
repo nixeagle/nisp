@@ -111,7 +111,7 @@ methods that support this."))
   (:default-initargs :username "lisp" :nickname "nisp"
                      :realname "Nixeagle's lisp experiments bot."
                      :server-port 6667
-                     :server-name "74.208.99.237"
+                     :server-name "irc.fuckinslack.net"
                      :comchar ",")
   (:documentation "Bot connection for slack's network."))
 
