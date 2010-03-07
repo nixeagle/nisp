@@ -39,19 +39,15 @@
              (format stream "Package ~A is not loaded"
                      (package-not-found-error-package condition)))))
 
+(define-condition swank-package-not-found-error (package-not-found-error)
+  ()
+  (:default-initargs :package :swank))
+
 (defgeneric eval-in-emacs (form &optional nowait))
 (defmethod eval-in-emacs ((form string) &optional nowait)
   (eval-in-emacs (read-from-string (ensure-no-leading-single-quote form))
                  nowait))
-(let (eval-in-emacs)
-  (defmethod eval-in-emacs :before (form &optional nowait)
-    (declare (ignore nowait))
-    (unless eval-in-emacs
-      (let ((eval-in-emacs-symbol (find-symbol "EVAL-IN-EMACS" :swank)))
-        (if eval-in-emacs-symbol
-            (setq eval-in-emacs (symbol-function eval-in-emacs-symbol))
-            (error (make-condition 'package-not-found-error
-                                   :package :swank))))))
-  (defmethod eval-in-emacs (form &optional nowait)
-    (funcall eval-in-emacs form nowait)))
+(defmethod eval-in-emacs (form &optional nowait)
+  (let ((swank::*emacs-connection* (swank::default-connection)))
+    (swank::eval-in-emacs form nowait)))
 ;;; END
