@@ -134,7 +134,16 @@ methods that support this."))
                      :server-name "flare183.net"
                      :comchar ",")
   (:documentation "Bot connection for flare183's server."))
+(defclass freenode-nisp-bot-connection (bot-connection
+                                        connect-with-background-handler-mixin
+                                       )
+  ()
+  (:default-initargs :username "lisp" :nickname "nisp"
+                     :realname "nixeagle's lisp experiments bot."
+                     :server-port 6667
 
+                     :server-name "irc.freenode.org"
+                     :comchar ","))
 (defmethod shared-initialize :after ((bot bot-connection) slot-names
                                      &key nickname username realname)
   (when (and nickname username realname)
@@ -251,6 +260,9 @@ methods that support this."))
 (defmethod connect :after ((irc flare-nisp-bot-connection) &key)
   (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
   (irc:join irc "#help"))
+(defmethod connect :after ((irc freenode-nisp-bot-connection) &key)
+  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
+  (irc:join irc "#botters"))
 
 ;;;}}}
 
@@ -433,6 +445,7 @@ methods that support this."))
 
 ;;;{{{ Initialize bots hacks <irc only right now>
 (defvar *sonic*)
+(defvar *freenode*)
 (defvar *slack*)
 (defvar *bot*)
 (defvar *devel-bot* nil "bot hosted on my laptop as opposed to the vps.")
@@ -445,11 +458,12 @@ methods that support this."))
     (define-bot *sonic* sonic-nisp-bot-connection)
     (define-bot *slack* slack-nisp-bot-connection)
     (define-bot *bot* 8b-i-bot-connection)
+    (define-bot *freenode* freenode-nisp-bot-connection)
     (define-bot *devel-bot* 8b-nisp-bot-connection)
     (define-bot *flare* flare-nisp-bot-connection))
   (setq *format-and-send-to-irc-function* (curry #'irc:privmsg *bot* "#bots")))
 
-(defparameter %bot-list% '(*sonic* *slack* *bot* *flare* *devel-bot* @lo@)
+(defparameter %bot-list% '(*sonic* *slack* *bot* *flare* *devel-bot* *freenode* @lo@)
   "Hackish list of bots.")
 
 ;;;}}}
