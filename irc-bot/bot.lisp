@@ -65,10 +65,9 @@ All things made by `make-anon-bot-user-class' superclass this."))
   ((user :initarg :user :type bot-user :reader name)
    (address :initarg :address :type target :reader address)))
 
-(defclass irc-message-content (abstract-message-content)
-  ((full-message :initarg :message :reader full-message :type string)
-   (message :reader message :type string)
-   (remaining-message :reader remaining-message :type string)))
+(defclass irc-message-content (abstract-text-message-content)
+  ()
+  )
 (defmethod commandp ((object irc-message-content))
   (not (string= (full-message object) (message object))))
 
