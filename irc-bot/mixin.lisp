@@ -94,6 +94,11 @@ specification."))
 (defgeneric message (object))
 (defgeneric remaining-message (object))
 (defgeneric commandp (object))
+
+(defclass abstract-text-message-content (abstract-message-content)
+  ((full-message :initarg :message :reader full-message :type string)
+   (message :reader message :type string)
+   (remaining-message :reader remaining-message :type string)))
 ;;; possibly include abstract-message as a composed class or somehow
 ;;; holding all these parts in one interface, which is why we rename
 ;;; abstract-message to abstract-message-content.
