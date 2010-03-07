@@ -463,6 +463,13 @@ methods that support this."))
 
 
 
+
+(defmethod send (action
+                 (sink bot-connection)
+                 (to target) (content string))
+  (declare (ignore action))
+  "Default action for irc is to privmsg"
+  (privmsg sink to content))
 (defmethod privmsg ((sink bot-connection) (to target)
                     (content string))
   (irc:privmsg sink to content))
