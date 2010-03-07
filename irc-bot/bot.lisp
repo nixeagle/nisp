@@ -52,7 +52,7 @@
 
 (defvar *irc-bot-instances* nil
   "Global list of bot instances.")
-(defclass target () ())
+(defclass target (abstract-target) ())
 
 (defclass bot-user (irc:user target abstract-user) ()
   (:documentation "This does not bother with normalization.
@@ -63,7 +63,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
 
 (defclass irc-user (abstract-target)
   ((user :initarg :user :type bot-user :reader name)
-   (address :initarg :address :type bot-channel :reader address)))
+   (address :initarg :address :type target :reader address)))
 
 (defclass irc-message-content (abstract-message-content)
   ((full-message :initarg :message :reader full-message :type string)
