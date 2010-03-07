@@ -103,4 +103,8 @@ specification."))
 ;;; holding all these parts in one interface, which is why we rename
 ;;; abstract-message to abstract-message-content.
 
+
+(defgeneric send (action sink to content))
+(defgeneric privmsg (sink to content))
+
 ;;; END
