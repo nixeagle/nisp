@@ -29,6 +29,7 @@
   ((:file "util.packages")
    (:file "package")
    (:file "mixin")
+   (:file "route-call-times")
    (:file "irc-packages")
    (:file "bot-types")
    (:file "symbols")
