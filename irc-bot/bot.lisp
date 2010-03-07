@@ -463,6 +463,16 @@ methods that support this."))
 
 
 
+(defmacro define-simple-command (name &body body)
+  `(defmethod handle-nisp-command
+       ((tree (eql ,(substitute #\Space #\- (symbol-name name))))
+        (source abstract-data-source)
+        (user abstract-user)
+        (address abstract-target)
+        (identity abstract-identity)
+        (action abstract-action)
+        (content abstract-text-message-content))
+     ,@body))
 
 (defmethod send (action
                  (sink bot-connection)
@@ -475,8 +485,18 @@ methods that support this."))
   (irc:privmsg sink to content))
 (defgeneric handle-nisp-command (tree source from address identity
                                       action content)
-  (:generic-function-class network-tree::network-tree-generic-function)
+  (:generic-function-class nisp-command-network-tree-generic-function)
   (:method-class handle-nisp-command-method))
+(define-simple-command emacs
+  (network-tree::next-node))
+(define-simple-command source
+  (reply "I'm written in common lisp by nixeagle. You can find my source at <http://github.com/nixeagle/nisp/tree/master/irc-bot/>"))
+(define-simple-command emacs-uptime
+  (reply (~::eval-in-emacs "(emacs-uptime)")))
+(define-simple-command emacs-idletime
+  (reply (~::eval-in-emacs "(format-seconds \"%Y, %D, %H, %M, %z%S\"
+                 (float-time (or (current-idle-time) '(0 0 0))))")))
+
 (defmethod handle-nisp-command ((tree (eql "say"))
                                 (source abstract-data-source)
                                 (user abstract-user)
