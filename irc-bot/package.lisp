@@ -1,6 +1,6 @@
 (defpackage #:nisp.i
   (:use :cl :iterate :split-sequence :nisp.util.packages :alexandria :eos
-        :with-fbound :closer-mop)
+        :with-fbound :closer-mop :nisp.network-tree)
   (:import-from :cl-irc :user #:nickname #:username #:realname)
 
   ;; This whole shadowing import block is taken from
