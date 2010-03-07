@@ -461,8 +461,6 @@ methods that support this."))
   (mapcar (conjoin #'symbolp #'boundp #'makunbound) symbols)
   (mapcar (conjoin #'symbolp #'fboundp #'fmakunbound) symbols))
 
-(defclass handle-nisp-command-method (network-tree::network-tree-method)
-  ())
 
 
 (defgeneric send (action to sink content))
