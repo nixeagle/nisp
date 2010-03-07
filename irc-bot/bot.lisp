@@ -494,6 +494,13 @@ methods that support this."))
   (declare (ignore action))
   "Default action for irc is to privmsg"
   (privmsg sink to content))
+(defmethod send (action
+                 (sink bot-connection)
+                 (to target) (content cons))
+  (declare (ignore action))
+  "Default action for irc is to privmsg"
+  (privmsg sink to (remove-newlines (join-sequence content))))
+
 (defmethod privmsg ((sink bot-connection) (to target)
                     (content string))
   (irc:privmsg sink to content))
