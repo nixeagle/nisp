@@ -50,8 +50,7 @@
       (check-type boolean-number boolean-number)
       (eql #\1 boolean-number))))
 
-(defun test-read (string
-                  &aux (stream (make-string-input-stream string)))
+(defun make-php-readtable ()
   (let ((*readtable* (copy-readtable)))
     (flet ((ignore (&rest chars)
              (mapcar (lambda (char)
@@ -64,7 +63,15 @@
       (set-macro-character #\b #'boolean-reader)
       (set-macro-character #\O #'object-reader)
       (ignore #\: #\; #\i #\d)
-      (read stream))))
+      *readtable*)))
+
+(defparameter *php-readtable* (make-php-readtable))
+(defun php-readtable ()
+  *php-readtable*)
+(defun call-with-php-readtable (thunk)
+  (let ((*readtable* (php-readtable)))
+    (funcall thunk)))
+
 
 (defun assert-print-unreadable (object)
   "Signals `print-not-readable' error when `*print-readably*' is true.
