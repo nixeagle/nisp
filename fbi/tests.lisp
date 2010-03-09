@@ -17,3 +17,21 @@
                        ,@body)
        (close (socket-stream sock) :abort t))))
 
+#+ ()
+(with-fbi-socket (sock)
+  (synchronous-json-request (make-instance 'auth
+                                           :secret "sekrit"
+                                           :user "Hi danopia from nixeagle!")
+                            sock :json-symbols-package :nisp.fbi.json-classes))
+
+#+ ()
+(with-fbi-socket (sock)
+  (synchronous-request (make-instance 'auth
+                                      :secret "sekrit"
+                                      :user "Hi danopia from nixeagle!")
+                       sock))
+
+
+#+ ()
+(let ((sock (json-socket-connect "danopia.net" 5348)))
+  ())
