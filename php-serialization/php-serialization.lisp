@@ -73,6 +73,13 @@ OBJECT is given to the :object parameter of `print-not-readable'"
   (when *print-readably*
     (error (make-condition 'print-not-readable
                            :object object))))
+
+
+(defun pprint-string (stream string)
+  "Print STRING to STREAM serialized for php."
+  (assert-print-unreadable string)
+  (let ((*print-pretty* nil))
+    (format stream "s:~D:~S;" (length string) string)))
 (defun test-print (php-list)
   (let ((*print-right-margin* 1000000)
         (*print-pprint-dispatch* (copy-pprint-dispatch nil)))))
