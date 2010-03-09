@@ -120,4 +120,12 @@ PHP array elements always start with an integer or a string."
 
 (eos:def-suite root)
 (eos:test (unserialize-stream-array :suite root))
+
+(eos:test (php-array-element-p :suite root)
+  (eos:is-true (php-array-element-p '(1 . 2)))
+  (eos:is-true (php-array-element-p '(1 . something)))
+  (eos:is-true (php-array-element-p '("hi" . "hi")))
+  (eos:is-false (php-array-element-p '(1.1 . 2)))
+  (eos:is-false (php-array-element-p '(1 2)))
+  (eos:is-false (php-array-element-p '("hi" 2))))
 ;;; END
