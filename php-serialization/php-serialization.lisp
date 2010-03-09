@@ -80,6 +80,28 @@ OBJECT is given to the :object parameter of `print-not-readable'"
   (assert-print-unreadable string)
   (let ((*print-pretty* nil))
     (format stream "s:~D:~S;" (length string) string)))
+
+(defun pprint-acons (stream acons)
+  (assert-print-unreadable acons)
+  (format stream "~S~S" (car acons) (cdr acons)))
+
+(defun pprint-integer (stream integer)
+  "Print INTEGER to STREAM serialized as a php integer."
+  (assert-print-unreadable integer)
+  (let ((*print-pretty* nil))
+    (format stream "i:~D;" integer)))
+
+(defun pprint-float (stream float)
+  "Print FLOAT to STREAM serialized as a php decimal."
+  (assert-print-unreadable float)
+  (let ((*print-pretty* nil))
+    (format stream "D:~D;" float)))
+
+(defun pprint-boolean (stream boolean)
+  (assert-print-unreadable boolean)
+  (let ((*print-pretty* nil))
+    (format stream "b:~D;" (if boolean 1 0))))
+
 (defun php-array-element-p (object)
   "True if OBJECT can be serialized as a php array element.
 
