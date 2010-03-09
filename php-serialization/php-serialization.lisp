@@ -74,12 +74,19 @@ OBJECT is given to the :object parameter of `print-not-readable'"
     (error (make-condition 'print-not-readable
                            :object object))))
 
-
 (defun pprint-string (stream string)
   "Print STRING to STREAM serialized for php."
   (assert-print-unreadable string)
   (let ((*print-pretty* nil))
     (format stream "s:~D:~S;" (length string) string)))
+
+(defun pprint-list (stream list)
+  "Print LIST to STREAM serialized as a php array."
+  (assert-print-unreadable list)
+  (let ((*print-pretty* nil))
+    (print list)
+    (format stream "a:~D:" (length list)))
+  (format stream "{~{~S~}}" list))
 
 (defun pprint-acons (stream acons)
   (assert-print-unreadable acons)
