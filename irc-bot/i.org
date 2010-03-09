@@ -99,12 +99,17 @@
     3) You can MSG from irc -> twitter's protocol where the translation is
        from IRC's PRIVMSG -> a "tweet".
 
+* Thoughts
+  (Data source . FBI)
+  (From . Remote _person_ or _thing_, eg FBI's data source)
 
 * Tasks
 *** TODO Rewrite command routing system to new MOP hackery
     Move [[file:bot.lisp]] command routing system to new MOP hackery to
     emulate a network using generic functions.
-
+*** QUESTION Actions as keywords?
+    Do we need to have a full CLOS object to represent an action or could
+    we get by with keywords or some other lighter method?
 
 * Footnotes
 
