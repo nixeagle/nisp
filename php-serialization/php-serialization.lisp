@@ -66,6 +66,13 @@
       (ignore #\: #\; #\i #\d)
       (read stream))))
 
+(defun assert-print-unreadable (object)
+  "Signals `print-not-readable' error when `*print-readably*' is true.
+
+OBJECT is given to the :object parameter of `print-not-readable'"
+  (when *print-readably*
+    (error (make-condition 'print-not-readable
+                           :object object))))
 (defun test-print (php-list)
   (let ((*print-right-margin* 1000000)
         (*print-pprint-dispatch* (copy-pprint-dispatch nil)))))
