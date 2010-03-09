@@ -3,6 +3,7 @@
   (:nicknames :network-tree)
   (:export :network-tree-generic-function
            :network-tree-method
+           #:remaining-parameters
            #:parse-method-lambda-expression-body)
   ;; This whole shadowing import block is taken from
   ;; closer-mop-packages.lisp in order to correctly import the
