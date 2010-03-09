@@ -1,25 +1,12 @@
-;(require :asdf)
+(require :asdf)
+(require :sb-posix)
 (pushnew "/usr/share/common-lisp/systems/" asdf:*central-registry*)
 
-(pushnew "/home/james/lisp/asdf/" asdf:*central-registry* :test #'equal)
-(pushnew "/home/james/lisp/nisp/asdf/" asdf:*central-registry* :test #'equal)
-
-;;; debian ecl asdf install does not work right.
-;;; it has a problem with trying to load sbcl specific things.
-#+ (or ecl clisp)
-(pushnew "/home/james/lisp/asdf-install/asdf-install/" asdf:*central-registry*)
-#+:ecl
-;ecl
-(load "/home/james/lisp/asdf-install/asdf-install/load-asdf-install.lisp")
-
-#+:clisp
-(pushnew "/home/james/.asdf-install-dir/systems/" asdf:*central-registry*)
-;;; gcl is cltl1, so asdf-install probably won't work
-;;; ecl seems to not have asdf preloaded yet.
-#+ (not (or gcl ecl))
 (asdf:load-system :asdf-install)
 
-;(mapc 'require '(sb-bsd-sockets sb-posix sb-introspect sb-cltl2 asdf asdf-install))
+(mapc 'require '(sb-bsd-sockets sb-posix sb-introspect sb-cltl2 asdf asdf-install))
+
+
 
 ;(save-lisp-and-die "/home/james/sbcl.core-for-slime")
 ;(save-lisp-and-die "/home/nixeagle/lisp/sbcl.core-for-slime")
@@ -34,9 +21,6 @@
 
 #+sbcl
 (declaim (sb-ext:unmuffle-conditions sb-ext:compiler-note))
-#+:sbcl
-(declaim (optimize (debug 3) (safety 3) (speed 0) (space 0)
-                   (compilation-speed 0)))
 
 ;;; If I have 5am and sbcl running I want to ignore redefinition warnings
 ;;; due to a bug with how it handles redefining tests.
@@ -47,13 +31,24 @@
 (progn
   (setq sb-ext:*efficiency-note-cost-threshold* 2)
   (setq sb-ext:*derive-function-types* t))
+#+ ()
+(handler-bind ((asdf-install::key-not-found (lambda (x) (let ((restart (find-restart 'asdf-install::skip-gpg-check)))     (when restart (invoke-restart restart)))))) (asdf-install:install :metatilities))
+
+(pushnew "/home/james/lisp/asdf/" asdf:*central-registry* :test #'equal)
+(pushnew "/home/james/lisp/nisp/asdf/" asdf:*central-registry* :test #'equal)
+(pushnew "/home/james/lisp/nisp/emacs/slime/" asdf:*central-registry*)
+(pushnew "/home/james/lisp/nisp/emacs/slime/contrib/" asdf:*central-registry*)
 
 (require :swank)
 (require :eos)
 
+#+:sbcl
+(declaim (optimize (debug 3) (safety 3) (speed 0) (space 0)
+                   (compilation-speed 0)))
+
 (setq
  swank:*inspector-verbose* t
- swank:*globally-redirect-io* t)
+ swank:*globally-redirect-io* nil)
 
 (defun my-setup-server (&optional (port 2288))
   "Load up a swank instance ready to be connected to by emacs."
