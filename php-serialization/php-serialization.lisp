@@ -121,9 +121,20 @@ PHP array elements always start with an integer or a string."
   "The car of an acons must be an integer or string."
   '(and cons (satisfies php-array-element-p)))
 
+
+
 (defun test-print (php-list)
   (let ((*print-right-margin* 1000000)
-        (*print-pprint-dispatch* (copy-pprint-dispatch nil)))))
+        (*print-pprint-dispatch* (copy-pprint-dispatch nil))
+        (*print-pretty* t))
+    (set-pprint-dispatch 'string #'pprint-string)
+    (set-pprint-dispatch 'integer #'pprint-integer)
+    (set-pprint-dispatch 'float #'pprint-float)
+    (set-pprint-dispatch 'boolean #'pprint-boolean)
+    (set-pprint-dispatch 'php-array-element #'pprint-acons)
+    (set-pprint-dispatch 'cons #'pprint-list)
+
+    (princ-to-string php-list)))
 
 (eos:def-suite root)
 (eos:test (unserialize-stream-array :suite root))
