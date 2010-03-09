@@ -66,6 +66,10 @@
       (ignore #\: #\; #\i #\d)
       (read stream))))
 
+(defun test-print (php-list)
+  (let ((*print-right-margin* 1000000)
+        (*print-pprint-dispatch* (copy-pprint-dispatch nil)))))
+
 (eos:def-suite root)
 (eos:test (unserialize-stream-array :suite root))
 ;;; END
