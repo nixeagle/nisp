@@ -606,6 +606,7 @@ methods that support this."))
 (define-simple-command say
   (reply (remaining-parameters)))
 
+#+ ()
 (defmethod handle-nisp-command ((tree (eql "say"))
                                 (source abstract-data-source)
                                 (user abstract-user)
