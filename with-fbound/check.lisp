@@ -307,18 +307,16 @@ REASON-ARGS is provided, is generated based on the form of TEST:
   "Generates a TEST-SKIPPED result."
   `(add-result 'test-skipped :reason (format nil ,@reason)))
 
-(defmacro is-true (condition &rest reason-args)
+(defmacro is-true (condition)
   "Like IS this check generates a pass if CONDITION returns true
   and a failure if CONDITION returns false. Unlike IS this check
   does not inspect CONDITION to determine how to report the
   failure."
   `(if ,condition
-    (add-result 'test-passed :test-expr ',condition
-                :docstring `(format nil ,reason-args))
-    (process-failure
-     :docstring (format nil ,@reason-args)
-     :reason (format nil "~S did not return a true value" ',condition)
-     :test-expr ',condition)))
+       (add-result 'test-passed :test-expr ',condition)
+       (process-failure
+        :reason (format nil "~S did not return a true value" ',condition)
+        :test-expr ',condition)))
 
 (defmacro is-false (condition &rest reason-args)
   "Generates a pass if CONDITION returns false, generates a
