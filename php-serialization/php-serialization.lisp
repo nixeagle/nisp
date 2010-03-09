@@ -80,6 +80,18 @@ OBJECT is given to the :object parameter of `print-not-readable'"
   (assert-print-unreadable string)
   (let ((*print-pretty* nil))
     (format stream "s:~D:~S;" (length string) string)))
+(defun php-array-element-p (object)
+  "True if OBJECT can be serialized as a php array element.
+
+PHP array elements always start with an integer or a string."
+  (and (consp object)
+       (or (integerp (car object))
+           (stringp (car object)))))
+
+(deftype php-array-element ()
+  "The car of an acons must be an integer or string."
+  '(and cons (satisfies php-array-element-p)))
+
 (defun test-print (php-list)
   (let ((*print-right-margin* 1000000)
         (*print-pprint-dispatch* (copy-pprint-dispatch nil)))))
