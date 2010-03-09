@@ -603,7 +603,10 @@ methods that support this."))
             (mapcar #'car
                     (github-apply #'github::show-branches
                                   (network-tree::remaining-parameters)))))))
+(define-simple-command say
+  (reply (remaining-parameters)))
 
+#+ ()
 (defmethod handle-nisp-command ((tree (eql "say"))
                                 (source abstract-data-source)
                                 (user abstract-user)
