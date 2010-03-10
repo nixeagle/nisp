@@ -59,5 +59,5 @@
 
 (defmethod compute-effective-method
     ((generic-function network-tree-generic-function)
-     method-combination methods)
+     (method-combination t) methods)
   `(call-method ,(car methods) ,(cdr methods) ,(car methods)))
