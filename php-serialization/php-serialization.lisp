@@ -66,12 +66,15 @@
       *readtable*)))
 
 (defparameter *php-readtable* (make-php-readtable))
+
 (defun php-readtable ()
   *php-readtable*)
 (defun call-with-php-readtable (thunk)
   (let ((*readtable* (php-readtable)))
     (funcall thunk)))
 
+(defmacro with-php-readtable (&body body)
+  `(call-with-php-readtable (lambda () ,@body)))
 
 (defun assert-print-unreadable (object)
   "Signals `print-not-readable' error when `*print-readably*' is true.
