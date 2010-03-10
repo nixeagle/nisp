@@ -1,5 +1,12 @@
 (defpackage #:php-serialization
-  (:use :cl))
+  (:use :cl)
+  (:export
+   #:call-with-php-pprint-table
+   #:call-with-php-readtable
+   #:php-readtable
+   #:php-pprint-table
+   #:with-php-pprint-table
+   #:with-php-readtable))
 
 (defun ignore-reader (stream char)
   "Ignore the CHAR and move on!"
