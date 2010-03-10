@@ -91,7 +91,6 @@ OBJECT is given to the :object parameter of `print-not-readable'"
   "Print LIST to STREAM serialized as a php array."
   (assert-print-unreadable list)
   (let ((*print-pretty* nil))
-    (print list)
     (format stream "a:~D:" (length list)))
   (format stream "{~{~S~}}" list))
 
