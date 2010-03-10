@@ -141,14 +141,16 @@ PHP array elements always start with an integer or a string."
 (defparameter *php-table* (make-php-pprint-dispatch-table)
   "Pretty print dispatch table for serializing to php.")
 
-(defun php-pprint-dispatch-table ()
+(defun php-pprint-table ()
   *php-table*)
 
-(defun call-with-php-pprint-dispatch-table (thunk)
+(defun call-with-php-pprint-table (thunk)
   (declare (type function thunk))
-  (let ((*print-pprint-dispatch* (php-pprint-dispatch-table)))
+  (let ((*print-pprint-dispatch* (php-pprint-table)))
     (funcall thunk)))
 
+(defmacro with-php-pprint-table (&body body)
+  `(call-with-php-pprint-table (lambda () ,@body)))
 
 (eos:def-suite root)
 (eos:test (unserialize-stream-array :suite root))
