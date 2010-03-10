@@ -45,7 +45,9 @@ This form is valid for use in `defclass'."
 (macrolet ((define-mop (name function &optional generic-docstring)
                `(progn
                   (defgeneric ,name (class)
-                    (:documentation ,generic-docstring))
+                    ,@(if generic-docstring
+                         `(:documentation ,generic-docstring)
+                         (values)))
                   (defmethod ,name ((class class))
                     (mapcar #',function (class-direct-slots class)))
                   (defmethod ,name ((instance standard-object))
