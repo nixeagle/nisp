@@ -515,8 +515,17 @@ methods that support this."))
 (define-simple-command source
   (reply "I'm written in common lisp by nixeagle. You can find my source at <http://github.com/nixeagle/nisp/tree/master/irc-bot/>"))
 
+(defun shorturl-is.gd (string)
+  (declare (type string string))
+  (drakma:http-request "http://is.gd/api.php"
+                       :parameters `(("longurl" . ,string))))
+
 (define-simple-command beta
   (network-tree::next-node))
+
+(define-simple-command beta-shorturl
+  (reply (shorturl-is.gd (remaining-parameters))))
+
 ;;; Not going to mess with this
 #+ () (define-simple-command beta-nikurl
   (reply (car (cl-ppcre:all-matches-as-strings
