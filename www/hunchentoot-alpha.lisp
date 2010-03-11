@@ -1,6 +1,6 @@
 (in-package :cl-user)
 (defpackage #:nisp.www
-  (:use :cl :hunchentoot)
+  (:use :cl :hunchentoot :alexandria)
   (:nicknames :www))
 (in-package :nisp.www)
 
