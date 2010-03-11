@@ -3,7 +3,8 @@
 (defclass nisp-command-network-tree-generic-function
     (network-tree-generic-function) ()
   (:metaclass closer-mop:funcallable-standard-class)
-  (:default-initargs :method-class (find-class 'handle-nisp-command-method)))
+  (:default-initargs :method-class (find-class 'handle-nisp-command-method)
+    #+ccl :closer-patch #+ccl t))
 
 (defclass handle-nisp-command-method (network-tree-method)
   ((call-count :initform 0 :type non-negative-fixnum
