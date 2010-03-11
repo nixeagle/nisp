@@ -73,4 +73,11 @@ hunchentoot acceptor."))
   (format nil "~A/compare/~A...~A"
           repository before after))
 
+(defun github-compare-view-from-payload (payload-alist)
+  (declare (type list payload-alist))
+  (github-compare-view
+   (assoc-value (assoc-value payload-alist :repository) :url)
+   (assoc-value payload-alist :before)
+   (assoc-value payload-alist :after)))
+
 ;;; End hunchentoot-alpha.lisp (for magit/git)
