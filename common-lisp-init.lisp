@@ -1,4 +1,5 @@
 (require :asdf)
+#-:ccl
 (pushnew "/usr/share/common-lisp/systems/" asdf:*central-registry*)
 
 (pushnew "/home/james/lisp/asdf/" asdf:*central-registry* :test #'equal)
@@ -8,6 +9,8 @@
 #+:ccl
 (pushnew "/home/james/lisp/asdf-install/asdf-install/"
          asdf:*central-registry* :test #'equal)
+(pushnew "/home/james/.asdf-install-dir/systems/" asdf:*central-registry*)
+
 (asdf:load-system :asdf-install)
 
 (asdf:load-system :swank)
@@ -19,6 +22,7 @@
 
 (in-package :cl-user)
 
+#+ ()
 (asdf:operate 'asdf:load-op :nisp.user)
-
+#+ ()
 (in-package :nisp.user)
