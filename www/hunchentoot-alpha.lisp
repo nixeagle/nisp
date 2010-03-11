@@ -69,4 +69,8 @@ hunchentoot acceptor."))
   (json:decode-json-from-string
    (cdr (assoc "payload" (post-parameters request) :test #'equalp))))
 
+(defun github-compare-view (repository before after)
+  (format nil "~A/compare/~A...~A"
+          repository before after))
+
 ;;; End hunchentoot-alpha.lisp (for magit/git)
