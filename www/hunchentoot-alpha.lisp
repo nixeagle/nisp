@@ -80,4 +80,9 @@ hunchentoot acceptor."))
    (assoc-value payload-alist :before)
    (assoc-value payload-alist :after)))
 
+(defun github-address-p (octets &key
+                         (octets-begin (list 207 97 227 224))
+                         (octets-end (list 207 97 227 255)))
+  (every #'<= octets-begin octets octets-end))
+
 ;;; End hunchentoot-alpha.lisp (for magit/git)
