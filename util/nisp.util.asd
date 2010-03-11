@@ -14,9 +14,6 @@
   :depends-on (:iterate :eos :with-fbound :alexandria)
   :components
   ((:file "declarations")
-   (:file "mapping")
-   (:file "palindrome")
    (:file "types")
    (:file "util-protocol")
-   (:file "helpers")
    (:file "tests" :depends-on ("declarations"))))
