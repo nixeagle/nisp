@@ -479,7 +479,9 @@ methods that support this."))
 
 (defmacro define-simple-command (name &body body)
   `(defmethod handle-nisp-command
-       ((tree (eql ,(substitute #\Space #\- (symbol-name name))))
+       ((tree (eql #-sbcl(network-tree::intern-network-tree-node
+                     ,(substitute #\Space #\- (symbol-name name)))
+                   #+sbcl ,(substitute #\Space #\- (symbol-name name))))
         (source abstract-data-source)
         (user abstract-user)
         (address abstract-target)
