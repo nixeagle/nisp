@@ -85,4 +85,13 @@ hunchentoot acceptor."))
                          (octets-end (list 207 97 227 255)))
   (every #'<= octets-begin octets octets-end))
 
+(define-easy-handler (github-hook :uri "/github-hook") (payload)
+  (if (github-address-p (mapcar #'parse-integer
+                                (split-sequence:split-sequence #\. (remote-addr*))))
+      (debug-to-irc (concatenate 'string "Compare view for nisp push: "
+                                 (nisp.i::shorturl-is.gd
+                                  (github-compare-view-from-payload
+                                   (json:decode-json-from-string payload)))))
+      "You are not github, bye now!"))
+
 ;;; End hunchentoot-alpha.lisp (for magit/git)
