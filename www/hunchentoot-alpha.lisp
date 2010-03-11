@@ -19,6 +19,14 @@
 can specialize on the acceptor class and not mess with the normal
 hunchentoot acceptor."))
 
+(defclass nisp-1337-acceptor (nisp-site-acceptor)
+  ()
+  (:default-initargs :port 1337 :name :leet)
+  (:documentation "Messing around on port 1337 mostly. This is just a
+  silly and near worthless pun with numbers meaning 'leet'."))
+
+(defvar *nisp-1337-acceptor* (make-instance 'nisp-1337-acceptor))
+
 (defvar *nisp-acceptor* (make-instance 'nisp-site-acceptor)
   ;; Note there is an oddity that I cannot stop one of these and then
   ;; start it and expect it to work as I would normally intend. Calling
@@ -34,7 +42,6 @@ hunchentoot acceptor."))
   "Contents of the last hunchentoot request.")
 
 ;;; Modifications/around methods on hunchentoot generics.
-#+ ()
 (defmethod handle-request :before ((acceptor nisp-site-acceptor) request)
   "Set *ALPHA-LAST-REQUEST* to REQUEST."
   (setq *nisp-last-request* request)
