@@ -144,7 +144,7 @@ methods that support this."))
 
                      :server-name "irc.freenode.org"
                      :comchar ","))
-(defmethod shared-initialize :after ((bot bot-connection) slot-names
+(defmethod shared-initialize :after ((bot bot-connection) (slot-names t)
                                      &key nickname username realname)
   (when (and nickname username realname)
     (setf (slot-value bot 'irc:user)
