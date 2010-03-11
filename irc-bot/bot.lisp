@@ -74,76 +74,55 @@ All things made by `make-anon-bot-user-class' superclass this."))
 ;;;{{{ connection classes
 (defclass bot-connection (connection comchar
                                      abstract-data-source
-                                     abstract-data-sink) ())
+                                     abstract-data-sink) ()
+  (:default-initargs :username "lisp" :nickname "nisp"
+                     :realname "Nixeagle's lisp experiments"
+                     :server-port 6667
+                     :comchar ","))
 (defclass connect-with-background-handler-mixin () ()
   (:documentation "Superclass this to connect directly to background on
 methods that support this."))
 (defclass lo-i-bot-connection (bot-connection
                                connect-with-background-handler-mixin)
   ()
-  (:default-initargs :username "lisp" :nickname "i"
-                     :realname "bot" :server-port 9999
-                     :server-name "127.0.0.1"
-                     :comchar ",")
+  (:default-initargs :server-port 9999 :server-name "127.0.0.1")
   (:documentation "Specifically for testing disconnect behavior."))
 
 (defclass 8b-i-bot-connection (bot-connection
                                connect-with-background-handler-mixin)
   ()
-  (:default-initargs :username "lisp" :nickname "i"
-                     :realname "bot" :server-port 6667
-                     :server-name "irc.eighthbit.net"
-                     :comchar ",")
+  (:default-initargs :server-name "irc.eighthbit.net")
   (:documentation "blah"))
 
 (defclass 8b-nisp-bot-connection (bot-connection
                                connect-with-background-handler-mixin)
   ()
-  (:default-initargs :username "lisp" :nickname "nisp"
-                     :realname "bot" :server-port 6667
-                     :server-name "irc.eighthbit.net"
-                     :comchar "|")
+  (:default-initargs :server-name "irc.eighthbit.net")
   (:documentation "blah"))
 
 (defclass slack-nisp-bot-connection (bot-connection
                                      connect-with-background-handler-mixin)
   ()
-  (:default-initargs :username "lisp" :nickname "nisp"
-                     :realname "Nixeagle's lisp experiments bot."
-                     :server-port 6667
-                     :server-name "irc.fuckinslack.net"
-                     :comchar ",")
+  (:default-initargs :server-name "irc.fuckinslack.net")
   (:documentation "Bot connection for slack's network."))
 
 (defclass sonic-nisp-bot-connection (bot-connection
                                      connect-with-background-handler-mixin)
   ()
-  (:default-initargs :username "lisp" :nickname "nisp"
-                     :realname "Nixeagle's lisp experiments bot."
-                     :server-port 6667
-                     :server-name "irc.57o9.net"
-                     :comchar ",")
+  (:default-initargs :server-name "irc.57o9.net")
   (:documentation "sonicrules1234's irc network."))
 
 (defclass flare-nisp-bot-connection (bot-connection
                                      connect-with-background-handler-mixin)
   ()
-  (:default-initargs :username "lisp" :nickname "nisp"
-                     :realname "Nixeagle's lisp experiments bot."
-                     :server-port 6667
-                     :server-name "flare183.net"
-                     :comchar ",")
+  (:default-initargs :server-name "flare183.net")
   (:documentation "Bot connection for flare183's server."))
 (defclass freenode-nisp-bot-connection (bot-connection
                                         connect-with-background-handler-mixin
-                                       )
+                                        )
   ()
-  (:default-initargs :username "lisp" :nickname "nisp"
-                     :realname "nixeagle's lisp experiments bot."
-                     :server-port 6667
+  (:default-initargs :server-name "irc.freenode.org"))
 
-                     :server-name "irc.freenode.org"
-                     :comchar ","))
 (defmethod shared-initialize :after ((bot bot-connection) (slot-names t)
                                      &key nickname username realname)
   (when (and nickname username realname)
