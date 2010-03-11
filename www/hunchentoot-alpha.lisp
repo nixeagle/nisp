@@ -64,4 +64,9 @@ hunchentoot acceptor."))
       (setq *default-handler* 'default-handler)))
 
 
+;;; Just messing with github hooks
+(defun decode-github-hook (request)
+  (json:decode-json-from-string
+   (cdr (assoc "payload" (post-parameters request) :test #'equalp))))
+
 ;;; End hunchentoot-alpha.lisp (for magit/git)
