@@ -77,12 +77,16 @@ A valid tree-symbol is defined as anything that does not contain a space."
 
 ;;;{{{ Tree classes
 (defclass network-tree-parent ()
-  ((parent :initarg :parent
+  (#+ () (parent :initarg :parent
            :reader network-tree-parent))
-  (:default-initargs :parent nil))
+ #+ () (:default-initargs :parent nil))
 
 (defclass tree-generic-direct-nodes (network-tree-parent)
-  ((direct-nodes :initform (make-hash-table :test 'equalp :weakness :value)
+  ((direct-nodes :initform
+                 (make-hash-table :test 'equalp
+                                  #+sbcl :weakness
+                                  #+ccl :weak
+                                  #+ (or sbcl ccl) :value)
                  :reader tree-generic-direct-nodes)))
 
 (defun tree-generic-direct-node (tree arg)
@@ -92,7 +96,9 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (gethash arg (tree-generic-direct-nodes tree)))
 
 (defclass network-tree-generic-function
-    (cl:standard-generic-function tree-generic-direct-nodes)
+    (#+sbcl
+     cl:standard-generic-function
+     #-sbcl standard-generic-function tree-generic-direct-nodes)
   ()
   (:metaclass closer-mop:funcallable-standard-class)
   (:default-initargs :method-class (find-class 'tree-method)))
@@ -103,7 +109,8 @@ A valid tree-symbol is defined as anything that does not contain a space."
   (eql-specializer-object obj))
 (defclass network-tree-method (standard-method network-tree-parent)
   ((methods :type list :reader network-tree-method-methods
-            :initform ())))
+            :initform ()))
+  #+ccl (:default-initargs :closer-patch t))
 (defclass tree-method (network-tree-method)
   ())
 
@@ -129,7 +136,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
          (or (gethash (car symbols) (tree-generic-direct-nodes node))
              (setf (gethash (car symbols) (tree-generic-direct-nodes node))
                    (make-instance 'network-tree-node :object (car symbols)
-                                  :parent node)))
+                                  )))
          (cdr symbols))
         node)))
 
@@ -184,6 +191,7 @@ is translated into a list of symbols."
           (declare (special *network-tree-remaining*))
           (setf (car args) (the network-tree-node
                              (tree-generic-direct-node *network-tree-nodes* command)))
+          (print args)
           (apply it args)))))
 
 
@@ -206,11 +214,12 @@ is translated into a list of symbols."
                                             (function next-node)
                                             (function remaining-parameters)))
                         ,@body))))
-        (call-next-method generic-function method expression environment)))))
+        (let  ((lamb (call-next-method generic-function method expression environment)))
+          lamb)))))
 
 (defmethod make-load-form ((self network-tree-node) &optional env)
   (declare (ignore env))
-  (values (intern-network-tree-node (network-tree-node-object self))
+  (values `(intern-network-tree-node ,(network-tree-node-object self))
           nil))
 
 #+ ()
