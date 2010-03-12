@@ -1,9 +1,8 @@
 (defpackage #:nisp.fbi.irc-commands
-  (:use :cl :usocket :iterate :json :nisp.util-protocol
+  (:use :cl :usocket :iterate :json
         :nisp.fbi.util
         :nisp.util.json
         :nisp.util.usocket
-        :nisp.util-types
         :bordeaux-threads
         :nisp.fbi.json-classes
         :nisp.fbi.sockets))
@@ -22,7 +21,7 @@
                    Specializations here are based on the type of action recieved ~
                    and "))
 (defgeneric fbi-message-hook (from json-mixin json-socket)
-  (:documentation 
+  (:documentation
    "Messages that are FROM a specific component get directed here.")
   (:method ((from symbol) (json json-mixin) (sock json-socket))
     "If we don't know what FROM is, don't handle it, but don't error."
@@ -81,7 +80,7 @@
         (funcall #'md5:md5sum-sequence
                  (if (< 0 (array-dimension (args json) 0))
                      (arglist->string
-                      (args json)) 
+                      (args json))
                      "")))))
 #+ ()
 (defmethod irc-command-hook ((cmd (eql :hello)) json socket)

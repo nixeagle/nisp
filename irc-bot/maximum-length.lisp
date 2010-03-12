@@ -1,5 +1,5 @@
 (defpackage #:nisp.clos.maximum-length
-  (:use :cl :nisp.util-types)
+  (:use :cl :alexandria)
   (:export :maximum-length-mixin
            :limited-length-mixin
            :maximum-length
@@ -39,4 +39,3 @@ This is the set of all objects that decompose to a string."))
                    :initarg :maximum-length
                    :initform (error "Maximum length must be specified.")
                    :documentation "Maximum length a sequence may be.")))
-

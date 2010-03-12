@@ -1,5 +1,5 @@
 (defpackage #:nisp.fbi.json-classes
-  (:use :cl :usocket :json :iterate :nisp.util-protocol :alexandria
+  (:use :cl :usocket :json :iterate :alexandria
         :nisp.util.json :eos :with-fbound)
   (:export :auth :subscribe :json-action-mixin
            :commit-author :commit-data
@@ -9,7 +9,7 @@
            #:json->alist #:make-json-type-signature
            #:json->string
            #:make-irc-private-message
-           
+
            #:make-subscribe #:json-nisp-message
 
            ;; publish
@@ -230,7 +230,7 @@ A type signature is basically a list of all keys in a hash table from cl-json"
         (nisp.fbi.json-classes::json-nisp-message
          (format nil "Class ~A does not exist. Bindings were: ~A"
                  type-class signature)))
-      (if (and (null symbol) (null class)) 
-          (call-next-method bindings nil 
+      (if (and (null symbol) (null class))
+          (call-next-method bindings nil
                             superclasses)
           (make-object bindings type-class superclasses)))))

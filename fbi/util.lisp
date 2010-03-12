@@ -1,5 +1,5 @@
 (defpackage #:nisp.fbi.util
-  (:use :cl :iterate :nisp.util-types)
+  (:use :cl :iterate)
   (:export #:make-keyword))
 
 (in-package :nisp.fbi.util)

@@ -1,13 +1,13 @@
 (defpackage #:nisp.irc-types
-  (:use :common-lisp :iterate :nisp.util-types)
+  (:use :common-lisp :iterate :alexandria)
   (:export #:length<= maximum-message-size))
 
 (in-package :nisp.irc-types)
 
 (defmacro ct (form type)
   `(let ((x ,form))
-     (check-type x ,type 
-                 (format nil "~S:~%~A" ',type 
+     (check-type x ,type
+                 (format nil "~S:~%~A" ',type
                          (documentation ',type 'type)))))
 
 
@@ -22,7 +22,7 @@ If SEQUENCE is shorter then UPTO-COUNT return its length."
   (declare (type sequence sequence)
            (type positive-fixnum upto-count))
   (loop for char across sequence
-          counting char into count 
+          counting char into count
           when (> count upto-count) return nil
      finally (return count)))
 #+ (or)
@@ -34,7 +34,7 @@ If SEQUENCE is shorter then UPTO-COUNT return its length."
   "Represents a valid socket port."
   '(integer 1  65535))
 
-(deftype letter-char () 
+(deftype letter-char ()
   "Represents an uppercase or lowercase letter in ASCII."
   '(member #\a #\b #\c #\d #\e #\f #\g #\h #\i #\j #\k #\l #\m #\n
     #\o #\p #\q #\r #\s #\t #\u #\v #\w #\x #\y #\z #\A #\B #\C #\D
@@ -64,7 +64,7 @@ In other words: \\\r\\\n"
   "Valid character at the start of an IRC nickname."
   ;; These are taken from advice from duckinator on eighthbit.net/offtopic
   ;; Also see rfc 2812 sec: 2.3.1
-  '(or 
+  '(or
     letter-char
     special-char))
 
@@ -93,7 +93,7 @@ On most IRC networks # indicates a normal channel."
 In detail, this refers to the <user>@<hostmask> form."
   ;; Yes rfc2812 says #\Bel is ok here. Go figure.
   `(and character
-        (not (or newline-char 
+        (not (or newline-char
                  (member #\Nul #\Space #\@)))))
 
 (deftype valid-integer-command ()
@@ -126,11 +126,11 @@ addition to whatever DOCSTRING is given."
                               (- (length (symbol-name type-name)) 2))))
                (assert (not (string= (type-name-substr)
                                      "-P"))
-                       (type-name) 
+                       (type-name)
                        "~% Types should not end in ~S" (type-name-substr)))
              `(defun ,(intern (concatenate 'string (symbol-name type-name) "-P")) (object)
-                ,(concatenate 'string 
-                              (or docstring 
+                ,(concatenate 'string
+                              (or docstring
                                   "MISSING DOCSTRING: WRITE ME!")
                               "
 
@@ -171,7 +171,7 @@ Type documentation:
   "Represents the user part of <user>@<hostmask>."
   '(satisfies username-string-p))
 
-(macrolet ((define-string-p 
+(macrolet ((define-string-p
                (name start-character-type character-type
                      &optional docstring)
              "Define predicates that check types of the form:
@@ -188,7 +188,7 @@ Type documentation:
   (define-string-p channel-string-p channel-start-char channel-char))
 
 (deftype nickname-string ()
-  `(and 
+  `(and
     (vector character)
     (satisfies nickname-string-p)))
 
@@ -198,7 +198,7 @@ Type documentation:
   "Valid channel name.
 
 Needs to be m/[#!+&][^ \x007,:]+/"
-  `(and 
+  `(and
     (vector character ,size)
     (satisfies channel-string-p)))
 

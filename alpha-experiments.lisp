@@ -1,6 +1,6 @@
 (in-package :cl-user)
 (defpackage #:nisp.alpha
-  (:use :common-lisp :iterate :nisp.util-types)
+  (:use :common-lisp :iterate)
   (:nicknames :alpha :a))
 (in-package :nisp.alpha)
 
@@ -44,4 +44,3 @@ This implies that SYMBOL actually refers to a structure."
 (defstruct 4-slot-structure a b c d)
 
 (defparameter *4slot* (make-4-slot-structure :a "hi" :b 23 :d "hello!"))
-

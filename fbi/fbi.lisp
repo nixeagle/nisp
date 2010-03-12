@@ -1,7 +1,7 @@
 (eval-when (:compile-toplevel)
   (asdf:load-system :cl-json))
 (defpackage #:nisp.fbi
-  (:use :cl :usocket :json :iterate :nisp.util-protocol :nisp.util.json))
+  (:use :cl :usocket :json :iterate :nisp.util.json))
 
 (in-package :nisp.fbi)
 
@@ -9,7 +9,7 @@
 
 
 (defpackage #:nisp.fbi.sockets
-  (:use :cl :usocket :json :iterate :nisp.util-protocol
+  (:use :cl :usocket :json :iterate
         :nisp.fbi.json-classes :nisp.util.json :nisp.util.usocket)
   (:nicknames :fbi-sockets)
   (:shadow :socket-connect))

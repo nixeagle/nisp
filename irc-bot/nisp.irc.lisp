@@ -1,7 +1,7 @@
 (in-package :cl-user)
 (defpackage #:nisp.irc
   (:use :common-lisp :nisp.clos.maximum-length
-        :iterate :metabang-bind :nisp.irc-types :nisp.util-types
+        :iterate :metabang-bind :nisp.irc-types
         ))
 (in-package :nisp.irc)
 ;;; General generics
@@ -43,7 +43,7 @@ This is completely unrelated to the lisp reader."))
   (:documentation
    "Set NICK on OBJECT.
 
-NICK has several constraints. 
+NICK has several constraints.
   - It must be a character string.
   - It must start with NICKNAME-START-CHARACTER.
   - Type of the second character on must be NICKNAME-CHARACTER.
@@ -57,13 +57,13 @@ NICK has several constraints.
   (:default-initargs :maximum-length 512))
 
 (defclass abstract-username (username-mixin maximum-length)
-  ((user :type string 
-         :accessor username 
+  ((user :type string
+         :accessor username
          :initarg :user
          :initform (error "Username must be provided."))))
 
 (defclass abstract-nickname (nickname-mixin maximum-length)
-  ((nickname :type string 
+  ((nickname :type string
              :accessor nickname
              :initarg :nick
              :initform (error "Nickname must be provided.")
@@ -166,7 +166,7 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 
 #+ () (defmethod initialize-instance ((instance identifier)
                                 &rest initargs &key &allow-other-keys)
-  (setf (getf initargs :username) 
+  (setf (getf initargs :username)
         (make-username (getf initargs :username)))
   (setf (getf initargs :nickname)
         (make-nickname (getf initargs :nickname)))
@@ -193,6 +193,6 @@ This does _not_ cause [ ] \\ ~ to be translated to { } | ^."
 (defclass raw-irc-protocol-line (raw-protocol-line maximum-message-length) ())
 
 (defpackage #:nisp-irc-user
-  (:use :cl :usocket :nisp.irc :nisp.irc-types :nisp.util-types
+  (:use :cl :usocket :nisp.irc :nisp.irc-types :alexandria
         :iterate))
 (in-package :nisp-irc-user)
