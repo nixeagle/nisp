@@ -11,9 +11,7 @@
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv3 or later"
   :description "irc bot"
-  :depends-on (:iterate :eos :with-fbound :alexandria)
+  :depends-on (:iterate :eos :alexandria)
   :components
-  ((:file "declarations")
-   (:file "types")
-   (:file "util-protocol")
-   (:file "tests" :depends-on ("declarations"))))
+  ((:file "types")
+   (:file "util-protocol")))
