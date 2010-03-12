@@ -36,8 +36,7 @@ future this solves most issues.")
                                      "~A" (irc:hostname user))
                       :direct-superclasses (list (find-class 'bot-user)))))
 
-(defvar *irc-bot-instances* nil
-  "Global list of bot instances.")
+
 (defclass target (abstract-target) ())
 
 (defclass bot-user (irc:user target abstract-user) ()
