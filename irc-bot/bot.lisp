@@ -255,23 +255,6 @@ methods that support this."))
   (generate-short-test-summary
    (ensure-symbol (string-upcase (car (split-command-string suite))))))
 
-
-
-(defmethod eql-specializer->string ((object closer-mop:eql-specializer))
-  (string-downcase (symbol-name (closer-mop:eql-specializer-object object))))
-
-(defun test-lookup (specializer
-                    &optional (package :nisp.i.command-argument-symbols))
-  (mapcar (lambda (x)
-            (mapcar #'eql-specializer->string
-                    (remove-if-not (lambda (object)
-                                     (typep object 'closer-mop:eql-specializer))
-                                   x)))
-          (mapcar #'closer-mop:method-specializers
-                  (closer-mop:specializer-direct-methods
-                   (closer-mop:intern-eql-specializer
-                    (find-symbol (string-upcase specializer) package))))))
-
 (defmethod initialize-instance :after ((instance irc-message-content)
                                        &rest initargs &key bot-connection)
   (declare (ignore initargs)
