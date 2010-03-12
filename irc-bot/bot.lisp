@@ -181,14 +181,28 @@ methods that support this."))
       (target message)))
 
 (defvar *it*)
-(defmethod irc-handle-privmsg ((message irc:irc-privmsg-message))
+(defmethod irc-handle-privmsg ((message irc:irc-privmsg-message) &aux
+                               (irc (irc:connection message))
+                               (source (irc:source message))
+                               (to (reply-target message))
+                               (cmd (message-text message)))
   "i bot test."
   (setq *it* message)
   (handler-case
-      (handle-command (irc:connection message)
-                      message
-                      (reply-target message)
-                      (message-text message))
+      (when (and (> (length cmd) 0)
+                 (find (comchar irc) cmd :end 1))
+        (route irc
+               (make-instance 'irc-user
+                              :address (typecase to
+                                         (irc:channel (ensure-irc-bot-channel to))
+                                         (string (ensure-irc-bot-channel
+                                                  (irc:find-channel irc to)))
+                                         (irc:user (ensure-irc-bot-user to)))
+                              :user (ensure-irc-bot-user
+                                     (ensure-user-host (irc:find-user irc source)
+                                                       (irc:host message))))
+               (make-instance 'irc-message-content :message cmd
+                              :bot-connection irc) t t))
     (error (condition) (describe condition))))
 
 (defclass sender ()
@@ -268,35 +282,6 @@ methods that support this."))
   (if (typep user-object 'bot-user)
       user-object
       (change-class user-object 'bot-user)))
-
-(defgeneric handle-command (connection sender to cmd))
-
-(defmethod handle-command ((irc connection) sender (to string) cmd)
-  "Look up which channel TO is talking about and pass it along."
-  (handle-command irc sender (irc:find-channel irc to) cmd))
-
-(defmethod handle-command ((irc connection) sender (to irc:channel) cmd)
-  (handle-command irc
-                  (ensure-user-host (irc:find-user irc (irc:source sender))
-                                    (irc:host sender))
-                  (ensure-irc-bot-channel to) cmd))
-
-(defmethod handle-command ((irc connection) sender (to irc:user) cmd)
-  (handle-command irc
-                  (ensure-user-host (irc:find-user irc (irc:source sender))
-                                    (irc:host sender))
-                  (ensure-irc-bot-user to)
-                  cmd))
-(defmethod handle-command ((irc bot-connection) (sender irc:user)
-                           to cmd)
-  (handler-case
-      (when (and (> (length cmd) 0)
-                 (find (comchar irc) cmd :end 1))
-        (route irc (make-instance 'irc-user :address to
-                                  :user (ensure-irc-bot-user sender))
-               (make-instance 'irc-message-content :message cmd
-                              :bot-connection irc) t t))
-    (error (condition) (irc:privmsg irc to condition))))
 
 (defmethod generate-short-test-summary ((suite symbol))
   "Run SUITE's tests and print a short report."
