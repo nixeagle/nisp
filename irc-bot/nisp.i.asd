@@ -35,11 +35,11 @@
    (:file "bot-types")
    (:file "symbols")
    (:file "nisp-handle-command-method")
-   (:file "bot")
    (:file "i.fbi")
    (:module "irc"
             :components
             ((:file "connect")))
+   (:file "bot")
    (:module "commands"
             :components
             ((:file "github")))
