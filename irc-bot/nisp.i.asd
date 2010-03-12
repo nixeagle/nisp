@@ -43,4 +43,5 @@
    (:module "commands"
             :components
             ((:file "github")))
+   (:file "user-init")
    (:file "tests")))

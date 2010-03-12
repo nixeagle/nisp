@@ -362,11 +362,6 @@ methods that support this."))
                          (address from) (make-instance 'abstract-identity)
                          (make-instance 'abstract-action) content)))
 
-
-(load (merge-pathnames "config.lisp" +root-directory+)
-      :if-does-not-exist nil)
-
-
 #+ ()
 (defmethod handle-nisp-command ((tree (eql "say"))
                                 (source abstract-data-source)
