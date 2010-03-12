@@ -1,6 +1,6 @@
 (in-package :nisp.i)
 
-;;;{{{ Random helpers:
+
 (defun remove-newlines (string)
   "Remove newlines from STRING."
   (declare (type string string))
@@ -12,7 +12,11 @@
 (test (join-sequence :suite nil)
   (with-fbound (join-sequence)
     ('("a" "b")) "a b"))
-;;;}}}
+
+(defun shorturl-is.gd (string)
+  (declare (type string string))
+  (drakma:http-request "http://is.gd/api.php"
+                       :parameters `(("longurl" . ,string))))
 
 (defvar +root-directory+
   (asdf:system-relative-pathname (asdf:find-system :nisp.i) "/")
@@ -57,8 +61,8 @@ All things made by `make-anon-bot-user-class' superclass this."))
    (address :initarg :address :type target :reader address)))
 
 (defclass irc-message-content (abstract-text-message-content)
-  ()
-  )
+  ())
+
 (defmethod commandp ((object irc-message-content))
   (not (string= (full-message object) (message object))))
 
@@ -376,10 +380,6 @@ methods that support this."))
 (define-simple-command source
   (reply "I'm written in common lisp by nixeagle. You can find my source at <http://github.com/nixeagle/nisp/tree/master/irc-bot/>"))
 
-(defun shorturl-is.gd (string)
-  (declare (type string string))
-  (drakma:http-request "http://is.gd/api.php"
-                       :parameters `(("longurl" . ,string))))
 
 (define-simple-command beta
   (network-tree::next-node))
@@ -391,15 +391,7 @@ methods that support this."))
 (define-simple-command say
   (reply (remaining-parameters)))
 
-#+ ()
-(defmethod handle-nisp-command ((tree (eql "say"))
-                                (source abstract-data-source)
-                                (user abstract-user)
-                                (address abstract-address)
-                                (identity abstract-identity)
-                                (action abstract-action)
-                                (content abstract-message-content))
-  (privmsg source address (network-tree::remaining-parameters)))
+
 (defgeneric route (source from content to sink))
 (defmethod route :around (source from content to sink)
   "Time how long calls and what parems were used and put this timing data
@@ -430,5 +422,16 @@ methods that support this."))
 
 (load (merge-pathnames "config.lisp" +root-directory+)
       :if-does-not-exist nil)
+
+
+#+ ()
+(defmethod handle-nisp-command ((tree (eql "say"))
+                                (source abstract-data-source)
+                                (user abstract-user)
+                                (address abstract-address)
+                                (identity abstract-identity)
+                                (action abstract-action)
+                                (content abstract-message-content))
+  (privmsg source address (network-tree::remaining-parameters)))
 
 ;;; END
