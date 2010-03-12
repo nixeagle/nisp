@@ -1,10 +1,5 @@
 (in-package :nisp.i)
 
-(defun shorturl-is.gd (string)
-  (declare (type string string))
-  (drakma:http-request "http://is.gd/api.php"
-                       :parameters `(("longurl" . ,string))))
-
 (defvar +root-directory+
   (asdf:system-relative-pathname (asdf:find-system :nisp.i) "/")
   "The root of where the asdf source is at.
@@ -254,15 +249,6 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (network-tree::next-node))
 (define-simple-command source
   (reply "I'm written in common lisp by nixeagle. You can find my source at <http://github.com/nixeagle/nisp/tree/master/irc-bot/>"))
-
-
-(define-simple-command beta
-  (network-tree::next-node))
-
-(define-simple-command beta-shorturl
-  (reply (shorturl-is.gd (remaining-parameters))))
-
-
 (define-simple-command say
   (reply (remaining-parameters)))
 

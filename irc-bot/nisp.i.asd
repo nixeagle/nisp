@@ -42,6 +42,7 @@
    (:file "bot")
    (:module "commands"
             :components
-            ((:file "github")))
+            ((:file "github")
+             (:file "beta")))
    (:file "user-init")
    (:file "tests")))
