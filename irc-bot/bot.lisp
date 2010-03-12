@@ -393,33 +393,7 @@ methods that support this."))
   (and (slot-boundp irc 'irc:output-stream)
        (open-stream-p (irc:output-stream irc))))
 
-;;;{{{ Initialize bots hacks <irc only right now>
-(defvar *sonic*)
-(defvar *freenode*)
-(defvar *slack*)
-(defvar *bot*)
-(defvar *devel-bot* nil "bot hosted on my laptop as opposed to the vps.")
-(defvar *flare*)
-(defvar @lo@)
-(defun %initialize-bots ()
-  "Start up all the bots."
-  (macrolet ((define-bot (name class)
-               `(defparameter ,name (make-instance ',class))))
-    (define-bot *sonic* sonic-nisp-bot-connection)
-    (define-bot *slack* slack-nisp-bot-connection)
-    (define-bot *bot* 8b-i-bot-connection)
-    (define-bot *freenode* freenode-nisp-bot-connection)
-    (define-bot *devel-bot* 8b-nisp-bot-connection)
-    (define-bot *flare* flare-nisp-bot-connection))
-  (setq *format-and-send-to-irc-function* (curry #'irc:privmsg *bot* "#bots")))
 
-(defparameter %bot-list% '(*sonic* *slack* *bot* *flare* *devel-bot* *freenode* @lo@)
-  "Hackish list of bots.")
-
-;;;}}}
-
-
-;;; past hacks now into attempting to create a generic routing protocol
 
 (defun unbind-symbols (&rest symbols)
   (mapcar (conjoin #'symbolp #'boundp #'makunbound) symbols)
