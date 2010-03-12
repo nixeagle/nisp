@@ -46,4 +46,5 @@
 
 (defmethod connect :after ((irc bot-connection) &key)
   "Make sure IRC's hook is setup."
-  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg))
+  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
+  (sleep 2))
