@@ -403,15 +403,6 @@ methods that support this."))
 (define-simple-command beta-shorturl
   (reply (shorturl-is.gd (remaining-parameters))))
 
-;;; Not going to mess with this
-#+ () (define-simple-command beta-nikurl
-  (reply (car (cl-ppcre:all-matches-as-strings
-               "http\\S+"
-               (drakma:http-request
-                (concatenate 'string
-                             "http://nik.im/api_create.php?url="
-                             (remove #\Space (network-tree::remaining-parameters))))))))
-
 (flet ((github-apply (function string)
          (apply function (github::parse-github-repository-notation string))))
   (define-simple-command github
