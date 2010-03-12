@@ -1,18 +1,5 @@
 (in-package :nisp.i)
 
-
-(defun remove-newlines (string)
-  "Remove newlines from STRING."
-  (declare (type string string))
-  (remove #\Newline string))
-
-(defun join-sequence (sequence &optional (seperator " "))
-  (format nil (concatenate 'string "~{~A~^" seperator "~}") sequence))
-
-(test (join-sequence :suite nil)
-  (with-fbound (join-sequence)
-    ('("a" "b")) "a b"))
-
 (defun unbind-symbols (&rest symbols)
   (mapcar (conjoin #'symbolp #'boundp #'makunbound) symbols)
   (mapcar (conjoin #'symbolp #'fboundp #'fmakunbound) symbols))
@@ -271,7 +258,8 @@ All things made by `make-anon-bot-user-class' superclass this."))
                  (to target) (content cons))
   (declare (ignore action))
   "Default action for irc is to privmsg"
-  (privmsg sink to (remove-newlines (join-sequence content))))
+  (privmsg sink to (remove #\Newline
+                           (format nil "~{~A~^ ~}" content))))
 
 (defmethod privmsg ((sink bot-connection) (to target)
                     (content string))
