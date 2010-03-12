@@ -165,37 +165,10 @@ methods that support this."))
          (lambda ()
            (nisp-start-read-loop irc))
          :name (compute-connection-id irc))))
-
-(defmethod connect :after ((irc 8b-i-bot-connection) &key)
-  "Connect I bot to #offtopic and #bots on eighthbit.net"
-  (irc:join irc "#offtopic")
-  (irc:join irc "#bots")
-  (irc:join irc "#nixeagle")
+(defmethod connect :after ((irc bot-connection) &key)
+  "Make sure IRC's hook is setup."
   (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg))
 
-(defmethod connect :after ((irc 8b-nisp-bot-connection) &key)
-  "Connect I bot to #offtopic and #bots on eighthbit.net"
-  (irc:join irc "#offtopic")
-  (irc:join irc "#bots")
-  (irc:join irc "#nixeagle")
-  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg))
-
-(defmethod connect :after ((irc slack-nisp-bot-connection) &key)
-  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
-  (sleep 1)
-  (irc:join irc "#bots"))
-
-(defmethod connect :after ((irc sonic-nisp-bot-connection) &key)
-  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
-  (irc:join irc "#services")
-  (irc:join irc "#sonicircd"))
-
-(defmethod connect :after ((irc flare-nisp-bot-connection) &key)
-  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
-  (irc:join irc "#help"))
-(defmethod connect :after ((irc freenode-nisp-bot-connection) &key)
-  (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg)
-  (irc:join irc "#botters"))
 
 ;;;}}}
 
