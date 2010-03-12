@@ -13,5 +13,4 @@
   :description "irc bot"
   :depends-on (:iterate :eos :alexandria)
   :components
-  ((:file "types")
-   (:file "util-protocol")))
+  ())
