@@ -52,8 +52,6 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (defmethod commandp ((object irc-message-content))
   (not (string= (full-message object) (message object))))
 
-(defclass bot-admin () ())
-
 (defmethod nickname ((irc connection))
   "Return CONNECTION's nickname."
   (nickname (irc:user irc)))
