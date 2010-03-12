@@ -74,9 +74,6 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (:documentation "Superclass this to connect directly to background on
 methods that support this."))
 
-(load (merge-pathnames "config.lisp" +root-directory+)
-      :if-does-not-exist nil)
-
 (defmethod shared-initialize :after ((bot bot-connection) (slot-names t)
                                      &key nickname username realname)
   (when (and nickname username realname)
@@ -527,5 +524,8 @@ methods that support this."))
                          (address from) (make-instance 'abstract-identity)
                          (make-instance 'abstract-action) content)))
 
+
+(load (merge-pathnames "config.lisp" +root-directory+)
+      :if-does-not-exist nil)
 
 ;;; END
