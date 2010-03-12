@@ -90,22 +90,3 @@
              (eq (aref result 0) #\Space))
         (subseq result 1)
         result)))
-
-(defmethod %route-command (connection sender to cmd current-args remaining-args)
-  "Route based on CURRENT-ARGS and leaving the rest in REMAINING-ARGS."
-  (handler-case
-      (apply
-       (find-command-handler-generic current-args)
-       connection sender to cmd
-       (append current-args
-               (ensure-list
-                (filter-to-remaining-arguments cmd current-args))))
-    (error (condition) (describe condition)
-           :nisp-no-command-found)))
-
-(defmethod route-command (connection sender to cmd
-                          &rest split-cmd)
-  (%route-command connection sender to cmd
-                  (list (ensure-symbol (string-upcase (caar split-cmd))
-                                       *command-argument-symbols-package*))
-                  (cdar split-cmd)))
