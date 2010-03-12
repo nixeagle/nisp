@@ -1,9 +1,5 @@
 (in-package :nisp.i)
 
-(defun unbind-symbols (&rest symbols)
-  (mapcar (conjoin #'symbolp #'boundp #'makunbound) symbols)
-  (mapcar (conjoin #'symbolp #'fboundp #'fmakunbound) symbols))
-
 (defun shorturl-is.gd (string)
   (declare (type string string))
   (drakma:http-request "http://is.gd/api.php"
