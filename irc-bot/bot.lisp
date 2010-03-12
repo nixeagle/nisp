@@ -70,28 +70,6 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (defmethod commandp ((object irc-message-content))
   (not (string= (full-message object) (message object))))
 
-;;;{{{ connection classes
-(defclass bot-connection (connection comchar
-                                     abstract-data-source
-                                     abstract-data-sink) ()
-  (:default-initargs :username "lisp" :nickname "nisp"
-                     :realname "Nixeagle's lisp experiments"
-                     :server-port 6667
-                     :comchar ","))
-(defclass connect-with-background-handler-mixin () ()
-  (:documentation "Superclass this to connect directly to background on
-methods that support this."))
-
-(defmethod shared-initialize :after ((bot bot-connection) (slot-names t)
-                                     &key nickname username realname)
-  (when (and nickname username realname)
-    (setf (slot-value bot 'irc:user)
-          (make-instance 'bot-user
-                         :nickname nickname
-                         :username username
-                         :realname realname))))
-;;;}}}
-
 (defclass bot-admin () ())
 
 (defmethod nickname ((irc connection))
