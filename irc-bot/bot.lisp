@@ -14,6 +14,14 @@
     ('("a" "b")) "a b"))
 ;;;}}}
 
+(defvar +root-directory+
+  (asdf:system-relative-pathname (asdf:find-system :nisp.i) "/")
+  "The root of where the asdf source is at.
+
+We use this for locating data and configuration information for
+nisp.i. This may run nto some issues in the future but for the near term
+future this solves most issues.")
+
 (defclass connection (irc:connection) ())
 
 ;;; not bot related directly
@@ -82,46 +90,9 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (defclass connect-with-background-handler-mixin () ()
   (:documentation "Superclass this to connect directly to background on
 methods that support this."))
-(defclass lo-i-bot-connection (bot-connection
-                               connect-with-background-handler-mixin)
-  ()
-  (:default-initargs :server-port 9999 :server-name "127.0.0.1")
-  (:documentation "Specifically for testing disconnect behavior."))
 
-(defclass 8b-i-bot-connection (bot-connection
-                               connect-with-background-handler-mixin)
-  ()
-  (:default-initargs :server-name "irc.eighthbit.net")
-  (:documentation "blah"))
-
-(defclass 8b-nisp-bot-connection (bot-connection
-                               connect-with-background-handler-mixin)
-  ()
-  (:default-initargs :server-name "irc.eighthbit.net")
-  (:documentation "blah"))
-
-(defclass slack-nisp-bot-connection (bot-connection
-                                     connect-with-background-handler-mixin)
-  ()
-  (:default-initargs :server-name "irc.fuckinslack.net")
-  (:documentation "Bot connection for slack's network."))
-
-(defclass sonic-nisp-bot-connection (bot-connection
-                                     connect-with-background-handler-mixin)
-  ()
-  (:default-initargs :server-name "irc.57o9.net")
-  (:documentation "sonicrules1234's irc network."))
-
-(defclass flare-nisp-bot-connection (bot-connection
-                                     connect-with-background-handler-mixin)
-  ()
-  (:default-initargs :server-name "flare183.net")
-  (:documentation "Bot connection for flare183's server."))
-(defclass freenode-nisp-bot-connection (bot-connection
-                                        connect-with-background-handler-mixin
-                                        )
-  ()
-  (:default-initargs :server-name "irc.freenode.org"))
+(load (merge-pathnames "config.lisp" +root-directory+)
+      :if-does-not-exist nil)
 
 (defmethod shared-initialize :after ((bot bot-connection) (slot-names t)
                                      &key nickname username realname)
