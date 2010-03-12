@@ -143,18 +143,25 @@ methods that support this."))
   (handler-case
       (when (and (> (length cmd) 0)
                  (find (comchar irc) cmd :end 1))
-        (route irc
-               (make-instance 'irc-user
-                              :address (typecase to
-                                         (irc:channel (ensure-irc-bot-channel to))
-                                         (string (ensure-irc-bot-channel
-                                                  (irc:find-channel irc to)))
-                                         (irc:user (ensure-irc-bot-user to)))
-                              :user (ensure-irc-bot-user
-                                     (ensure-user-host (irc:find-user irc source)
-                                                       (irc:host message))))
-               (make-instance 'irc-message-content :message cmd
-                              :bot-connection irc) t t))
+        (route-command
+         irc
+         (make-instance 'irc-user
+                        :address (typecase to
+                                   (irc:channel (ensure-irc-bot-channel to))
+                                   (string (ensure-irc-bot-channel
+                                            (irc:find-channel irc to)))
+                                   (irc:user (ensure-irc-bot-user to)))
+                        :user (ensure-irc-bot-user
+                               (ensure-user-host (irc:find-user irc source)
+                                                 (irc:host message))))
+         (make-instance 'irc-message-content :message cmd
+                        :bot-connection irc)
+         (typecase to
+           (irc:channel (ensure-irc-bot-channel to))
+           (string (ensure-irc-bot-channel
+                    (irc:find-channel irc to)))
+           (irc:user (ensure-irc-bot-user to)))
+         irc))
     (error (condition) (describe condition))))
 
 (defclass sender ()
@@ -335,8 +342,8 @@ methods that support this."))
   (reply (remaining-parameters)))
 
 
-(defgeneric route (source from content to sink))
-(defmethod route :around (source from content to sink)
+(defgeneric route-command (source from content to sink))
+(defmethod route-command :around (source from content to sink)
   "Time how long calls and what parems were used and put this timing data
   in a list."
   (let ((start-time (get-internal-real-time)))
@@ -352,10 +359,11 @@ methods that support this."))
                               (push-new-time condition)
                               (error condition))))
         (push-new-time (call-next-method))))))
-(defmethod route  ((source abstract-data-source)
-                   (from abstract-from)
-                   (content abstract-message-content)
-                   to sink)
+(defmethod route-command  ((source abstract-data-source)
+                           (from abstract-from)
+                           (content abstract-message-content)
+                           (to abstract-target)
+                           (sink abstract-data-sink))
   (declare (ignore to sink))
   (when (commandp content)
     (handle-nisp-command (message content) source (name from)
