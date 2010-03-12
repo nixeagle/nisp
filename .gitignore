@@ -10,3 +10,5 @@
 /irc-bot/config.lisp
 /private.lisp
 /primes.dat
+/www/access.log
+/www/message.log
