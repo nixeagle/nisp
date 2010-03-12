@@ -24,22 +24,6 @@ future this solves most issues.")
 
 (defclass connection (irc:connection) ())
 
-;;; not bot related directly
-;;;{{{ superclasses:
-(defun add-superclass (instance new-superclass)
-  "Add NEW-SUPERCLASS to INSTANCE's superclass list."
-  (reinitialize-instance (class-of instance) :direct-superclasses
-                         (adjoin (find-class new-superclass)
-                                  (c2cl:class-direct-superclasses
-                                   (class-of instance)))))
-
-(defun delete-superclass-of (instance superclass)
-  "Delete SUPERCLASS from INSTANCE's superclass list."
-  (reinitialize-instance (class-of instance) :direct-superclasses
-                         (remove (find-class superclass)
-                                 (c2cl:class-direct-superclasses
-                                  (class-of instance)))))
-
 (defun make-anon-bot-user-class (user-instance)
   "Make brand new anon class for USER-INSTANCE."
   (make-instance 'standard-class :direct-superclasses
@@ -56,7 +40,6 @@ future this solves most issues.")
                                       (irc:server-name connection))
                                      "~A" (irc:hostname user))
                       :direct-superclasses (list (find-class 'bot-user)))))
-;;;}}}
 
 (defvar *irc-bot-instances* nil
   "Global list of bot instances.")

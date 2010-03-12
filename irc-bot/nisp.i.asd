@@ -28,6 +28,7 @@
   :components
   ((:file "util.packages")
    (:file "package")
+   (:file "superclass-helpers")
    (:file "mixin")
    (:file "route-call-times")
    (:file "irc-packages")
