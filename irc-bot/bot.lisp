@@ -13,6 +13,10 @@
   (with-fbound (join-sequence)
     ('("a" "b")) "a b"))
 
+(defun unbind-symbols (&rest symbols)
+  (mapcar (conjoin #'symbolp #'boundp #'makunbound) symbols)
+  (mapcar (conjoin #'symbolp #'fboundp #'fmakunbound) symbols))
+
 (defun shorturl-is.gd (string)
   (declare (type string string))
   (drakma:http-request "http://is.gd/api.php"
@@ -280,13 +284,6 @@ methods that support this."))
        (open-stream-p (irc:output-stream irc))))
 
 
-
-(defun unbind-symbols (&rest symbols)
-  (mapcar (conjoin #'symbolp #'boundp #'makunbound) symbols)
-  (mapcar (conjoin #'symbolp #'fboundp #'fmakunbound) symbols))
-
-
-
 (defmacro define-simple-command (name &body body)
   `(defmethod handle-nisp-command
        ((tree (eql #-sbcl(network-tree::intern-network-tree-node
@@ -320,6 +317,7 @@ methods that support this."))
                                       action content)
   (:generic-function-class nisp-command-network-tree-generic-function)
   (:method-class handle-nisp-command-method))
+
 (define-simple-command emacs
   (network-tree::next-node))
 (define-simple-command source
