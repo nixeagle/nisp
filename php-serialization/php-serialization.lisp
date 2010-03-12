@@ -7,6 +7,7 @@
    #:php-pprint-table
    #:with-php-pprint-table
    #:with-php-readtable))
+(in-package :php-serialization)
 
 (defun ignore-reader (stream char)
   "Ignore the CHAR and move on!"
