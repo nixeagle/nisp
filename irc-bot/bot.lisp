@@ -164,11 +164,6 @@ methods that support this."))
          irc))
     (error (condition) (describe condition))))
 
-(defclass sender ()
-  ((host :accessor host :initarg :host)
-   (source :accessor source :initarg :source)
-   (user :accessor user :initarg :user)))
-
 (defmethod ensure-user-host ((user irc:user) (host string))
   (when (string= (irc:hostname user) "")
     (setf (irc:hostname user) host))
