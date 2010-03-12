@@ -215,6 +215,10 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (and (slot-boundp irc 'irc:output-stream)
        (open-stream-p (irc:output-stream irc))))
 
+(defgeneric handle-nisp-command (tree source from address identity
+                                      action content)
+  (:generic-function-class nisp-command-network-tree-generic-function)
+  (:method-class handle-nisp-command-method))
 
 (defmacro define-simple-command (name &body body)
   `(defmethod handle-nisp-command
@@ -246,10 +250,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (defmethod privmsg ((sink bot-connection) (to target)
                     (content string))
   (irc:privmsg sink to content))
-(defgeneric handle-nisp-command (tree source from address identity
-                                      action content)
-  (:generic-function-class nisp-command-network-tree-generic-function)
-  (:method-class handle-nisp-command-method))
+
 
 (define-simple-command emacs
   (network-tree::next-node))
