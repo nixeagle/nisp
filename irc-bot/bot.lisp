@@ -201,19 +201,6 @@ All things made by `make-anon-bot-user-class' superclass this."))
       user-object
       (change-class user-object 'bot-user)))
 
-(defmethod generate-short-test-summary ((suite symbol))
-  "Run SUITE's tests and print a short report."
-  (iterate (for test in (run suite))
-           (counting (typep test 'eos::test-passed) :into passed)
-           (counting (not (typep test 'eos::test-passed)) :into failed)
-           (finally (print failed) (return
-                      (format nil "Total tests: ~A Passed: ~A Failed: ~A"
-                              (+ passed failed) passed failed)))))
-(defmethod generate-short-test-summary ((suite string))
-  "Split, upcase, and convert SUITE to a symbol then pass it on."
-  (generate-short-test-summary
-   (ensure-symbol (string-upcase (car (split-command-string suite))))))
-
 (defmethod initialize-instance :after ((instance irc-message-content)
                                        &rest initargs &key bot-connection)
   (declare (ignore initargs)
