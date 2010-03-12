@@ -37,6 +37,9 @@
    (:file "nisp-handle-command-method")
    (:file "bot")
    (:file "i.fbi")
+   (:module "irc"
+            :components
+            ((:file "connect")))
    (:module "commands"
             :components
             ((:file "github")))
