@@ -154,14 +154,13 @@ methods that support this."))
   (describe irc)
   (irc:read-message-loop irc))
 
-(defparameter @thread@ nil)
+
 (defmethod connect :after ((irc connect-with-background-handler-mixin) &key)
   "Start IRC's command loop in a different thread."
-  (setq @thread@
-        (bordeaux-threads:make-thread
-         (lambda ()
-           (nisp-start-read-loop irc))
-         :name (compute-connection-id irc))))
+  (bordeaux-threads:make-thread (lambda ()
+                                  (nisp-start-read-loop irc))
+                                :name (compute-connection-id irc)))
+
 (defmethod connect :after ((irc bot-connection) &key)
   "Make sure IRC's hook is setup."
   (irc:add-hook irc 'irc:irc-privmsg-message 'irc-handle-privmsg))
