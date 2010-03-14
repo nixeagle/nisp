@@ -25,12 +25,12 @@
 (defun call-wrap-statement (*standard-output* thunk)
   (let ((*statementp* t))
     (pprint-indent :block 0)
-    (funcall thunk *standard-output*)
+    (funcall thunk)
     (unless *recursivep*
       (write-char #\;)
       (pprint-newline :linear))))
 (defmacro wrap-statement (stream &body body)
-  `(call-wrap-statement ,stream (lambda (*standard-output*) ,@body)))
+  `(call-wrap-statement ,stream (lambda () ,@body)))
 
 (defun wrap-function (*standard-output* list)
   (pprint-logical-block (nil list)
@@ -44,32 +44,33 @@
     (wrap-braces *standard-output* (cdddr list))))
 
 (defparameter *block-prefix* "    ")
-(defun wrap-braces (*standard-output* thunk)
+(defun call-wrap-braces (*standard-output* thunk)
   (write-char #\{)
   (pprint-newline :mandatory)
   (princ *block-prefix*)
   (funcall thunk)
   (write-char #\}))
-
+(defmacro wrap-braces (stream &body body)
+  `(call-wrap-braces ,stream (lambda () ,@body)))
 (defun print-op (op)
   (pprint-indent :block 2)
   (write-char #\Space)
   (pprint-newline :fill)
   (princ op)
   (write-char #\Space))
-*print-miser-width*
+
 (defmacro noppc (arg stream)
   `(let ((*print-pretty* nil))
      (princ ,arg ,stream)))
 (defun pprint-+ (*standard-output* list)
-  (wrap-statement *standard-output*
-    (pprint-logical-block (*standard-output* list)
-      (let ((op (pprint-pop)))
-        (loop
-           (write (pprint-pop))
-           (pprint-exit-if-list-exhausted)
-           (print-op op)))
-      (pprint-exit-if-list-exhausted))))
+  (wrap-braces *standard-output*
+    (wrap-statement *standard-output*
+      (pprint-logical-block (*standard-output* list)
+        (let ((op (pprint-pop)))
+          (loop
+             (write (pprint-pop))
+             (pprint-exit-if-list-exhausted)
+             (print-op op)))))))
 
 (defun pprint-* (stream list)
   (wrap-statement stream (cdr list)
