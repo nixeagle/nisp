@@ -22,78 +22,87 @@
 (defmacro wrap-parens (stream &body body)
   `(call-wrap-parens ,stream (lambda () ,@body)))
 
-(defun call-wrap-statement (stream thunk)
+(defun call-wrap-statement (*standard-output* thunk)
   (let ((*statementp* t))
-    (funcall thunk))
-  (unless *recursivep*
-    (princ #\; stream)
-    (princ #\Newline stream)))
-
+    (pprint-indent :block 0)
+    (funcall thunk *standard-output*)
+    (unless *recursivep*
+      (write-char #\;)
+      (pprint-newline :linear))))
 (defmacro wrap-statement (stream &body body)
-  `(call-wrap-statement ,stream (lambda () ,@body)))
+  `(call-wrap-statement ,stream (lambda (*standard-output*) ,@body)))
 
-(defun call-wrap-function (name lambda-list stream thunk)
-  (let ((*function-level* (1+ *function-level*)))
-    (princ "function " stream)
-    (prin1 name stream)
-    (princ #\Space stream)
-    (pprint-function-lambda-list stream lambda-list)
-    (princ #\Space stream)
-    (call-wrap-braces stream thunk)))
+(defun wrap-function (*standard-output* list)
+  (pprint-logical-block (nil list)
+    (pprint-pop)                        ;Ignore defun
+    (pprint-indent :current 0)
+    (princ "function ")
+    (write (pprint-pop))
+    (write-char #\Space)
+    (pprint-function-lambda-list *standard-output* (pprint-pop))
+    (write-char #\Space)
+    (wrap-braces *standard-output* (cdddr list))))
 
-(defmacro wrap-function (name lambda-list stream &body body)
-  `(call-wrap-function ,name ,lambda-list ,stream (lambda () ,@body)))
-
-(defun call-wrap-braces (stream thunk)
-  (princ #\{ stream)
-  (princ #\newline stream)
+(defparameter *block-prefix* "    ")
+(defun wrap-braces (*standard-output* thunk)
+  (write-char #\{)
+  (pprint-newline :mandatory)
+  (princ *block-prefix*)
   (funcall thunk)
-  (princ #\} stream))
+  (write-char #\}))
 
-(defmacro wrap-braces (stream &body body)
-  `(call-wrap-braces ,stream (lambda () ,@body)))
-
-(defun pprint-+ (stream list)
-  (wrap-statement stream
-    (if (not (null (cdr list)))
-        (wrap-parens stream
-          (funcall (formatter "~{~S~^ + ~}") stream (cdr list)))
-        (princ 0 stream))))
+(defun print-op (op)
+  (pprint-indent :block 2)
+  (write-char #\Space)
+  (pprint-newline :fill)
+  (princ op)
+  (write-char #\Space))
+*print-miser-width*
+(defmacro noppc (arg stream)
+  `(let ((*print-pretty* nil))
+     (princ ,arg ,stream)))
+(defun pprint-+ (*standard-output* list)
+  (wrap-statement *standard-output*
+    (pprint-logical-block (*standard-output* list)
+      (let ((op (pprint-pop)))
+        (loop
+           (write (pprint-pop))
+           (pprint-exit-if-list-exhausted)
+           (print-op op)))
+      (pprint-exit-if-list-exhausted))))
 
 (defun pprint-* (stream list)
-  (wrap-statement stream
-    (if (not (null (cdr list)))
-        (wrap-parens stream
-          (funcall (formatter "~{~S~^ * ~}") stream (cdr list)))
-        (princ 1 stream))))
+  (wrap-statement stream (cdr list)
+                  #+ () (if (not (null (cdr list)))
+                      (wrap-parens stream
+                        (funcall (formatter "~{~S~^ * ~}") stream))
+                      (princ 1 stream))))
 
 (defun pprint-- (stream list)
-  (wrap-statement stream
-    (case (length (cdr list))
-      (1 (princ "-" stream)
-         (prin1 (cadr list) stream))
-      (0 (error "You cannot subtract with 0 arguments!"))
-      (otherwise
-       (wrap-parens stream
-         (funcall (formatter "~{~S~^ - ~}") stream (cdr list)))))))
+  (wrap-statement stream (cdr list)
+                #+ ()  (case (length)
+                    (1 (princ "-" stream)
+                       (prin1 (cadr list) stream))
+                    (0 (error "You cannot subtract with 0 arguments!"))
+                    (otherwise
+                     (wrap-parens stream
+                       (funcall (formatter "~{~S~^ - ~}") stream (cdr list)))))))
 
 (defun pprint-/ (stream list)
-  (wrap-statement stream
-    (case (length (cdr list))
-      (1 (when (and (numberp (cadr list)) (zerop (cadr list)))
-           (error 'division-by-zero :operation 'pprint-/
-                  :operands (list 1 (cadr list))))
-         (princ "1/" stream)
-         (prin1 (cadr list) stream))
-      (0 (error "You cannot divide by 0 arguments."))
-      (otherwise
-       (wrap-parens stream
-         (funcall (formatter "~{~S~^ / ~}") stream (cdr list)))))))
+  (wrap-statement stream (cdr list)#+ ()
+                  (case (length (cdr list))
+                    (1 (when (and (numberp (cadr list)) (zerop (cadr list)))
+                         (error 'division-by-zero :operation 'pprint-/
+                                :operands (list 1 (cadr list))))
+                       (princ "1/" stream)
+                       (prin1 (cadr list) stream))
+                    (0 (error "You cannot divide by 0 arguments."))
+                    (otherwise
+                     (wrap-parens stream
+                       (funcall (formatter "~{~S~^ / ~}") stream (cdr list)))))))
 
 (defun pprint-defun (stream list)
-  (wrap-function (second list) (third list) stream
-    (funcall (formatter "~{~A~#[~;return ~:;~]~}") stream
-             (cdddr list))))
+  (wrap-function stream list))
 
 (defun pprint-function-lambda-list (stream list)
   (if list
