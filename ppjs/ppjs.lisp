@@ -25,7 +25,9 @@
 (defun call-wrap-statement (stream thunk)
   (let ((*statementp* t))
     (funcall thunk))
-  (unless *recursivep* (princ #\; stream)))
+  (unless *recursivep*
+    (princ #\; stream)
+    (princ #\Newline stream)))
 
 (defmacro wrap-statement (stream &body body)
   `(call-wrap-statement ,stream (lambda () ,@body)))
@@ -46,7 +48,6 @@
   (princ #\{ stream)
   (princ #\newline stream)
   (funcall thunk)
-  (princ #\newline stream)
   (princ #\} stream))
 
 (defmacro wrap-braces (stream &body body)
