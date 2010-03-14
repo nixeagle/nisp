@@ -30,13 +30,17 @@
 (defmacro wrap-statement (stream &body body)
   `(call-wrap-statement ,stream (lambda () ,@body)))
 
-(defun call-wrap-function (stream thunk)
+(defun call-wrap-function (name lambda-list stream thunk)
   (let ((*function-level* (1+ *function-level*)))
     (princ "function " stream)
-    (funcall thunk)))
+    (prin1 name stream)
+    (princ #\Space stream)
+    (pprint-function-lambda-list stream lambda-list)
+    (princ #\Space stream)
+    (call-wrap-braces stream thunk)))
 
-(defmacro wrap-function (stream &body body)
-  `(call-wrap-function ,stream (lambda () ,@body)))
+(defmacro wrap-function (name lambda-list stream &body body)
+  `(call-wrap-function ,name ,lambda-list ,stream (lambda () ,@body)))
 
 (defun call-wrap-braces (stream thunk)
   (princ #\{ stream)
@@ -86,11 +90,9 @@
          (funcall (formatter "~{~S~^ / ~}") stream (cdr list)))))))
 
 (defun pprint-defun (stream list)
-  (wrap-function stream
-      (format stream "function ~A ~A {~%return ~A~%}"
-              (second list)
-              (or (third list) "()")
-              (fourth list))))
+  (wrap-function (second list) (third list) stream
+    (funcall (formatter "return ~A") stream
+             (fourth list))))
 
 (defun pprint-function-lambda-list (stream list)
   (prin1 list stream))
