@@ -95,7 +95,9 @@
              (fourth list))))
 
 (defun pprint-function-lambda-list (stream list)
-  (prin1 list stream))
+  (if list
+      (prin1 list stream)
+      (princ "()" stream)))
 
 (defun pprint-symbol (stream symbol)
   (princ (string-downcase (symbol-name symbol)) stream))
