@@ -11,6 +11,8 @@
                                       (prin1-to-string (read-from-string (nisp.i::remaining-parameters))))))))))
 (defvar *recursivep* nil)
 (defvar *statementp* nil)
+(defvar *function-level* 0)
+
 (defun call-wrap-parens (stream thunk)
   (when *recursivep* (princ "(" stream))
   (let ((*recursivep* t))
@@ -29,8 +31,10 @@
   `(call-wrap-statement ,stream (lambda () ,@body)))
 
 (defun call-wrap-function (stream thunk)
-  (let ((*functionp* t))
+  (declare (ignore stream))
+  (let ((*function-level* (1+ *function-level*)))
     (funcall thunk)))
+
 (defmacro wrap-function (stream &body body)
   `(call-wrap-function ,stream (lambda () ',@body)))
 
@@ -82,10 +86,14 @@
          (funcall (formatter "~{~S~^ / ~}") stream (cdr list)))))))
 
 (defun pprint-defun (stream list)
-  (format stream "function ~A ~A {~%return ~A~%}"
-          (second list)
-          (or (third list) "()")
-          (fourth list)))
+  (wrap-function
+      (format stream "function ~A ~A {~%return ~A~%}"
+              (second list)
+              (or (third list) "()")
+              (fourth list))))
+
+(defun pprint-function-lambda-list (stream list)
+  (prin1 list stream))
 
 (defun pprint-symbol (stream symbol)
   (princ (string-downcase (symbol-name symbol)) stream))
