@@ -14,10 +14,10 @@
 (defvar *function-level* 0)
 
 (defun call-wrap-parens (stream thunk)
-  (when *recursivep* (princ "(" stream))
+  (when *recursivep* (princ #\( stream))
   (let ((*recursivep* t))
     (funcall thunk))
-  (when *recursivep* (princ ")" stream)))
+  (when *recursivep* (princ #\) stream)))
 
 (defmacro wrap-parens (stream &body body)
   `(call-wrap-parens ,stream (lambda () ,@body)))
@@ -25,7 +25,7 @@
 (defun call-wrap-statement (stream thunk)
   (let ((*statementp* t))
     (funcall thunk))
-  (unless *recursivep* (princ ";" stream)))
+  (unless *recursivep* (princ #\; stream)))
 
 (defmacro wrap-statement (stream &body body)
   `(call-wrap-statement ,stream (lambda () ,@body)))
