@@ -91,8 +91,8 @@
 
 (defun pprint-defun (stream list)
   (wrap-function (second list) (third list) stream
-    (funcall (formatter "return ~A") stream
-             (fourth list))))
+    (funcall (formatter "~{~A~#[~;return ~:;~]~}") stream
+             (cdddr list))))
 
 (defun pprint-function-lambda-list (stream list)
   (if list
