@@ -1,0 +1,28 @@
+#+TITLE: loki notes
+
+Name is an accident arising from typoing ioke when searching wikipedia for
+loke (lisp ioke). I typed loki which turns up a rather interesting article
+on a norse god named [[en:Loki][Loki]]. She is a shapeshifter much as io and ioke are
+both shape shifting languages.
+
+* metaprotocol
+
+*** add-direct-mimic
+    Add a [[mimic]] to a loki object.
+
+
+*** remove-direct-mimic
+    Remove a [[mimic]] from a loki object.
+
+* Dictionary
+*** mimic
+    These are equivalent to common lisp superclasses, but work on a per
+    instance basis.
+
+*** imitator
+    These are equivalent to common lisp subclasses but work on a per
+    instance bases. Strictly speaking objects don't need to maintain a
+    list of subclasses in ioke, but we do here for implementation
+    effeciantcy
+
+*** cells
