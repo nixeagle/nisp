@@ -203,26 +203,26 @@ Metaprotocol notes:
 Scott calls packages a RunTime, and of course packages are not
 implemented at this time. [2010-03-17 Wed 07:41]")
 
-(add-direct-cell *base* "hash" (make-method (self)
-                                 "Hash on Base is as if `eq' is used."
-                                 (declare (type object self))
-                                 (sxhash self)))
+(setf (direct-cell *base* "hash")
+      (make-method (self)
+        "Hash on Base is as if `eq' is used."
+        (declare (type object self))
+        (sxhash self)))
 
-(add-direct-cell *base* "cell"
-                 (make-method (self cell-name)
-                   "Return a cell as if by `cell'."
-                   (declare (type object self)
-                            (type (or string-object symbol-object) cell-name))
-                   (etypecase cell-name
-                     (string-object (cell self (string-data cell-name)))
-                     (symbol-object (cell self (symbol-name (symbol-data cell-name)))))))
+(setf (direct-cell *base* "cell")
+      (make-method (self cell-name)
+        "Return a cell as if by `cell'."
+        (declare (type object self)
+                 (type (or string-object symbol-object) cell-name))
+        (etypecase cell-name
+          (string-object (cell self (string-data cell-name)))
+          (symbol-object (cell self (symbol-name (symbol-data cell-name)))))))
 
-(add-direct-cell
- *base* "=="
- (make-method (self other)
-   "True iff SELF is `eq' to OTHER."
-   (declare (type object self other))
-   (eq self other)))
+(setf (direct-cell *base* "==")
+      (make-method (self other)
+        "True iff SELF is `eq' to OTHER."
+        (declare (type object self other))
+        (eq self other)))
 
 
 (defun write-readably (object &optional (stream *standard-output*))
