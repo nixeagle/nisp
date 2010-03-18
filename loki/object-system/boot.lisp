@@ -186,6 +186,8 @@ Metaprotocol notes:
            (type string name))
   (the (or object null) (gethash name (direct-cells object))))
 
+(defsetf direct-cell add-direct-cell)
+
 (defun call-method (object &rest args)
   "Apply ARGS to OBJECT's `method-function'."
   (declare (type method-object object))
