@@ -4,9 +4,6 @@
              (:conc-name method-)
              (:include data-mixin)
              (:constructor)
-             (:constructor create-method-object
-                           (&key direct-mimics direct-imitators
-                                 direct-cells lambda-list forms))
              (:print-object
               (lambda (obj *standard-output*)
                 (if *print-readably*
@@ -16,33 +13,33 @@
                             (direct-cells obj) (method-lambda-list obj)
                             (method-forms obj))
                     (call-next-method)))))
-  (function nil :type (or function null))
+  (declarations '() :type list)
+  (function nil)
   (lambda-list '() :type list)
   (forms '() :type list))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defun make-method-lambda-form (this-method arguments expression)
-    (multiple-value-bind (forms declarations docstring)
-        (parse-body expression  :documentation t :whole t)
-      (progn
-        `(lambda (message receiver context ,@arguments)
-           ,docstring
-           (declare (type (or null object) context message receiver))
-           ,@declarations
-           (let ((this-method ,this-method)
-                 (|self| receiver)
-                 (@ receiver)
-                 (|currentMessage| message)
-                 (context context)
-                 (|surroundingContext| *surrounding-context*))
-             (declare (ignorable this-method |self| @ |currentMessage|
-                                 context |surroundingContext|))
-             ,@forms))))))
+  (defun make-method-lambda-form (this-method declarations docstring
+                                  arguments forms)
+    `(lambda (message receiver context ,@arguments)
+       ,docstring
+       (declare (type (or null object) context message receiver))
+       ,@declarations
+       (let ((this-method ,this-method)
+             (|self| receiver)
+             (@ receiver)
+             (|currentMessage| message)
+             (context context)
+             (|surroundingContext| *surrounding-context*))
+         (declare (ignorable this-method |self| @ |currentMessage|
+                             context |surroundingContext|))
+         ,@forms))))
 
+#+ ()
 (defmacro make-method-lambda (this-method arguments expression)
   `#',(make-method-lambda-form this-method arguments expression))
 
-(defmethod make-load-form ((self method-object) &optional env)
+#+ () (defmethod make-load-form ((self method-object) &optional env)
   (declare (ignore env))
   (values
    `(make-method-object :direct-mimics ',(direct-mimics self)
@@ -60,5 +57,15 @@
   (apply (method-function object) args))
 
 (defmacro make-method (lambda-list &body body)
-  (create-method-object :lambda-list lambda-list
-                        :forms body))
+  (multiple-value-bind (forms declarations docstring)
+      (parse-body body  :documentation t :whole t)
+    (let ((this-method
+           (make-method-object :lambda-list lambda-list
+                               :forms forms
+                               :docstring docstring
+                               :declarations declarations)))
+      `(progn
+         (setf (method-function ,this-method)
+               #',(make-method-lambda-form this-method declarations docstring
+                                           lambda-list forms))
+         ,this-method))))
