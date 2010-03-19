@@ -25,5 +25,6 @@
             :serial t
             :components ((:file "boot")
                          (:file "method")
-                         (:file "userland-setup")))
+                         (:file "userland-setup")
+                         (:file "print-readably")))
    (:file "main-package")))
