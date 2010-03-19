@@ -8,10 +8,12 @@
               (lambda (obj *standard-output*)
                 (if *print-readably*
                     (format *standard-output*
-                            "#S(~S :direct-mimics ~S :direct-cells ~S :lambda-list ~S :forms ~S)"
+                            "#S(~S :direct-mimics ~S :direct-cells ~S :lambda-list ~S :forms ~S :docstring ~S :declarations ~S)"
                             (type-of obj) (direct-mimics obj)
                             (direct-cells obj) (method-lambda-list obj)
-                            (method-forms obj))
+                            (method-forms obj)
+                            (docstring obj)
+                            (method-declarations obj))
                     (call-next-method)))))
   (declarations '() :type list)
   (function nil)
