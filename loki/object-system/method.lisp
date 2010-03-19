@@ -47,6 +47,8 @@
    `(make-method-object :direct-mimics ',(direct-mimics self)
                         :direct-cells ',(direct-cells self)
                         :lambda-list ',(method-lambda-list self)
+                        :docstring ',(docstring self)
+                        :declarations ',(method-declarations self)
                         :forms ',(method-forms self))
    `(setf (method-function ',self)
           (make-method-lambda ,self
