@@ -16,12 +16,12 @@
                             (method-declarations obj))
                     (call-next-method)))))
   (declarations '() :type list)
-  (function nil)
+  (function nil :type (or null function)) ;Slot is temp nil at load/compile
   (lambda-list '() :type list)
   (forms '() :type list))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defun make-method-lambda-form (this-method declarations docstring
+  (defmacro make-method-lambda (this-method declarations docstring
                                   arguments forms)
     `(lambda (message receiver context ,@arguments)
        ,docstring
@@ -49,11 +49,11 @@
                         :lambda-list ',(method-lambda-list self)
                         :forms ',(method-forms self))
    `(setf (method-function ',self)
-          (make-method-lambda-form ,self
-                                   ',(method-declarations self)
-                                   ,(docstring self)
-                                   ',(method-lambda-list self)
-                                   ',(method-forms self)))))
+          (make-method-lambda ,self
+                              ,(method-declarations self)
+                              ,(docstring self)
+                              ,(method-lambda-list self)
+                              ,(method-forms self)))))
 
 (defun call-method (object &rest args)
   "Apply ARGS to OBJECT's `method-function'."
@@ -70,6 +70,6 @@
                                    :docstring docstring
                                    :declarations declarations)))
          (setf (method-function ,this-method)
-               #',(make-method-lambda-form this-method declarations docstring
-                                           lambda-list forms))
+               ,(make-method-lambda-form this-method declarations docstring
+                                         lambda-list forms))
          ,this-method))))
