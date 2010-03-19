@@ -39,7 +39,7 @@
 (defmacro make-method-lambda (this-method arguments expression)
   `#',(make-method-lambda-form this-method arguments expression))
 
-#+ () (defmethod make-load-form ((self method-object) &optional env)
+(defmethod make-load-form ((self method-object) &optional env)
   (declare (ignore env))
   (values
    `(make-method-object :direct-mimics ',(direct-mimics self)
@@ -47,9 +47,11 @@
                         :lambda-list ',(method-lambda-list self)
                         :forms ',(method-forms self))
    `(setf (method-function ',self)
-          (make-method-lambda ,self
-                              ,(method-lambda-list self)
-                              ,(method-forms self)))))
+          (make-method-lambda-form ,self
+                                   ,(method-declarations self)
+                                   ,(docstring self)
+                                   ',(method-lambda-list self)
+                                   ',(method-forms self)))))
 
 (defun call-method (object &rest args)
   "Apply ARGS to OBJECT's `method-function'."
@@ -59,12 +61,12 @@
 (defmacro make-method (lambda-list &body body)
   (multiple-value-bind (forms declarations docstring)
       (parse-body body  :documentation t :whole t)
-    (let ((this-method
-           (make-method-object :lambda-list lambda-list
-                               :forms forms
-                               :docstring docstring
-                               :declarations declarations)))
-      `(progn
+    (with-gensyms (this-method)
+      `(let ((,this-method
+              ,(make-method-object :lambda-list lambda-list
+                                   :forms forms
+                                   :docstring docstring
+                                   :declarations declarations)))
          (setf (method-function ,this-method)
                #',(make-method-lambda-form this-method declarations docstring
                                            lambda-list forms))
