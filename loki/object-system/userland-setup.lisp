@@ -8,7 +8,10 @@
 
 (setf (direct-cell *base* "hash")
       (make-method ()
-        "Hash on Base is as if `eq' is used."
+        "Hash on Base is as if `eq' is used.
+
+This does not seem to be returning the right hash for two otherwise eq
+loki objects."
         (sxhash |self|)))
 
 (setf (direct-cell *base* "cell")
