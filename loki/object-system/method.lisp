@@ -48,7 +48,7 @@
                         :forms ',(method-forms self))
    `(setf (method-function ',self)
           (make-method-lambda-form ,self
-                                   ,(method-declarations self)
+                                   ',(method-declarations self)
                                    ,(docstring self)
                                    ',(method-lambda-list self)
                                    ',(method-forms self)))))
