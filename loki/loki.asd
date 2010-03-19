@@ -23,5 +23,7 @@
                          (:file "boot")))
    (:module object-system
             :serial t
-            :components ((:file "boot")))
+            :components ((:file "boot")
+                         (:file "method")
+                         (:file "userland-setup")))
    (:file "main-package")))

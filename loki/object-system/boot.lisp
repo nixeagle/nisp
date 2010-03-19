@@ -20,7 +20,8 @@ lock should be held.")
   direct-mimics
   direct-imitators
   (direct-cells (make-hash-table :test 'equalp)
-                :type hash-table))
+                :type hash-table)
+  (docstring "" :type string))
 
 (defstruct (data-mixin (:conc-name nil)
                        (:include object)))
@@ -68,38 +69,10 @@ lock should be held.")
                           (:include data-mixin))
   (data :undefined-symbol :type symbol))
 
-(defstruct (method-object
-             (:conc-name method-)
-             (:include data-mixin)
-             (:constructor)
-             (:constructor create-method-object
-                           (&key direct-mimics direct-imitators
-                                 direct-cells lambda-list forms
-                                 &aux (function (compile nil
-                                                         `(lambda ,lambda-list
-                                                            ,@forms)))))
-             (:print-object
-              (lambda (obj *standard-output*)
-                (if *print-readably*
-                    (format *standard-output*
-                            "#S(~S :direct-mimics ~S :direct-cells ~S :lambda-list ~S :forms ~S)"
-                            (type-of obj) (direct-mimics obj)
-                            (direct-cells obj) (method-lambda-list obj)
-                            (method-forms obj))
-                    (call-next-method)))))
-  (function nil :type (or function null))
-  (lambda-list '() :type list)
-  (forms '() :type list))
 
 
-(defmethod make-load-form ((self method-object) &optional env)
-  (declare (ignore env))
-  `(make-method-object :direct-mimics ',(direct-mimics self)
-                       :direct-cells ',(direct-cells self)
-                       :argument-list ',(method-lambda-list self)
-                       :forms ',(method-forms self)
-                       :function (lambda ,(method-lambda-list self)
-                                   ,@(method-forms self))))
+
+
 
 (eval-when (:compile-toplevel :load-toplevel)
   (defun object-lock-forms (&rest loki-objects)
@@ -188,66 +161,25 @@ Metaprotocol notes:
 
 (defsetf direct-cell add-direct-cell)
 
-(defun call-method (object &rest args)
-  "Apply ARGS to OBJECT's `method-function'."
-  (declare (type method-object object))
-  (apply (method-function object) args))
-
-(defmacro make-method (lambda-list &body body)
-  `(create-method-object :lambda-list ',lambda-list
-     :forms ',body))
-
-(defvar *base* (make-object)
+(defparameter *base* (make-object)
   "Root of a loki Package.
 
 Scott calls packages a RunTime, and of course packages are not
 implemented at this time. [2010-03-17 Wed 07:41]")
-
-(setf (direct-cell *base* "hash")
-      (make-method (self)
-        "Hash on Base is as if `eq' is used."
-        (declare (type object self))
-        (sxhash self)))
-
-(setf (direct-cell *base* "cell")
-      (make-method (self cell-name)
-        "Return a cell as if by `cell'."
-        (declare (type object self)
-                 (type (or string-object symbol-object) cell-name))
-        (etypecase cell-name
-          (string-object (cell self (string-data cell-name)))
-          (symbol-object (cell self (symbol-name (symbol-data cell-name)))))))
-
-(setf (direct-cell *base* "==")
-      (make-method (self other)
-        "True iff SELF is `eq' to OTHER."
-        (declare (type object self other))
-        (eq self other)))
-
-
-(defun write-readably (object &optional (stream *standard-output*))
-  (let ((*print-readably* t)
-        (*print-pretty* nil)
-        (*print-circle* t))
-    (prin1 object stream)))
-
-(defun write-readably-to-string (object)
-  (let ((*print-readably* t)
-        (*print-pretty* nil)
-        (*print-circle* t))
-    (prin1-to-string object)))
-
-(defvar *Ground* (make-object)
+(defparameter *Ground* (make-object)
   "Usually between `Base' and most anything else.")
-
-(add-direct-mimic *Ground* *Base*)
-(add-direct-imitator *Base* *Ground*)
-
-(defvar *origin* (make-object)
+(defparameter *origin* (make-object)
   "Mimics `Ground' and is where new stuff in loki comes from.")
+(defvar *context* *Ground*
+  "Defaults to `*Ground*', but this can change.")
+(defvar *surrounding-context* nil
+  "Supposed to be the context at the call site.")
+(defvar *receiver* *Ground*
+  "Known as self or @ in loki.")
+(defvar *current-message* nil)
+(defvar *this-method* nil
+  "The current method being invoked.")
 
-(add-direct-mimic *origin* *ground*)
-(add-direct-imitator *origin* *ground*)
 
 (defun cell (object name)
   "Recursively find cell on OBJECT by NAME."
