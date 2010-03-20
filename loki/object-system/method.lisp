@@ -25,13 +25,13 @@
                                   arguments forms)
     `(lambda (message receiver context ,@arguments)
        ,docstring
-       (declare (type (or null object) context message receiver))
+       (declare (type object context message receiver))
        ,@declarations
        (let ((this-method ,this-method)
-             (|self| receiver)
-             (@ receiver)
+             (|self| (or receiver *ground*))
+             (@ (or receiver *ground*))
              (|currentMessage| message)
-             (context context)
+             (context (or context *context*))
              (|surroundingContext| *surrounding-context*))
          (declare (ignorable this-method |self| @ |currentMessage|
                              context |surroundingContext|))
@@ -57,17 +57,24 @@
                               ,(method-lambda-list self)
                               ,(method-forms self)))))
 
-(defun call-method (object &rest args)
+(defun call-method (object receiver &rest args)
   "Apply ARGS to OBJECT's `method-function'."
   (declare (type method-object object))
-  (apply (method-function object) args))
+  (apply (method-function object) (make-object)
+         receiver (make-object) args))
+
+(defun call (receiver method-name &rest args)
+  (declare (type object receiver))
+  (apply (method-function (cell receiver method-name))
+         (make-object) receiver (make-object) args))
 
 (defmacro make-method (lambda-list &body body)
   (multiple-value-bind (forms declarations docstring)
       (parse-body body  :documentation t :whole t)
     (with-gensyms (this-method)
       `(let ((,this-method
-              ,(make-method-object :lambda-list lambda-list
+              ,(make-method-object #+  :direct-mimics (list *origin*)
+                                   :lambda-list lambda-list
                                    :forms forms
                                    :docstring docstring
                                    :declarations declarations)))

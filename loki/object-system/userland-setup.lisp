@@ -24,7 +24,13 @@ loki objects."
 (setf (direct-cell *base* "==")
       (make-method (other)
         "True iff SELF is `eq' to OTHER."
+        (declare (type object other))
         (eq |self| other)))
+
+(setf (direct-cell *base* "=")
+      (make-method (place value)
+        "Set PLACE on @ to VALUE."
+        (setf (direct-cell @ place) value)))
 
 ;;;object context message reciever
 ;;; reciever is @ or self
@@ -43,3 +49,40 @@ loki objects."
 
 (add-direct-mimic *origin* *ground*)
 (add-direct-imitator *origin* *ground*)
+
+(defpackage #:loki-user
+  (:use))
+
+
+(define-constant +standard-read-string+ (get-macro-character #\" (copy-readtable nil)))
+
+(defun call-with-loki-readtable (thunk)
+  (declare (type function thunk))
+  (let ((*readtable* (copy-readtable nil)))
+    (setf (readtable-case *readtable*) :preserve)
+    (set-macro-character #\" (lambda (stream char)
+                               (make-string-object
+                                :data
+                                (funcall +standard-read-string+ stream char))))
+    (let ((*package* (find-package :loki-user)))
+      (walk-loki-list (cl:funcall thunk)))))
+
+(defun walk-loki-list (list)
+  (declare (type list list))
+  (mapcar #'make-simple-data-object
+          list))
+
+(defun make-simple-data-object (input)
+  (typecase input
+    (complex (make-complex-object :data input))
+    (integer (make-integer-object :data input))
+    (rational (make-rational-object :data input))
+    (string (make-string-object :data input))
+    (otherwise input)))
+
+(defun integer->ioke (integer)
+  (declare (type integer integer))
+  )
+
+(defmacro with-loki-syntax (&body body)
+  `(call-with-loki-readtable (lambda () ,@body)))
