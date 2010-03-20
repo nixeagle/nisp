@@ -86,3 +86,15 @@ loki objects."
 
 (defmacro with-loki-syntax (&body body)
   `(call-with-loki-readtable (lambda () ,@body)))
+
+
+(defun loki-repeating-read (input)
+  (declare (type (or stream string) input))
+  (let ((input (if (stringp input)
+                   (make-string-input-stream input)
+                   input)))
+    (with-loki-syntax
+      (do* ((x nil (read input))
+            (result () (push x result)))
+           ((eq nil (peek-char t input nil nil)) (nreverse result))
+        (print x *trace-output*)))))
