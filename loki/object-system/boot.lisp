@@ -12,7 +12,21 @@ If thread protection is required for some operation and that operation is
 not easily localizable or the relevant protocols are still too raw, this
 lock should be held.")
 
-(defstruct (object (:conc-name nil))
+(defstruct (object (:conc-name nil)
+                   (:print-object
+                    (lambda (obj stream)
+                      (format stream "#S(~A~@[ direct-mimics: ~S~]~@[ direct-cells: ~S~]~@[ :docstring ~S~]~@[ :data ~S~])"
+                              (type-of obj)
+                              (direct-mimics obj)
+                              (and (not (zerop (hash-table-count
+                                                (direct-cells obj))))
+                                   (direct-cells obj))
+                              (and (not (string= "" (docstring obj)))
+                                   (docstring obj))
+                              (typecase obj
+                                (method-object nil)
+                                (data-mixin (slot-value obj 'data))
+                                (otherwise nil))))))
   "All programmer level objects in loki are instances of this object."
   (object-lock (make-lock "instance lock")
                #+sbcl :type #+sbcl sb-thread:mutex
@@ -144,11 +158,20 @@ Metaprotocol notes:
     (setf (direct-imitators object)
           (delete imitator (direct-imitators object) :test 'eq))))
 
-(defun add-direct-cell (object name value)
-  (declare (type object object value)
+(defun call-add-direct-cell (object name value)
+  (declare (type object object)
            (type string name))
   (with-loki-object-locks-held (object)
-    (setf (gethash name (direct-cells object)) value)))
+    (setf (gethash name (direct-cells object))
+          (if (stringp value)
+              (make-string-object :data value)
+              value))))
+(defmacro add-direct-cell (object name value)
+  `(call-add-direct-cell ,object ,name ,value))
+#+ () (define-compiler-macro add-direct-cell (&whole whole object name value)
+  (declare (ignore object name))
+  (print value *trace-output*)
+  whole)
 
 (defun remove-direct-cell (object name)
   (declare (type object object)
@@ -163,6 +186,16 @@ Metaprotocol notes:
   (the (or object null) (gethash name (direct-cells object))))
 
 (defsetf direct-cell add-direct-cell)
+#+ () (defmacro direct-cell (object name)
+  "If NAME is a symbol, we convert it to a string."
+  `(call-direct-cell ,object ,(if (symbolp name)
+                                  (symbol-name name)
+                                  name)))
+
+(defmacro direct-cellf (object cell value)
+  `(add-direct-cell ,object ,cell ,(if (stringp value)
+                                       (make-string-object :data value)
+                                       value)))
 
 (defparameter *base* (make-object)
   "Root of a loki Package.

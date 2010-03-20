@@ -79,6 +79,6 @@
                                    :docstring docstring
                                    :declarations declarations)))
          (setf (method-function ,this-method)
-               ,(make-method-lambda-form this-method declarations docstring
-                                         lambda-list forms))
+               (make-method-lambda ,this-method ,declarations ,docstring
+                                         ,lambda-list ,forms))
          ,this-method))))

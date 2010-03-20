@@ -1,10 +1,10 @@
 (in-package :loki-object-system)
 
+(make-string-object :data "a")
 
-
-(setf (direct-cell *base* "kind") (make-string-object :data "Base"))
-(setf (direct-cell *base* "inspect") (make-string-object :data "Base"))
-(setf (direct-cell *base* "notice") (make-string-object :data "Base"))
+(setf (direct-cell *base* "kind") "Base")
+(setf (direct-cell *base* "inspect") "Base")
+(setf (direct-cell *base* "notice") "Base")
 
 (setf (direct-cell *base* "hash")
       (make-method ()
@@ -25,12 +25,13 @@ loki objects."
       (make-method (other)
         "True iff SELF is `eq' to OTHER."
         (declare (type object other))
-        (eq |self| other)))
+        (eq |self| other)) )
 
 (setf (direct-cell *base* "=")
       (make-method (place value)
         "Set PLACE on @ to VALUE."
         (setf (direct-cell @ place) value)))
+
 
 ;;;object context message reciever
 ;;; reciever is @ or self
@@ -41,14 +42,41 @@ loki objects."
 ;;; method was called from
 
 (add-direct-mimic *Ground* *Base*)
-(add-direct-imitator *Ground* *Base*)
 
 (setf (direct-cell *Ground* "Ground") *Ground*)
-
+(setf (direct-cell *Ground* "kind") "Ground")
 
 
 (add-direct-mimic *origin* *ground*)
-(add-direct-imitator *origin* *ground*)
+(setf (direct-cell *origin* "kind") "Origin")
+
+
+(defparameter *Default-Behavior-Definitions* (make-object))
+(setf (direct-cell *default-behavior-definitions* "kind")
+      "DefaultBehavior Definitions")
+(setf (direct-cell *default-behavior-definitions* "inspect")
+      "DefaultBehavior Definitions")
+(setf (direct-cell *default-behavior-definitions* "notice")
+      "DefaultBehavior Definitions")
+(setf (direct-cell *default-behavior-definitions* "method")
+      (make-method (&optional body)
+        "Very crude version of Ioke `method'.
+
+We do not handle any arg parsing or optional user supplied documentation
+strings. These will be added in the future as the user level interface
+starts to improve.
+
+For starters this really begs to be a macro."
+        (let ((this-method
+               (make-method-object :lambda-list ()
+                                   :forms (list body)
+                                   :docstring ""
+                                   :declarations ())))
+          (setf (method-function this-method)
+                (lambda () body))
+          this-method)))
+
+(add-direct-mimic *ground* *default-behavior-definitions*)
 
 (defpackage #:loki-user
   (:use))
