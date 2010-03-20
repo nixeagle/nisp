@@ -197,7 +197,7 @@ Metaprotocol notes:
                                        (make-string-object :data value)
                                        value)))
 
-(defparameter *base* (make-object)
+(defparameter *base* (make-object :docstring "Root of a loki package.")
   "Root of a loki Package.
 
 Scott calls packages a RunTime, and of course packages are not

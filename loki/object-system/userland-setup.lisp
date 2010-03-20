@@ -32,6 +32,18 @@ loki objects."
         "Set PLACE on @ to VALUE."
         (setf (direct-cell @ place) value)))
 
+(setf (direct-cell *base* "documentation")
+      (make-method ()
+        "Get documentation string for the receiver."
+        (docstring @)))
+
+(setf (direct-cell *base* "documentation=")
+      (make-method (text)
+        "Make TEXT the documentation string of receiver."
+        (declare (type string-object text))
+        (setf (docstring @) (string-data text))
+        text))
+
 
 ;;;object context message reciever
 ;;; reciever is @ or self
