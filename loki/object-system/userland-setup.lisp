@@ -64,6 +64,7 @@ loki objects."
                                (make-string-object
                                 :data
                                 (funcall +standard-read-string+ stream char))))
+    (set-syntax-from-char #\, #\Space)
     (let ((*package* (find-package :loki-user)))
       (walk-loki-list (cl:funcall thunk)))))
 
@@ -78,11 +79,13 @@ loki objects."
     (integer (make-integer-object :data input))
     (rational (make-rational-object :data input))
     (string (make-string-object :data input))
+    (symbol (princ-to-string input))
+    (cons (cons (make-simple-data-object (car input))
+                (and (not (endp (cdr input)))
+                     (make-simple-data-object (cdr input)))))
     (otherwise input)))
 
-(defun integer->ioke (integer)
-  (declare (type integer integer))
-  )
+
 
 (defmacro with-loki-syntax (&body body)
   `(call-with-loki-readtable (lambda () ,@body)))
@@ -98,3 +101,9 @@ loki objects."
             (result () (push x result)))
            ((eq nil (peek-char t input nil nil)) (nreverse result))
         (print x *trace-output*)))))
+
+
+(defmacro transform (input)
+  (let ((tree (loki-repeating-read input)))
+    `(call *ground* ,(car tree)
+           ,@(cadr tree))))

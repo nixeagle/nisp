@@ -73,7 +73,7 @@
       (parse-body body  :documentation t :whole t)
     (with-gensyms (this-method)
       `(let ((,this-method
-              ,(make-method-object #+  :direct-mimics (list *origin*)
+              ,(make-method-object #+ :direct-mimics (list *origin*)
                                    :lambda-list lambda-list
                                    :forms forms
                                    :docstring docstring
