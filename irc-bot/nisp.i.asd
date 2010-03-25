@@ -26,16 +26,16 @@
                :closer-mop)
   :serial t
   :components
-  ((:file "util.packages")
+  (
+   #+ () (:file "util.packages")        ;Out of date/not used.
    (:file "package")
    (:file "superclass-helpers")
    (:file "mixin")
    (:file "route-call-times")
-   (:file "irc-packages")
-   (:file "bot-types")
+   #+ () (:file "irc-packages")          ;Out of date/not used.
+   (:file "comchar")
    (:file "symbols")
    (:file "nisp-handle-command-method")
-   (:file "i.fbi")
    (:module "irc"
             :components
             ((:file "connect")))
