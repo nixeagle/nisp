@@ -18,6 +18,7 @@
                :with-fbound
                :nisp.util.usocket
                :split-sequence
+               :anaphora
                :drakma
                :cl-ppcre
                :alexandria
