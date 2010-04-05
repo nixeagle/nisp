@@ -67,6 +67,10 @@ will be grouped together."
                                 around before after)
       (collect-normal-combinations methods
         :defaulting :meta-around :around :before :after)
+    (unless hook
+      (mapl (lambda (sublist)
+              (check-unique-method-specializers (car sublist) sublist))
+            primary))
     (flet ((call-methods (methods)
              (mapcar (lambda (method)
                        `(call-method ,method))
