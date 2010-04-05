@@ -3,7 +3,8 @@
 ;;; experimental and certainly not for use in anything critical.
 
 (defpackage #:nisp-standard-method-combination
-  (:use :cl :iterate :alexandria))
+  (:use :cl :iterate :alexandria)
+  (:export #:nisp-standard))
 
 (in-package :nisp-standard-method-combination)
 
