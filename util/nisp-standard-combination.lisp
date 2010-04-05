@@ -9,6 +9,7 @@
 (in-package :nisp-standard-method-combination)
 
 (defun method-specializers-unique-p (method list)
+  "True if METHOD's specializers are unique among the methods on LIST."
   (not (find (closer-mop:method-specializers method) list :test #'equal
          :key #'closer-mop:method-specializers)))
 
