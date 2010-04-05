@@ -72,6 +72,23 @@ will be grouped together."
              (finally (return
                         (values ,primary ,@gensyms)))))))
 
+(defun wrap-method (around form)
+  "Generate a form where AROUND is wraps FORM.
+
+This is used repeatedly in method combinations to achieve a form of
+nesting where the inner groupings are reached by (call-next-method ...)."
+  (if around
+      `(call-method ,(first around)
+                    (,@(rest around)
+                       (make-method ,form)))
+      form))
+
+(defun generate-call-method-forms (methods)
+  "Generate (call-method METHOD) from METHODS."
+  (mapcar (lambda (method)
+            `(call-method ,method))
+          methods))
+
 (define-method-combination nisp-standard (&key hook)
   ((methods *))
   "Alternate, more advanced standard method combination.
@@ -132,27 +149,17 @@ Finally two additional qualifiers are supported:
         :defaulting :meta-around :around :before :after)
     (unless hook
       (check-unique-method-specializers-list primary))
-    (flet ((call-methods (methods)
-             (mapcar (lambda (method)
-                       `(call-method ,method))
-                     methods))
-           (wrap-method (around form)
-             (if around
-                 `(call-method ,(first around)
-                               (,@(rest around)
-                                  (make-method ,form)))
-                 form)))
-      (let* ((form (if (or before after (rest primary))
-                       `(multiple-value-prog1
-                            (progn ,@(call-methods before)
-                                   ,(if hook
-                                        `(,hook ,@(mapcar (lambda (method)
-                                                            `(call-method ,method))
-                                                          primary))
-                                        `(call-method ,(first primary)
-                                                      ,(rest primary))))
-                          ,@(call-methods (reverse after)))
-                       `(call-method ,(first primary))))
-             (standard-form (wrap-method around form))
-             (standard-around (wrap-method meta-around standard-form)))
-        (wrap-method (reverse defaulting) standard-around)))))
+    (let* ((form (if (or before after (rest primary))
+                     `(multiple-value-prog1
+                          (progn ,@(generate-call-method-forms before)
+                                 ,(if hook
+                                      `(,hook ,@(mapcar (lambda (method)
+                                                          `(call-method ,method))
+                                                        primary))
+                                      `(call-method ,(first primary)
+                                                    ,(rest primary))))
+                        ,@(generate-call-method-forms (reverse after)))
+                     `(call-method ,(first primary))))
+           (standard-form (wrap-method around form))
+           (standard-around (wrap-method meta-around standard-form)))
+      (wrap-method (reverse defaulting) standard-around))))
