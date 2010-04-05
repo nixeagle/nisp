@@ -8,6 +8,10 @@
 
 (in-package :nisp-standard-method-combination)
 
+(defun method-filtered-p (method filter-list)
+  "True when FILTER-LIST contains a qualifier of METHOD."
+  (not (null (intersection filter-list (method-qualifiers method)))))
+
 (defun method-specializers-unique-p (method list)
   "True if METHOD's specializers are unique among the methods on LIST."
   (not (find (closer-mop:method-specializers method) list :test #'equal
