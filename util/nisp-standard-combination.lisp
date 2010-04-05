@@ -17,6 +17,13 @@
   (unless (method-specializers-unique-p method list)
     (error "Two methods are specialized on the same arguments.")))
 
+(defun check-unique-method-specializers-list (methods)
+  "Errors when two METHODS specialize on the same arguments."
+  (declare (list methods))
+  (when methods
+    (check-unique-method-specializers (car methods) (cdr methods))
+    (check-unique-method-specializers-list (cdr methods))))
+
 (defun collecting-into-forms (list method keywords gensyms)
   "Generate (collecting METHOD :into GENSYM) forms.
 
@@ -124,9 +131,7 @@ Finally two additional qualifiers are supported:
       (collect-normal-combinations methods
         :defaulting :meta-around :around :before :after)
     (unless hook
-      (mapl (lambda (sublist)
-              (check-unique-method-specializers (car sublist) sublist))
-            primary))
+      (check-unique-method-specializers-list primary))
     (flet ((call-methods (methods)
              (mapcar (lambda (method)
                        `(call-method ,method))
