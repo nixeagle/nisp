@@ -28,23 +28,7 @@
     (check-unique-method-specializers (car methods) (cdr methods))
     (check-unique-method-specializers-list (cdr methods))))
 
-(defun collecting-into-forms (list method keywords gensyms)
-  "Generate (collecting METHOD :into GENSYM) forms.
-
-Given symbols for LIST and METHOD plus lists of KEYWORDS and GENSYMS,
-generate a series of collecting into statements where the METHOD gets
-shoved into one of the GENSYMs given in the list of GENSYMS."
-  (declare (symbol list method)
-           (list keywords gensyms))
-  `(progn
-     ,@(mapcar (lambda (keyword gen)
-                 `(when (find ,keyword ,list)
-                    (check-unique-method-specializers ,method ,gen)
-                    (collecting ,method :into ,gen :result-type 'list)))
-               keywords
-               gensyms)))
-
-(defmacro collect-normal-combinations
+(defun collect-normal-combinations
     (methods &rest combo-keywords)
   "Group METHODS by COMBO-KEYWORDS plus primary methods.
 
@@ -61,20 +45,25 @@ passed in as COMBO-KEYWORDS.
 For example if a method is an :AROUND method, and COMBO-KEYWORDS
 contains :AROUND, that method (along with all others qualified as :AROUND
 will be grouped together."
-  (let ((gensyms (iter (for it :in combo-keywords)
-                        (collect (gensym)))))
-    (with-gensyms (method qualifiers intersection primary)
-      `(iter (for ,method in ,methods)
-             (for ,qualifiers = (method-qualifiers ,method))
-             (for ,intersection = (intersection ,qualifiers ',combo-keywords))
-             (cond
-               ((length= 1 ,intersection)
-                ,(collecting-into-forms `,qualifiers `,method combo-keywords gensyms))
-               ((length= 0 ,intersection)
-                (collecting ,method :into ,primary))
-               (t (error "Too many combination keywords for normal-combinations.")))
-             (finally (return
-                        (values ,primary ,@gensyms)))))))
+  (iter outer
+        (with output-array = (make-array (length combo-keywords)
+                                         :initial-element nil))
+        (for method in methods)
+        (for qualifiers = (method-qualifiers method))
+        (for intersection = (intersection qualifiers combo-keywords))
+        (cond
+          ((length= 1 intersection)
+           (iter (for keyword :in combo-keywords)
+                 (for index :index-of-sequence combo-keywords)
+                 (when (find keyword qualifiers)
+                   (check-unique-method-specializers method (aref output-array (1+ index)))
+                   (in outer (push method (aref output-array (1+ index))))))
+           #+ ()             (collecting-into-forms qualifiers method combo-keywords gensyms))
+          ((length= 0 intersection)
+           (push method (aref output-array 0)))
+          (t (error "Too many combination keywords for normal-combinations.")))
+        (finally (return-from outer
+                   (values-list (coerce output-array 'list))))))
 
 (defun wrap-method (around form)
   "Generate a form where AROUND is wraps FORM.
