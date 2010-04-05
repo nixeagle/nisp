@@ -7,6 +7,14 @@
 
 (in-package :nisp-standard-method-combination)
 
+(defun method-specializers-unique-p (method list)
+  (not (find (closer-mop:method-specializers method) list :test #'equal
+         :key #'closer-mop:method-specializers)))
+
+(defun check-unique-method-specializers (method list)
+  (unless (method-specializers-unique-p method list)
+    (error "Two methods are specialized on the same arguments.")))
+
 (defun collecting-into-forms (list method keywords gensyms)
   "Generate (collecting METHOD :into GENSYM.
 
@@ -16,10 +24,8 @@ shoved into one of the GENSYMs given in the list of GENSYMS."
   `(progn
      ,@(mapcar (lambda (keyword gen)
                  `(when (find ,keyword ,list)
-                    (if (find (closer-mop:method-specializers ,method) ,gen :test #'equal
-                              :key #'closer-mop:method-specializers)
-                        (error "Two methods are specialized on the same arguments.")
-                        (collecting ,method :into ,gen :result-type 'list))))
+                    (check-unique-method-specializers ,method ,gen)
+                    (collecting ,method :into ,gen :result-type 'list)))
                keywords
                gensyms)))
 
@@ -64,7 +70,13 @@ will be grouped together."
     (flet ((call-methods (methods)
              (mapcar (lambda (method)
                        `(call-method ,method))
-                     methods)))
+                     methods))
+           (wrap-method (around form)
+             (if around
+                 `(call-method ,(first around)
+                               (,@(rest around)
+                                  (make-method ,form)))
+                 form)))
       (let* ((form (if (or before after (rest primary))
                        `(multiple-value-prog1
                             (progn ,@(call-methods before)
@@ -76,21 +88,7 @@ will be grouped together."
                                                       ,(rest primary))))
                           ,@(call-methods (reverse after)))
                        `(call-method ,(first primary))))
-             (standard-form
-              (if around
-                  `(call-method ,(first around)
-                                (,@(rest around)
-                                   (make-method ,form)))
-                  form))
-             (standard-around
-              (if meta-around
-                  `(call-method ,(first meta-around)
-                                (,@(rest meta-around)
-                                   (make-method ,standard-form)))
-                  standard-form))
+             (standard-form (wrap-method around form))
+             (standard-around (wrap-method meta-around standard-form))
              (defaulting (reverse defaulting)))
-        (if defaulting
-            `(call-method ,(first defaulting)
-                          (,@(rest defaulting)
-                             (make-method ,standard-around)))
-            standard-around)))))
+        (wrap-method defaulting standard-around)))))
