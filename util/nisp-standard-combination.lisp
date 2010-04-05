@@ -149,7 +149,7 @@ Finally two additional qualifiers are supported:
         :defaulting :meta-around :around :before :after)
     (unless hook
       (check-unique-method-specializers-list primary))
-    (let* ((form (if (or before after (rest primary))
+    (let ((form (if (or before after (rest primary))
                      `(multiple-value-prog1
                           (progn ,@(generate-call-method-forms before)
                                  ,(if hook
@@ -159,7 +159,7 @@ Finally two additional qualifiers are supported:
                                       `(call-method ,(first primary)
                                                     ,(rest primary))))
                         ,@(generate-call-method-forms (reverse after)))
-                     `(call-method ,(first primary))))
-           (standard-form (wrap-method around form))
-           (standard-around (wrap-method meta-around standard-form)))
-      (wrap-method (reverse defaulting) standard-around))))
+                     `(call-method ,(first primary)))))
+      (wrap-method (reverse defaulting)                        ; :defaulting
+                   (wrap-method meta-around                    ; :meta-around
+                                (wrap-method around form)))))) ; :around
