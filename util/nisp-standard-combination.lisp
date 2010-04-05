@@ -18,11 +18,13 @@
     (error "Two methods are specialized on the same arguments.")))
 
 (defun collecting-into-forms (list method keywords gensyms)
-  "Generate (collecting METHOD :into GENSYM.
+  "Generate (collecting METHOD :into GENSYM) forms.
 
 Given symbols for LIST and METHOD plus lists of KEYWORDS and GENSYMS,
 generate a series of collecting into statements where the METHOD gets
 shoved into one of the GENSYMs given in the list of GENSYMS."
+  (declare (symbol list method)
+           (list keywords gensyms))
   `(progn
      ,@(mapcar (lambda (keyword gen)
                  `(when (find ,keyword ,list)
@@ -95,6 +97,5 @@ will be grouped together."
                           ,@(call-methods (reverse after)))
                        `(call-method ,(first primary))))
              (standard-form (wrap-method around form))
-             (standard-around (wrap-method meta-around standard-form))
-             (defaulting (reverse defaulting)))
-        (wrap-method defaulting standard-around)))))
+             (standard-around (wrap-method meta-around standard-form)))
+        (wrap-method (reverse defaulting) standard-around)))))
