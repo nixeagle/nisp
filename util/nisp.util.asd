@@ -11,6 +11,8 @@
   :maintainer "James S <dev@nixeagle.org>"
   :license "GPLv3 or later"
   :description "irc bot"
-  :depends-on (:iterate :eos :alexandria)
+  :depends-on (:iterate :eos :alexandria :closer-mop)
   :components
-  ())
+  ((:file "nisp-standard-combination")))
+
+;;; END
