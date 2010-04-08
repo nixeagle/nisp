@@ -211,7 +211,8 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (defgeneric handle-nisp-command (tree source from address identity
                                       action content)
   (:generic-function-class nisp-command-network-tree-generic-function)
-  (:method-class handle-nisp-command-method))
+  (:method-class handle-nisp-command-method)
+  (:method-combination nisp-standard-method-combination:nisp-standard))
 
 (defmacro define-simple-command (name &body body)
   `(defmethod handle-nisp-command
