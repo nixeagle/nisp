@@ -15,7 +15,7 @@
                :eos
                :bordeaux-threads
                :cl-github
-
+               :closure-html
                :nisp.util.usocket
                :split-sequence
                :anaphora
