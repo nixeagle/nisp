@@ -1,1 +1,0 @@
-../Eos/eos.asd
