@@ -10,12 +10,75 @@
 
 (defun method-filtered-p (method filter-list)
   "True when FILTER-LIST contains a qualifier of METHOD."
-  (not (null (intersection filter-list (method-qualifiers method)))))
+  (not (null (method-applicable-filters method filter-list))))
+
+(defun lambda-list-keyword-p (x)
+  #.(format nil "True if X is a lambda list keyword.
+
+Any one of: ~S" lambda-list-keywords)
+  (member x lambda-list-keywords))
+
+(defun lambda-list-symbols (lambda-list)
+  "Return just the argument names of LAMBDA-LIST.
+
+All keywords and argument parameters are stripped returning a flat list
+with only the argument names themselves."
+  (declare (list lambda-list))
+  (mapcar #'ensure-car
+          (remove-if #'lambda-list-keyword-p
+                     lambda-list)))
+
+(defun combination-filter-argument-names->positions
+    (combination-args lambda-list)
+  "Map LAMBDA-LIST symbol positions to COMBINATION-ARGS.
+
+LAMBDA-LIST should be a valid lambda list. COMBINATION-ARGS needs to
+contain a plist matching some keywords to argument names. A plist matching
+some keywords to argument positions is returned.
+
+The argument names in COMBINATION-ARGS must match the argument names in
+LAMBDA-LIST."
+  (declare (list combination-args lambda-list))
+  (alist-plist
+   (mapcar (lambda (assoc-pair)
+             (cons (car assoc-pair)
+                   (position (cdr assoc-pair)
+                             lambda-list)))
+           (plist-alist combination-args))))
+
+(defun method-applicable-filters (method filters)
+  (declare (list filters)
+           (method method))
+  (applicable-filters filters (method-qualifiers method)))
+
+(defun applicable-filters (qualifiers filters)
+  (intersection filters qualifiers))
+
+(defun filtered-method-applicable-p (arguments qualifiers filters filter-positions)
+  (if (and qualifiers filter-positions)
+       (let ((applicable-filters (applicable-filters qualifiers filters)))
+         (if applicable-filters
+             (every (lambda (filter)
+                      (let ((pos (getf filter-positions filter)))
+                        (funcall (nth (1+ (position filter qualifiers)) qualifiers)
+                                 (nth (1+ pos) arguments))))a
+                    applicable-filters)
+             t))
+       t))
+
+(defun filtered-method-applicable-p-form (method arguments filters filter-positions)
+  (if (and qualifiers filter-positions
+           (applicable-filters (method-qualifiers method filters)))
+
+      `(call-method ,method)))
 
 (defun method-specializers-unique-p (method list)
   "True if METHOD's specializers are unique among the methods on LIST."
-  (not (find (closer-mop:method-specializers method) list :test #'equal
-         :key #'closer-mop:method-specializers)))
+  (flet ((method-signature (meth)
+           (append (method-qualifiers meth)
+                   (closer-mop:method-specializers meth))))
+    (not (find (method-signature method) list :test #'equal
+               :key #'method-signature))))
 
 (defun check-unique-method-specializers (method list)
   (unless (method-specializers-unique-p method list)
@@ -27,6 +90,25 @@
   (when methods
     (check-unique-method-specializers (car methods) (cdr methods))
     (check-unique-method-specializers-list (cdr methods))))
+
+(defun collect-filtered-combinations (gf methods argument-list filters)
+  (if filters                           ;No filters, no iteration.
+      (iter (with only-filters = (mapcar #'ensure-car (plist-alist filters)))
+            (with filter-positions =
+                  (combination-filter-argument-names->positions
+                   filters (closer-mop:generic-function-lambda-list gf)))
+            (for method :in methods)
+
+            (unless (method-filtered-p method filters)
+              (collecting method)       ; No method-level filter
+              (next-iteration))
+            (when (filtered-method-applicable-p
+                   argument-list
+                   (method-qualifiers method)
+                   only-filters
+                   filter-positions)
+              (collect method)))
+      methods))
 
 (defun collect-normal-combinations
     (methods &rest combo-keywords)
@@ -82,8 +164,11 @@ nesting where the inner groupings are reached by (call-next-method ...)."
             `(call-method ,method))
           methods))
 
-(define-method-combination nisp-standard (&key hook)
+(define-method-combination nisp-standard (&key hook filters)
   ((methods *))
+  (:arguments &whole argument-list)
+  (:generic-function gf)
+
   "Alternate, more advanced standard method combination.
 
 There are 6 different kinds of qualified methods. The 4 standard
@@ -138,21 +223,22 @@ Finally two additional qualifiers are supported:
     WRAPPING-STANDARD."
   (multiple-value-bind (primary defaulting meta-around
                                 around before after)
-      (collect-normal-combinations methods
-        :defaulting :meta-around :around :before :after)
+      (collect-normal-combinations
+       (collect-filtered-combinations gf methods argument-list filters)
+       :defaulting :meta-around :around :before :after)
     (unless hook
       (check-unique-method-specializers-list primary))
     (let ((form (if (or before after (rest primary))
-                     `(multiple-value-prog1
-                          (progn ,@(generate-call-method-forms before)
-                                 ,(if hook
-                                      `(,hook ,@(mapcar (lambda (method)
-                                                          `(call-method ,method))
-                                                        primary))
-                                      `(call-method ,(first primary)
-                                                    ,(rest primary))))
-                        ,@(generate-call-method-forms (reverse after)))
-                     `(call-method ,(first primary)))))
-      (wrap-method (reverse defaulting)                        ; :defaulting
-                   (wrap-method meta-around                    ; :meta-around
+                    `(multiple-value-prog1
+                         (progn ,@(generate-call-method-forms before)
+                                ,(if hook
+                                     `(,hook ,@(mapcar (lambda (method)
+                                                         `(call-method ,method))
+                                                       primary))
+                                     `(call-method ,(first primary)
+                                                   ,(rest primary))))
+                       ,@(generate-call-method-forms (reverse after)))
+                    `(call-method ,(first primary)))))
+      (wrap-method (reverse defaulting)     ; :defaulting
+                   (wrap-method meta-around ; :meta-around
                                 (wrap-method around form)))))) ; :around
