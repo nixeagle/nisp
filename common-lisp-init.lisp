@@ -19,6 +19,10 @@
 
 (declaim (optimize (debug 3) (safety 3) (speed 0) (space 0)
                    (compilation-speed 0)))
+#+:ccl
+(progn
+  (setq ccl:*fasl-save-definitions* t)
+  (setq ccl:*save-definitions* t))
 
 (in-package :cl-user)
 
