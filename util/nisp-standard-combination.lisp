@@ -61,14 +61,14 @@ LAMBDA-LIST."
              (every (lambda (filter)
                       (let ((pos (getf filter-positions filter)))
                         (funcall (nth (1+ (position filter qualifiers)) qualifiers)
-                                 (nth (1+ pos) arguments))))a
+                                 (nth (1+ pos) arguments))))
                     applicable-filters)
              t))
        t))
 
 (defun filtered-method-applicable-p-form (method arguments filters filter-positions)
-  (if (and qualifiers filter-positions
-           (applicable-filters (method-qualifiers method filters)))
+  (if (and arguments filter-positions
+           (applicable-filters (method-qualifiers method) filters))
 
       `(call-method ,method)))
 
