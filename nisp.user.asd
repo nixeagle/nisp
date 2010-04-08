@@ -23,7 +23,6 @@
                 :nisp.util
                 :eos
                 :swank
-                :with-fbound
                 :alexandria
                 :split-sequence
                 :cl-github

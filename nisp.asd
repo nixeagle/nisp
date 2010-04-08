@@ -40,7 +40,7 @@
   :description "Nixeagle's random lisp experiments"
   :depends-on (:cl-ppcre
                :nisp.util
-               :with-fbound
+
                :cl-irc
                :split-sequence
                :iterate

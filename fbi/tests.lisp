@@ -1,8 +1,6 @@
 (in-package :nisp.fbi.json-classes)
 
-(define-new-suite :nisp-eos-root)
-
-(def-suite root :in :nisp-eos-root)
+(def-suite root)
 (test (make-json-type-signature :suite root)
   (with-fbound (make-json-type-signature)
     ('((a . b) (c . d))) '(a c)))

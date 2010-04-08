@@ -1,6 +1,5 @@
 (in-package :nisp.mop-simple)
-(define-new-suite :nisp-eos-root)
-(def-suite root :in :nisp-eos-root)
+(def-suite root)
 
 (test (class-slots :suite root)
   "Result of `class-slots' should be list of `standard-effective-slot-definition'."

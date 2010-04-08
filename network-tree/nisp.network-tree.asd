@@ -1,5 +1,5 @@
 (asdf:defsystem :nisp.network-tree
-  :depends-on (:alexandria :split-sequence :closer-mop :eos :with-fbound)
+  :depends-on (:alexandria :split-sequence :closer-mop :eos)
   :serial t
   :components
   ((:file "package")

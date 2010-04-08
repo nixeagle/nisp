@@ -10,7 +10,7 @@
   :license "GPLv3 or later"
   :depends-on (:iterate
                 :alexandria
-                :with-fbound
+                :eos
                 :usocket
                 :nisp.util.usocket
                 :nisp.util

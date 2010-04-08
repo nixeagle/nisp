@@ -1,6 +1,7 @@
 ;;; Tests for tree-funcallable-class
 (in-package :nisp.network-tree)
 
+#+ ()
 (progn
   (fmakunbound 'test-tree-generic-function)
   (defgeneric test-tree-generic-function (tree arg1)
@@ -29,12 +30,22 @@
     (list tree arg1 (remaining-parameters)))
 
 
+
   (defmethod test-tree-generic-function :before ((tree (eql "hi there hi")) arg1)
     1))
 
+(progn
+  (fmakunbound 'test-tree-generic-function)
 
-(define-new-suite :nisp-eos-root)
-(def-suite root :in :nisp-eos-root)
+  (defmethod test-tree-generic-function ((tree (eql (intern-network-tree-node "hi"))) arg1)
+    arg1
+    "hi"))
+
+
+
+
+
+(def-suite root)
 
 (test (first-command-word :suite root)
   (is (string= "Hi" (first-command-word "Hi how are you?")))
@@ -55,6 +66,7 @@ We assume input is a string."
       to a symbol."))
 
 (test (ensure-network-node-symbol :suite root)
+  #+ ()
   (with-fbound (ensure-network-node-symbol)
     ('it) (find-symbol "IT" +network-tree-symbols-package+)
     ('(it it2)) :signals error
@@ -67,6 +79,7 @@ a single tree symbol out of what boils down to one symbol"
 
 (test (ensure-network-node-symbols :suite root
                                    :depends-on ensure-network-node-symbol)
+  #+ ()
   (with-fbound (ensure-network-node-symbols)
     ('(hi how)) '(:HI :HOW)
     ("hi how") '(:HI :HOW)

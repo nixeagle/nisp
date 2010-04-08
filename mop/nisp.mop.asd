@@ -2,7 +2,7 @@
   :depends-on (:closer-mop
                :alexandria
                :iterate
-               :with-fbound)
+               )
   :serial t
   :components ((:file "package")
                (:file "simple")

@@ -1,6 +1,6 @@
 (defpackage #:nisp.fbi.json-classes
   (:use :cl :usocket :json :iterate :alexandria
-        :nisp.util.json :eos :with-fbound)
+        :nisp.util.json :eos)
   (:export :auth :subscribe :json-action-mixin
            :commit-author :commit-data
            :irc-data :irc-message :irc-private :publish
