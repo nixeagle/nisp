@@ -205,10 +205,10 @@ is translated into a list of symbols."
                              (remaining-parameters ()
                                (declare (special *network-tree-remaining*))
                                (the string *network-tree-remaining*))
-                             (next-node ()
+                             (next-node (&optional (remaining-parameters (remaining-parameters)))
                                (let ((*network-tree-nodes* ,(car lambda-args)))
                                  (funcall #',(generic-function-name generic-function)
-                                        (remaining-parameters)
+                                          remaining-parameters
                                         ,@(cdr lambda-args)))))
                         (declare (ignorable (function test)
                                             (function next-node)
