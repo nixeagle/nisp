@@ -37,3 +37,6 @@
 [submodule "cl-github"]
 	path = cl-github
 	url = ../cl-github
+[submodule "acumen"]
+	path = acumen
+	url = ../acumen
