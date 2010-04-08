@@ -104,9 +104,15 @@
   (From . Remote _person_ or _thing_, eg FBI's data source)
 
 * Tasks
-*** TODO Rewrite command routing system to new MOP hackery
+*** DONE Rewrite command routing system to new MOP hackery
+    CLOSED: [2010-03-12 Fri 18:44]
+    :LOGBOOK:
+    - State "DONE"       from "TODO"       [2010-03-12 Fri 18:44]
+    :END:
     Move [[file:bot.lisp]] command routing system to new MOP hackery to
     emulate a network using generic functions.
+
+
 *** QUESTION Actions as keywords?
     Do we need to have a full CLOS object to represent an action or could
     we get by with keywords or some other lighter method?
