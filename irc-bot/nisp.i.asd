@@ -15,12 +15,14 @@
                :eos
                :bordeaux-threads
                :cl-github
-               :with-fbound
+
                :nisp.util.usocket
                :split-sequence
                :anaphora
                :drakma
                :cl-ppcre
+               :english-parser
+               :acumen
                :alexandria
                :cl-irc
                :iterate
@@ -28,12 +30,12 @@
   :serial t
   :components
   (
-   #+ () (:file "util.packages")        ;Out of date/not used.
+   (:file "util.packages")        ;Out of date/not used.
    (:file "package")
    (:file "superclass-helpers")
    (:file "mixin")
    (:file "route-call-times")
-   #+ () (:file "irc-packages")          ;Out of date/not used.
+   (:file "irc-packages")          ;Out of date/not used.
    (:file "comchar")
    (:file "symbols")
    (:file "nisp-handle-command-method")
