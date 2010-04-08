@@ -14,6 +14,7 @@
                :nisp.network-tree
                :eos
                :bordeaux-threads
+               :trivial-timers
                :cl-github
                :closure-html
                :cl-l10n
