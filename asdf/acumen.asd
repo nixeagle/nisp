@@ -1,1 +1,1 @@
-/home/james/n/acumen/acumen.asd
+../acumen/acumen.asd
