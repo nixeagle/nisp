@@ -71,10 +71,10 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (defmethod find-channel-user ((connection connection)
                               (channel irc:channel) (nickname string))
   "Find NICKNAME in CHANNEL on CONNECTION."
-  (let ((nickname (irc:normalize-nickname connection nickname)))
-    (or (gethash nickname (irc:users channel))
-        (when (string= nickname (nickname (irc:user connection)))
-          (irc:user connection)))))
+  (sor (irc:normalize-nickname connection nickname)
+       (gethash it (irc:users channel))
+       (when (string= it (nickname (irc:user connection)))
+         (irc:user connection))))
 
 
 (defmethod target ((message irc:irc-privmsg-message))
@@ -94,8 +94,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
                                (to (reply-target message))
                                (cmd (message-text message)))
   (handler-case
-      (when (and (> (length cmd) 0)
-                 (find (comchar irc) cmd :end 1))
+      (when (and (> (length cmd) 0))
         (route-command
          irc
          (make-instance 'irc-user
@@ -208,6 +207,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (and (slot-boundp irc 'irc:output-stream)
        (open-stream-p (irc:output-stream irc))))
 
+
 (defgeneric handle-nisp-command (tree source from address identity
                                       action content)
   (:generic-function-class nisp-command-network-tree-generic-function)
@@ -231,27 +231,23 @@ All things made by `make-anon-bot-user-class' superclass this."))
                  (to target) (content string))
   (declare (ignore action))
   "Default action for irc is to privmsg"
-  (privmsg sink to content))
+  (privmsg sink to (remove #\Newline content)))
 (defmethod send (action
                  (sink bot-connection)
                  (to target) (content cons))
   (declare (ignore action))
   "Default action for irc is to privmsg"
   (privmsg sink to (remove #\Newline
-                           (format nil "~{~A~^ ~}" content))))
+                          #+ () (format nil "~{~A~^ ~}" content)
+                          (format nil "~A" content))))
 
 (defmethod privmsg ((sink bot-connection) (to target)
                     (content string))
   (irc:privmsg sink to content))
 
 
-(define-simple-command emacs
-  (network-tree::next-node))
-(define-simple-command source
-  (reply "I'm written in common lisp by nixeagle. You can find my source at <http://github.com/nixeagle/nisp/tree/master/irc-bot/>"))
-(define-simple-command say
-  (reply (remaining-parameters)))
-
+(defun parse-link (line)
+  (nth-value 1 (cl-ppcre:scan-to-strings "\\\[\\\[(?:([^:]+):)?(.*?)\\\]\\\]" line)))
 
 (defgeneric route-command (source from content to sink))
 (defmethod route-command :around (source from content to sink)
@@ -270,25 +266,323 @@ All things made by `make-anon-bot-user-class' superclass this."))
                               (push-new-time condition)
                               (error condition))))
         (push-new-time (call-next-method))))))
+
 (defmethod route-command  ((source abstract-data-source)
                            (from abstract-from)
                            (content abstract-message-content)
                            (to abstract-target)
                            (sink abstract-data-sink))
   (declare (ignore sink))
-  (when (commandp content)
-    (handle-nisp-command (message content) source (name from)
-                         to (make-instance 'abstract-identity)
-                         (make-instance 'abstract-action) content)))
+  (acond
+    ((commandp content)
+     (handle-nisp-command (message content) source (name from)
+                          to (make-instance 'abstract-identity)
+                          (make-instance 'abstract-action) content))
+    ((parse-link (message content))
+     (handle-nisp-command (format nil "link ~A ~A" (aref it 0) (aref it 1))
+                          source (name from)
+                          to (make-instance 'abstract-identity)
+                          (make-instance 'abstract-action) content))))
 
-#+ ()
-(defmethod handle-nisp-command ((tree (eql "say"))
+
+
+#+ () (defmethod handle-nisp-command ((tree (eql "say"))
                                 (source abstract-data-source)
                                 (user abstract-user)
                                 (address abstract-address)
+
                                 (identity abstract-identity)
                                 (action abstract-action)
                                 (content abstract-message-content))
   (privmsg source address (network-tree::remaining-parameters)))
+
+(defun string-integer-p (string)
+  (= (length string) (nth-value 1 (parse-integer string :junk-allowed t))))
+
+
+
+(define-simple-command lag
+  (reply (format nil "~A seconds."
+                 (float (/ (random 10000) (random 10000))))))
+(define-simple-command emacs
+  (network-tree::next-node))
+(define-simple-command source
+  (reply "I'm written in common lisp by nixeagle. You can find my source at <http://github.com/nixeagle/nisp/tree/master/irc-bot/>."))
+(define-simple-command emacs-live
+  (reply "Nixeagle's live emacs buffer is at http://i.nixeagle.net:1337/t or http://i.nixeagle.net:8080/t . For best results please view in firefox or chrome. Opera won't even show the text (source unknown). IE gets some silly runtime error and fixing it is not a priority."))
+(define-simple-command say (reply (remaining-parameters)))
+
+(define-simple-command link
+  (handler-case (network-tree::next-node)
+    (error (condition)
+      (network-tree::next-node
+       (apply #'format nil "nil ~A:~A"
+              (multiple-value-list (network-tree::first-command-word (remaining-parameters))))))))
+
+(defun format-euler-problem-url-text (id)
+  (let ((url (format nil "http://projecteuler.net/index.php?section=problems&id=~A" id)))
+    (let ((it (dom:get-elements-by-tag-name (chtml:parse (drakma:http-request url) (rune-dom:make-dom-builder)) "p")))
+      (format nil "Project Euler problem #~A: ~A <~A>"
+              id
+              (dom:data (dom:first-child (aref it (1- (fill-pointer it)))))
+              (shorturl-is.gd url)))))
+
+
+(define-simple-command link-euler
+  (if (string-integer-p (remaining-parameters))
+      (reply (format-euler-problem-url-text (remaining-parameters)))
+      (reply (format nil "Project Euler profile for ~A: ~A" (remaining-parameters)
+                     (shorturl-is.gd (format nil "http://projecteuler.net/index.php?section=profile&profile=~A" (remaining-parameters)))))) )
+
+(defun format-link-wikipedia (params)
+  (format nil "Wikipedia article ~A: ~A" params
+          (shorturl-is.gd (format nil "http://en.wikipedia.org/wiki/~A"
+                                  params))))
+(define-simple-command link-wikipedia
+  (reply (format-link-wikipedia (remaining-parameters))))
+(define-simple-command link-wiki
+  (reply (format-link-wikipedia (remaining-parameters))))
+(define-simple-command link-nil
+  (reply (format-link-wikipedia (remaining-parameters))))
+
+
+
+(defvar *nist-compsci-dictionary* (make-hash-table :test #'equalp))
+
+(iter (for x in-vector (dom:get-elements-by-tag-name
+                        (chtml:parse (drakma:http-request "http://www.itl.nist.gov/div897/sqg/dads/ui.html")
+                                     (rune-dom:make-dom-builder)) "a"))
+      (when (search "HTML/" (dom:get-attribute x "href") :end2 5)
+        (when (dom:text-node-p (dom:first-child x))
+          (setf (gethash (dom:data (dom:first-child x)) *nist-compsci-dictionary*)
+                (concatenate 'string "http://www.itl.nist.gov/div897/sqg/dads/"
+                             (dom:get-attribute x "href"))))))
+
+(define-simple-command link-nist
+  (reply (gethash (remaining-parameters) *nist-compsci-dictionary*
+                  (format nil "Requested page ~A does not exist in my index."
+                          (remaining-parameters)))))
+
+(define-simple-command link-cpan
+  (reply (format nil "CPAN: http://search.cpan.org/search?mode=all&query=~A"
+                 (remaining-parameters))))
+
+(define-simple-command link-wk
+  (reply (format nil "wiktionary: http://en.wiktionary.org/wiki/~A"
+                 (remaining-parameters))))
+
+(defun string-capitalize-only (string)
+  (cl-ppcre:regex-replace-all "\\\b(.)"
+                              string
+                              (lambda (target-string start end match-start match-end reg-starts reg-ends)
+                                (declare (ignore start end reg-ends reg-starts))
+                                (string-upcase (subseq target-string match-start match-end)))))
+
+(defun format-link-wikihow (params &optional lang)
+  (let ((article (substitute #\- #\Space params)))
+    (format nil "wikiHow page ~A: ~A"
+            (substitute #\Space #\- article)
+            (if lang
+                (format nil "http://~A.wikihow.com/~A"
+                        lang article)
+                (format nil "http://wikihow.com/~A"
+                        article)))))
+
+(define-simple-command link-wikihow
+  (reply (format-link-wikihow (remaining-parameters))))
+
+
+(let ((count 0))
+  (define-simple-command link-rfc
+    (incf count)
+    (reply (if (string-integer-p (remaining-parameters))
+               (format nil "RFC: http://www.ietf.org/rfc/rfc~A" (remaining-parameters))
+               "RFCs are referred to by number")))
+
+  (define-simple-command help
+    (incf count)
+    (reply (format nil "Help? what help. Count: ~A" count))))
+
+(defun random-up-or-down (&optional (magnitude 1))
+  (if (zerop (random 2))
+      (- magnitude)
+      magnitude))
+
+(defun generate-markov-sequence (&key (initial 0) (range 10))
+  "Demo markov to get the idea of it."
+  (iter (for up-or-down = (random-up-or-down))
+        (for n initially initial then (+ n up-or-down))
+        (until (or (> n (+ initial range)) (< n (+ initial (- range)))))
+        (collect (list n up-or-down))))
+
+
+(define-simple-command markov
+  (reply (remove #\Newline
+                 (format nil "~A" (generate-markov-sequence
+                                   :initial 0 :range 3)))))
+
+
+(defvar *states* (list :positive-even :positive-odd :negative-odd :negative-even :zero))
+;;=> *STATES*
+
+(defvar *learning-rate* 1/10
+  "Rate that we adjust things based on a reward.")
+
+(defvar *actions* (list (constantly "Probably")
+                        (constantly "Bye")
+                        (constantly "Hi")
+                        (constantly "Interesting")
+                        (constantly "ZzzZzzZzzZzz")))
+
+
+(flet ((generate-action-list (&optional (initial-score 5) (action-set *actions*))
+         (mapcar (lambda (x) (cons x initial-score)) action-set)))
+  (defparameter *lookup-table* (alist-hash-table
+                                `((:positive-even . ,(generate-action-list))
+                                  (:positive-odd . ,(generate-action-list))
+                                  (:zero . ,(generate-action-list))
+                                  (:negative-even . ,(generate-action-list))
+                                  (:negative-odd . ,(generate-action-list))))
+    "We default the score for every entry to 5. This is chosen by the
+    programmer. We have to start with some default. Our default is flat
+    between the range 0 and 10. These are arbitrary values"))
+
+(defun state-action-score (state action)
+  "Scoring for a particular state/action pair."
+  (cdr (assoc action (gethash state *lookup-table*))))
+
+
+(defun (setf state-action-score) (score state action)
+  (setf (cdr (assoc action (gethash state *lookup-table*)))
+        score))
+
+
+(defun state-learning-rate (state action)
+  *learning-rate*)
+
+(defun state-action-max-score (state action)
+  10)
+
+(defun compute-new-score (state action reward)
+  (+ (state-action-score state action)
+     (* (state-learning-rate state action)
+        (+ reward
+           (- (state-action-score state action))))))
+
+(defun compute-state (number-input)
+  (let ((number-input (if (stringp number-input)
+                          (parse-integer number-input)
+                          number-input)))
+    (cond
+      ((zerop number-input) :zero)
+      ((and (> 0 number-input) (evenp number-input)) :negative-even)
+      ((and (> 0 number-input) (oddp number-input)) :negative-odd)
+      ((evenp number-input) :positive-even)
+      (t :positive-odd))))
+
+
+(defun flux (normal-score)
+  (+ normal-score (/ (random 150) 100)))
+
+(defun compute-possible-actions (string-integer)
+  (aif (parse-integer string-integer :junk-allowed t)
+       (mapcar (lambda (action)
+                 (cons (state-action-score
+                         (compute-state it) action) action)) *actions*)
+       "I expect integers only! Your brainzzzzzzzz plox!"))
+
+(defun add-flux (action-list)
+  (mapcar (lambda (action-score-pair)
+            (cons (flux (car action-score-pair))
+                  (cdr action-score-pair)))
+          action-list))
+
+(defun compute-best-action (action-list)
+  (sort action-list #'> :key #'car))
+
+(defun handle-ai (string-integer)
+  (aif (string-integer-p string-integer)
+       (car (compute-best-action (add-flux (compute-possible-actions string-integer))))
+       "I expect integers only!"))
+
+(let ((input "")
+      (last-score 0)
+      (last-action nil)
+      (last-state nil))
+  (define-simple-command ai
+    (if (string-integer-p (remaining-parameters))
+        (progn
+          (setq input (remaining-parameters))
+          (destructuring-bind (score . action) (handle-ai (remaining-parameters))
+            (setq last-action action
+                  last-score score
+                  last-state (compute-state (parse-integer (remaining-parameters))))
+            (reply (remove #\Newline
+                           (funcall action)))))
+        (network-tree::next-node)))
+  (define-simple-command ai-test-state
+    (reply (princ-to-string (compute-state (parse-integer (remaining-parameters))))))
+  (define-simple-command ai-previnfo
+    (reply (list input last-score last-action)))
+  (define-simple-command ai-test
+    (network-tree::next-node))
+  (define-simple-command ai-test-reward
+    (if (string-integer-p (remaining-parameters))
+        (reply (format nil "New score for state ~A and action ~A would be ~A."
+                       last-state
+                       (funcall last-action)
+                       (float (compute-new-score last-state last-action (parse-integer (remaining-parameters))))))
+        (reply "Come on! Integers rock!")))
+  (flet ((format-reward-reply (score)
+           (format nil "Score for state ~A saying ~A is now ~A."
+                   last-state
+                   (funcall last-action)
+                   (float (reward-ai last-state last-action score)))))
+  (define-simple-command ai-trout
+    (reply (format-reward-reply 0)))
+  (define-simple-command ai-cookie
+    (reply (format-reward-reply 10)))))
+
+(defun reward-ai (state action amount)
+  (setf (state-action-score state action)
+        (compute-new-score state action amount)))
+(define-simple-command test
+  (network-tree::next-node))
+
+(define-simple-command test-action
+  (reply (funcall (nth (random 5) *actions*))))
+
+(define-simple-command test-tokenize
+  (network-tree::next-node))
+
+#+ () (define-simple-command test-tokenize-word
+  (with-input-from-string (s (remaining-parameters))
+    (reply (nisp.tokenize::parse-word s))))
+
+(define-simple-command tokenize
+  (reply (format nil "~S" (nisp.tokenize:tokenize-string (remaining-parameters)))))
+
+(define-simple-command test-wordinfo
+  (aif (gethash (remaining-parameters) wiktionary::*dictionary*)
+       (reply (format nil "~A types: ~A"
+                      (wiktionary::word-name it)
+                      (wiktionary::word-pos it)))
+       ;(reply "borked!")
+       (reply "I don't know!")))
+
+(define-simple-command word
+  (network-tree::next-node))
+
+(define-simple-command word-pos
+  (multiple-value-bind (pos-list found?)
+      (wiktionary:lookup-pos (remaining-parameters))
+    (if found?
+        (reply (format nil "~A" pos-list))
+        (reply "I can't find that word!"))))
+
+#+ ()  (www::define-easy-handler (www::ai-demonstration :uri "/ai")
+      ((number :init-form 0 :parameter-type 'integer))
+    (princ-to-string (funcall (cdr (handle-ai (princ-to-string number))))))
+
 
 ;;; END
