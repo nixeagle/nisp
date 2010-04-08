@@ -8,9 +8,9 @@
   (define-simple-command github-show
     (network-tree::next-node))
   (define-simple-command github-show-followers
-    (reply (cl-github:show-followers (network-tree::remaining-parameters))))
+    (reply (cl-github:show-followers (remaining-parameters))))
   (define-simple-command github-show-following
-    (reply (cl-github:show-following (network-tree::remaining-parameters))))
+    (reply (cl-github:show-following (remaining-parameters))))
   (define-simple-command github-show-repositories
     (reply
      (mapcar #'cl-github::repository-name
