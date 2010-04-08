@@ -16,7 +16,9 @@
                 :cl-who
                 :closure-html
                 :drakma
+                :series
                 :usocket
+                :anaphora
                 :closure-html
                 :cl-html-parse
                 :djula
