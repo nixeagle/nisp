@@ -1,6 +1,6 @@
 (defpackage #:nisp.util.json
   (:use :cl :json :usocket :nisp.util.usocket
-        :eos :with-fbound)
+        :eos)
   (:export :json-socket :json-mixin :json-socket-connect
            :make-json-mixin-from-string
            :read-json :write-json :synchronous-json-request))
@@ -65,4 +65,3 @@ Classes are read from JSON-SYMBOLS-PACKAGE by READ-FUNCTION."
   (let ((sock (json-socket-connect "danopia.net" 5348)))
     (is (typep sock 'json-socket))
     (is (close (socket-stream sock)))))
-

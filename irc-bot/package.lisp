@@ -1,6 +1,6 @@
 (defpackage #:nisp.i
   (:use :cl :iterate :split-sequence :nisp.util.packages :alexandria :eos
-        :with-fbound :closer-mop :nisp.network-tree :anaphora)
+         :closer-mop :nisp.network-tree :anaphora)
   (:import-from :cl-irc :user #:nickname #:username #:realname)
 
   ;; This whole shadowing import block is taken from
@@ -119,7 +119,7 @@
                              ))
 
 (defpackage #:nisp.i-zeta
-  (:use :cl :eos :with-fbound :iterate :alexandria)
+  (:use :cl :eos :iterate :alexandria)
   (:shadowing-import-from  :closer-mop
                              #:built-in-class
                              #:class
