@@ -368,6 +368,10 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (reply (format nil "CPAN: http://search.cpan.org/search?mode=all&query=~A"
                  (remaining-parameters))))
 
+(define-simple-command link-emacs
+  (reply (format nil "Emacwiki: ~A"
+                 (shorturl-is.gd (format nil "http://www.google.com/cse?cx=004774160799092323420%3A6-ff2s0o6yi&q=~A&sa=Search" (substitute #\+ #\Space (remaining-parameters)))))))
+
 (define-simple-command link-wk
   (reply (format nil "wiktionary: http://en.wiktionary.org/wiki/~A"
                  (remaining-parameters))))
