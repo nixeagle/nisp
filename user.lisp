@@ -8,7 +8,6 @@
         :alexandria
         :anaphora
         :eos
-        :series
         :usocket
         :drakma)                         ;http-request
   (:nicknames :nu :~))
