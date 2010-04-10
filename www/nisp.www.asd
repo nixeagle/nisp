@@ -7,4 +7,5 @@
                :nisp.global
                )
   :components
-  ((:file "hunchentoot-alpha")))
+  ((:file "hunchentoot-alpha")
+   (:file "ninthbit")))
