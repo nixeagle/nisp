@@ -31,9 +31,10 @@
      expression environment)
   (multiple-value-bind (body lambda-args declarations)
       (parse-method-lambda-expression-body expression)
-    (with-gensyms (args next-methods this-method)
+    (with-gensyms (args next-methods this-method #-sbcl a)
       (let ((lamb
-             `(lambda (,args ,next-methods ,this-method)
+             `(lambda (,args ,next-methods ,this-method
+                       #-sbcl &rest #-sbcl ,a)
                 (declare (ignorable ,this-method))
                 (when *trace-method-lambda*
                   (print ,args))
@@ -54,11 +55,13 @@
                                             (declare (ignorable (function reply)))
                                             ,@body)))
                                     environment)
-                  ,args ,next-methods))))
-        (print lamb)
+                  ,args ,next-methods #-sbcl ,a))))
+
         lamb))))
 
 (defmethod compute-effective-method
     ((generic-function network-tree-generic-function)
      (method-combination t) methods)
   `(call-method ,(car methods) ,(cdr methods) ,(car methods)))
+
+;;; END
