@@ -1,6 +1,7 @@
 (in-package :cl-user)
 (defpackage #:nisp.www
-  (:use :cl :hunchentoot :alexandria)
+  (:use :cl :hunchentoot :hunchentoot-vhost :alexandria :cl-who :parenscript)
+  (:shadowing-import-from :parenscript :switch :var)
   (:nicknames :www))
 (in-package :nisp.www)
 
