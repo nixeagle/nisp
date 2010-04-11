@@ -171,13 +171,14 @@ is translated into a list of symbols."
 (defmethod sb-pcl:make-method-specializers-form
     ((generic-function network-tree-generic-function)
      method specializer-names environment)
-  ;; We always assume a specializer exists in the first element of
-  ;; SPECIALIZER-NAMES. We certainly can do better, but this works.
-  (call-next-method generic-function method
-                    (cons (maybe-make-tree-specializer-form (car specializer-names))
-                          (cdr specializer-names))
-                    environment))
-
+  ;; If it is a list, we assume it is a tree specializer.
+  (if (listp (car specializer-names))
+      (call-next-method generic-function method
+                        (cons (maybe-make-tree-specializer-form (car specializer-names))
+                              (cdr specializer-names))
+                        environment)
+      (call-next-method)))
+(defparameter *args* nil)
 (let ((*network-tree-remaining* nil))
   (declare (special *network-tree-remaining*))
   (defmethod compute-discriminating-function
