@@ -112,8 +112,13 @@ The result is an alist of the form:
 (defmacro blocktimer (&body body)
   `(call-blocktimer (lambda () ,@body)))
 
-(defmacro qtime (&body body)
-  `(call-blocktimer-return-time (lambda () ,@body)))
+(defmacro qtime (iterations &body body)
+  "Time BODY over ITERATIONS loops."
+  `(values
+    (float (call-blocktimer-return-time
+      (lambda () (dotimes (i ,(expt 2 iterations))
+                   ,@body))))
+    ,(expt 2 iterations)))
 ;#+sbcl
 ;(my-setup-server)
 
