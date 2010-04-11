@@ -189,10 +189,9 @@ is translated into a list of symbols."
         (multiple-value-bind (command *network-tree-remaining*)
             (first-command-word (car args))
           (declare (special *network-tree-remaining*))
-          (setf (car args) (the network-tree-node
+         (setf (car args) (the network-tree-node
                              (tree-generic-direct-node *network-tree-nodes* command)))
-          (print args)
-          (apply it args)))))
+         (apply it args)))))
 
 
   (defmethod make-method-lambda
