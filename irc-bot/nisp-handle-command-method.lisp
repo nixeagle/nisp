@@ -36,8 +36,6 @@
              `(lambda (,args ,next-methods ,this-method
                        #-sbcl &rest #-sbcl ,a)
                 (declare (ignorable ,this-method))
-                (when *trace-method-lambda*
-                  (print ,args))
                 (,(call-next-method generic-function method
                                     `(lambda ,lambda-args
                                        ,@declarations
@@ -46,8 +44,6 @@
                                                action content)
                                          lambda-args
                                          (declare (ignore tree from identity content))
-                                         `(incf (handle-nisp-command-method-call-count
-                                                 ,this-method))
                                          `(labels ((reply (message)
                                                      (if *debug*
                                                          `(send ,,action ,,source ,,address ,message)

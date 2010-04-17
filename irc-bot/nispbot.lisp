@@ -138,7 +138,7 @@ valid-comchar.")
 (defun command-hook (message)
   (declare (notinline command-hook))
   "For now lets try to parse just one command"
-  (setq 
+  (setq
    nisp-safe::*populate-functions*
         (adjoin 'nisp-safe::populate-ldap-stuff
                 nisp-safe::*populate-functions*))
@@ -147,7 +147,7 @@ valid-comchar.")
                                             forms)))
     (when forms
       (handler-case
-          (if (and (member (host message) 
+          (if (and (member (host message)
                            (irc-bot-admin-hosts (connection message)) :test #'string=)
                    admin-request)
               ;; User is person running the bot, so allow any lisp to
@@ -168,7 +168,7 @@ valid-comchar.")
                                   (safe-eval message forms))))))
 ;        (end-of-file (condition) (values nil condition))
         (error (condition) (privmsg (connection message)
-                                    (first (arguments message))
+                                    (first (irc:arguments message))
                                     (strip-newlines (format nil "~A" condition))))))))
 
 #+nil
@@ -203,7 +203,7 @@ valid-comchar.")
 (defun start-nispbot-instance (&optional (nick nispbot-config::*nickname*))
   (setq nispbot::*nispbot* (nispbot::make-irc-bot nick "irc.eighthbit.net"))
   (irc:start-background-message-handler nispbot::*nispbot*)
-  (sleep 3) 
+  (sleep 3)
   (nispbot::join-all-channels nispbot::*nispbot*)
   (irc:add-hook *nispbot* 'irc:irc-privmsg-message 'command-hook))
 
