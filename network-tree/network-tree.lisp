@@ -17,17 +17,54 @@ second value."
                  body)))
       (values (parse (cddr lambda-form)) lambda-args (reverse declare-forms)))))
 
-(defun first-command-word (command-string &optional (seperater #\Space))
+
+
+
+(defun pretend-splits (string)
+  (iter (repeat 1)
+    (for (values res next-start)
+         initially (test-first-command-word string)
+         then (test-first-command-word string next-start))
+        (collect res)
+        (while next-start)
+        ))
+(defun pretend-splits/2 (string)
+  (declare (optimize (speed 3) (debug 1) (safety 0)))
+  (iter (for (values new rest)
+             initially (first-command-word string)
+             then (first-command-word rest))
+        (repeat 3)
+        (until (string= rest ""))))
+(declaim (inline test-first-command-word))
+(defun test-first-command-word (command-string &optional (start-index 0) (seperater #\Space))
   "Extract the first segment in COMMAND-STRING before SEPERATER.
 
 Second return value is what is left after removing the segment."
-  (declare (type string command-string)
-           (type character seperater))
-  (let ((space-index (position seperater command-string)))
+  (declare (simple-string command-string)
+           (character seperater)
+           (optimize (speed 3) (safety 0) (debug 1)))
+  (let ((space-index (position seperater command-string :start start-index)))
+    (declare (type (or null non-negative-fixnum) space-index))
+    (if space-index
+        (values (subseq command-string start-index space-index)
+                (1+ space-index))
+        (values (if (zerop start-index)
+                    command-string
+                    (subseq command-string start-index))
+                nil))))
+(defun first-command-word (command-string &optional (seperater #\Space)
+                           (start-index 0))
+  "Extract the first segment in COMMAND-STRING before SEPERATER.
+
+Second return value is what is left after removing the segment."
+  (declare (type simple-string command-string)
+           (type character seperater)
+           (optimize (speed 3) (safety 0) (debug 1)))
+  (let ((space-index (position seperater command-string :start start-index)))
     (declare (type (or null non-negative-fixnum) space-index))
     (if space-index
         (values
-         (subseq command-string 0 space-index)
+         (subseq command-string start-index space-index)
          (subseq command-string (the non-negative-fixnum (1+ space-index))))
         (values command-string ""))))
 
@@ -43,18 +80,28 @@ A valid tree-symbol is defined as anything that does not contain a space."
   '(and string (satisfies network-node-string-p)))
 
 ;;;{{{ ensure-network-node-symbol(s)
+
 (defparameter +network-tree-symbols-package+ (find-package :keyword)
   "Package that all tree symbols should get interned into.")
 
+#+ ()
 (defgeneric ensure-network-node-symbol (symbol)
   (:documentation "Make sure SYMBOL exists in `+network-tree-symbols-package+'."))
+
+(defun ensure-network-node-symbol (arg)
+  (if (stringp arg)
+      arg
+      (princ-to-string arg)))
+
+#+ ()
 (defmethod ensure-network-node-symbol (arg)
   "Make a symbol out of ARG by `format-symbol'."
   (string-upcase (format "~A" arg)))
+#+ ()
 (defmethod ensure-network-node-symbol ((symbol symbol))
   "Make SYMBOL a list and recall."
   (call-next-method))
-
+#+ ()
 (defmethod ensure-network-node-symbol ((symbol-as-string string))
   "Split by spaces, then intern SYMBOLS as normal."
   (declare (type network-node-string symbol-as-string))
@@ -81,32 +128,35 @@ A valid tree-symbol is defined as anything that does not contain a space."
            :reader network-tree-parent))
  #+ () (:default-initargs :parent nil))
 
-(defclass tree-generic-direct-nodes (network-tree-parent)
-  ((direct-nodes :initform
-                 (make-hash-table :test 'equalp
-                                  #+sbcl :weakness
-                                  #+ccl :weak
-                                  #+ (or sbcl ccl) :value)
-                 :reader tree-generic-direct-nodes)))
+(locally (declare (optimize (speed 3) (safety 0) (debug 0)))
+  (defstruct (tree-generic-direct-nodes
+               (:conc-name))
+    (tree-generic-direct-nodes (make-hash-table :test 'equalp
+                                                #+sbcl :weakness
+                                                #+ccl :weak
+                                                #+ (or sbcl ccl) :value)
+                               )))
 
+(declaim (inline tree-generic-direct-node))
 (defun tree-generic-direct-node (tree arg)
-  (declare (type string arg)
+  (declare (type simple-string arg)
            (type tree-generic-direct-nodes tree)
-           (optimize (speed 3) (safety 0) (debug 1)))
+           (optimize (speed 3) (safety 0) (debug 0)))
   (gethash arg (tree-generic-direct-nodes tree)))
 
 (defclass network-tree-generic-function
     (#+sbcl
      cl:standard-generic-function
-     #-sbcl standard-generic-function tree-generic-direct-nodes)
+     #-sbcl standard-generic-function)
   ()
   (:metaclass closer-mop:funcallable-standard-class)
   (:default-initargs :method-class (find-class 'tree-method)))
 
-(defclass network-tree-node (eql-specializer tree-generic-direct-nodes)
-  ())
-(defmethod  network-tree-node-object ((obj network-tree-node))
-  (eql-specializer-object obj))
+(defstruct (network-tree-node (:include tree-generic-direct-nodes)
+                              (:conc-name))
+  )
+
+
 (defclass network-tree-method (standard-method network-tree-parent)
   ((methods :type list :reader network-tree-method-methods
             :initform ()))
@@ -114,7 +164,7 @@ A valid tree-symbol is defined as anything that does not contain a space."
 (defclass tree-method (network-tree-method)
   ())
 
-(defmethod print-object ((obj network-tree-node) stream)
+#+ () (defmethod print-object ((obj network-tree-node) stream)
    (print-unreadable-object (obj stream :type t :identity t)
      (princ (network-tree-node-object obj) stream)))
 
@@ -135,8 +185,8 @@ A valid tree-symbol is defined as anything that does not contain a space."
         (%intern-network-tree-node
          (or (gethash (car symbols) (tree-generic-direct-nodes node))
              (setf (gethash (car symbols) (tree-generic-direct-nodes node))
-                   (make-instance 'network-tree-node :object (car symbols)
-                                  )))
+                   (make-network-tree-node)
+                   ))
          (cdr symbols))
         node)))
 
@@ -190,9 +240,9 @@ is translated into a list of symbols."
         (multiple-value-bind (command *network-tree-remaining*)
             (first-command-word (car args))
           (declare (special *network-tree-remaining*))
-         (setf (car args) (the network-tree-node
-                             (tree-generic-direct-node *network-tree-nodes* command)))
-         (apply it args)))))
+          (apply it (the network-tree-node
+                             (tree-generic-direct-node *network-tree-nodes* command))
+                (cdr args))))))
 
 
   (defmethod make-method-lambda

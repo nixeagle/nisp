@@ -36,8 +36,24 @@
 
 (progn
   (fmakunbound 'test-tree-generic-function)
-
-  (defmethod test-tree-generic-function ((tree (eql (intern-network-tree-node "hi"))) arg1)
+  (fmakunbound 'call-test-tree-generic-function)
+  (defgeneric test-tree-generic-function (tree arg1)
+    (:generic-function-class network-tree-generic-function))
+  (defun call-test-tree-generic-function (tree arg1)
+    (declare (optimize (speed 3) (debug 0) (safety 0))
+             (simple-string tree))
+    (test-tree-generic-function (tree-generic-direct-node *network-tree-nodes* tree) arg1))
+  (defmethod test-tree-generic-function ((tree (eql "hi")) arg1)
+    arg1
+    "hi"
+#+ ()    (remaining-parameters))
+  (defmethod test-tree-generic-function ((tree (eql "one")) arg1)
+    (next-node))
+  (defmethod test-tree-generic-function ((tree (eql "one two")) arg1)
+    (next-node))
+  (defmethod test-tree-generic-function ((tree (eql "one two three")) arg1)
+    arg1)
+#+ ()  (defmethod test-tree-generic-function ((tree (eql (intern-network-tree-node "hi"))) arg1)
     arg1
     "hi"))
 

@@ -1,5 +1,5 @@
 (defpackage #:nisp.network-tree
-  (:use :cl :alexandria :split-sequence :closer-mop :eos)
+  (:use :cl :alexandria :split-sequence :closer-mop :eos :iterate)
   (:nicknames :network-tree)
   (:export :network-tree-generic-function
            :network-tree-method
