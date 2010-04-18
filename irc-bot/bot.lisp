@@ -326,6 +326,22 @@ All things made by `make-anon-bot-user-class' superclass this."))
        (apply #'format nil "nil ~A:~A"
               (multiple-value-list (network-tree::first-command-word (remaining-parameters))))))))
 
+(defmethod handle-nisp-command
+    ((tree (eql "link")) (source connection) (user abstract-user)
+     (address bot-channel) (identity abstract-identity)
+     (action abstract-action) (content abstract-text-message-content))
+  (unless #+nisp-vps (or (gethash "whbot-dev" (irc:users address) nil)
+                         (gethash "nisp-devel" (irc:users address) nil))
+          #-nisp-vps nil
+          (handler-case (nisp.network-tree::next-node)
+            (error (condition)
+              (declare (ignore condition))
+              (nisp.network-tree::next-node
+               (apply #'format nil "nil ~A:~A"
+                      (multiple-value-list
+                       (nisp.network-tree::first-command-word
+                        (remaining-parameters)))))))))
+
 (defun format-euler-problem-url-text (id)
   (let ((url (format nil "http://projecteuler.net/index.php?section=problems&id=~A" id)))
     (let ((it (dom:get-elements-by-tag-name (chtml:parse (drakma:http-request url) (rune-dom:make-dom-builder)) "p")))
@@ -343,8 +359,8 @@ All things made by `make-anon-bot-user-class' superclass this."))
 
 (defun format-link-wikipedia (params)
   (format nil "Wikipedia article ~A: ~A" params
-          (shorturl-is.gd (format nil "http://en.wikipedia.org/wiki/~A"
-                                  params))))
+          (format nil "http://en.wikipedia.org/wiki/~A"
+                  params)))
 (define-simple-command link-wikipedia
   (reply (format-link-wikipedia (remaining-parameters))))
 (define-simple-command link-wiki
@@ -352,7 +368,8 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (define-simple-command link-nil
   (reply (format-link-wikipedia (remaining-parameters))))
 
-
+(define-simple-command shorturl
+  (reply (shorturl-is.gd (remaining-parameters))))
 
 (defvar *nist-compsci-dictionary* (make-hash-table :test #'equalp))
 
