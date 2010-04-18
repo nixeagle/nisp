@@ -33,6 +33,11 @@
 
     (get-cxml-element-contents source "rev")))
 
+(defun site-single-statistic (domain stat-property)
+  (let ((source (cxml:make-source (http-request (format nil "http://~A/api.php?action=query&meta=siteinfo&siprop=statistics&format=xml" domain)))))
+    (klacks:find-element source "statistics")
+    (klacks:get-attribute source stat-property)))
+
 (defun parse-mediawiki-list (start-char text)
   (cl-ppcre:all-matches-as-strings
    (format nil "\\~A.+\\\n" start-char)
@@ -145,6 +150,15 @@
 
 (define-wikihow-es-command link-nil
   (reply (format-link-wikihow (remaining-parameters) "es")))
+
+(define-wikihow-command stats
+  (network-tree::next-node))
+
+(define-wikihow-command stats-article
+  (network-tree::next-node))
+
+(define-wikihow-command stats-article-count
+  (reply (wikihow::site-single-statistic "en.wikihow.com" "articles")))
 
 (define-wikihow-command link-g
   (reply (format nil "Google: http://google.com/search?q=~A"
