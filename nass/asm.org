@@ -1,0 +1,192 @@
+* common ops
+*** mov
+    : mov reg, reg/memory/constant
+    : mov memory, reg
+    mov (two forms),
+
+***** register operands
+      mov     ax, ax
+      mov     ax, bx
+      mov     ax, cx
+      mov     ax, dx
+
+***** memory operands
+      mov     ax, [1000]
+      mov     ax, [bx]
+      mov     ax, [1000+bx]
+
+*** arithmatic
+    add,
+    sub,
+    cmp,
+    and,
+    or,
+    not,
+
+*** jumps
+
+                ja      dest            -- Jump if above
+                jae     dest            -- Jump if above or equal
+                jb      dest            -- Jump if below
+                jbe     dest            -- Jump if below or equal
+                je      dest            -- Jump if equal
+                jne     dest            -- Jump if not equal
+                jmp     dest            -- Unconditional jump
+                iret                    -- Return from an interrupt
+
+
+brk stops the program in a state that it can be restarted.
+
+halt - terminates execution
+
+* number i/o
+  get and put
+
+  a number into ax or out of ax
+
+
+mod rem r/m is the addressing mode byte
+
+
+* Emulators
+*** cl-rlc
+    Simulator for RLC (resistance, inductance, capacitance) circuits
+    written in common lisp (cool!).
+
+*** coldfire - freescale coldfire 5206 emulator
+    Freescale coldfire 5206 emulator.
+
+    Homepage: http://www.slicer.ca/coldfire/
+
+*** desmume - Nintendo DS emulator :ARM:
+    Nintendo DS emulator. (ARM).
+
+    Homepage: http://desmume.org/
+
+*** dgen - Sega GEnesis/MegaDrive game console.
+
+*** dosbox
+    x86 emulator for dos
+
+*** dosemu
+    dos emulator
+
+*** dynamips
+    CISCO router emulation
+
+*** e-uae Amiga OS
+    http://www.rcdrummond.net/uae
+
+*** fceu - NES emulator :6502:RISC:
+    - Homepage
+      - http://fceultra.sourceforge.net/
+
+    Instruction set documentation:
+    - http://www.6502.org/tutorials/
+
+*** freehdl - VHDL simulator :VHDL:
+    - what vhdl is.
+      - http://en.wikipedia.org/wiki/VHDL
+    - VHDL standards (IEEE)
+      - http://www.eda.org/vhdl-200x/
+
+    Not too too intresting, quick glances seem to expect me to pay for the
+    standard documentation which means implementing it is not encouraged.
+
+*** GHDL - VHDL simulator :VHDL:
+    - homepage
+      - http://ghdl.free.fr
+
+*** gngb - gameboy classic/color/others :gameboy:z80:
+    - homepage
+      - http://m.peponas.free.fr/gngb/
+
+*** gnuboy-sdl gameboy and gameboy color :gameboy:z80:
+
+*** gnusim8085 intel 8085 :arch:intel:
+    - homepage
+      - http://www.gnusim8085.org
+
+*** gpsim Microchip PIC :Microchip_PIC:
+
+***  gxemul Multiple machines :ARM:MIPS:PowerPC:SuperH:
+    - homepage
+      - http://gxemul.sourceforge.net/
+
+*** hatari :arch:
+    - homepage
+      - http://hatari.berlios.de/
+
+*** hercules - emulate mainframes :System370:ESA390:ZArchitecture:
+
+*** mdk :MIX:
+    Mythical computer described in first volume of art of computer
+    programming.
+
+*** Mednafen emulator for many systems :Atari_Lynx:GameBoy:GameBoy_Advance:GameBoy_Color:NES:PC_Engine:PC_FX:SuperGrafx:NeoGeo_Pocket:NeoGeo_Pocket_Color:WonderSwan:
+
+*** mixal :MIX:
+
+*** nupen64plus :NES64:
+    - http://code.google.com/p/mupen64plus/
+
+*** openmsx :MSX:
+    - http://openmsx.sf.net
+
+*** os8 :OS8:
+
+*** pearpc :PowerPC:
+    - http://pearpc.sourceforge.net
+
+*** qemu
+    - qemulator is neat for managing it.
+    - qtemu is a neat gui
+
+*** sdcc-ucsim microcontroller simulator :MCS51:HC08:Z80:microcontroller:
+    - http://sdcc.sourceforge.net
+
+*** simulavr :Atmel_AVF:microcontroller:
+    - http://savannah.nongnu.org/projects/simulavr
+
+*** simulpic :Microchip_PIC16F84:PIC:microcontroller:
+
+*** softgun :ARM:Netsilicon:NS9750:NS9360:Freescale_iMX21:
+    http://softgun.sourceforge.net/
+
+*** spectemu-common :Z80:ZX_Spectrum:
+
+*** stella :Atari:2600:
+    http://stella.sf.net/
+
+*** tiemu  :TI:89:92:92_plus:V200PLT:
+    - http://lpg.ticalc.org/prj_tiemu/
+
+*** uae :Amiga:500:
+    - http://uae.coresystems.de/
+
+*** vice :commodore:Pets:VIC_20:64:128:CBM_II:PLUS4:C64:VIC20:DTV:
+    - http://www.viceteam.org/
+
+*** virtualbox :x86:virtualization:
+    - http://www.virtualbox.org/
+
+*** visualboyadvance :gameboy:advance:gdb:gprof:
+    - http://sourceforge.net/projects/vba
+
+*** xmame-common :arcade:z80:6502:I86:
+
+*** xmess-common crapton of stuff :Atari:2600:Lynx:NES:SNES:GameBoy:Sega:Master_System:Megadrive:Game_Gear:Colecovision:Vectrex:Apple_II:400:800:Commodore:64:128:IBM:PC_XT:PC_AT:MDA:CGA:ZX80:ZX_Spectrum:TI994:TI:994:TRS80:MSX:
+
+*** xtrs :Tandy:Radio_Shack:Zilog:Z80:
+
+
+*** yabuse :sega:saturn:
+    - http://yabause.org
+
+*** z88dk :SmallC_Plus:SmallC:Z80:Cambridge:z88:Sinclare:ZX:Spectrum:ZX81:CPM:Amstrad:NC100:VZ200:VZ300:Sharp:MZ:TI:TI82:TI83:TI83_Plus:TI85:TI86:82:83:83_Plus:85:86:ABC80:Jupiter:ACE:XIRCOM:REX:6000:Paters:Sprinter:Sam:Coupe:MSX1:Spectravideo:Mattel:Aquarius:C128:z80:
+
+* Assemblers
+  For now look in debtags devel::machinecode
+
+* mips
+
