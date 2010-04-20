@@ -590,8 +590,6 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (define-simple-command tokenize
   (reply (format nil "~S" (nisp.tokenize:tokenize-string (remaining-parameters)))))
 
-(cl-ppcre:scan-to-strings "/(.+?)/ (.+)")
-
 (define-simple-command regex
   (let ((match-array (nth-value 1 (cl-ppcre:scan-to-strings "/(.+?)/ (.+)"  (remaining-parameters)))))
   (reply
