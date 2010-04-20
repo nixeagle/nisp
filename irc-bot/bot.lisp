@@ -590,6 +590,23 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (define-simple-command tokenize
   (reply (format nil "~S" (nisp.tokenize:tokenize-string (remaining-parameters)))))
 
+(cl-ppcre:scan-to-strings "/(.+?)/ (.+)")
+
+(define-simple-command regex
+  (let ((match-array (nth-value 1 (cl-ppcre:scan-to-strings "/(.+?)/ (.+)"  (remaining-parameters)))))
+  (reply
+   (multiple-value-bind (start end reg-start reg-end)
+       (cl-ppcre:scan
+        (aref match-array 0)
+        (aref match-array 1))
+     (if start
+         (format nil "match: (~A, ~A)~A" start end
+                 (if (length= 0 reg-start)
+                     ""
+                     (format nil " Groups: ~{~A~}"
+                             (mapcar #'list (coerce reg-start 'list)
+                                     (coerce reg-end 'list)))))
+         "Does not match")))))
 (define-simple-command test-wordinfo
   (aif (gethash (remaining-parameters) wiktionary::*dictionary*)
        (reply (format nil "~A types: ~A"
