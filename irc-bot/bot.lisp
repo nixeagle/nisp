@@ -309,8 +309,8 @@ All things made by `make-anon-bot-user-class' superclass this."))
 
 
 (define-simple-command lag
-  (reply (format nil "~A seconds."
-                 (float (/ (random 10000) (random 10000))))))
+  (reply "~A seconds." (float (/ (random 10000) (random 10000)))))
+
 (define-simple-command emacs
   (network-tree::next-node))
 (define-simple-command source
@@ -354,8 +354,8 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (define-simple-command link-euler
   (if (string-integer-p (remaining-parameters))
       (reply (format-euler-problem-url-text (remaining-parameters)))
-      (reply (format nil "Project Euler profile for ~A: ~A" (remaining-parameters)
-                     (shorturl-is.gd (format nil "http://projecteuler.net/index.php?section=profile&profile=~A" (remaining-parameters)))))) )
+      (reply  "Project Euler profile for ~A: ~A" (remaining-parameters)
+              (shorturl-is.gd (format nil "http://projecteuler.net/index.php?section=profile&profile=~A" (remaining-parameters))))) )
 
 (defun format-link-wikipedia (params)
   (format nil "Wikipedia article ~A: ~A" params
@@ -388,16 +388,14 @@ All things made by `make-anon-bot-user-class' superclass this."))
                           (remaining-parameters)))))
 
 (define-simple-command link-cpan
-  (reply (format nil "CPAN: http://search.cpan.org/search?mode=all&query=~A"
-                 (remaining-parameters))))
+  (reply "CPAN: http://search.cpan.org/search?mode=all&query=~A" (remaining-parameters)))
 
 (define-simple-command link-emacs
-  (reply (format nil "Emacwiki: ~A"
-                 (shorturl-is.gd (format nil "http://www.google.com/cse?cx=004774160799092323420%3A6-ff2s0o6yi&q=~A&sa=Search" (substitute #\+ #\Space (remaining-parameters)))))))
+  (reply "Emacwiki: ~A"
+          (shorturl-is.gd (format nil "http://www.google.com/cse?cx=004774160799092323420%3A6-ff2s0o6yi&q=~A&sa=Search" (substitute #\+ #\Space (remaining-parameters))))))
 
 (define-simple-command link-wk
-  (reply (format nil "wiktionary: http://en.wiktionary.org/wiki/~A"
-                 (remaining-parameters))))
+  (reply "wiktionary: http://en.wiktionary.org/wiki/~A" (remaining-parameters)))
 
 (defun string-capitalize-only (string)
   (cl-ppcre:regex-replace-all "\\\b(.)"
@@ -423,17 +421,17 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (reply "Google: http://google.com/search?q=~A"
          (substitute #\+ #\Space (remaining-parameters))))
 
+(define-simple-command link-debpackage
+  (reply "http://packages.debian.org/~A" (remaining-parameters)))
 
-(let ((count 0))
-  (define-simple-command link-rfc
-    (incf count)
-    (reply (if (string-integer-p (remaining-parameters))
-               (format nil "RFC: http://www.ietf.org/rfc/rfc~A" (remaining-parameters))
-               "RFCs are referred to by number")))
 
-  (define-simple-command help
-    (incf count)
-    (reply (format nil "Help? what help. Count: ~A" count))))
+(define-simple-command link-rfc
+  (if (string-integer-p (remaining-parameters))
+      (reply "RFC: http://www.ietf.org/rfc/rfc~A" (remaining-parameters))
+      (reply "RFCs are referred to by number")))
+
+(define-simple-command help
+  (reply "Help? what help"))
 
 (defun random-up-or-down (&optional (magnitude 1))
   (if (zerop (random 2))
@@ -560,20 +558,20 @@ All things made by `make-anon-bot-user-class' superclass this."))
     (network-tree::next-node))
   (define-simple-command ai-test-reward
     (if (string-integer-p (remaining-parameters))
-        (reply (format nil "New score for state ~A and action ~A would be ~A."
-                       last-state
-                       (funcall last-action)
-                       (float (compute-new-score last-state last-action (parse-integer (remaining-parameters))))))
+        (reply "New score for state ~A and action ~A would be ~A."
+               last-state
+               (funcall last-action)
+               (float (compute-new-score last-state last-action (parse-integer (remaining-parameters)))))
         (reply "Come on! Integers rock!")))
   (flet ((format-reward-reply (score)
            (format nil "Score for state ~A saying ~A is now ~A."
                    last-state
                    (funcall last-action)
                    (float (reward-ai last-state last-action score)))))
-  (define-simple-command ai-trout
-    (reply (format-reward-reply 0)))
-  (define-simple-command ai-cookie
-    (reply (format-reward-reply 10)))))
+    (define-simple-command ai-trout
+      (reply (format-reward-reply 0)))
+    (define-simple-command ai-cookie
+      (reply (format-reward-reply 10)))))
 
 (defun reward-ai (state action amount)
   (setf (state-action-score state action)
@@ -592,7 +590,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
     (reply (nisp.tokenize::parse-word s))))
 
 (define-simple-command tokenize
-  (reply (format nil "~S" (nisp.tokenize:tokenize-string (remaining-parameters)))))
+  (reply "~S" (nisp.tokenize:tokenize-string (remaining-parameters))))
 
 (define-simple-command regex
   (let ((match-array (nth-value 1 (cl-ppcre:scan-to-strings "/(.+?)/ (.+)"  (remaining-parameters)))))
@@ -611,10 +609,9 @@ All things made by `make-anon-bot-user-class' superclass this."))
          "Does not match")))))
 (define-simple-command test-wordinfo
   (aif (gethash (remaining-parameters) wiktionary::*dictionary*)
-       (reply (format nil "~A types: ~A"
-                      (wiktionary::word-name it)
-                      (wiktionary::word-pos it)))
-       ;(reply "borked!")
+       (reply "~A types: ~A"
+              (wiktionary::word-name it)
+              (wiktionary::word-pos it))
        (reply "I don't know!")))
 
 (define-simple-command word
@@ -624,7 +621,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (multiple-value-bind (pos-list found?)
       (wiktionary:lookup-pos (remaining-parameters))
     (if found?
-        (reply (format nil "~A" pos-list))
+        (reply "~A" pos-list)
         (reply "I can't find that word!"))))
 
 #+ ()  (www::define-easy-handler (www::ai-demonstration :uri "/ai")
