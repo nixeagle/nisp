@@ -1,5 +1,5 @@
 
-* BUG TRIVIAL-TIMEOUT style-warning
+* DONE TRIVIAL-TIMEOUT style-warning
 -+  style-warning (1)
  `-- The variable COM.METABANG.TRIVIAL-TIMEOUT::C is defined but never used.
 -+  warning (1)
@@ -14,8 +14,12 @@
 * TODO Define property-list type
   Verify input is a property list etc.
 
-* TODO Split functional-tests from nisp
-  DEADLINE: <2010-01-05 Tue>
+  Huh?
+* DONE Split functional-tests from nisp
+  DEADLINE: <2010-01-05 Tue> CLOSED: [2010-04-22 Thu 18:00]
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2010-04-22 Thu 18:00]
+  :END:
   :PROPERTIES:
   :CREATED:  <2010-01-03 Sun 07:31>
   :END:
