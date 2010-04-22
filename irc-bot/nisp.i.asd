@@ -10,6 +10,7 @@
   :license "GPLv3 or later"
   :description "irc bot"
   :depends-on (:nisp.mop
+               :nisp.global
                :nisp.util
                :nisp.network-tree
                :eos
