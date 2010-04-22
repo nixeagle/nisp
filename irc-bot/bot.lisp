@@ -419,6 +419,10 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (define-simple-command link-wikihow
   (reply (format-link-wikihow (remaining-parameters))))
 
+(define-simple-command link-google
+  (reply "Google: http://google.com/search?q=~A"
+         (substitute #\+ #\Space (remaining-parameters))))
+
 
 (let ((count 0))
   (define-simple-command link-rfc
