@@ -44,10 +44,10 @@
                                                action content)
                                          lambda-args
                                          (declare (ignore tree from identity content))
-                                         `(labels ((reply (message)
+                                         `(labels ((reply (&rest message)
                                                      (if *debug*
-                                                         `(send ,,action ,,source ,,address ,message)
-                                                         (send ,action ,source ,address message))))
+                                                         `(send ,,action ,,source ,,address ,@message)
+                                                         (apply #'send ,action ,source ,address message))))
                                             (declare (ignorable (function reply)))
                                             ,@body)))
                                     environment)
