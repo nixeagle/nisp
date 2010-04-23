@@ -433,6 +433,13 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (define-simple-command help
   (reply "Help? what help"))
 
+(define-simple-command about
+  (network-tree::next-node))
+(define-simple-command about-nass
+  (reply "Nixeagle's attempt at an assembler. Source is at <http://github.com/nixeagle/nass>"))
+(define-simple-command about-nisp
+  (reply "Nisp is this bot, but more generally refers to a pile of lisp code at <http://github.com/nixeagle/nisp>. Check out some of the many sub directories in this repository for more information. For example this bot's code is in the irc-bot/ directory."))
+
 (defun random-up-or-down (&optional (magnitude 1))
   (if (zerop (random 2))
       (- magnitude)
