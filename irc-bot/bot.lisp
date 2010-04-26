@@ -609,11 +609,15 @@ All things made by `make-anon-bot-user-class' superclass this."))
         (aref match-array 0)
         (aref match-array 1))
      (if start
-         (format nil "match: (~A, ~A)~A" start end
+         (format nil "match: \"~A\"~A" (subseq (aref match-array 1) start end)
                  (if (length= 0 reg-start)
                      ""
-                     (format nil " Groups: ~{~A~}"
-                             (mapcar #'list (coerce reg-start 'list)
+                     (format nil "; Groups: [~{~A~^, ~}]"
+                             (mapcar (lambda (re-start re-end)
+                                       (format nil "\"~A\" (~A ~A)"
+                                               (subseq (aref match-array 1) re-start re-end)
+                                               re-start re-end))
+                                     (coerce reg-start 'list)
                                      (coerce reg-end 'list)))))
          "Does not match")))))
 (define-simple-command test-wordinfo
