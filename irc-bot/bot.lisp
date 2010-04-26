@@ -360,7 +360,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (defun format-link-wikipedia (params)
   (format nil "Wikipedia article ~A: ~A" params
           (format nil "http://en.wikipedia.org/wiki/~A"
-                  params)))
+                  (substitute #\_ #\Space params))))
 (define-simple-command link-wikipedia
   (reply (format-link-wikipedia (remaining-parameters))))
 (define-simple-command link-wiki
