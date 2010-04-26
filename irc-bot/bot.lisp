@@ -439,6 +439,8 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (reply "Nixeagle's attempt at an assembler. Source is at <http://github.com/nixeagle/nass>"))
 (define-simple-command about-nisp
   (reply "Nisp is this bot, but more generally refers to a pile of lisp code at <http://github.com/nixeagle/nisp>. Check out some of the many sub directories in this repository for more information. For example this bot's code is in the irc-bot/ directory."))
+(define-simple-command about-commits
+  (reply "Commits for this bot are at: http://github.com/nixeagle/nisp/commits/master"))
 
 (defun random-up-or-down (&optional (magnitude 1))
   (if (zerop (random 2))
