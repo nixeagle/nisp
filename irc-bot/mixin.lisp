@@ -104,7 +104,7 @@ specification."))
 ;;; abstract-message to abstract-message-content.
 
 
-(defgeneric send (action sink to content))
+(defgeneric send (action sink to content &rest additional-args))
 (defgeneric privmsg (sink to content))
 
 ;;; END
