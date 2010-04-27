@@ -122,62 +122,7 @@ The result is an alist of the form:
 ;#+sbcl
 ;(my-setup-server)
 
-(defpackage #:nix-emacs
-  (:use :cl :swank))
 
-(in-package :nix-emacs)
-
-(defun nix-pprint (values)
-  (swank::with-buffer-syntax ()
-
-    (let ((*PRINT-CIRCLE* nil)
-          (*PRINT-PRETTY*  t)
-          (*PRINT-ESCAPE*  t)
-          (*PRINT-ARRAY* t)
-          (*PRINT-LINES* nil)
-          (*PRINT-LEVEL* nil)
-          (*PRINT-LENGTH* nil)
-          (*PRINT-RIGHT-MARGIN* 72)
-          (*print-readably* nil))
-      (with-output-to-string (*standard-output*)
-        (dolist (o values)
-          (pprint o))))))
-(defun describe-values (object)
-  (mapcar
-   (lambda (x)
-     (with-output-to-string (*standard-output*)
-       (describe x)))
-   (if (and (listp object) (listp (car object)))
-       (car object)
-       object)))
-(defun nix-pprint-eval (string &optional extra)
-  (declare (ignore extra))
-  (swank::with-buffer-syntax ()
-    (let* ((*PRINT-CIRCLE* nil)
-           (*PRINT-PRETTY*  t)
-           (*PRINT-ESCAPE*  t)
-           (*PRINT-ARRAY* t)
-           (eos:*run-test-when-defined* t)
-           (*PRINT-LINES* nil)
-           (*PRINT-LEVEL* nil)
-           (*PRINT-LENGTH* nil)
-           (*print-right-margin* 78)
-           (*print-readably* nil)
-           (stand (make-string-output-stream))
-           (trace (make-string-output-stream))
-           (err (make-string-output-stream))
-           (*standard-output* stand)
-           (*trace-output* trace)
-           (*error-output* err)
-           (form (read-from-string string))
-           (values (multiple-value-list
-                    (eval form))))
-      (list string
-            (get-output-stream-string stand)
-            (get-output-stream-string err)
-            (get-output-stream-string trace)
-            (nix-pprint values)
-            (describe-values values)))))
 
 (in-package :nisp.user)
 
