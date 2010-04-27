@@ -4,6 +4,7 @@
   (:use :cl :asdf))
 (in-package :nisp-safe-system)
 
+#+old
 (defsystem :nisp-safe
   :version "0.0.12"
   :author "James S <dev@nixeagle.org>"
@@ -13,8 +14,7 @@
                :hu.dwim.walker
                :md5
                :metabang-bind
-               :iterate
-               :nistilities)
+               :iterate)
   :components
   ((:module "safe"
             :serial t
