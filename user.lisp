@@ -105,7 +105,7 @@ The result is an alist of the form:
 (defun call-blocktimer-return-time (thunk)
   (let ((start-time (get-internal-real-time)))
     (progn
-        (funcall thunk)
+      (funcall thunk)
       (/ (- (get-internal-real-time) start-time)
          internal-time-units-per-second))))
 
@@ -114,11 +114,36 @@ The result is an alist of the form:
 
 (defmacro qtime (iterations &body body)
   "Time BODY over ITERATIONS loops."
-  `(values
-    (float (call-blocktimer-return-time
-      (lambda () (dotimes (i ,(expt 2 iterations))
-                   ,@body))))
-    ,(expt 2 iterations)))
+  (with-gensyms (result unoptimized-result default-result)
+    `(let ((,result (call-blocktimer-return-time
+                     (lambda ()
+                       (declare (optimize (speed 3) (debug 1) (safety 0)))
+                       (dotimes (i ,(expt 2 iterations))
+                         ,@body))))
+           (,default-result
+            (call-blocktimer-return-time
+             (lambda ()
+                       (declare (optimize (speed 1) (debug 1) (safety 1)))
+                       (dotimes (i ,(expt 2 iterations))
+                         ,@body))))
+           (,unoptimized-result
+            (call-blocktimer-return-time
+             (lambda ()
+                       (declare (optimize (speed 0) (debug 3) (safety 3)))
+                       (dotimes (i ,(expt 2 iterations))
+                         ,@body)))))
+       (values
+        (list ,(expt 2 iterations) (format nil "~f" ,unoptimized-result)
+              (format nil "~f" ,default-result) (format nil "~f" ,result))
+
+
+        (list (format nil "~,,' :D" (floor (/ (/ ,unoptimized-result ,(expt 2 iterations)))))
+              (format nil "~f" (/ ,unoptimized-result ,(expt 2 iterations))))
+        (list (format nil "~,,' :D" (floor (/ (/ ,default-result ,(expt 2 iterations)))))
+              (format nil "~f" (/ ,default-result ,(expt 2 iterations))))
+        (list (format nil "~,,' :D" (floor (/ (/ ,result ,(expt 2 iterations)))))
+              (format nil "~f" (/ ,result ,(expt 2 iterations))))
+        ))))
 ;#+sbcl
 ;(my-setup-server)
 
