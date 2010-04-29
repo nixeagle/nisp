@@ -12,13 +12,13 @@
   "Add PREFIX to PACKAGE."
    (declare (type (or null string symbol) prefix)
             (type string package))
-   (make-empty-package
+   (nutils.packages:make-empty-package
     (concatenate 'string
                  (typecase prefix
                    (string prefix)
                    (symbol (if prefix
-                               (symbol-name prefix)))) 
-                 (normalize-network-name package)) :ignore))
+                               (symbol-name prefix))))
+                 (normalize-network-name package))))
 
 (defgeneric ensure-network-package (package &key prefix &allow-other-keys)
   (:documentation "Make sure PACKAGE exists."))
