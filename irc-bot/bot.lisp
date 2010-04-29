@@ -636,7 +636,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
         (reply "~A" pos-list)
         (reply "I can't find that word!"))))
 
-
+(define-simple-command ping (reply "pong"))
 
 ;;; harder say stuff... not at all best way to do this
 (defmethod handle-nisp-command
