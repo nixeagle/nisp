@@ -1,3 +1,21 @@
+(defpackage #:nixeagle.local-time.helpers
+  (:use :cl :local-time)
+  (:documentation "Several functions and macros that should be in the
+  local-time package but are not. Should be submitted at some point
+  upstream, but these are needed now.")
+  (:export #:with-local-time-reader))
+(in-package :nixeagle.local-time.helpers)
+
+(defun call-with-local-time-reader (thunk &optional (base-readtable *readtable*))
+  "Call THUNK with local-time read macro extended copy of BASE-READTABLE."
+  (let ((*readtable* (copy-readtable base-readtable)))
+    (enable-read-macros)
+    (funcall thunk)))
+
+(defmacro with-local-time-reader (&body body)
+  "Bind `local-time' reader macros over BODY."
+  `(call-with-local-time-reader (lambda () ,@body)))
+
 (defpackage #:ninthbit.www.news
   (:use :cl :iterate :cl-who)
   (:import-from :www #:*9b* #:with-html))
