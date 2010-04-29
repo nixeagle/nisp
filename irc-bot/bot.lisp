@@ -246,7 +246,6 @@ All things made by `make-anon-bot-user-class' superclass this."))
                     (content string))
   (irc:privmsg sink to content))
 
-
 (defun parse-link (line)
   (nth-value 1 (cl-ppcre:scan-to-strings "\\\[\\\[(?:([^:]+):)?(.*?)\\\]\\\]" line)))
 
@@ -636,6 +635,22 @@ All things made by `make-anon-bot-user-class' superclass this."))
     (if found?
         (reply "~A" pos-list)
         (reply "I can't find that word!"))))
+
+
+
+;;; harder say stuff... not at all best way to do this
+(defmethod handle-nisp-command
+    ((tree (eql "privmsg")) (source connection) (user bot-user)
+     (address bot-channel) (identity abstract-identity)
+     (action abstract-action) (content abstract-text-message-content))
+  (when (member (irc:hostname user)
+                '("Bit/Cam" "Byte/nixeagle" "Byte/duckinator/Dux"
+                  "Byte/CodeBlock")
+                :test #'equalp)
+
+    (apply #'irc:privmsg source (coerce (nth-value 1 (cl-ppcre:scan-to-strings
+                                                "([^\S]+) (.+)" (remaining-parameters)))
+                                        'list))))
 
 #+ ()  (www::define-easy-handler (www::ai-demonstration :uri "/ai")
       ((number :init-form 0 :parameter-type 'integer))
