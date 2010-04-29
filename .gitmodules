@@ -40,3 +40,6 @@
 [submodule "acumen"]
 	path = acumen
 	url = ../acumen
+[submodule "nutils"]
+	path = nutils
+	url = ../nutils
