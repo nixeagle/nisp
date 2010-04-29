@@ -40,8 +40,9 @@
       (print *byte-news* stream))))
 
 (defun read-byte-news ()
-  (with-open-file (stream "news.dat" :direction :input)
-    (setq *byte-news* (read stream))))
+  (with-open-file (stream "news.dat")
+    (with-local-time-reader
+      (setq *byte-news* (read stream)))))
 
 (hunchentoot-vhost:define-easy-virtual-handler *9b*
     (byte-news-feed :uri "/news") ()
