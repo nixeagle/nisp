@@ -33,8 +33,11 @@
   (push (make-byte-news :name nick :news news-text) *byte-news*))
 
 (defun save-byte-news ()
-  (with-open-file (stream "news.dat" :direction :output)
-    (print *byte-news* stream)))
+  (with-open-file (stream "news.dat" :direction :output
+                          :if-exists :supersede)
+
+    (with-standard-io-syntax
+      (print *byte-news* stream))))
 
 (defun read-byte-news ()
   (with-open-file (stream "news.dat" :direction :input)
