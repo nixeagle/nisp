@@ -17,7 +17,8 @@
   `(call-with-local-time-reader (lambda () ,@body)))
 
 (defpackage #:ninthbit.www.news
-  (:use :cl :iterate :cl-who)
+  (:use :cl :iterate :cl-who
+        :nixeagle.local-time.helpers)
   (:import-from :www #:*9b* #:with-html))
 (in-package :ninthbit.www.news)
 
