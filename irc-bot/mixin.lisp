@@ -102,9 +102,12 @@ specification."))
 ;;; possibly include abstract-message as a composed class or somehow
 ;;; holding all these parts in one interface, which is why we rename
 ;;; abstract-message to abstract-message-content.
-
+(defgeneric message-text (object))
 
 (defgeneric send (action sink to content &rest additional-args))
 (defgeneric privmsg (sink to content))
+
+(defgeneric connectedp (connection-object)
+  (:documentation "Is CONNECTION-OBJECT currently connected?"))
 
 ;;; END
