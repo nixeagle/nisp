@@ -263,8 +263,18 @@ that can be called.
                     (content string))
   (irc:privmsg sink to content))
 
+(defun multiarray-string-p (matches-array)
+  "Match a wikilink style thing that is really the inside of a multi
+dimensional array."
+  (and (not (cl-ppcre:scan "(?:\\\][^\\\[]+\\\[).*\\\]"
+                             (aref matches-array 1)))
+         matches-array))
+
 (defun parse-link (line)
-  (nth-value 1 (cl-ppcre:scan-to-strings "\\\[\\\[(?:([^:]+):)?(.*?)\\\]\\\]" line)))
+  (multiple-value-bind (whole-match matches-array)
+      (cl-ppcre:scan-to-strings "\\\[\\\[(?:([^:]+):)?(.*?)\\\]\\\]" line)
+    (declare (ignore whole-match))
+    (multiarray-string-p matches-array)))
 
 (defgeneric route-command (source from content to sink))
 (defmethod route-command :around (source from content to sink)
