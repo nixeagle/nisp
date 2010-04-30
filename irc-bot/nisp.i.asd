@@ -33,11 +33,9 @@
                :closer-mop)
   :serial t
   :components
-  (
-   (:file "package")
-   (:file "superclass-helpers")
+  ((:file "package")
+   (:file "superclass-helpers")         ;in use by ADD-IRC-USER-SUPERCLASS
    (:file "mixin")
-   (:file "route-call-times")
    (:file "irc-packages")          ;Out of date/not used.
    (:file "comchar")
    (:file "symbols")

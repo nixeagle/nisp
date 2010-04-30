@@ -280,24 +280,6 @@ dimensional array."
     (multiarray-string-p matches-array)))
 
 (defgeneric route-command (source from content to sink))
-(defmethod route-command :around (source from content to sink)
-  "Time how long calls and what parems were used and put this timing data
-  in a list."
-  (if *debug*
-      (call-next-method)
-   (let ((start-time (get-internal-real-time)))
-     (flet ((push-new-time (result)
-              (let ((end-time (get-internal-real-time)))
-                (push (list source from content to sink result
-                            (/ (- end-time start-time)
-                               internal-time-units-per-second))
-                      *route-call-times*))
-              result))
-       (handler-bind ((error (lambda (condition)
-                               (print condition)
-                               (push-new-time condition)
-                               (error condition))))
-         (push-new-time (call-next-method)))))))
 
 (defvar *command-args*)
 (defmethod route-command  ((source abstract-data-source)
