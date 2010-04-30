@@ -6,14 +6,14 @@
   (:default-initargs :method-class (find-class 'handle-nisp-command-method)
     #+ccl :closer-patch #+ccl t))
 
-(defclass handle-nisp-command-method (network-tree-method)
+(defclass handle-command-method (network-tree-method)
   ((call-count :initform 0 :type non-negative-fixnum
-          :reader handle-nisp-command-method-call-count)))
-(defgeneric (setf handle-nisp-command-method-call-count)
+          :reader handle-command-method-call-count)))
+(defgeneric (setf handle-command-method-call-count)
     (value object))
 
-(defmethod (setf handle-nisp-command-method-call-count)
-    ((value integer) (object handle-nisp-command-method))
+(defmethod (setf handle-command-method-call-count)
+    ((value integer) (object handle-command-method))
   (if (= (1+ (slot-value object 'call-count)) value)
       (setf (slot-value object 'call-count) value)
       (error "Doing anything other then incrementing the call-count vie
@@ -27,7 +27,7 @@
   below.")
 (defmethod make-method-lambda
     ((generic-function nisp-command-network-tree-generic-function)
-     (method handle-nisp-command-method)
+     (method handle-command-method)
      expression environment)
   (multiple-value-bind (body lambda-args declarations)
       (parse-method-lambda-expression-body expression)

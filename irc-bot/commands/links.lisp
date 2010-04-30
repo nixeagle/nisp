@@ -7,7 +7,7 @@
        (apply #'format nil "nil ~A:~A"
               (multiple-value-list (network-tree::first-command-word (remaining-parameters))))))))
 
-(defmethod handle-nisp-command
+(defmethod handle-command
     ((tree (eql "link")) (source connection) (user abstract-user)
      (address bot-channel) (identity abstract-identity)
      (action abstract-action) (content abstract-text-message-content))

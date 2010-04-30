@@ -101,7 +101,7 @@
                                                  total-unpatrolled))))))))
 
 (defmacro define-wikihow-command (name &body body)
-    `(defmethod handle-nisp-command
+    `(defmethod handle-command
        ((tree (eql #-sbcl(network-tree::intern-network-tree-node
                      ,(substitute #\Space #\- (symbol-name name)))
                    #+sbcl ,(substitute #\Space #\- (symbol-name name))))
@@ -114,7 +114,7 @@
        ,@body))
 
 (defmacro define-wikihow-es-command (name &body body)
-   `(defmethod handle-nisp-command
+   `(defmethod handle-command
        ((tree (eql #-sbcl(network-tree::intern-network-tree-node
                      ,(substitute #\Space #\- (symbol-name name)))
                    #+sbcl ,(substitute #\Space #\- (symbol-name name))))
@@ -127,7 +127,7 @@
        ,@body))
 
 #+ ()
-(defmethod handle-nisp-command :around
+(defmethod handle-command :around
     (tree
      (source whbot-bot-connection)
      (user abstract-user)

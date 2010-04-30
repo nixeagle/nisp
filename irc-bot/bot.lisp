@@ -208,10 +208,10 @@ All things made by `make-anon-bot-user-class' superclass this."))
        (open-stream-p (irc:output-stream irc))))
 
 
-(defgeneric handle-nisp-command (tree source from address identity
+(defgeneric handle-command (tree source from address identity
                                       action content)
   (:generic-function-class nisp-command-network-tree-generic-function)
-  (:method-class handle-nisp-command-method)
+  (:method-class handle-command-method)
   (:method-combination nisp-standard-method-combination:nisp-standard))
 
 (defmacro define-simple-command (name &body body)
@@ -232,7 +232,7 @@ that can be called.
   - (REPLY FORMAT-STRING &rest ARGUMENTS) Replies using the same semantics
     as (FORMAT nil FORMAT-STRING ARG1 ARG2 ARG3...), but the formatted
     string is automatically replied to the correct location."
-  `(defmethod handle-nisp-command
+  `(defmethod handle-command
        ((tree (eql #-sbcl(network-tree::intern-network-tree-node
                      ,(substitute #\Space #\- (symbol-name name)))
                    #+sbcl ,(substitute #\Space #\- (symbol-name name))))
@@ -293,11 +293,11 @@ dimensional array."
      (setq *command-args* (list (message content) source (name from)
                                 to (make-instance 'abstract-identity)
                                 (make-instance 'abstract-action) content))
-     (handle-nisp-command (message content) source (name from)
+     (handle-command (message content) source (name from)
                           to (make-instance 'abstract-identity)
                           (make-instance 'abstract-action) content))
     ((parse-link (message content))
-     (handle-nisp-command (format nil "link ~A ~A" (aref it 0) (aref it 1))
+     (handle-command (format nil "link ~A ~A" (aref it 0) (aref it 1))
                           source (name from)
                           to (make-instance 'abstract-identity)
                           (make-instance 'abstract-action) content))))
@@ -376,7 +376,7 @@ dimensional array."
   (reply "Dux is a simple operating system started in 2008, with goals including being easily ported to new systems and being simple to understand. Source is at http://github.com/RockerMONO/dux and more information is at http://duckinator.net/dux"))
 
 ;;; harder say stuff... not at all best way to do this
-(defmethod handle-nisp-command
+(defmethod handle-command
     ((tree (eql "privmsg")) (source connection) (user bot-user)
      (address bot-channel) (identity abstract-identity)
      (action abstract-action) (content abstract-text-message-content))
