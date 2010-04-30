@@ -207,13 +207,6 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (and (slot-boundp irc 'irc:output-stream)
        (open-stream-p (irc:output-stream irc))))
 
-
-(defgeneric handle-command (tree source from address identity
-                                      action content)
-  (:generic-function-class nisp-command-network-tree-generic-function)
-  (:method-class handle-command-method)
-  (:method-combination nisp-standard-method-combination:nisp-standard))
-
 (defmacro define-simple-command (name &body body)
   "Defines the command NAME which runs the forms in BODY.
 

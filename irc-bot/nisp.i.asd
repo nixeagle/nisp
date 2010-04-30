@@ -39,7 +39,7 @@
    (:file "irc-packages")          ;Out of date/not used.
    (:file "comchar")
    (:file "symbols")
-   (:file "nisp-handle-command-method")
+   (:file "nisp-handle-command-method") ;major logic
    (:module "irc"
             :components
             ((:file "connect")))

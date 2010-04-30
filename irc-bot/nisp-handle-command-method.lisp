@@ -60,4 +60,10 @@
      (method-combination t) methods)
   `(call-method ,(car methods) ,(cdr methods) ,(car methods)))
 
+(defgeneric handle-command (tree source from address identity
+                                      action content)
+  (:generic-function-class nisp-command-network-tree-generic-function)
+  (:method-class handle-command-method)
+  (:method-combination nisp-standard-method-combination:nisp-standard))
+
 ;;; END
