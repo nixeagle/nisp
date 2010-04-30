@@ -266,7 +266,10 @@ that can be called.
 (defun multiarray-string-p (matches-array)
   "Match a wikilink style thing that is really the inside of a multi
 dimensional array."
-  (and (not (cl-ppcre:scan "(?:\\\][^\\\[]+\\\[).*\\\]"
+  ;; Nasty regex here. We are matching ] [ ] or ] , [ and not allowing
+  ;; link completion on those patterns. The spaces in those examples can
+  ;; be any number of characters.
+  (and (not (cl-ppcre:scan "\\\][^\\\[]*\\\[.*\\\]|\\\][^\\\[]*,[^\\\[]*\\\["
                              (aref matches-array 1)))
          matches-array))
 
