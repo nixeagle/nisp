@@ -1,5 +1,5 @@
 (defpackage #:nisp.i
-  (:use :cl :iterate :split-sequence :nisp.util.packages :alexandria :eos
+  (:use :cl :iterate :split-sequence :alexandria :eos
          :closer-mop :nisp.network-tree :anaphora)
   (:import-from :cl-irc :user #:nickname #:username #:realname)
 
