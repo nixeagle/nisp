@@ -638,6 +638,9 @@ All things made by `make-anon-bot-user-class' superclass this."))
 
 (define-simple-command ping (reply "pong"))
 
+(define-simple-command about-parenphobia
+  (reply "Parenphobia is the result of excessive attention paid to syntatic padding chars and not enough attention to meaning of the code. See http://img264.imageshack.us/img264/1397/lispnd7.png for how a lisper sees it."))
+
 ;;; harder say stuff... not at all best way to do this
 (defmethod handle-nisp-command
     ((tree (eql "privmsg")) (source connection) (user bot-user)
