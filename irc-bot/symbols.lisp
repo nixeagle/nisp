@@ -5,7 +5,7 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defvar *command-argument-symbols-package* :nisp.i.command-argument-symbols
     "Package to intern symbols for command argument parsing.")
-  (make-empty-package *command-argument-symbols-package* :supersede))
+  (nutils.packages:make-empty-package *command-argument-symbols-package* :supersede))
 
 (defun split-command-string (command-string)
   "Split COMMAND-STRING into appropriate parts."
