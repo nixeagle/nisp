@@ -215,6 +215,23 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (:method-combination nisp-standard-method-combination:nisp-standard))
 
 (defmacro define-simple-command (name &body body)
+  "Defines the command NAME which runs the forms in BODY.
+
+All commands do one of 3 things. Reply to the current context, pass
+control to a subcommand, or do nothing.
+
+Inside simple-command forms, there are two 3 important local functions
+that can be called.
+
+  - (NEXT-NODE) passes control from the current command to a subcommand
+    that is defined seperately.
+
+  - (REMAINING-PARAMETERS) returns a string with any remaining arguments
+    to the command or sub-command
+
+  - (REPLY FORMAT-STRING &rest ARGUMENTS) Replies using the same semantics
+    as (FORMAT nil FORMAT-STRING ARG1 ARG2 ARG3...), but the formatted
+    string is automatically replied to the correct location."
   `(defmethod handle-nisp-command
        ((tree (eql #-sbcl(network-tree::intern-network-tree-node
                      ,(substitute #\Space #\- (symbol-name name)))
