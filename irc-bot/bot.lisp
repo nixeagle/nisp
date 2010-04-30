@@ -641,6 +641,9 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (define-simple-command about-parenphobia
   (reply "Parenphobia is the result of excessive attention paid to syntatic padding chars and not enough attention to meaning of the code. See http://img264.imageshack.us/img264/1397/lispnd7.png for how a lisper sees it."))
 
+(define-simple-command about-dux
+  (reply "Dux is a simple operating system started in 2008, with goals including being easily ported to new systems and being simple to understand. Source is at http://github.com/RockerMONO/dux and more information is at http://duckinator.net/dux"))
+
 ;;; harder say stuff... not at all best way to do this
 (defmethod handle-nisp-command
     ((tree (eql "privmsg")) (source connection) (user bot-user)
