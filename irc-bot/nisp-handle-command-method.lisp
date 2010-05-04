@@ -1,14 +1,15 @@
 ;;; Sticking this in its own file to make sbcl happy
-(in-package :nisp.i)
-(defclass nisp-command-network-tree-generic-function
-    (network-tree-generic-function) ()
-  (:metaclass closer-mop:funcallable-standard-class)
-  (:default-initargs :method-class (find-class 'handle-nisp-command-method)
-    #+ccl :closer-patch #+ccl t))
+(in-package :nisp-core)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defclass nisp-command-network-tree-generic-function
+      (network-tree-generic-function) ()
+    (:metaclass closer-mop:funcallable-standard-class)
+    (:default-initargs :method-class (find-class 'handle-nisp-command-method)
+      #+ccl :closer-patch #+ccl t))
 
-(defclass handle-command-method (network-tree-method)
-  ((call-count :initform 0 :type non-negative-fixnum
-          :reader handle-command-method-call-count)))
+  (defclass handle-command-method (network-tree-method)
+    ((call-count :initform 0 :type fixnum
+                 :reader handle-command-method-call-count))))
 (defgeneric (setf handle-command-method-call-count)
     (value object))
 
@@ -31,7 +32,10 @@
      expression environment)
   (multiple-value-bind (body lambda-args declarations)
       (parse-method-lambda-expression-body expression)
-    (with-gensyms (args next-methods this-method #-sbcl a)
+    (let ((args (gensym "ARGS"))
+          (next-methods (gensym "NEXT-METHODS"))
+          (this-method (gensym "THIS-METHOD"))
+          #-sbcl (a (gensym "A")))
       (let ((lamb
              `(lambda (,args ,next-methods ,this-method
                        #-sbcl &rest #-sbcl ,a)
@@ -53,18 +57,20 @@
                                     environment)
                   ,args ,next-methods #-sbcl ,a))))
 
-        lamb))))
+        lamb) )))
 
 (defmethod compute-effective-method
     ((generic-function network-tree-generic-function)
      (method-combination t) methods)
   `(call-method ,(car methods) ,(cdr methods) ,(car methods)))
 
+(defgeneric route-command (source from content to sink))
+
 (defgeneric handle-command (tree source from address identity
                                       action content)
   (:generic-function-class nisp-command-network-tree-generic-function)
   (:method-class handle-command-method)
-  (:method-combination nisp-standard-method-combination:nisp-standard))
+ #+ () (:method-combination nisp-standard-method-combination:nisp-standard))
 
 (defmacro define-simple-command (name &body body)
   "Defines the command NAME which runs the forms in BODY.
@@ -96,28 +102,7 @@ that can be called.
         (content abstract-text-message-content))
      ,@body))
 
-(defgeneric route-command (source from content to sink))
 
-(defvar *command-args*)
-(defmethod route-command  ((source abstract-data-source)
-                           (from abstract-from)
-                           (content abstract-message-content)
-                           (to abstract-target)
-                           (sink abstract-data-sink))
-  (declare (ignore sink))
-  (acond
-    ((commandp content)
-     (setq *command-args* (list (message content) source (name from)
-                                to (make-instance 'abstract-identity)
-                                (make-instance 'abstract-action) content))
-     (handle-command (message content) source (name from)
-                          to (make-instance 'abstract-identity)
-                          (make-instance 'abstract-action) content))
-    ((parse-link (message content))
-     (handle-command (format nil "link ~A ~A" (aref it 0) (aref it 1))
-                          source (name from)
-                          to (make-instance 'abstract-identity)
-                          (make-instance 'abstract-action) content))))
 
 
 ;;; END

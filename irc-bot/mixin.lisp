@@ -1,5 +1,5 @@
 ;;; General mixins
-(in-package :nisp.i)
+(in-package :nisp.core)
 
 (defclass abstract-identity () ()
   (:documentation "Direct mapping to person's identity.
