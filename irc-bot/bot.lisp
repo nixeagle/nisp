@@ -305,6 +305,10 @@ dimensional array."
   (reply "Nixeagle's attempt at an assembler. Source is at <http://github.com/nixeagle/nass>"))
 (define-simple-command about-nisp
   (reply "Nisp is this bot, but more generally refers to a pile of lisp code at <http://github.com/nixeagle/nisp>. Check out some of the many sub directories in this repository for more information. For example this bot's code is in the irc-bot/ directory."))
+(define-simple-command about-binary
+  (network-tree::next-node))
+(define-simple-command about-binary-data
+  (reply "binary-data is at <http://github.com/nixeagle/binary-data>. By using the common lisp MOP, all kinds of binary formats can be described. Currently implemented: flat little endian structures. TODO: flat big endian structures (PPC, MIPS...), nested binary structures (ELF, communication protocols, id3 tags...)."))
 (define-simple-command about-commits
   (reply "Commits for this bot are at: http://github.com/nixeagle/nisp/commits/master"))
 
