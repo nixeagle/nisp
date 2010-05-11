@@ -264,8 +264,9 @@ dimensional array."
     (multiarray-string-p matches-array)))
 
 
-(defun string-integer-p (string)
-  (= (length string) (nth-value 1 (parse-integer string :junk-allowed t))))
+(defun string-integer-p (string &optional (radix 10))
+  (= (length string) (nth-value 1 (parse-integer string :junk-allowed t
+                                                 :radix radix))))
 
 
 
@@ -346,6 +347,20 @@ dimensional array."
 (define-simple-command about-smart-questions
   (reply "See http://www.catb.org/~esr/faqs/smart-questions.html for hints on asking a better question."))
 
+(define-simple-command bits
+  (when (string-integer-p (remaining-parameters) 16)
+    (let ((value (parse-integer (remaining-parameters) :radix 16 :junk-allowed t)))
+      (reply
+       (if (zerop value)
+           "0000"
+           (apply #'concatenate 'string
+                  (loop for i from (* 8 (floor (log value 256))) downto 0 by 8
+                     collect (format nil "~8,'0,' ,8:B " (ldb (byte 8 i) value)))))))))
+
+(define-simple-command hexs
+  (when (string-integer-p (remaining-parameters) 2)
+    (let ((value (parse-integer (remaining-parameters) :radix 2 :junk-allowed t)))
+      (reply (format nil "~x" value)))))
 ;;; harder say stuff... not at all best way to do this
 (defmethod handle-command
     ((tree (eql "privmsg")) (source connection) (user bot-user)
