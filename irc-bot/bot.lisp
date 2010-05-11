@@ -341,6 +341,11 @@ dimensional array."
 (define-simple-command about-dux
   (reply "Dux is a simple operating system started in 2008, with goals including being easily ported to new systems and being simple to understand. Source is at http://github.com/RockerMONO/dux and more information is at http://duckinator.net/dux"))
 
+(define-simple-command about-smart
+  (network-tree::next-node))
+(define-simple-command about-smart-questions
+  (reply "See http://www.catb.org/~esr/faqs/smart-questions.html for hints on asking a better question."))
+
 ;;; harder say stuff... not at all best way to do this
 (defmethod handle-command
     ((tree (eql "privmsg")) (source connection) (user bot-user)
