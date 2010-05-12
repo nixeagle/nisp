@@ -145,4 +145,5 @@
            #:abstract-data-source
            #:abstract-data-sink
            #:abstract-action
-           #:abstract-message-content))
+           #:abstract-message-content
+           #:reply))
