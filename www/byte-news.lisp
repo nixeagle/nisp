@@ -53,11 +53,11 @@
      (iter (for news :in *byte-news*)
            (htm (:p (fmt "~A :: ~A - ~A"
                          (local-time:to-rfc3339-timestring (byte-news-time news))
-                         (byte-news-name news)
-                         (byte-news-news news))))))))
+                         (escape-string (byte-news-name news))
+                         (cl-ppcre:regex-replace-all "</?p>" (nth-value 1 (cl-markdown:markdown (escape-string (byte-news-news news)) :stream nil)) ""))))))))
 
 #+:nisp-devel                           ; don't do elsewhere yet.
-(closer-mop:defmethod nisp.i::handle-nisp-command
+(defmethod nisp-core::handle-command
     ((nisp.i::tree (eql "UPDATE")) (source nisp.i::9b-dev-bot-connection)
      (user nisp.i::abstract-user)
      (address nisp.i::abstract-target)
@@ -65,6 +65,6 @@
      (action nisp.i::abstract-action)
      (content nisp.i::abstract-text-message-content))
   (add-news-item (nisp.i::nickname user)
-                 (nisp.i::remaining-parameters))
-  (nisp.i::reply "Reported \"~A\" to the 9b beta news feed."
-                 (nisp.i::remaining-parameters)))
+                 (nisp-core::remaining-parameters))
+  (nisp-core::reply "Reported \"~A\" to the 9b beta news feed at http://nix.ninthbit.net:8080/news"
+                 (nisp-core::remaining-parameters)))
