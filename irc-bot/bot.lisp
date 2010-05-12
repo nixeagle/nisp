@@ -233,7 +233,10 @@ All things made by `make-anon-bot-user-class' superclass this."))
                  (to target) (content string) &rest additional-args)
   (declare (ignore action))
   "Default action for irc is to privmsg"
-  (privmsg sink to (remove #\Newline (apply #'format nil content additional-args))))
+  (privmsg sink to (remove #\Newline
+                           (if additional-args
+                               (apply #'format nil content additional-args)
+                               (format nil "~A" content)))))
 (defmethod send (action
                  (sink bot-connection)
                  (to target) (content cons) &rest additional-args)
