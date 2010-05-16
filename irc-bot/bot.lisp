@@ -364,6 +364,10 @@ dimensional array."
   (when (string-integer-p (remaining-parameters) 2)
     (let ((value (parse-integer (remaining-parameters) :radix 2 :junk-allowed t)))
       (reply (format nil "~x" value)))))
+
+(define-simple-command link-x86opcode
+  (reply "http://ref.x86asm.net/geek.html#x~A" (remaining-parameters)))
+
 ;;; harder say stuff... not at all best way to do this
 (defmethod handle-command
     ((tree (eql "privmsg")) (source connection) (user bot-user)
