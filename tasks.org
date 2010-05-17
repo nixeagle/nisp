@@ -1,5 +1,5 @@
 
-* DONE TRIVIAL-TIMEOUT style-warning
+* DONE TRIVIAL-TIMEOUT style-warning :ARCHIVE:
 -+  style-warning (1)
  `-- The variable COM.METABANG.TRIVIAL-TIMEOUT::C is defined but never used.
 -+  warning (1)
@@ -11,11 +11,11 @@
   the timeout seems to also abort the debugger which is different
   behavior then with sbcl.
 
-* TODO Define property-list type
+* TODO Define property-list type :ARCHIVE:
   Verify input is a property list etc.
 
   Huh?
-* DONE Split functional-tests from nisp
+* DONE Split functional-tests from nisp :ARCHIVE:
   DEADLINE: <2010-01-05 Tue> CLOSED: [2010-04-22 Thu 18:00]
   :LOGBOOK:
   - State "DONE"       from "TODO"       [2010-04-22 Thu 18:00]
@@ -30,5 +30,7 @@
   repository at some point in the future.
 
 
-
+* TODO Some kind of a str (string) command... :nisp:lisp:strings:
+  I'd like something better then doing (format nil "blah ~A" stuff)... and
+  concatenate just does not fit my fancy.
 
