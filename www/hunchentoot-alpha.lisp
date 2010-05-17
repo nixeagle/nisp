@@ -7,10 +7,11 @@
 
 (defun debug-to-irc (arg)
   (print arg)
-  (case (nisp.global::system-keyword)
-    (:nisp-devel (list (irc:privmsg nisp.i::*devel-bot* "#programming" arg)
-                    #+ ()   (irc:privmsg nisp.i::*freenode* "#botters" arg)))
-    (:nisp-vps (irc:privmsg nisp.i::*bot* "#nixeagle" arg))))
+  #+nisp-devel
+  (list (irc:privmsg nisp.i::*devel-bot* "#programming" arg)
+                    #+ ()   (irc:privmsg nisp.i::*freenode* "#botters" arg))
+  #+nisp-vps
+  (irc:privmsg nisp.i::*9b* "#programming" arg))
 
 
 (setq *prologue* "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">")
