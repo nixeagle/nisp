@@ -161,7 +161,6 @@ hunchentoot acceptor."))
 
 (define-easy-virtual-handler *commits*
     (commits-github :uri "/github") (payload)
-  (debug-to-irc "testing")
   (setf *github-request* *request*)
   (if (github-address-p (mapcar #'parse-integer
                                 (split-sequence:split-sequence #\. (remote-addr*))))
