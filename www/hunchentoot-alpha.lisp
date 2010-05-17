@@ -158,8 +158,6 @@ hunchentoot acceptor."))
                       (assoc-value commit :removed)
                       (subseq (assoc-value commit :message) 0 (position #\NewLine (assoc-value commit :message))))))))
 
-(format nil "~C" (code-char 2))
-
 (define-easy-virtual-handler *commits*
     (commits-github :uri "/github") (payload)
   (setf *github-request* *request*)
@@ -175,12 +173,14 @@ hunchentoot acceptor."))
                                 sexp)))))
       "You are not github, bye now!"))
 
+(define-easy-handler (github-hook :uri "/github-hook")
+    (payload)
+  (setf *github-request* *request*)
   (if (github-address-p (mapcar #'parse-integer
                                 (split-sequence:split-sequence #\. (remote-addr*))))
-      (debug-to-irc (concatenate 'string "Compare view for nisp push: "
-                                 (nisp.i::shorturl-is.gd
-                                  (github-compare-view-from-payload
-                                   (json:decode-json-from-string payload)))))
+      (let ((sexp  (json:decode-json-from-string payload)))
+        (loop for commit in (format-github-commit-message sexp)
+           do (debug-to-irc commit)))
       "You are not github, bye now!"))
 
 ;;; End hunchentoot-alpha.lisp (for magit/git)
