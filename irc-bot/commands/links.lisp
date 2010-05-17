@@ -12,7 +12,8 @@
      (address bot-channel) (identity abstract-identity)
      (action abstract-action) (content abstract-text-message-content))
   (unless #+nisp-vps (or (gethash "whbot-dev" (irc:users address) nil)
-                         (gethash "nisp-devel" (irc:users address) nil))
+                         (gethash "nisp-devel" (irc:users address) nil)
+                         (gethash "nisp-dev" (irc:users address) nil))
           #-nisp-vps nil
           (handler-case (nisp.network-tree::next-node)
             (error (condition)
