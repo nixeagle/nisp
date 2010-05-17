@@ -6,9 +6,29 @@
 (in-package :nisp.www)
 
 (defun debug-to-irc (arg)
+  (print arg)
   (case (nisp.global::system-keyword)
-    (:nisp-devel (irc:privmsg nisp.i::*devel-bot* "#nixeagle" arg))
-    (:nisp-production (irc:privmsg nisp.i::*bot* "#nixeagle" arg))))
+    (:nisp-devel (list (irc:privmsg nisp.i::*devel-bot* "#programming" arg)
+                    #+ ()   (irc:privmsg nisp.i::*freenode* "#botters" arg)))
+    (:nisp-vps (irc:privmsg nisp.i::*bot* "#nixeagle" arg))))
+
+
+(setq *prologue* "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">")
+  (setf (html-mode) :SGML)
+(setq *js-string-delimiter* #\")
+
+(defmacro with-html (&body body)
+  "Do with-html-output-to-string with BODY.
+
+This is the sensible and sane default that hunchentoot does not seem to
+provide on its own."
+  `(progn
+
+     (with-html-output-to-string (*standard-output* nil #+ () :prologue #+ () t)
+       ((:html ;:lang "en-US"
+               ;:xmlns "http://www.w3.org/1999/xhtml"
+               )
+        ,@body))))
 
 (defparameter *nisp-port* 80
   "Default port for alpha-site.")
@@ -27,7 +47,11 @@ hunchentoot acceptor."))
   silly and near worthless pun with numbers meaning 'leet'."))
 
 (defvar *nisp-1337-acceptor* (make-instance 'nisp-1337-acceptor))
+(defvar *nisp-8080-acceptor* (make-instance 'nisp-1337-acceptor :port 8080 :name :chirps))
+(defvar *nisp-6667-acceptor* (make-instance 'nisp-1337-acceptor :port 6667 :name :chirps))
 
+(defvar *nisp-started-6667-acceptor* (start *nisp-6667-acceptor*))
+(defvar *nisp-started-8080-acceptor* (start *nisp-8080-acceptor*))
 (defvar *nisp-acceptor* (make-instance 'nisp-site-acceptor)
   ;; Note there is an oddity that I cannot stop one of these and then
   ;; start it and expect it to work as I would normally intend. Calling
@@ -38,6 +62,26 @@ hunchentoot acceptor."))
   ;; followed by: (setq *alpha-acceptor* (make-instance ...))
   ;; and then call (start *alpha-acceptor*).
   "Default acceptor.")
+
+
+(defparameter *commits*
+  (hunchentoot-vhost:make-virtual-host "commits"
+                                       '(#+nisp-vps "commits.nixeagle.net"
+                                         #+nisp-devel "pri.wiki.james.nixeagle.net")
+                                       :server
+                                       #+nisp-vps
+                                       (assoc-value cl-user::*root-ports* 80)
+                                       #+nisp-devel
+                                       *nisp-started-8080-acceptor* #+ ()
+                                       (list
+                                             *nisp-started-1337-acceptor*
+                                             *nisp-started-6667-acceptor*)))
+
+(defvar *nisp-started-1337-acceptor*
+  (when (eq (nisp.global::system-keyword) :nisp-devel)
+    (start *nisp-1337-acceptor*)))
+
+
 
 (defvar *nisp-last-request* nil
   "Contents of the last hunchentoot request.")
@@ -64,9 +108,10 @@ hunchentoot acceptor."))
       (setq *default-handler* *old-default-handler*)
       (setq *default-handler* 'default-handler)))
 
-
+(defvar *github-request*)
 ;;; Just messing with github hooks
 (defun decode-github-hook (request)
+  (setq *github-request* request)
   (json:decode-json-from-string
    (cdr (assoc "payload" (post-parameters request) :test #'equalp))))
 
@@ -86,7 +131,50 @@ hunchentoot acceptor."))
                          (octets-end (list 207 97 227 255)))
   (every #'<= octets-begin octets octets-end))
 
-(define-easy-handler (github-hook :uri "/github-hook") (payload)
+(defun format-github-commit-message (alist-message)
+  (let ((commits (assoc-value alist-message :commits))
+        (repository (assoc-value alist-message :repository)))
+    (apply #'list
+           (format nil "~A/~A: ~D new commits, compare view at <~A>. ~:[~;~D outstanding issues.~]"
+                   (assoc-value (assoc-value repository :owner) :name)
+                   (assoc-value repository :name)
+                   (length commits)
+                   (nisp.i::shorturl-is.gd
+                    (github-compare-view-from-payload
+                     alist-message))
+                   (assoc-value repository :has-issues)
+                   (assoc-value repository :open-issues))
+           (loop for commit in commits
+              collect
+                (format nil "~A:~
+                             ~@[ Added ~{~A~^, ~}.~]~
+                             ~@[ Modified ~{~A~^, ~}.~]~
+                             ~@[ Removed ~{~A~^, ~}.~] ~
+                             With summary: ~A"
+                      (assoc-value (assoc-value commit :author) :name)
+                      (assoc-value commit :added)
+                      (assoc-value commit :modified)
+                      (assoc-value commit :removed)
+                      (subseq (assoc-value commit :message) 0 (position #\NewLine (assoc-value commit :message))))))))
+
+(format nil "~C" (code-char 2))
+
+(define-easy-virtual-handler *commits*
+    (commits-github :uri "/github") (payload)
+  (debug-to-irc "testing")
+  (setf *github-request* *request*)
+  (if (github-address-p (mapcar #'parse-integer
+                                (split-sequence:split-sequence #\. (remote-addr*))))
+      (let ((sexp  (json:decode-json-from-string payload)))
+        (loop for commit in (format-github-commit-message sexp)
+           do (debug-to-irc commit))
+#+ ()        (debug-to-irc (format nil "Compare view push: ~A"
+                              ;(assoc-value (cdar sexp) :name)
+                              (nisp.i::shorturl-is.gd
+                               (github-compare-view-from-payload
+                                sexp)))))
+      "You are not github, bye now!"))
+
   (if (github-address-p (mapcar #'parse-integer
                                 (split-sequence:split-sequence #\. (remote-addr*))))
       (debug-to-irc (concatenate 'string "Compare view for nisp push: "
