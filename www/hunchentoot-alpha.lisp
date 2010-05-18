@@ -13,6 +13,9 @@
   #+nisp-vps
   (irc:privmsg nisp.i::*9b* "#programming" arg))
 
+(defun debug-to-bikcmp (arg)
+  #+nisp-vps
+  (irc:privmsg nisp.i::*bikcmp* "#bots" arg))
 
 (setq *prologue* "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">")
   (setf (html-mode) :SGML)
@@ -166,12 +169,17 @@ hunchentoot acceptor."))
                                 (split-sequence:split-sequence #\. (remote-addr*))))
       (let ((sexp  (json:decode-json-from-string payload)))
         (loop for commit in (format-github-commit-message sexp)
-           do (debug-to-irc commit))
-#+ ()        (debug-to-irc (format nil "Compare view push: ~A"
-                              ;(assoc-value (cdar sexp) :name)
-                              (nisp.i::shorturl-is.gd
-                               (github-compare-view-from-payload
-                                sexp)))))
+           do (debug-to-irc commit)
+             (when (string= "nixeagle"
+                            (assoc-value
+                             (assoc-value
+                              (assoc-value sexp :repository) :owner) :name))
+               (debug-to-bikcmp commit)))
+        #+ ()        (debug-to-irc (format nil "Compare view push: ~A"
+                                        ;(assoc-value (cdar sexp) :name)
+                                           (nisp.i::shorturl-is.gd
+                                            (github-compare-view-from-payload
+                                             sexp)))))
       "You are not github, bye now!"))
 
 (define-easy-handler (github-hook :uri "/github-hook")
