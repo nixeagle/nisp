@@ -13,7 +13,11 @@
      (action abstract-action) (content abstract-text-message-content))
   (unless #+nisp-vps (or (gethash "whbot-dev" (irc:users address) nil)
                          (gethash "nisp-devel" (irc:users address) nil)
-                         (gethash "nisp-dev" (irc:users address) nil))
+                         (gethash "nisp-dev" (irc:users address) nil)
+                         #+nisp-vps
+                         (and (gethash "nisp" (irc:users address) nil)
+                              (string= (irc:nickname source)
+                                       "nisp-stable")))
           #-nisp-vps nil
           (handler-case (nisp.network-tree::next-node)
             (error (condition)
