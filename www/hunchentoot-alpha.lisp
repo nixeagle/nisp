@@ -51,8 +51,9 @@ hunchentoot acceptor."))
 (defvar *nisp-8080-acceptor* (make-instance 'nisp-1337-acceptor :port 8080 :name :chirps))
 (defvar *nisp-6667-acceptor* (make-instance 'nisp-1337-acceptor :port 6667 :name :chirps))
 
-(defvar *nisp-started-6667-acceptor* (start *nisp-6667-acceptor*))
-(defvar *nisp-started-8080-acceptor* (start *nisp-8080-acceptor*))
+#+ () (progn
+  (defvar *nisp-started-6667-acceptor* (start *nisp-6667-acceptor*))
+  (defvar *nisp-started-8080-acceptor* (start *nisp-8080-acceptor*)))
 (defvar *nisp-acceptor* (make-instance 'nisp-site-acceptor)
   ;; Note there is an oddity that I cannot stop one of these and then
   ;; start it and expect it to work as I would normally intend. Calling
