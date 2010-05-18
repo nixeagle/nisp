@@ -135,8 +135,10 @@ hunchentoot acceptor."))
                          (octets-begin (list 207 97 227 224))
                          (octets-end (list 207 97 227 255)))
   (every #'<= octets-begin octets octets-end))
+(defvar *foobar*)
 
 (defun format-github-commit-message (alist-message)
+  (setq *foobar* alist-message)
   (let ((commits (assoc-value alist-message :commits))
         (repository (assoc-value alist-message :repository)))
     (apply #'list
