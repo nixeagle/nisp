@@ -112,6 +112,9 @@ The result is an alist of the form:
 (defmacro blocktimer (&body body)
   `(call-blocktimer (lambda () ,@body)))
 
+;;; (+ 1 2)
+
+
 (defmacro qtime (iterations &body body)
   "Time BODY over ITERATIONS loops."
   (with-gensyms (result unoptimized-result default-result)
