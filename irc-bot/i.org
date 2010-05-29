@@ -75,8 +75,13 @@
     the permission is applicable for the _person_ not just an account
     somewhere.
 
-***** QUESTION Is this a party?
+***** ANSWERED Is this a party?
+      CLOSED: [2010-05-22 Sat 17:50]
+      :LOGBOOK:
+      - State "ANSWERED"   from "QUESTION"   [2010-05-22 Sat 17:50]
+      :END:
       Ref: [[party]]
+      No it is not, identity is a specific and known person/user account.
 
 *** TODO message-content
     A message itself and what operations are sane to do message contents.
@@ -84,6 +89,10 @@
     1) text
     2) binary
     3) other?
+
+       Its actually not important what the contents of a message are as
+       long as we define what actions are "valid" and what actions are not
+       valid on a particular message.
 *** DONE action
     CLOSED: [2010-03-02 Tue 01:38]
     :LOGBOOK:
