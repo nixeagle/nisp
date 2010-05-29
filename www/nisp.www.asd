@@ -3,6 +3,7 @@
                :hunchentoot-vhost
                :parenscript
                :cl-who
+               :nutils
                :nisp.i
                ;; dependent on me
                :nisp.global
