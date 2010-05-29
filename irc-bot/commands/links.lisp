@@ -104,3 +104,10 @@
   (if (string-integer-p (remaining-parameters))
       (reply "RFC: http://www.ietf.org/rfc/rfc~A" (remaining-parameters))
       (reply "RFCs are referred to by number")))
+
+
+(define-simple-command link-g
+  (reply (format nil "Google: http://google.com/search?q=~A"
+                 (substitute #\+ #\Space (remaining-parameters)))))
+
+;;; END
