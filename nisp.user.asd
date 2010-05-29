@@ -16,16 +16,15 @@
                 :cl-who
                 :closure-html
                 :drakma
-                :series
                 :usocket
                 :anaphora
                 :closure-html
                 :cl-html-parse
                 :djula
                 :nisp.util
+                :nutils
                 :eos
                 :swank
-                :alexandria
                 :split-sequence
                 :cl-github
                 :nisp.fbi)
