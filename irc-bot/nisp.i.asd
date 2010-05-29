@@ -45,11 +45,9 @@
   :components
   ((:file "package")
    (:file "superclass-helpers")         ;in use by ADD-IRC-USER-SUPERCLASS
-   (:file "mixin")
    (:file "irc-packages")          ;Out of date/not used.
    (:file "comchar")
    (:file "symbols")
-   (:file "nisp-handle-command-method") ;major logic
    (:module "irc"
             :components
             ((:file "connect")))
@@ -61,3 +59,5 @@
              (:file "beta")))
    (:file "user-init")
    (:file "tests")))
+
+;;; END
