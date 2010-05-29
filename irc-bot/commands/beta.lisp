@@ -11,3 +11,9 @@
 
 (define-simple-command beta-shorturl
   (reply (shorturl-is.gd (remaining-parameters))))
+
+(define-simple-command beta-getip
+  (reply (format nil "~{~{~A~^.~}~^ ~}"
+                 (mapcar (lambda (ip-vector)
+                           (coerce ip-vector 'list))
+                         (usocket::get-hosts-by-name (remaining-parameters))))))
