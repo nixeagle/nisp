@@ -26,17 +26,20 @@
                :eos
                :bordeaux-threads
                :trivial-timers
-               :cl-github
-               :closure-html
-               :cl-l10n
+
                :split-sequence
                :anaphora
-               :drakma
+
                :cl-ppcre
                :alexandria
                :cl-irc
                :iterate
-               :closer-mop)
+               :closer-mop
+
+               :drakma
+               :cl-github
+               :closure-html
+               :cl-l10n)
   :serial t
   :components
   ((:file "package")
@@ -46,12 +49,12 @@
             :components
             ((:file "connect")))
    (:file "bot")
-   (:module "commands"
+  #+ () (:module "commands"
             :components
             ((:file "links")
              (:file "github")
              (:file "beta")))
-   (:file "user-init")
-   (:file "tests")))
+  #+ () (:file "user-init")
+   #+ () (:file "tests")))
 
 ;;; END
