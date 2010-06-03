@@ -1,5 +1,17 @@
 ;;; Sticking this in its own file to make sbcl happy
 (in-package :nisp-core)
+
+(defgeneric route-command (source from content to sink))
+
+(defgeneric handle-command (tree source from address identity
+                                      action content)
+  (:generic-function-class nisp-command-network-tree-generic-function)
+  (:method-class handle-command-method)
+ #+ () (:method-combination nisp-standard-method-combination:nisp-standard))
+
+(defgeneric (setf handle-command-method-call-count)
+    (value object))
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defclass nisp-command-network-tree-generic-function
       (network-tree-generic-function) ()
@@ -10,8 +22,6 @@
   (defclass handle-command-method (network-tree-method)
     ((call-count :initform 0 :type fixnum
                  :reader handle-command-method-call-count))))
-(defgeneric (setf handle-command-method-call-count)
-    (value object))
 
 (defmethod (setf handle-command-method-call-count)
     ((value integer) (object handle-command-method))
@@ -61,14 +71,6 @@
     ((generic-function network-tree-generic-function)
      (method-combination t) methods)
   `(call-method ,(car methods) ,(cdr methods) ,(car methods)))
-
-(defgeneric route-command (source from content to sink))
-
-(defgeneric handle-command (tree source from address identity
-                                      action content)
-  (:generic-function-class nisp-command-network-tree-generic-function)
-  (:method-class handle-command-method)
- #+ () (:method-combination nisp-standard-method-combination:nisp-standard))
 
 (defmacro define-simple-command (name &body body)
   "Defines the command NAME which runs the forms in BODY.
