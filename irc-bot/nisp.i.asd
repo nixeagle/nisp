@@ -29,13 +29,10 @@
                :cl-github
                :closure-html
                :cl-l10n
-               :nisp.util.usocket
                :split-sequence
                :anaphora
                :drakma
                :cl-ppcre
-               :english-parser
-               :acumen
                :alexandria
                :cl-irc
                :iterate
