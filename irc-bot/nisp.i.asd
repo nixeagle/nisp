@@ -28,15 +28,14 @@
                :trivial-timers
 
                :split-sequence
-               :anaphora
 
                :cl-ppcre
-               :alexandria
+
                :cl-irc
                :iterate
                :closer-mop
 
-               #+ ()  :nisp.global
+               #+ () :nisp.global
                #+ () :nisp.mop
                #+ () :drakma
                #+ () :cl-github
