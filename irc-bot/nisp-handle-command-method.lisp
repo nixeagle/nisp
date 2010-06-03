@@ -23,9 +23,7 @@
   "Set to t to enable debug mode, this mode means no outgoing messages are
   sent which allows testing locally without spamming various services
   needlessly.")
-(defvar *trace-method-lambda* nil
-  "Poorman's tracing facility for poking around `make-method-lambda'
-  below.")
+
 (defmethod make-method-lambda
     ((generic-function nisp-command-network-tree-generic-function)
      (method handle-command-method)
