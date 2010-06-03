@@ -22,7 +22,6 @@
                :nisp.core
                :nisp.mop
                :nisp.global
-               :nisp.util
                :nisp.network-tree
                :eos
                :bordeaux-threads
@@ -45,7 +44,6 @@
   :components
   ((:file "package")
    (:file "superclass-helpers")         ;in use by ADD-IRC-USER-SUPERCLASS
-   (:file "irc-packages")          ;Out of date/not used.
    (:file "comchar")
    (:file "symbols")
    (:module "irc"
