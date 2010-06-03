@@ -45,7 +45,6 @@
   ((:file "package")
    (:file "superclass-helpers")         ;in use by ADD-IRC-USER-SUPERCLASS
    (:file "comchar")
-   (:file "symbols")
    (:module "irc"
             :components
             ((:file "connect")))
