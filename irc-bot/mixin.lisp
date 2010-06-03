@@ -18,7 +18,7 @@ methods specialized on this object is a complient interface."))
 ;;; Not well specified atm, will be working on this
 ;;; soon. 01-03-2010
 
-;;;{{{ party, from, to
+
 (defclass abstract-name () ())
 (defgeneric name (object)
   (:documentation "Must return a 'person/thing name'.
@@ -46,9 +46,9 @@ This is something to address someone by."))
 
 (defclass abstract-target (abstract-from abstract-to) ())
 
-;;;}}}
 
-;;;{{{ Protocol, provider, medium, source, sink
+
+
 (defclass abstract-protocol () ()
   (:documentation "Transfer encodings.
 
@@ -79,7 +79,7 @@ This is different from `abstract-to' in that here we care about where a
   message is routed to, as opposed to who or what is to eventually receive
   the message. The term 'sink' means what medium a message will be
   convoyed over to reach its destination as specified by `abstract-to'."))
-;;;}}}
+
 
 (defclass abstract-action () ()
   (:documentation "Generic information about intended actions.
