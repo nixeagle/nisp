@@ -20,8 +20,8 @@
   :description "irc bot"
   :depends-on (:nutils
                :nisp.core
-               :nisp.mop
-               :nisp.global
+
+
                :nisp.network-tree
                :eos
                :bordeaux-threads
@@ -36,10 +36,14 @@
                :iterate
                :closer-mop
 
-               :drakma
-               :cl-github
-               :closure-html
-               :cl-l10n)
+               #+ ()  :nisp.global
+               #+ () :nisp.mop
+               #+ () :drakma
+               #+ () :cl-github
+               #+ () :closure-html
+               ;; Still required by commands/wikihow.lisp
+               #+ () :cl-l10n
+               )
   :serial t
   :components
   ((:file "package")
