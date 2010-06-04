@@ -146,4 +146,5 @@
            #:abstract-data-sink
            #:abstract-action
            #:abstract-message-content
-           #:reply))
+           #:reply
+           #:defcommand))
