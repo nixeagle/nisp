@@ -47,7 +47,7 @@
             ((:file "links")
              (:file "github")
              (:file "beta")))
-  #+ () (:file "user-init")
+  (:file "user-init")
    #+ () (:file "tests")))
 
 ;;; END

@@ -1,10 +1,45 @@
-#+TITLE: nisp.irc
+#+TITLE: nisp-core
+
+* Introduction
+  nisp-core is a general purpose communications framework. Currently the
+  only thing nisp-core works with well is irc. The required interfaces to
+  be implemented for other protocols is not yet well defined, but doing so
+  is a matter of specifying specific generic functions required for each
+  connection class.
+
+*** Installation
+    Simple installation requires this repository to be cloned.
+    : git clone git://github.com/nixeagle/nisp
+
+    Then cd into the new repo and get all the sub-modules.
+    : cd nisp/
+    : git submodule update --init --recursive
+
+    Your lisp configuration file needs to know about nisp/asdf. If you are
+    on sbcl, you need to add this to your =~/.sbclrc=.
+    : (pushnew "/path/to/nisp/asdf/" asdf:*central-registry* :test #'equal)
+
+    In your lisp instance, run:
+    : (asdf:load-system :nisp.i)
+
+    Please note that some dependencies are not in the nisp repository, you
+    will need to do =(asdf-install:install :package-name)= for each. The
+    major offenders are =:closer-mop= and =:bordeaux-threads=.
+
+*** Configuration
+    A demonstration configuration file is in [[file:config-dist.lisp]]. This
+    should be copied to [[file:config.lisp]] before doing
+    =(require :nisp.i)=.
+
+    The way the configuration is setup for each bot class is very likely
+    to change in the next few version releases.
+
 
 * License
   Some of the code in this repository will originate from cl-irc which
   can be retrieved from http://common-lisp.net/project/cl-irc/ and has
   been released under a BSD license. A copy of this license is at
-  [[file:CL-IRC-LICENSE]]. 
+  [[file:CL-IRC-LICENSE]].
 
   My modifications and extensions are released under the GNU GPLv3. A
   copy of this license is at [[file:COPYING]]
