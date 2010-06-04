@@ -1,39 +1,23 @@
-;;; Please note that this config layout is very temporary.  Expect
-;;; breaking changes, though notice will be given in some form.
-(defpackage #:nispbot-config
-  (:use :common-lisp)
-  (:export *channel* *nickname*))
+(in-package :nisp.i)
 
-(in-package :nispbot-config)
 
-(defparameter *nickname* "somenick"
-  "The nick name of the bot. Be warned that this layout
-is likely to be very temporary as we plan on moving into a
-CLOS style.")
+;;; Connection details here.
+(defclass main-irc-bot (bot-connection
+                               connect-with-background-handler-mixin)
+  ()
+  (:default-initargs :server-name "irc.ninthbit.net"
+    :comchar #\!
+    :nickname "nisp-dist")
+  (:documentation "Demonstration class
 
-(defvar *server* "platinum.eighthbit.net"
-  "The network to connect to. Currently we can connect only
-to one network at a time. This is a bug and will be fixed.")
+Shows how to setup a connection to ninthbit.net using a comchar of !."))
 
-(defvar *channels* '("#chan1"  "#chan2" "chan3")
-  "Default list of channels to join on connection. When the bot goes
-  object orianted this will follow, but no matter what it will remain a
-  list in the simplest case.")
+;;; Tell the bot what to do after it connects. For now this includes
+;;; channel joins and talking to nickserv.
+(defmethod connect :after ((irc main-irc-bot) &key)
+  (irc:join irc "#bots")
+  (irc:privmsg irc "#bots" "hi all!"))
 
-(defvar *password* nil
-  "Default password for irc instances.")
+(defvar *main-irc-bot* (make-instance 'main-irc-bot))
 
-(defvar *comchar* #\!
-  "Bot will parse all messages strting with this char.")
-
-(defvar *developer-host* ""
-  "Set this to person running the bot, allows extra commands.")
-
-(defvar *admin-hosts* ()
-  "List of people who are allowed to run full eval with no restrictions.")
-
-(defvar *bot-hosts* ()
-  "List of hosts to ignore by default.")
-
-(defvar *freenode-password* ""
-  "Temporary for storing the password to freenode.")
+(unless (connectedp *main-irc-bot*) (connect *main-irc-bot*))
