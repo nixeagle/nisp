@@ -202,7 +202,12 @@ is translated into a list of symbols."
   (declare (type string symbols))
   (%intern-network-tree-node *network-tree-nodes* (ensure-network-node-symbols symbols)))
 
-;;;}}}
+(defun find-network-tree-node (name &key (nodes *network-tree-nodes*))
+  "Find a node called NAME."
+  (loop for node-name in (ensure-network-node-symbols name)
+     for current-node = nodes then next-node
+     for next-node = (gethash node-name (tree-generic-direct-nodes current-node))
+     finally (return next-node)))
 
 (defun maybe-make-tree-specializer-form (specializer-name)
   ;; We don't actually check right now, instead just making the correct
