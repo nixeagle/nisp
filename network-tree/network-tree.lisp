@@ -17,9 +17,6 @@ second value."
                  body)))
       (values (parse (cddr lambda-form)) lambda-args (reverse declare-forms)))))
 
-
-
-
 (defun pretend-splits (string)
   (iter (repeat 1)
     (for (values res next-start)
@@ -208,6 +205,20 @@ is translated into a list of symbols."
      for current-node = nodes then next-node
      for next-node = (gethash node-name (tree-generic-direct-nodes current-node))
      finally (return next-node)))
+
+(defun network-tree-node-keys (node)
+  "Finds the keys required to get NODE."
+  (let (result foundp)
+    (labels ((next-node (current-node &optional so-far)
+               (loop for name being the hash-keys in (tree-generic-direct-nodes current-node) using (hash-value sub-node)
+                  when (eq node sub-node) do
+                    (setq result (reverse (cons name so-far))
+                          foundp t)
+                  unless foundp
+                  do (next-node sub-node (cons name so-far)))))
+      (next-node *network-tree-nodes*))
+    result))
+
 
 (defun maybe-make-tree-specializer-form (specializer-name)
   ;; We don't actually check right now, instead just making the correct

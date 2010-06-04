@@ -5,7 +5,8 @@
            :network-tree-method
            #:remaining-parameters
            #:parse-method-lambda-expression-body
-           #:find-network-tree-node)
+           #:find-network-tree-node
+           #:network-tree-node-keys)
   ;; This whole shadowing import block is taken from
   ;; closer-mop-packages.lisp in order to correctly import the
   ;; closer-mop package.
