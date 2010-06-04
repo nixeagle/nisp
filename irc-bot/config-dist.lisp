@@ -1,13 +1,10 @@
 ;;; Please note that this config layout is very temporary.  Expect
 ;;; breaking changes, though notice will be given in some form.
 (defpackage #:nispbot-config
-  (:use :common-lisp :lift
-        )
-  (:export *channel* *nickname* *eighthbit*))
+  (:use :common-lisp)
+  (:export *channel* *nickname*))
 
 (in-package :nispbot-config)
-
-(deftestsuite root-suite (nisp::root-suite) ())
 
 (defparameter *nickname* "somenick"
   "The nick name of the bot. Be warned that this layout
@@ -40,11 +37,3 @@ to one network at a time. This is a bug and will be fixed.")
 
 (defvar *freenode-password* ""
   "Temporary for storing the password to freenode.")
-
-(deftestsuite test-*channels* (root-suite)
-  ()
-  :test (is-list
-         (:documentation
-          "Please use *channels* which is currently a list of
-strings. *channel is depreciated.")
-         (ensure (listp *channels*))))
