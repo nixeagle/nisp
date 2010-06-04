@@ -8,6 +8,9 @@
   connection class.
 
 *** Installation
+    You need a lisp, if you don't have one, a simple guide for setting
+    sbcl and emacs up is [[http://github.com/nixeagle/nass/blob/master/doc/lisp-sbcl-intro.org][here]].
+
     Simple installation requires this repository to be cloned.
     : git clone git://github.com/nixeagle/nisp
 
