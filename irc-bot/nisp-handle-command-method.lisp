@@ -108,6 +108,21 @@ that can be called.
      ,@body))
 
 
+(defun intern-network-tree-node-eql-specializer (name)
+  (intern-eql-specializer (find-network-tree-node name)))
+
+(defun command-specializer-eql-p (node-eql-specializer command)
+  (eq node-eql-specializer (car (method-specializers command))))
+
+(defun find-command-by-name (name)
+  "List commands matching NAME.
+
+There is a chance to get multiple commands matching a NAME due to method
+combination rules as well as different specializers."
+  (let ((node-eql-specializer (intern-network-tree-node-eql-specializer name)))
+   (loop for command in (closer-mop:generic-function-methods #'handle-command)
+      when (command-specializer-eql-p node-eql-specializer command)
+        collect command)))
 
 
 ;;; END
