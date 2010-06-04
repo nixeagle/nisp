@@ -34,6 +34,29 @@
     The way the configuration is setup for each bot class is very likely
     to change in the next few version releases.
 
+*** Extending
+    This framework is designed to be very flexible and simple to
+    program. Command syntax is very simple to pick up, a single example is
+    enough to explain most simple to moderate cases.
+
+    After configuration and a connection is established, try evaluating
+    the following:
+    : (in-package :nisp.i)
+    : (defcommand test () (reply "it works!"))
+
+    The connected bot should respond to !test with a reply of "it works".
+
+    This currently marks the command as being in all plugins, be aware
+    that in the next few releases work on full "plugin" support will
+    complete.
+
+    It is suggested for now that any extensions are loaded from
+    config.lisp with some sort of statement looking like:
+    : (load (merge-pathnames "plugin-name.lisp" +root-directory+)
+    :       :if-does-not-exist nil)
+
+    Using the action specifier in HANDLE-COMMAND is highly discouraged. It
+    will be removed in future releases.
 
 * License
   Some of the code in this repository will originate from cl-irc which
