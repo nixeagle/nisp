@@ -9,8 +9,13 @@
       #+ccl :closer-patch #+ccl t))
 
   (defclass handle-command-method (network-tree-method)
-    ((call-count :initform 0 :type fixnum
+    ((plugin :initarg :plugin :initform nil)
+     (call-count :initform 0 :type fixnum
                  :reader handle-command-method-call-count))))
+
+(defmethod print-object ((obj handle-command-method) stream)
+  (print-unreadable-object (obj stream)
+    (format stream "~{~(~A~)~^-~}" (network-tree-node-keys (eql-specializer-object  (car (method-specializers obj)))))))
 
 (defgeneric route-command (source from content to sink))
 
