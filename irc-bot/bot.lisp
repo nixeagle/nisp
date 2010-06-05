@@ -71,10 +71,10 @@ All things made by `make-anon-bot-user-class' superclass this."))
 (defmethod find-channel-user ((connection connection)
                               (channel irc:channel) (nickname string))
   "Find NICKNAME in CHANNEL on CONNECTION."
-  (sor (irc:normalize-nickname connection nickname)
-       (gethash it (irc:users channel))
-       (when (string= it (nickname (irc:user connection)))
-         (irc:user connection))))
+  (or (irc:normalize-nickname connection nickname)
+      (gethash (irc:normalize-nickname connection nickname) (irc:users channel))
+      (when (string= (irc:normalize-nickname connection nickname) (nickname (irc:user connection)))
+        (irc:user connection))))
 
 
 (defmethod target ((message irc:irc-privmsg-message))
