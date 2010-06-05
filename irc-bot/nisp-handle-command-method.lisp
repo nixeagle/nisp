@@ -107,6 +107,29 @@ that can be called.
         (content abstract-text-message-content))
      ,@body))
 
+(defmacro defcommand
+    (name (&key (source '(source abstract-data-source))
+                (user '(user abstract-user))
+                (address '(address abstract-target))
+                (identity '(identity abstract-identity))
+                (action '(action abstract-action))
+                (content '(content abstract-text-message-content)))
+     &body body)
+  `(defmethod handle-command
+       ((tree (eql #-sbcl(network-tree::intern-network-tree-node
+                     ,(substitute #\Space #\- (symbol-name name)))
+                   #+sbcl ,(substitute #\Space #\- (symbol-name name))))
+        ;; Just for now... these should be ',source (and so on). The
+        ;; keywords here should not be evaulated as input no matter how
+        ;; this is looked at.
+        ,source
+        ,user
+        ,address
+        ,identity
+        ,action
+        ,content)
+     ,@body))
+
 
 (defun intern-network-tree-node-eql-specializer (name)
   (intern-eql-specializer (find-network-tree-node name)))
