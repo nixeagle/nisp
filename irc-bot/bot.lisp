@@ -281,6 +281,19 @@ dimensional array."
                                                  :radix radix))))
 
 
+;;; harder say stuff... not at all best way to do this
+(defmethod handle-command
+    ((tree (eql "privmsg")) (source connection) (user bot-user)
+     (address bot-channel) (identity abstract-identity)
+     (action abstract-action) (content abstract-text-message-content))
+  (when (member (irc:hostname user)
+                '("Bit/Cam" "Byte/nixeagle" "Byte/duckinator/Dux"
+                  "Byte/CodeBlock")
+                :test #'equalp)
+
+    (apply #'irc:privmsg source (coerce (nth-value 1 (cl-ppcre:scan-to-strings
+                                                "([^\S]+) (.+)" (remaining-parameters)))
+                                        'list))))
 
 (define-simple-command lag
   (reply "~A seconds." (float (/ (random 10000) (random 10000)))))
@@ -377,15 +390,6 @@ dimensional array."
 (define-simple-command link-x86opcode
   (reply "http://ref.x86asm.net/geek.html#x~A" (remaining-parameters)))
 
-;;; harder say stuff... not at all best way to do this
-(defmethod handle-command
-    ((tree (eql "privmsg")) (source connection) (user bot-user)
-     (address bot-channel) (identity abstract-identity)
-     (action abstract-action) (content abstract-text-message-content))
-  (when (member (irc:hostname user)
-                '("Bit/Cam" "Byte/nixeagle" "Byte/duckinator/Dux"
-                  "Byte/CodeBlock")
-                :test #'equalp)
 
     (apply #'irc:privmsg source (coerce (nth-value 1 (cl-ppcre:scan-to-strings
                                                 "([^\S]+) (.+)" (remaining-parameters)))

@@ -15,7 +15,7 @@
    (:file "nisp-handle-command-method")))
 
 (defsystem :nisp.i
-  :version "0.0.0"
+  :version "0.0.19"
   :license "GPLv3 or later"
   :description "irc bot"
   :depends-on (:nutils
@@ -25,6 +25,9 @@
                :cl-irc
                :closer-mop
                :nisp.network-tree
+               ;;Needed for the link stuff, this is a temporary dependency
+               ;;until plugins work a little better then now.
+               :cl-ppcre
 
                #+ () :nisp.global
                #+ () :nisp.mop
