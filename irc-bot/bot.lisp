@@ -179,6 +179,14 @@ All things made by `make-anon-bot-user-class' superclass this."))
   "Remove leading COMCHAR from MESSAGE."
   (remove-comchar (comchar comchar) message))
 
+(defmethod remove-name ((irc bot-connection) (message string))
+  "Remove bot's name if its addressed."
+  (let ((nickname-length (length (nickname irc))))
+    (and (search message (nickname irc) :end1 nickname-length)
+         (member (char message nickname-length)
+                 '(#\: #\,) :test #'char=)
+         (subseq message (+ 2 nickname-length)))))
+
 (defun ensure-irc-bot-channel (channel-object)
   (declare (type irc:channel))
   (if (typep channel-object 'bot-channel)
@@ -198,6 +206,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
   (setf (slot-value instance 'message)
         (or (remove-comchar (comchar bot-connection)
                             (slot-value instance 'full-message))
+            (remove-name bot-connection (slot-value instance 'full-message))
             (slot-value instance 'full-message)))
   (setf (slot-value instance 'remaining-message)
         (slot-value instance 'message)))
