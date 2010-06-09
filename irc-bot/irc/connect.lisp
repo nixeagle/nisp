@@ -21,6 +21,11 @@ methods that support this."))
                          :realname realname))))
 
 (defgeneric connect (connection &key &allow-other-keys))
+(defmethod connect :around ((bot connection) &key (first-connect-p t))
+  (declare (boolean first-connect-p))
+  (when (and first-connect-p (not (connectedp bot)))
+    (call-next-method)))
+
 (defmethod connect :before ((bot bot-connection) &key ssl)
   (setf (slot-value bot 'irc::socket)
         (usocket:socket-connect (irc:server-name bot)
