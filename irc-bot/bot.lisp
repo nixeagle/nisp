@@ -114,7 +114,7 @@ All things made by `make-anon-bot-user-class' superclass this."))
                     (irc:find-channel irc to)))
            (irc:user (ensure-irc-bot-user to)))
          irc))
-    (error (condition) (describe condition))))
+    (error (condition) (declare (ignore condition)))))
 
 (defmethod ensure-user-host ((user irc:user) (host string))
   (when (string= (irc:hostname user) "")
