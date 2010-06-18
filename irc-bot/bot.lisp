@@ -391,8 +391,5 @@ dimensional array."
   (reply "http://ref.x86asm.net/geek.html#x~A" (remaining-parameters)))
 
 
-    (apply #'irc:privmsg source (coerce (nth-value 1 (cl-ppcre:scan-to-strings
-                                                "([^\S]+) (.+)" (remaining-parameters)))
-                                        'list))))
 
 ;;; END
