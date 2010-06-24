@@ -43,3 +43,6 @@
 [submodule "nutils"]
 	path = nutils
 	url = git://github.com/nixeagle/nutils.git
+[submodule "lift"]
+	path = lift
+	url = git://github.com/nixeagle/lift.git
