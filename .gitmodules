@@ -1,30 +1,30 @@
 [submodule "ldap"]
 	path = ldap
-	url = ../nisp.ldap
+	url = git://github.com/nixeagle/nisp.ldap.git
 [submodule "nistilities"]
 	path = nistilities
-	url = ../nisp.nistilities
+	url = git://github.com/nixeagle/nisp.nistilities.git
 [submodule "cl-irc"]
 	path = cl-irc
 	url = git://github.com/nixeagle/cl-irc.git
 [submodule "cl-walker"]
 	path = cl-walker
-	url = ../cl-walker
+	url = git://github.com/nixeagle/cl-walker.git
 [submodule "hu.dwim.asdf"]
 	path = hu.dwim.asdf
-	url = ../hu.dwim.asdf
+	url = git://github.com/nixeagle/hu.dwim.asdf.git
 [submodule "hu.dwim.def"]
 	path = hu.dwim.def
-	url = ../hu.dwim.def
+	url = git://github.com/nixeagle/hu.dwim.def.git
 [submodule "hu.dwim.common-lisp"]
 	path = hu.dwim.common-lisp
-	url = ../hu.dwim.common-lisp
+	url = git://github.com/nixeagle/hu.dwim.common-lisp.git
 [submodule "hu.dwim.defclass-star"]
 	path = hu.dwim.defclass-star
-	url = ../hu.dwim.defclass-star
+	url = git://github.com/nixeagle/hu.dwim.defclass-star.git
 [submodule "nisp.util"]
 	path = nisp.util
-	url = ../nisp.util
+	url = git://github.com/nixeagle/nisp.util.git
 [submodule "slime"]
 	path = slime
 	url = git://github.com/nablaone/slime.git
@@ -33,13 +33,13 @@
 	url = git://github.com/archimag/hunchentoot.git
 [submodule "Eos"]
 	path = Eos
-	url = ../Eos
+	url = git://github.com/nixeagle/Eos.git
 [submodule "cl-github"]
 	path = cl-github
-	url = ../cl-github
+	url = git://github.com/nixeagle/cl-github.git
 [submodule "acumen"]
 	path = acumen
-	url = ../acumen
+	url = git://github.com/nixeagle/acumen.git
 [submodule "nutils"]
 	path = nutils
-	url = ../nutils
+	url = git://github.com/nixeagle/nutils.git
