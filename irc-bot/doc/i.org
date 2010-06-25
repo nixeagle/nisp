@@ -133,3 +133,9 @@ for action types to combine with same [[protocol]] in both the source/sink
 ends but differentiate based on which services are in the
 combination. There really is nothing you cannot do with this type, but
 this type generally has the most meaning within the context of a protocol.
+
+
+* deps
+  closer-mop
+  anaphora
+  trivial-timers
